@@ -76,36 +76,6 @@ const Utils = {
     },
     
     /**
-     * 显示成功提示
-     */
-    showSuccessMessage: function(message) {
-        // 创建成功提示
-        const toast = document.createElement('div');
-        toast.className = 'success-toast';
-        toast.textContent = message;
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #10B981;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            z-index: 1003;
-            animation: slideUp 0.3s ease;
-            font-weight: 500;
-        `;
-        
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
-    },
-    
-    /**
      * 格式化时间
      */
     formatTime: function(date) {
@@ -215,59 +185,28 @@ const Clock = {
 const Weather = {
     apiKey: '',
     apiUrl: 'https://api.openweathermap.org/data/2.5/weather',
-    mode: 'carousel', // 'carousel' 或 'fixed'
-    currentCityIndex: 0,
-    carouselTimer: null,
-    carouselInterval: 30000, // 30秒
-    isCarouselRunning: false,
-    selectedCity: '北京',
-    
-    // 全国主要城市列表
-    cities: [
-        '北京', '哈尔滨', '长春', '沈阳', '天津', '呼和浩特', '乌鲁木齐', '银川', '西宁', '兰州',
-        '西安', '拉萨', '成都', '重庆', '贵阳', '昆明', '太原', '石家庄', '济南', '郑州',
-        '合肥', '南京', '上海', '武汉', '长沙', '南昌', '杭州', '福州', '台北', '南宁',
-        '海口', '广州', '香港', '澳门', '深圳', '厦门', '宁波', '青岛', '大连', '桂林',
-        '汕头', '连云港', '秦皇岛', '延安', '赣州', '三亚', '雄安', '高雄', '钓鱼岛', '永兴岛', '永暑礁'
-    ],
     
     init: function() {
         this.loadConfig();
-        this.loadSavedSettings();
-        this.initializeWeatherDisplay();
+        this.getCurrentLocation();
     },
     
     loadConfig: function() {
+        // 从配置文件加载 API Key
         if (AppState.rssConfig && AppState.rssConfig.settings.weatherApiKey) {
             this.apiKey = AppState.rssConfig.settings.weatherApiKey;
         }
     },
     
-    loadSavedSettings: function() {
-        const savedMode = Utils.storage.get('weatherMode', 'carousel');
-        const savedCity = Utils.storage.get('selectedCity', '北京');
-        
-        this.mode = savedMode;
-        this.selectedCity = savedCity;
-        
-        // 更新UI状态
-        this.updateModeIndicator();
-    },
-    
-    initializeWeatherDisplay: function() {
-        // 静默尝试获取地理位置，不显示弹框
-        this.tryGetCurrentLocation();
-    },
-    
-    tryGetCurrentLocation: function() {
+    getCurrentLocation: function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 this.onLocationSuccess.bind(this),
                 this.onLocationError.bind(this),
                 {
-                    timeout: 5000,
-                    enableHighAccuracy: false,
-                    maximumAge: 600000 // 10分钟缓存
+                    timeout: 10000,
+                    enableHighAccuracy: true,
+                    maximumAge: 300000 // 5分钟缓存
                 }
             );
         } else {
@@ -276,146 +215,102 @@ const Weather = {
     },
     
     onLocationSuccess: function(position) {
-        // 成功获取位置，但不立即显示，仅作为备用
-        const userLocation = {
+        AppState.location = {
             lat: position.coords.latitude,
-            lon: position.coords.longitude
+            lon: position.coords.longitude,
+            name: ''
         };
-        
-        // 如果是固定模式且没有选择城市，使用当前位置
-        if (this.mode === 'fixed' && !this.selectedCity) {
-            this.fetchWeatherByCoords(userLocation.lat, userLocation.lon);
-        } else {
-            this.startWeatherDisplay();
-        }
+        this.fetchWeather();
     },
     
     onLocationError: function(error) {
-        console.log('地理位置获取失败，使用默认模式:', error.message);
-        this.startWeatherDisplay();
-    },
-    
-    startWeatherDisplay: function() {
-        if (this.mode === 'carousel') {
-            this.startCarousel();
-        } else {
-            this.fetchWeatherByCity(this.selectedCity);
-        }
-    },
-    
-    startCarousel: function() {
-        if (this.isCarouselRunning) return;
+        console.warn('获取位置失败:', error.message);
         
-        this.isCarouselRunning = true;
-        this.currentCityIndex = 0;
-        
-        // 立即显示第一个城市
-        this.fetchCurrentCarouselCity();
-        
-        // 启动定时器
-        this.carouselTimer = setInterval(() => {
-            this.nextCarouselCity();
-        }, this.carouselInterval);
+        // 使用默认城市或显示输入框
+        const defaultCity = AppState.rssConfig?.settings?.defaultCity || '北京';
+        this.showLocationModal(defaultCity);
     },
     
-    stopCarousel: function() {
-        if (this.carouselTimer) {
-            clearInterval(this.carouselTimer);
-            this.carouselTimer = null;
-        }
-        this.isCarouselRunning = false;
+    showLocationModal: function(defaultCity) {
+        DOMElements.cityInput.value = defaultCity;
+        DOMElements.locationModal.style.display = 'flex';
+        DOMElements.cityInput.focus();
     },
     
-    nextCarouselCity: function() {
-        this.currentCityIndex = (this.currentCityIndex + 1) % this.cities.length;
-        this.fetchCurrentCarouselCity();
+    hideLocationModal: function() {
+        DOMElements.locationModal.style.display = 'none';
     },
     
-    fetchCurrentCarouselCity: function() {
-        const city = this.cities[this.currentCityIndex];
-        this.fetchWeatherByCity(city, true);
-    },
-    
-    fetchWeatherByCity: function(cityName, isCarousel = false) {
-        if (!this.apiKey || this.apiKey === 'your_openweather_api_key') {
-            this.showMockWeather(cityName, isCarousel);
+    setLocationByCity: function(cityName) {
+        if (!cityName.trim()) {
+            Utils.showError('请输入有效的城市名称');
             return;
         }
         
-        const url = `${this.apiUrl}?q=${encodeURIComponent(cityName)}&appid=${this.apiKey}&units=metric&lang=zh_cn`;
+        AppState.location = {
+            lat: null,
+            lon: null,
+            name: cityName.trim()
+        };
+        
+        this.hideLocationModal();
+        this.fetchWeather();
+    },
+    
+    fetchWeather: function() {
+        if (!this.apiKey || this.apiKey === 'your_openweather_api_key') {
+            // 使用模拟数据
+            this.showMockWeather();
+            return;
+        }
+        
+        let url = this.apiUrl + '?appid=' + this.apiKey + '&units=metric&lang=zh_cn';
+        
+        if (AppState.location.lat && AppState.location.lon) {
+            url += '&lat=' + AppState.location.lat + '&lon=' + AppState.location.lon;
+        } else if (AppState.location.name) {
+            url += '&q=' + encodeURIComponent(AppState.location.name);
+        }
         
         fetch(url)
-            .then(response => {
+            .then(function(response) {
                 if (!response.ok) {
                     throw new Error('天气数据获取失败');
                 }
                 return response.json();
             })
-            .then(data => this.onWeatherSuccess(data, isCarousel))
-            .catch(error => {
-                console.error('天气数据错误:', error);
-                this.showMockWeather(cityName, isCarousel);
-            });
+            .then(this.onWeatherSuccess.bind(this))
+            .catch(this.onWeatherError.bind(this));
     },
     
-    fetchWeatherByCoords: function(lat, lon) {
-        if (!this.apiKey || this.apiKey === 'your_openweather_api_key') {
-            this.showMockWeather('北京', false);
-            return;
-        }
-        
-        const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric&lang=zh_cn`;
-        
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('天气数据获取失败');
-                }
-                return response.json();
-            })
-            .then(data => this.onWeatherSuccess(data, false))
-            .catch(error => {
-                console.error('天气数据错误:', error);
-                this.showMockWeather('北京', false);
-            });
-    },
-    
-    onWeatherSuccess: function(data, isCarousel = false) {
+    onWeatherSuccess: function(data) {
         AppState.weather = {
             temperature: Math.round(data.main.temp),
             condition: data.weather[0].description,
             humidity: data.main.humidity,
-            windSpeed: Math.round(data.wind.speed * 3.6),
+            windSpeed: Math.round(data.wind.speed * 3.6), // 转换为 km/h
             location: data.name,
-            icon: data.weather[0].main.toLowerCase(),
-            isCarousel: isCarousel
+            icon: data.weather[0].main.toLowerCase()
         };
         
         this.render();
     },
     
-    showMockWeather: function(cityName, isCarousel = false) {
+    onWeatherError: function(error) {
+        console.error('天气数据错误:', error);
+        Utils.showError('天气信息加载失败，使用模拟数据');
+        this.showMockWeather();
+    },
+    
+    showMockWeather: function() {
         // 模拟天气数据
-        const mockData = {
-            '北京': { temp: 22, condition: '多云', humidity: 65, wind: 15, icon: 'clouds' },
-            '上海': { temp: 25, condition: '晴', humidity: 58, wind: 12, icon: 'clear' },
-            '广州': { temp: 28, condition: '小雨', humidity: 78, wind: 8, icon: 'rain' },
-            '深圳': { temp: 27, condition: '阴', humidity: 72, wind: 10, icon: 'clouds' },
-            '成都': { temp: 20, condition: '雾', humidity: 82, wind: 6, icon: 'clouds' },
-            '杭州': { temp: 23, condition: '晴', humidity: 61, wind: 14, icon: 'clear' }
-        };
-        
-        const defaultData = { temp: 22, condition: '多云', humidity: 65, wind: 15, icon: 'clouds' };
-        const data = mockData[cityName] || defaultData;
-        
         AppState.weather = {
-            temperature: data.temp,
-            condition: data.condition,
-            humidity: data.humidity,
-            windSpeed: data.wind,
-            location: cityName,
-            icon: data.icon,
-            isCarousel: isCarousel
+            temperature: 22,
+            condition: '多云',
+            humidity: 65,
+            windSpeed: 15,
+            location: AppState.location?.name || '北京',
+            icon: 'clouds'
         };
         
         this.render();
@@ -435,18 +330,16 @@ const Weather = {
         DOMElements.weatherCondition.textContent = weather.condition;
         DOMElements.humidity.textContent = weather.humidity + '%';
         DOMElements.windSpeed.textContent = weather.windSpeed + ' km/h';
-        DOMElements.currentCity.textContent = weather.location;
+        DOMElements.location.textContent = weather.location;
         
         // 更新天气图标
         this.updateWeatherIcon(weather.icon);
-        
-        // 更新模式指示器
-        this.updateModeIndicator();
     },
     
     updateWeatherIcon: function(iconCode) {
-        let iconPath = 'icons/sunny.svg';
+        let iconPath = 'icons/sunny.svg'; // 默认图标
         
+        // 根据天气状态选择图标
         switch (iconCode) {
             case 'clear':
             case 'sun':
@@ -470,45 +363,6 @@ const Weather = {
         
         DOMElements.weatherIcon.src = iconPath;
         DOMElements.weatherIcon.alt = AppState.weather.condition;
-    },
-    
-    updateModeIndicator: function() {
-        const indicator = DOMElements.weatherModeIndicator;
-        const modeText = indicator.querySelector('.mode-text');
-        
-        if (this.mode === 'carousel') {
-            modeText.textContent = '轮播模式';
-            indicator.className = 'weather-mode-indicator';
-        } else {
-            modeText.textContent = '固定城市';
-            indicator.className = 'weather-mode-indicator fixed-mode';
-        }
-    },
-    
-    // 设置模式
-    setMode: function(mode, selectedCity = null) {
-        this.stopCarousel();
-        
-        this.mode = mode;
-        if (selectedCity) {
-            this.selectedCity = selectedCity;
-        }
-        
-        // 保存设置
-        Utils.storage.set('weatherMode', this.mode);
-        Utils.storage.set('selectedCity', this.selectedCity);
-        
-        // 重新启动显示
-        this.startWeatherDisplay();
-    },
-    
-    // 获取当前设置
-    getCurrentSettings: function() {
-        return {
-            mode: this.mode,
-            selectedCity: this.selectedCity,
-            cities: this.cities
-        };
     }
 };
 
@@ -549,22 +403,7 @@ const News = {
     },
     
     fetchSingleFeed: function(feed) {
-        // 为RSS URL添加防缓存参数
-        const timestamp = Date.now();
-        const cacheBuster = Math.random().toString(36).substr(2, 9);
-        const rssUrlWithCache = `${feed.url}${feed.url.includes('?') ? '&' : '?'}_t=${timestamp}&_cb=${cacheBuster}`;
-        const proxiedUrl = this.corsProxy + encodeURIComponent(rssUrlWithCache);
-        
-        console.log('获取RSS源:', feed.name, '- URL:', feed.url);
-        
-        return fetch(proxiedUrl, {
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache'
-            },
-            cache: 'no-store'
-        })
+        return fetch(this.corsProxy + encodeURIComponent(feed.url))
             .then(function(response) {
                 if (!response.ok) {
                     throw new Error('HTTP ' + response.status);
@@ -822,206 +661,49 @@ const Theme = {
 };
 
 // ===========================================
-// 天气设置模块
-// ===========================================
-const WeatherSettings = {
-    selectedCity: '',
-    
-    init: function() {
-        this.bindEvents();
-        this.generateCityGrid();
-    },
-    
-    bindEvents: function() {
-        // 打开设置模态框
-        DOMElements.weatherSettingsBtn.addEventListener('click', this.openModal.bind(this));
-        
-        // 关闭模态框
-        DOMElements.closeWeatherSettings.addEventListener('click', this.closeModal.bind(this));
-        DOMElements.cancelWeatherSettings.addEventListener('click', this.closeModal.bind(this));
-        
-        // 点击模态框背景关闭
-        DOMElements.weatherSettingsModal.addEventListener('click', function(e) {
-            if (e.target === DOMElements.weatherSettingsModal) {
-                this.closeModal();
-            }
-        }.bind(this));
-        
-        // ESC键关闭
-        DOMElements.weatherSettingsModal.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                this.closeModal();
-            }
-        }.bind(this));
-        
-        // 模式选择
-        DOMElements.carouselMode.addEventListener('change', this.onModeChange.bind(this));
-        DOMElements.fixedMode.addEventListener('change', this.onModeChange.bind(this));
-        
-        // 城市搜索
-        DOMElements.citySearchInput.addEventListener('input', this.onCitySearch.bind(this));
-        
-        // 确认设置
-        DOMElements.confirmWeatherSettings.addEventListener('click', this.saveSettings.bind(this));
-    },
-    
-    openModal: function() {
-        const settings = Weather.getCurrentSettings();
-        
-        // 设置当前模式
-        if (settings.mode === 'carousel') {
-            DOMElements.carouselMode.checked = true;
-        } else {
-            DOMElements.fixedMode.checked = true;
-        }
-        
-        this.selectedCity = settings.selectedCity;
-        this.onModeChange();
-        this.updateCitySelection();
-        
-        DOMElements.weatherSettingsModal.style.display = 'flex';
-        
-        // 获取焦点
-        setTimeout(() => {
-            if (DOMElements.carouselMode.checked) {
-                DOMElements.carouselMode.focus();
-            } else {
-                DOMElements.fixedMode.focus();
-            }
-        }, 100);
-    },
-    
-    closeModal: function() {
-        DOMElements.weatherSettingsModal.style.display = 'none';
-        DOMElements.citySearchInput.value = '';
-        this.selectedCity = '';
-    },
-    
-    onModeChange: function() {
-        const isFixed = DOMElements.fixedMode.checked;
-        
-        if (isFixed) {
-            DOMElements.citySelectionSection.style.display = 'block';
-        } else {
-            DOMElements.citySelectionSection.style.display = 'none';
-        }
-    },
-    
-    generateCityGrid: function() {
-        const cities = Weather.cities;
-        const grid = DOMElements.cityGrid;
-        
-        grid.innerHTML = '';
-        
-        cities.forEach(city => {
-            const cityElement = document.createElement('div');
-            cityElement.className = 'city-option';
-            cityElement.textContent = city;
-            cityElement.dataset.city = city;
-            
-            cityElement.addEventListener('click', () => {
-                this.selectCity(city);
-            });
-            
-            grid.appendChild(cityElement);
-        });
-    },
-    
-    selectCity: function(city) {
-        this.selectedCity = city;
-        this.updateCitySelection();
-    },
-    
-    updateCitySelection: function() {
-        const cityOptions = DOMElements.cityGrid.querySelectorAll('.city-option');
-        
-        cityOptions.forEach(option => {
-            if (option.dataset.city === this.selectedCity) {
-                option.classList.add('selected');
-            } else {
-                option.classList.remove('selected');
-            }
-        });
-    },
-    
-    onCitySearch: function() {
-        const searchTerm = DOMElements.citySearchInput.value.toLowerCase();
-        const cityOptions = DOMElements.cityGrid.querySelectorAll('.city-option');
-        
-        cityOptions.forEach(option => {
-            const cityName = option.textContent.toLowerCase();
-            if (cityName.includes(searchTerm)) {
-                option.style.display = 'block';
-            } else {
-                option.style.display = 'none';
-            }
-        });
-    },
-    
-    saveSettings: function() {
-        const mode = DOMElements.carouselMode.checked ? 'carousel' : 'fixed';
-        
-        if (mode === 'fixed' && !this.selectedCity) {
-            Utils.showError('请选择一个城市');
-            return;
-        }
-        
-        // 应用设置
-        Weather.setMode(mode, this.selectedCity);
-        
-        // 关闭模态框
-        this.closeModal();
-        
-        // 显示成功消息
-        const modeText = mode === 'carousel' ? '轮播模式' : '固定城市模式';
-        const message = mode === 'carousel' ? 
-            `已切换到${modeText}` : 
-            `已切换到${modeText}：${this.selectedCity}`;
-        
-        this.showSuccessMessage(message);
-    },
-    
-    showSuccessMessage: function(message) {
-        // 创建成功提示
-        const toast = document.createElement('div');
-        toast.className = 'success-toast';
-        toast.textContent = message;
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #10B981;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            z-index: 1003;
-            animation: slideUp 0.3s ease;
-            font-weight: 500;
-        `;
-        
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
-    }
-};
-
-// ===========================================
 // 事件处理
 // ===========================================
 const EventHandlers = {
     init: function() {
+        this.bindLocationModal();
         this.bindKeyboardEvents();
         this.bindWindowEvents();
+    },
+    
+    bindLocationModal: function() {
+        // 确认位置
+        DOMElements.confirmLocation.addEventListener('click', function() {
+            const cityName = DOMElements.cityInput.value;
+            Weather.setLocationByCity(cityName);
+        });
+        
+        // 取消位置设置
+        DOMElements.cancelLocation.addEventListener('click', function() {
+            Weather.hideLocationModal();
+            Weather.showMockWeather();
+        });
+        
+        // 回车键确认
+        DOMElements.cityInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cityName = DOMElements.cityInput.value;
+                Weather.setLocationByCity(cityName);
+            }
+        });
+        
+        // ESC键关闭
+        DOMElements.locationModal.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                Weather.hideLocationModal();
+                Weather.showMockWeather();
+            }
+        });
     },
     
     bindKeyboardEvents: function() {
         document.addEventListener('keydown', function(e) {
             // 空格键切换主题
-            if (e.code === 'Space' && !e.target.matches('input, textarea, [contenteditable]')) {
+            if (e.code === 'Space' && !e.target.matches('input')) {
                 e.preventDefault();
                 Theme.toggle();
             }
@@ -1030,23 +712,6 @@ const EventHandlers = {
             if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
                 e.preventDefault();
                 News.nextNews();
-            }
-            
-            // S键打开天气设置
-            if (e.code === 'KeyS' && !e.target.matches('input, textarea, [contenteditable]')) {
-                e.preventDefault();
-                DOMElements.weatherSettingsBtn.click();
-            }
-            
-            // F5或Ctrl+R强制刷新RSS数据
-            if (e.code === 'F5' || (e.ctrlKey && e.code === 'KeyR')) {
-                e.preventDefault();
-                console.log('强制刷新RSS数据...');
-                // 清除本地存储的缓存
-                Utils.storage.set('lastNewsUpdate', 0);
-                // 重新加载新闻
-                News.fetchAllNews();
-                Utils.showSuccessMessage('正在刷新RSS数据...');
             }
         });
     },
@@ -1084,36 +749,11 @@ const EventHandlers = {
 // ===========================================
 const App = {
     init: function() {
-        // 初始化时强制清除缓存
-        this.clearAllCaches();
-        
         // 初始化DOM元素引用
         this.initDOMElements();
         
         // 加载配置文件
         this.loadConfig();
-    },
-    
-    clearAllCaches: function() {
-        try {
-            // 清除本地存储的RSS缓存
-            Utils.storage.set('lastNewsUpdate', 0);
-            
-            // 清除Service Worker缓存（如果有）
-            if ('serviceWorker' in navigator && 'caches' in window) {
-                caches.keys().then(function(cacheNames) {
-                    return Promise.all(
-                        cacheNames.map(function(cacheName) {
-                            return caches.delete(cacheName);
-                        })
-                    );
-                });
-            }
-            
-            console.log('缓存清除完成，强制刷新RSS数据');
-        } catch (error) {
-            console.warn('清除缓存时出现错误:', error);
-        }
     },
     
     initDOMElements: function() {
@@ -1130,20 +770,7 @@ const App = {
         DOMElements.weatherCondition = document.getElementById('weather-condition');
         DOMElements.humidity = document.getElementById('humidity');
         DOMElements.windSpeed = document.getElementById('wind-speed');
-        DOMElements.currentCity = document.getElementById('current-city');
-        DOMElements.weatherModeIndicator = document.getElementById('weather-mode-indicator');
-        DOMElements.weatherSettingsBtn = document.getElementById('weather-settings-btn');
-        
-        // 天气设置模态框
-        DOMElements.weatherSettingsModal = document.getElementById('weather-settings-modal');
-        DOMElements.closeWeatherSettings = document.getElementById('close-weather-settings');
-        DOMElements.carouselMode = document.getElementById('carousel-mode');
-        DOMElements.fixedMode = document.getElementById('fixed-mode');
-        DOMElements.citySelectionSection = document.getElementById('city-selection-section');
-        DOMElements.citySearchInput = document.getElementById('city-search-input');
-        DOMElements.cityGrid = document.getElementById('city-grid');
-        DOMElements.confirmWeatherSettings = document.getElementById('confirm-weather-settings');
-        DOMElements.cancelWeatherSettings = document.getElementById('cancel-weather-settings');
+        DOMElements.location = document.getElementById('location');
         
         // 新闻相关
         DOMElements.newsLoading = document.getElementById('news-loading');
@@ -1154,24 +781,16 @@ const App = {
         
         // 控制相关
         DOMElements.themeToggle = document.getElementById('theme-toggle');
+        DOMElements.locationModal = document.getElementById('location-modal');
+        DOMElements.cityInput = document.getElementById('city-input');
+        DOMElements.confirmLocation = document.getElementById('confirm-location');
+        DOMElements.cancelLocation = document.getElementById('cancel-location');
         DOMElements.errorToast = document.getElementById('error-toast');
         DOMElements.errorMessage = document.getElementById('error-message');
     },
     
     loadConfig: function() {
-        // 为 config.json 添加防缓存参数
-        const timestamp = Date.now();
-        const configUrl = `config.json?v=${timestamp}&_cache_bust=${Math.random().toString(36).substr(2, 9)}`;
-        
-        fetch(configUrl, {
-            method: 'GET',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            },
-            cache: 'no-store'
-        })
+        fetch('config.json')
             .then(function(response) {
                 if (!response.ok) {
                     throw new Error('配置文件加载失败');
@@ -1180,10 +799,6 @@ const App = {
             })
             .then(function(config) {
                 AppState.rssConfig = config;
-                console.log('配置文件加载成功，包含', config.rssFeeds.length, '个RSS源');
-                // 显示加载的RSS源名称
-                const sourceNames = config.rssFeeds.map(feed => feed.name).join('、');
-                console.log('RSS源：', sourceNames);
                 this.startApp();
             }.bind(this))
             .catch(function(error) {
@@ -1199,7 +814,6 @@ const App = {
         Clock.init();
         Weather.init();
         News.init();
-        WeatherSettings.init();
         EventHandlers.init();
         
         console.log('智能信息显示终端启动完成！');
