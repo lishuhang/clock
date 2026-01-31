@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Clock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+body { font-family: 'Inter', sans-serif; font-weight: 300; }
+
+#bg-video {
+  position: fixed;
+  top: 50%; left: 50%;
+  min-width: 100%; min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 0;
+}
+
+#clock-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+#settings-btn {
+  position: fixed;
+  top: 20px; right: 20px;
+  width: 40px; height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  z-index: 100;
+}
+#settings-btn:hover { opacity: 0.8; }
+#settings-btn svg { width: 100%; height: 100%; }
+
+#settings-panel {
+  display: none;
+  position: fixed;
+  top: 80px; right: 20px;
+  width: 320px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  z-index: 99;
+  color: #fff;
+  font-size: 14px;
+}
+#settings-panel.visible { display: block; }
+
+#settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  cursor: move;
+  user-select: none;
+}
+#settings-header h3 { font-weight: 300; font-size: 16px; }
+#close-settings {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  line-height: 1;
+}
+#close-settings:hover { opacity: 1; }
+
+.setting-group {
+  margin-bottom: 16px;
+}
+.setting-group label {
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.8;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.setting-group input, .setting-group select {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.setting-group input:focus, .setting-group select:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.setting-group input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.setting-group select option { background: #222; }
+
+#audio-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+#audio-control label { font-size: 12px; opacity: 0.8; }
+#mute-toggle {
+  width: 44px; height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s;
+}
+#mute-toggle.unmuted { background: rgba(100, 200, 100, 0.6); }
+#mute-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+#mute-toggle.unmuted::after { transform: translateX(20px); }
+
+#click-to-start {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  cursor: pointer;
+}
+#click-to-start span {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  opacity: 0.8;
+}
+#click-to-start.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<video id="bg-video" autoplay muted loop playsinline></video>
+<canvas id="clock-canvas"></canvas>
+
+<button id="settings-btn" title="Settings">
+  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+
+<div id="settings-panel">
+  <div id="settings-header">
+    <h3>设置 / Settings</h3>
+    <button id="close-settings">&times;</button>
+  </div>
+  
+  <div class="setting-group">
+    <label>背景视频 URL / Video URL</label>
+    <input type="text" id="video-url" placeholder="cloud.mp4">
+  </div>
+  
+  <div class="setting-group">
+    <label>背景音乐 URL / Audio URL</label>
+    <input type="text" id="audio-url" placeholder="clock.mp3">
+  </div>
+  
+  <div class="setting-group">
+    <label>时区 / Timezone</label>
+    <select id="timezone">
+      <option value="local">本地时间 / Local</option>
+      <option value="UTC">UTC</option>
+      <option value="-12">UTC-12</option>
+      <option value="-11">UTC-11</option>
+      <option value="-10">UTC-10 (Hawaii)</option>
+      <option value="-9">UTC-9 (Alaska)</option>
+      <option value="-8">UTC-8 (Pacific)</option>
+      <option value="-7">UTC-7 (Mountain)</option>
+      <option value="-6">UTC-6 (Central)</option>
+      <option value="-5">UTC-5 (Eastern)</option>
+      <option value="-4">UTC-4 (Atlantic)</option>
+      <option value="-3">UTC-3</option>
+      <option value="-2">UTC-2</option>
+      <option value="-1">UTC-1</option>
+      <option value="1">UTC+1 (CET)</option>
+      <option value="2">UTC+2 (EET)</option>
+      <option value="3">UTC+3 (Moscow)</option>
+      <option value="4">UTC+4</option>
+      <option value="5">UTC+5</option>
+      <option value="5.5">UTC+5:30 (India)</option>
+      <option value="6">UTC+6</option>
+      <option value="7">UTC+7</option>
+      <option value="8">UTC+8 (China/Singapore)</option>
+      <option value="9">UTC+9 (Japan/Korea)</option>
+      <option value="9.5">UTC+9:30</option>
+      <option value="10">UTC+10 (Sydney)</option>
+      <option value="11">UTC+11</option>
+      <option value="12">UTC+12 (Auckland)</option>
+    </select>
+  </div>
+  
+  <div id="audio-control">
+    <label>音乐 / Music</label>
+    <button id="mute-toggle" class="unmuted"></button>
+  </div>
+</div>
+
+<div id="click-to-start">
+  <span>点击开始 / Click to Start</span>
+</div>
+
+<audio id="bg-audio" preload="auto"></audio>
+
+<script>
+(function() {
+  'use strict';
+
+  const DEFAULT_VIDEO = 'cloud.mp4';
+  const DEFAULT_AUDIO = 'clock.mp3';
+  const AUDIO_DURATION = 60;
+  
+  let settings = {
+    videoUrl: DEFAULT_VIDEO,
+    audioUrl: DEFAULT_AUDIO,
+    timezone: 'local',
+    muted: false
+  };
+
+  const canvas = document.getElementById('clock-canvas');
+  const ctx = canvas.getContext('2d');
+  const video = document.getElementById('bg-video');
+  const audio = document.getElementById('bg-audio');
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsPanel = document.getElementById('settings-panel');
+  const closeSettings = document.getElementById('close-settings');
+  const videoUrlInput = document.getElementById('video-url');
+  const audioUrlInput = document.getElementById('audio-url');
+  const timezoneSelect = document.getElementById('timezone');
+  const muteToggle = document.getElementById('mute-toggle');
+  const clickToStart = document.getElementById('click-to-start');
+
+  function loadSettings() {
+    try {
+      const saved = localStorage.getItem('clockSettings');
+      if (saved) settings = { ...settings, ...JSON.parse(saved) };
+    } catch (e) { console.warn('Load settings failed:', e); }
+    applySettings();
+  }
+
+  function saveSettings() {
+    try { localStorage.setItem('clockSettings', JSON.stringify(settings)); }
+    catch (e) { console.warn('Save settings failed:', e); }
+  }
+
+  function applySettings() {
+    videoUrlInput.value = settings.videoUrl;
+    audioUrlInput.value = settings.audioUrl;
+    timezoneSelect.value = settings.timezone;
+    muteToggle.classList.toggle('unmuted', !settings.muted);
+    
+    const videoSrc = settings.videoUrl || DEFAULT_VIDEO;
+    const audioSrc = settings.audioUrl || DEFAULT_AUDIO;
+    
+    if (!video.src.endsWith(videoSrc)) video.src = videoSrc;
+    if (!audio.src.endsWith(audioSrc)) {
+      audio.src = audioSrc;
+      audio.load();
+    }
+    audio.muted = settings.muted;
+  }
+
+  function getTime() {
+    const now = new Date();
+    if (settings.timezone === 'local') {
+      return { h: now.getHours(), m: now.getMinutes(), s: now.getSeconds(), ms: now.getMilliseconds() };
+    } else if (settings.timezone === 'UTC') {
+      return { h: now.getUTCHours(), m: now.getUTCMinutes(), s: now.getUTCSeconds(), ms: now.getUTCMilliseconds() };
+    } else {
+      const offset = parseFloat(settings.timezone);
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const target = new Date(utc + offset * 3600000);
+      return { h: target.getHours(), m: target.getMinutes(), s: target.getSeconds(), ms: target.getMilliseconds() };
+    }
+  }
+
+  let audioStarted = false;
+
+  function syncAudio() {
+    if (!audioStarted || settings.muted || audio.paused) return;
+    
+    const time = getTime();
+    const target = (time.s + time.ms / 1000) % AUDIO_DURATION;
+    const current = audio.currentTime % AUDIO_DURATION;
+    const drift = Math.abs(target - current);
+    
+    if (drift > 0.2 && drift < (AUDIO_DURATION - 0.2)) {
+      audio.currentTime = target;
+    }
+  }
+
+  function startAudio() {
+    if (audioStarted) return;
+    
+    const time = getTime();
+    const target = (time.s + time.ms / 1000) % AUDIO_DURATION;
+    
+    audio.currentTime = target;
+    audio.loop = true;
+    audio.play().then(() => { audioStarted = true; }).catch(e => console.warn('Audio failed:', e));
+  }
+
+  let bgBrightness = 0.3;
+  const bCanvas = document.createElement('canvas');
+  const bCtx = bCanvas.getContext('2d', { willReadFrequently: true });
+  bCanvas.width = bCanvas.height = 32;
+
+  function updateBrightness() {
+    if (video.readyState < 2) return;
+    try {
+      bCtx.drawImage(video, 0, 0, 32, 32);
+      const d = bCtx.getImageData(0, 0, 32, 32).data;
+      let sum = 0;
+      for (let i = 0; i < d.length; i += 4) sum += d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+      bgBrightness = sum / (32 * 32 * 255);
+    } catch (e) { bgBrightness = 0.3; }
+  }
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+  }
+
+  function drawClock() {
+    const w = canvas.width, h = canvas.height, dpr = devicePixelRatio;
+    ctx.clearRect(0, 0, w, h);
+    
+    const margin = Math.min(w, h) * 0.08;
+    const R = (Math.min(w, h) - margin * 2) / 2;
+    const cx = w / 2, cy = h / 2;
+    
+    const time = getTime();
+    const hours = time.h % 12, mins = time.m, secs = time.s, ms = time.ms;
+    const smoothSec = secs + ms / 1000;
+    
+    const alpha = 0.5;
+    const dark = bgBrightness > 0.55;
+    const stroke = dark ? `rgba(30,30,30,${alpha})` : `rgba(255,255,255,${alpha})`;
+    const fill = stroke;
+    
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.strokeStyle = stroke;
+    ctx.fillStyle = fill;
+    
+    const sc = R / 240;
+    
+    // Outer circles
+    ctx.lineWidth = 6 * dpr * sc;
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 0.96, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    ctx.lineWidth = 2 * dpr * sc;
+    ctx.globalAlpha = 0.8 * alpha / 0.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 0.912, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    
+    // Minute ticks
+    ctx.lineWidth = 3 * dpr * sc;
+    ctx.lineCap = 'butt';
+    ctx.globalAlpha = 0.7;
+    for (let i = 0; i < 60; i++) {
+      if (i % 5 !== 0) {
+        const a = (i * 6 - 90) * Math.PI / 180;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * R * 0.8, Math.sin(a) * R * 0.8);
+        ctx.lineTo(Math.cos(a) * R * 0.86, Math.sin(a) * R * 0.86);
+        ctx.stroke();
+      }
+    }
+    
+    // Hour ticks
+    ctx.lineWidth = 8 * dpr * sc;
+    ctx.globalAlpha = 1;
+    for (let i = 0; i < 12; i++) {
+      const a = (i * 30 - 90) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78);
+      ctx.lineTo(Math.cos(a) * R * 0.88, Math.sin(a) * R * 0.88);
+      ctx.stroke();
+    }
+    
+    // Hour hand
+    ctx.lineCap = 'round';
+    const ha = ((hours + mins / 60) * 30 - 90) * Math.PI / 180;
+    ctx.lineWidth = 14 * dpr * sc;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(Math.cos(ha) * R * 0.44, Math.sin(ha) * R * 0.44);
+    ctx.stroke();
+    
+    // Minute hand
+    const ma = ((mins + secs / 60) * 6 - 90) * Math.PI / 180;
+    ctx.lineWidth = 10 * dpr * sc;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(ma) * R * -0.08, Math.sin(ma) * R * -0.08);
+    ctx.lineTo(Math.cos(ma) * R * 0.68, Math.sin(ma) * R * 0.68);
+    ctx.stroke();
+    
+    // Second hand
+    const sa = (smoothSec * 6 - 90) * Math.PI / 180;
+    ctx.lineWidth = 3 * dpr * sc;
+    ctx.lineCap = 'butt';
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(sa) * R * -0.2, Math.sin(sa) * R * -0.2);
+    ctx.lineTo(Math.cos(sa) * R * 0.76, Math.sin(sa) * R * 0.76);
+    ctx.stroke();
+    
+    // Center
+    ctx.beginPath();
+    ctx.arc(0, 0, 5 * dpr * sc, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.fillStyle = dark ? `rgba(255,255,255,${alpha})` : `rgba(0,0,0,${alpha})`;
+    ctx.lineWidth = 3 * dpr * sc;
+    ctx.beginPath();
+    ctx.arc(0, 0, 12 * dpr * sc, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    
+    // Digital clock
+    ctx.fillStyle = fill;
+    const fontSize = R * 0.14;
+    ctx.font = `800 ${fontSize}px 'Inter', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    const hStr = time.h.toString().padStart(2, '0');
+    const mStr = mins.toString().padStart(2, '0');
+    const sStr = secs.toString().padStart(2, '0');
+    const colon = ms < 500 ? ':' : ' ';
+    
+    ctx.fillText(`${hStr}${colon}${mStr}${colon}${sStr}`, 0, R * 0.45);
+    
+    ctx.restore();
+  }
+
+  let lastBrightness = 0;
+  function animate(ts) {
+    if (ts - lastBrightness > 500) { updateBrightness(); lastBrightness = ts; }
+    drawClock();
+    syncAudio();
+    requestAnimationFrame(animate);
+  }
+
+  // Drag settings panel
+  let dragging = false, dragX = 0, dragY = 0;
+  document.getElementById('settings-header').addEventListener('mousedown', e => {
+    if (e.target.id === 'close-settings') return;
+    dragging = true;
+    const r = settingsPanel.getBoundingClientRect();
+    dragX = e.clientX - r.left;
+    dragY = e.clientY - r.top;
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    settingsPanel.style.left = (e.clientX - dragX) + 'px';
+    settingsPanel.style.top = (e.clientY - dragY) + 'px';
+    settingsPanel.style.right = 'auto';
+  });
+  document.addEventListener('mouseup', () => dragging = false);
+
+  // Events
+  window.addEventListener('resize', resizeCanvas);
+  settingsBtn.addEventListener('click', () => settingsPanel.classList.toggle('visible'));
+  closeSettings.addEventListener('click', () => settingsPanel.classList.remove('visible'));
+  
+  videoUrlInput.addEventListener('change', () => {
+    settings.videoUrl = videoUrlInput.value || DEFAULT_VIDEO;
+    video.src = settings.videoUrl;
+    saveSettings();
+  });
+  
+  audioUrlInput.addEventListener('change', () => {
+    settings.audioUrl = audioUrlInput.value || DEFAULT_AUDIO;
+    audio.src = settings.audioUrl;
+    audio.load();
+    audioStarted = false;
+    if (!settings.muted) startAudio();
+    saveSettings();
+  });
+  
+  timezoneSelect.addEventListener('change', () => {
+    settings.timezone = timezoneSelect.value;
+    saveSettings();
+  });
+  
+  muteToggle.addEventListener('click', () => {
+    settings.muted = !settings.muted;
+    muteToggle.classList.toggle('unmuted', !settings.muted);
+    audio.muted = settings.muted;
+    if (!settings.muted && !audioStarted) startAudio();
+    saveSettings();
+  });
+
+  clickToStart.addEventListener('click', () => {
+    clickToStart.classList.add('hidden');
+    video.play();
+    if (!settings.muted) startAudio();
+  });
+
+  // Init
+  loadSettings();
+  resizeCanvas();
+  requestAnimationFrame(animate);
+  video.play().catch(() => {});
+})();
+</script>
+</body>
+</html>
