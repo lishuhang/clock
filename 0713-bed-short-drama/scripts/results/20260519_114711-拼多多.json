@@ -4394,9 +4394,39 @@
       "scene_desc": "男子继续低头，字幕显示“想一夜暴富的人不少啊”",
       "drama_episode": "我有财富之眼 第4集",
       "dialogue": "想一夜暴富的人不少啊"
+    },
+    {
+      "timestamp": "00:18:15-00:18:17",
+      "scene_desc": "一名穿白色外套的男子低头，背景模糊",
+      "drama_episode": "我有财富2期 第4集",
+      "dialogue": "相亲，在相亲的人不少啊"
+    },
+    {
+      "timestamp": "00:18:17-00:18:19",
+      "scene_desc": "一名穿黑色T恤的男子与白衣男子对话",
+      "drama_episode": "我有财富2期 第4集",
+      "dialogue": "我有财富2买点什么"
+    },
+    {
+      "timestamp": "00:18:19-00:18:25",
+      "scene_desc": "镜头转向柜台，展示多个带有价格标签的物品",
+      "drama_episode": "我有财富2期 第4集",
+      "dialogue": "那之前到了那么多都血亏 这些全是小奖"
+    },
+    {
+      "timestamp": "00:18:25-00:18:29",
+      "scene_desc": "白衣男子抬头看向镜头说话",
+      "drama_episode": "我有财富2期 第4集",
+      "dialogue": "老板"
+    },
+    {
+      "timestamp": "00:18:29-00:18:31",
+      "scene_desc": "黑衣男子低头看物品",
+      "drama_episode": "我有财富2期 第4集",
+      "dialogue": "还有这些 全都给我拿了"
     }
   ],
-  "currentSegment": 73,
+  "currentSegment": 74,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:11:15.414Z"
+  "lastUpdate": "2026-07-14T14:12:11.963Z"
 }
