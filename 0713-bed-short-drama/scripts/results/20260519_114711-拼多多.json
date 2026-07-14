@@ -6740,9 +6740,87 @@
       "scene_desc": "男性角色做出手势，字幕显示\"好\"",
       "drama_episode": "《剑仙降临竟是傻子姐姐》第16集",
       "dialogue": "好"
+    },
+    {
+      "timestamp": "00:29:30-00:29:32",
+      "scene_desc": "一名穿着棕色外套的男子，脸部特写，背景模糊",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:32-00:29:34",
+      "scene_desc": "两名穿白大褂的男子推着担架车，背景有救护车，字幕\"让一让让一让让一让\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "让一让让一让让一让"
+    },
+    {
+      "timestamp": "00:29:34-00:29:37",
+      "scene_desc": "担架车被推到一栋建筑前，周围有围观人群，字幕\"人死了吗\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "人死了吗"
+    },
+    {
+      "timestamp": "00:29:37-00:29:39",
+      "scene_desc": "围观人群，字幕\"他把脸都盖上了\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "他把脸都盖上了"
+    },
+    {
+      "timestamp": "00:29:39-00:29:41",
+      "scene_desc": "一名穿黑色外套的男子，字幕\"要脸呗\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "要脸呗"
+    },
+    {
+      "timestamp": "00:29:41-00:29:43",
+      "scene_desc": "一名戴眼镜的女子，字幕\"听说两个人是光溜溜\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "听说两个人是光溜溜"
+    },
+    {
+      "timestamp": "00:29:43-00:29:45",
+      "scene_desc": "穿黑色外套的男子，字幕\"的被打捞上来的\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第9集",
+      "dialogue": "的被打捞上来的"
+    },
+    {
+      "timestamp": "00:29:45-00:29:47",
+      "scene_desc": "一名戴白色帽子的女子，表情痛苦",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:47-00:29:49",
+      "scene_desc": "（亲密）一名戴白色帽子的女子和一名戴眼镜的男子，女子抓住男子的手",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:49-00:29:51",
+      "scene_desc": "（亲密）戴眼镜的男子躺在担架上，表情痛苦，手抬起",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:51-00:29:53",
+      "scene_desc": "（亲密）戴眼镜的男子和戴白色帽子的女子，女子靠近男子",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:53-00:29:55",
+      "scene_desc": "戴白色帽子的女子，表情平静",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:55-00:29:57",
+      "scene_desc": "一名穿棕色外套的男子，字幕\"爸\"",
+      "drama_episode": "《幸好姐姐力挽狂澜》第10集",
+      "dialogue": "爸"
     }
   ],
-  "currentSegment": 118,
+  "currentSegment": 119,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:51:57.812Z"
+  "lastUpdate": "2026-07-14T15:54:59.918Z"
 }
