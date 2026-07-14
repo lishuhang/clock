@@ -2906,9 +2906,63 @@
       "scene_desc": "镜头切回女子，她表情复杂。",
       "drama_episode": "念念不死劫 第1集",
       "dialogue": "没人会跟钱过不去"
+    },
+    {
+      "timestamp": "00:12:00-00:12:02",
+      "scene_desc": "一位穿着白色水手服上衣和黑色百褶裙的年轻女性站在楼梯前，侧身看向右侧。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:02-00:12:05",
+      "scene_desc": "一位穿着黑色西装的男性坐在沙发上，对着镜头外的人说话，字幕显示“过来”。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "过来"
+    },
+    {
+      "timestamp": "00:12:05-00:12:08",
+      "scene_desc": "女性特写镜头，她低头，表情有些不情愿或害羞。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:08-00:12:11",
+      "scene_desc": "女性面向镜头，双手放在身侧，站在楼梯前。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:11-00:12:14",
+      "scene_desc": "女性走到沙发前，背对镜头，男性坐在沙发上看着她。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:14-00:12:17",
+      "scene_desc": "男性特写镜头，他看着女性，表情严肃。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:17-00:12:20",
+      "scene_desc": "男性特写镜头，字幕显示“你叫什么名字”。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "你叫什么名字"
+    },
+    {
+      "timestamp": "00:12:20-00:12:23",
+      "scene_desc": "女性特写镜头，字幕显示“司念”。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "司念"
+    },
+    {
+      "timestamp": "00:12:23-00:12:26",
+      "scene_desc": "男性特写镜头，字幕显示“司念”。",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "司念"
     }
   ],
-  "currentSegment": 48,
+  "currentSegment": 49,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:38:15.583Z"
+  "lastUpdate": "2026-07-14T13:43:27.582Z"
 }
