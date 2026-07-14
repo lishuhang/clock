@@ -4652,9 +4652,33 @@
       "scene_desc": "回到白衣男子，他表情惊讶",
       "drama_episode": "我有财富之眼 第4集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:19:30-00:19:34",
+      "scene_desc": "一名穿白色外套的年轻男子，表情从低头思索变为抬头看向镜头，背景模糊有彩色装饰",
+      "drama_episode": "《我有财富之眼》第4集",
+      "dialogue": "我有财富之眼 我买 老板"
+    },
+    {
+      "timestamp": "00:19:34-00:19:37",
+      "scene_desc": "男子手持一张红色“中国龙”刮刮乐彩票，特写展示彩票图案",
+      "drama_episode": "《我有财富之眼》第4集",
+      "dialogue": "我有财富之眼 100万"
+    },
+    {
+      "timestamp": "00:19:37-00:19:40",
+      "scene_desc": "男子坐在桌前，低头用红色刮刮乐刮片刮彩票，背景可见玻璃窗和绿植",
+      "drama_episode": "《我有财富之眼》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:19:40-00:19:45",
+      "scene_desc": "特写刮刮乐彩票，一只手用刮片刮开彩票上的数字区域，随后刮开蓝色区域显示文字",
+      "drama_episode": "《我有财富之眼》第4集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 78,
+  "currentSegment": 79,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:14:18.961Z"
+  "lastUpdate": "2026-07-14T14:14:55.251Z"
 }
