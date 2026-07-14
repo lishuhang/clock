@@ -6206,9 +6206,57 @@
       "scene_desc": "（亲密）女子躺在床上，露出胸部以上，表情暧昧。",
       "drama_episode": "一秒宗 第9集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:30-00:27:32",
+      "scene_desc": "一名穿深蓝色制服戴帽子的男子，表情严肃，伸手阻拦，字幕显示“你们不能走啊”",
+      "drama_episode": "《仙尊》第14集",
+      "dialogue": "你们不能走啊"
+    },
+    {
+      "timestamp": "00:27:32-00:27:33",
+      "scene_desc": "穿制服男子大笑，背景有穿制服的女性和拿摄像机的其他人",
+      "drama_episode": "《仙尊》第14集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:33-00:27:35",
+      "scene_desc": "户外场景，穿制服的男子与穿灰色西装的男子对峙，周围有其他人和摄像机，字幕显示“你们不能走啊”",
+      "drama_episode": "《仙尊》第14集",
+      "dialogue": "你们不能走啊"
+    },
+    {
+      "timestamp": "00:27:35-00:27:40",
+      "scene_desc": "（亲密）室内场景，一名女子趴在床上，随后起身，一名赤裸上身的男子裹着浴巾从门口进入，走向女子",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:40-00:27:42",
+      "scene_desc": "（亲密）女子坐在床上，背对镜头，男子站在她面前，手里拿着一张纸",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:42-00:27:43",
+      "scene_desc": "（亲密）男子将手里的纸递给女子",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:43-00:27:44",
+      "scene_desc": "美食广告，显示“小团圆·口味湘菜”和“【5折抢购】跳跳蛙2-3人餐 ¥261”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:27:44-00:27:45",
+      "scene_desc": "广告弹窗，显示“浏览商品并下单 可获得151888金币”和金币图标",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 110,
+  "currentSegment": 111,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:31:21.758Z"
+  "lastUpdate": "2026-07-14T15:32:13.631Z"
 }
