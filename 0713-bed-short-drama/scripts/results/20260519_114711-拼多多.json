@@ -3104,9 +3104,57 @@
       "scene_desc": "女性角色微笑着，然后抬头看向画面外，似乎在回应某人。",
       "drama_episode": "《念念不无助》第1集",
       "dialogue": "有大房子住"
+    },
+    {
+      "timestamp": "00:13:00-00:13:02",
+      "scene_desc": "一位留着齐刘海、穿着白色衬衫和黑色背带裙的年轻女性微笑着看向画面右侧",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "我是不在意的"
+    },
+    {
+      "timestamp": "00:13:02-00:13:04",
+      "scene_desc": "画面变暗，出现一双手在钢琴上弹奏",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "就这样"
+    },
+    {
+      "timestamp": "00:13:04-00:13:06",
+      "scene_desc": "镜头切换回女性，她面露难色",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "我跟着顾乘"
+    },
+    {
+      "timestamp": "00:13:06-00:13:08",
+      "scene_desc": "女性背对镜头，坐在一架白色三角钢琴前弹奏",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "三年又三年"
+    },
+    {
+      "timestamp": "00:13:08-00:13:10",
+      "scene_desc": "女性继续弹琴，字幕变为“从十八岁到二十四岁”",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "从十八岁到二十四岁"
+    },
+    {
+      "timestamp": "00:13:10-00:13:12",
+      "scene_desc": "镜头再次切换到钢琴键盘特写，有另一双手在弹奏",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:12-00:13:14",
+      "scene_desc": "镜头切回女性，她看着电脑屏幕，表情悲伤",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:14-00:13:16",
+      "scene_desc": "女性继续在钢琴前弹奏",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 52,
+  "currentSegment": 53,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:46:53.335Z"
+  "lastUpdate": "2026-07-14T13:47:19.007Z"
 }
