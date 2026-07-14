@@ -1076,9 +1076,51 @@
       "scene_desc": "黑色连衣裙女子特写，表情平静",
       "drama_episode": "乖女婿 第5集",
       "dialogue": "一直在深山的道观里面"
+    },
+    {
+      "timestamp": "00:03:45-00:03:47",
+      "scene_desc": "一位穿着黑色蕾丝连衣裙的女士，背景是室内",
+      "drama_episode": "《狐娘传说》第5集",
+      "dialogue": "一直在深山的道观里面"
+    },
+    {
+      "timestamp": "00:03:47-00:03:50",
+      "scene_desc": "一位穿着绿色外套、眼睛被蒙住的男士，背景是古风场景",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "大赵的开国皇帝"
+    },
+    {
+      "timestamp": "00:03:50-00:03:53",
+      "scene_desc": "一位穿着黄色龙袍、头戴皇冠的男士，表情惊讶",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "我都要讲世界大战了你说这是古代，赵大是吧"
+    },
+    {
+      "timestamp": "00:03:53-00:03:56",
+      "scene_desc": "一位穿着黄色龙袍、头戴皇冠的男士，表情严肃",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "赵大，未来居然是这么称呼朕的"
+    },
+    {
+      "timestamp": "00:03:56-00:03:59",
+      "scene_desc": "一位穿着古装、头戴精美发饰的女士，表情疑惑",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "可史书怎么会记载我赵印为赵大呢"
+    },
+    {
+      "timestamp": "00:03:59-00:04:02",
+      "scene_desc": "一位穿着黄色龙袍、头戴皇冠的男士，表情得意",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "算了，听点别的吧"
+    },
+    {
+      "timestamp": "00:04:02-00:04:05",
+      "scene_desc": "一位穿着绿色外套、眼睛被蒙住的男士，表情疑惑",
+      "drama_episode": "《大赵的开国皇帝》",
+      "dialogue": "这整个大赵的历史啊"
     }
   ],
-  "currentSegment": 15,
+  "currentSegment": 16,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:38:45.570Z"
+  "lastUpdate": "2026-07-14T06:39:58.814Z"
 }
