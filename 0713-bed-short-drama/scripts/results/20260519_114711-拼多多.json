@@ -5504,9 +5504,39 @@
       "scene_desc": "男性放下手机，字幕显示\"深爷若是好奇\"",
       "drama_episode": "《坠入春夜》第16集",
       "dialogue": "深爷若是好奇"
+    },
+    {
+      "timestamp": "00:23:30-00:23:33",
+      "scene_desc": "一名穿紫色连衣裙的女性站在带灯的梳妆台前，转身看向镜子，镜中映出她身后站着的穿深色西装的男性。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:23:33-00:23:36",
+      "scene_desc": "镜头拉近，聚焦于穿酒红色连衣裙的女性，她面向镜头，表情严肃。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:23:36-00:23:39",
+      "scene_desc": "穿酒红色连衣裙的女性看着镜头，字幕显示\"不过深爷\"。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "不过深爷"
+    },
+    {
+      "timestamp": "00:23:39-00:23:42",
+      "scene_desc": "穿酒红色连衣裙的女性看着镜头，字幕显示\"你能不能先帮我\"。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "你能不能先帮我"
+    },
+    {
+      "timestamp": "00:23:42-00:23:45",
+      "scene_desc": "穿酒红色连衣裙的女性看着镜头，字幕显示\"把拉链拉上\"，她伸手拉自己的衣服拉链。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "把拉链拉上"
     }
   ],
-  "currentSegment": 94,
+  "currentSegment": 95,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:05:51.414Z"
+  "lastUpdate": "2026-07-14T15:06:58.115Z"
 }
