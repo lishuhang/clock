@@ -2444,9 +2444,81 @@
       "scene_desc": "（亲密）浴室内，一位粉色头发的女士在浴缸中，表情惊恐，被两人发现",
       "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:45-00:09:47",
+      "scene_desc": "快手界面，一位粉色长卷发女子（沈悦）表情惊讶，双手放在胸前，背景模糊",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:47-00:09:50",
+      "scene_desc": "沈悦表情转为委屈，字幕显示“姐你怎么带外人回来了”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "姐你怎么带外人回来了"
+    },
+    {
+      "timestamp": "00:09:50-00:09:53",
+      "scene_desc": "沈悦表情转为平静，字幕显示“小悦”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "小悦"
+    },
+    {
+      "timestamp": "00:09:53-00:09:56",
+      "scene_desc": "黑色长卷发女子（小悦）表情平静，字幕显示“这是楼下的邻居陆函”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "这是楼下的邻居陆函"
+    },
+    {
+      "timestamp": "00:09:56-00:09:59",
+      "scene_desc": "小悦表情平静，字幕显示“我请他上来帮忙看看”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "我请他上来帮忙看看"
+    },
+    {
+      "timestamp": "00:09:59-00:10:02",
+      "scene_desc": "小悦和陆函站在一起，陆函表情平静，字幕显示“我看看吧”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "我看看吧"
+    },
+    {
+      "timestamp": "00:10:02-00:10:05",
+      "scene_desc": "陆函表情平静，字幕显示“水管漏水”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "水管漏水"
+    },
+    {
+      "timestamp": "00:10:05-00:10:08",
+      "scene_desc": "陆函和小悦站在一起，陆函表情平静，字幕显示“还是接口松了”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "还是接口松了"
+    },
+    {
+      "timestamp": "00:10:08-00:10:11",
+      "scene_desc": "陆函表情平静，字幕显示“我帮你们处理”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "我帮你们处理"
+    },
+    {
+      "timestamp": "00:10:11-00:10:14",
+      "scene_desc": "陆函修理水龙头，双手握住水龙头",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:14-00:10:17",
+      "scene_desc": "陆函用扳手修理水管",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:17-00:10:20",
+      "scene_desc": "陆函表情惊讶，字幕显示“10分钟后”",
+      "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
+      "dialogue": "10分钟后"
     }
   ],
-  "currentSegment": 39,
+  "currentSegment": 40,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:28:10.895Z"
+  "lastUpdate": "2026-07-14T13:29:04.025Z"
 }
