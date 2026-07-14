@@ -3212,9 +3212,75 @@
       "scene_desc": "一只手在桌上的手机上滑动。",
       "drama_episode": "念念不死劫 第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:30-00:13:31",
+      "scene_desc": "一只手拿起黑色手机",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:31-00:13:33",
+      "scene_desc": "（亲密）一名上身赤裸的男子从床上坐起，拿起手机接听",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:33-00:13:34",
+      "scene_desc": "（亲密）男子接听电话",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:34-00:13:37",
+      "scene_desc": "画面切换，显示“女囚营”字样，出现刀剑和盔甲特写",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "朝廷发男人了"
+    },
+    {
+      "timestamp": "00:13:37-00:13:39",
+      "scene_desc": "两名穿红黑盔甲的女子在古建筑前，其中一人喊话",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "快去前营广场"
+    },
+    {
+      "timestamp": "00:13:39-00:13:40",
+      "scene_desc": "两名女子继续喊话",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "速度都快点"
+    },
+    {
+      "timestamp": "00:13:40-00:13:42",
+      "scene_desc": "古街上有灯笼，人群聚集，字幕显示",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "慢了好男人就被挑走了"
+    },
+    {
+      "timestamp": "00:13:42-00:13:44",
+      "scene_desc": "几人奔跑，字幕显示",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "快走快走"
+    },
+    {
+      "timestamp": "00:13:44-00:13:45",
+      "scene_desc": "火光冲天，字幕显示",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "快去抢男人了"
+    },
+    {
+      "timestamp": "00:13:45-00:13:46",
+      "scene_desc": "刀剑交锋特写",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:46-00:13:47",
+      "scene_desc": "夜晚场景，多人持武器",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 54,
+  "currentSegment": 55,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:48:22.285Z"
+  "lastUpdate": "2026-07-14T13:49:11.822Z"
 }
