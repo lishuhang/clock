@@ -3824,9 +3824,57 @@
       "scene_desc": "画面中是一个人的侧脸，戴着眼镜，正在说话",
       "drama_episode": "《种地吧！少爷》第2集",
       "dialogue": "还哭着闹着求别人嫁给你"
+    },
+    {
+      "timestamp": "00:15:45-00:15:47",
+      "scene_desc": "一位戴眼镜的女士侧脸，背景模糊",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "还哭着闹着求别人嫁给你"
+    },
+    {
+      "timestamp": "00:15:47-00:15:51",
+      "scene_desc": "公园里，一个穿黑色背带裙的女孩向前跑，一个穿棕色外套的男孩追上去",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "飞了飞了"
+    },
+    {
+      "timestamp": "00:15:51-00:15:56",
+      "scene_desc": "男孩和女孩并排跑，男孩张开双臂",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "飞了飞了"
+    },
+    {
+      "timestamp": "00:15:56-00:15:58",
+      "scene_desc": "男孩和女孩坐在公园石凳上，面对面",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "到时候我把所有的玩具都给你"
+    },
+    {
+      "timestamp": "00:15:58-00:16:00",
+      "scene_desc": "男孩特写，表情认真",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "长大以后你一定要嫁给我"
+    },
+    {
+      "timestamp": "00:16:00-00:16:02",
+      "scene_desc": "男孩和女孩坐在石凳上，男孩拿着东西，女孩看着他",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "到时候我把所有的玩具都给你"
+    },
+    {
+      "timestamp": "00:16:02-00:16:04",
+      "scene_desc": "一位穿蓝色旗袍戴眼镜的女士，右手拿着手机",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "我怎么不记得了"
+    },
+    {
+      "timestamp": "00:16:04-00:16:06",
+      "scene_desc": "两位女士和一位男士站在乡间公路上，旁边有红色跑车",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 63,
+  "currentSegment": 64,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:58:09.958Z"
+  "lastUpdate": "2026-07-14T13:59:03.917Z"
 }
