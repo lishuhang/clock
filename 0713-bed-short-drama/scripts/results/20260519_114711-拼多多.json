@@ -950,9 +950,81 @@
       "scene_desc": "穿着黑色连衣裙的女子低头。",
       "drama_episode": "狐媚传说 第5集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:15-00:03:17",
+      "scene_desc": "一位穿着黑色蕾丝连衣裙的年轻女子站在室内，表情严肃。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "臭丫头又乱说"
+    },
+    {
+      "timestamp": "00:03:17-00:03:18",
+      "scene_desc": "一位穿着墨绿色连衣裙的女子出现，表情愤怒。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "乱开玩笑的人吗"
+    },
+    {
+      "timestamp": "00:03:18-00:03:22",
+      "scene_desc": "黑衣女子面向镜头说话，随后转头看向一侧。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "妈，你下手也太黑了吧"
+    },
+    {
+      "timestamp": "00:03:22-00:03:24",
+      "scene_desc": "一位穿着棕色西装的男子出现，表情惊讶。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "姐夫你看啊"
+    },
+    {
+      "timestamp": "00:03:24-00:03:27",
+      "scene_desc": "黑衣女子侧身，手放在臀部，表情委屈。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "妈妈把我屁屁都打肿了"
+    },
+    {
+      "timestamp": "00:03:27-00:03:28",
+      "scene_desc": "穿西装的男子再次出现，表情震惊。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "妈妈把我屁屁都打肿了"
+    },
+    {
+      "timestamp": "00:03:28-00:03:29",
+      "scene_desc": "一位穿着白色连衣裙的女子出现，表情平静。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "这"
+    },
+    {
+      "timestamp": "00:03:29-00:03:30",
+      "scene_desc": "黑衣女子再次侧身，手放在臀部。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "（亲密）"
+    },
+    {
+      "timestamp": "00:03:30-00:03:32",
+      "scene_desc": "黑衣女子坐在沙发上，表情委屈。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "又胡闹"
+    },
+    {
+      "timestamp": "00:03:32-00:03:33",
+      "scene_desc": "穿墨绿色连衣裙的女子站在一旁，表情不满。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "又胡闹"
+    },
+    {
+      "timestamp": "00:03:33-00:03:34",
+      "scene_desc": "黑衣女子坐在沙发上，表情委屈。",
+      "drama_episode": "《甄姬传说》第5集",
+      "dialogue": "又胡闹"
+    },
+    {
+      "timestamp": "00:03:34-00:03:35",
+      "scene_desc": "画面出现广告，内容为“点击看短剧 领40万金币”。",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 13,
+  "currentSegment": 14,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:36:18.021Z"
+  "lastUpdate": "2026-07-14T06:37:53.822Z"
 }
