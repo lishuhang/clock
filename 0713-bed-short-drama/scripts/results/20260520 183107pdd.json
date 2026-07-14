@@ -2588,9 +2588,81 @@
       "scene_desc": "短剧片段，两名男性在室内市场或商店里，正在交谈，其中一人手里拿着一件白色的衣服，背景有其他人和商品，字幕显示短剧名为《皆大欢喜》，集数为第19集",
       "drama_episode": "《皆大欢喜》第19集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:30-00:10:31",
+      "scene_desc": "古装剧场景，一名穿红色古装的女子在雪地中行走，字幕显示“我叫江离”，左侧有“南诏国”字样",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "我叫江离"
+    },
+    {
+      "timestamp": "00:10:31-00:10:33",
+      "scene_desc": "一名戴眼罩、穿黑衣的男子持剑站立，字幕显示“所以我心甘情愿替他除尽”",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "所以我心甘情愿替他除尽"
+    },
+    {
+      "timestamp": "00:10:33-00:10:35",
+      "scene_desc": "穿红色古装的女子站立，背景为古代建筑",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:35-00:10:37",
+      "scene_desc": "女子与戴眼罩男子近距离互动，女子手抚男子胸口，男子手持写有“南诏”的木牌",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:37-00:10:38",
+      "scene_desc": "戴眼罩男子的特写，字幕显示“孤岂能留一个知晓”",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "孤岂能留一个知晓"
+    },
+    {
+      "timestamp": "00:10:38-00:10:39",
+      "scene_desc": "女子流血的特写，字幕显示“殿下知道的”",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "殿下知道的"
+    },
+    {
+      "timestamp": "00:10:39-00:10:40",
+      "scene_desc": "戴眼罩男子流血的特写",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:40-00:10:41",
+      "scene_desc": "戴眼罩男子手持物品站立",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:41-00:10:42",
+      "scene_desc": "（亲密）一名女子躺在铺有花瓣的床上，表情迷茫",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:42-00:10:43",
+      "scene_desc": "一名女子躺在铺有花瓣的床上，字幕显示“这是哪儿”，左侧有“大幽国嘉禾郡主 阮昭宁”字样",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "这是哪儿"
+    },
+    {
+      "timestamp": "00:10:43-00:10:44",
+      "scene_desc": "一名穿浅蓝色古装的女子弯腰，表情惊讶",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:44-00:10:45",
+      "scene_desc": "一名女子躺在铺有花瓣的床上，表情平静",
+      "drama_episode": "《娇娇入怀》第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 42,
+  "currentSegment": 43,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:43:20.199Z"
+  "lastUpdate": "2026-07-14T16:44:34.258Z"
 }
