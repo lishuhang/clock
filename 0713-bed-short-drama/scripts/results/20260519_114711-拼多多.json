@@ -5474,9 +5474,39 @@
       "scene_desc": "（亲密）短剧《坠入春夜》片段，画面中女性演员手持金色卡片，男性演员靠近她，场景为赌场",
       "drama_episode": "《坠入春夜》第15集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:23:15-00:23:19",
+      "scene_desc": "一名穿黑色吊带裙、戴耳饰的长发女性看着另一只手拿着的金色卡片，字幕显示\"三脚猫功夫\"",
+      "drama_episode": "《坠入春夜》第15集",
+      "dialogue": "三脚猫功夫"
+    },
+    {
+      "timestamp": "00:23:19-00:23:21",
+      "scene_desc": "城市夜景，画面中央弹出\"连续打卡 白拿20元\"的弹窗广告",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:23:21-00:23:26",
+      "scene_desc": "一名穿黑色西装的男性拿着手机打电话，字幕显示\"这个叫袁浅的荷官\"",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "这个叫袁浅的荷官"
+    },
+    {
+      "timestamp": "00:23:26-00:23:29",
+      "scene_desc": "男性继续打电话，字幕显示\"到底什么来历\"",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "到底什么来历"
+    },
+    {
+      "timestamp": "00:23:29-00:23:30",
+      "scene_desc": "男性放下手机，字幕显示\"深爷若是好奇\"",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "深爷若是好奇"
     }
   ],
-  "currentSegment": 93,
+  "currentSegment": 94,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:05:18.210Z"
+  "lastUpdate": "2026-07-14T15:05:51.414Z"
 }
