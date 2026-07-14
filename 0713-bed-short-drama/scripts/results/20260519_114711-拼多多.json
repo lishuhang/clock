@@ -3980,9 +3980,51 @@
       "scene_desc": "一位穿红色西装的男士在田野里打电话，表情严肃",
       "drama_episode": "种地吧！少爷 第2集",
       "dialogue": "你听我说呀 你得听我 你再多嘴我就把你信用卡停掉 喂妈 你再多嘴我就把你信用卡停掉"
+    },
+    {
+      "timestamp": "00:16:30-00:16:32",
+      "scene_desc": "一位穿棕色西装的男子在田野里打电话，表情焦急",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "扬声扬声扬声"
+    },
+    {
+      "timestamp": "00:16:32-00:16:35",
+      "scene_desc": "一位穿白衬衫和棕色背心的女子在田野里，表情担忧",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "封总 你是不是搞错了呀"
+    },
+    {
+      "timestamp": "00:16:35-00:16:37",
+      "scene_desc": "男子和女子面对面，男子表情严肃",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "封总 你是不是搞错了呀"
+    },
+    {
+      "timestamp": "00:16:37-00:16:40",
+      "scene_desc": "一位穿蓝色花卉旗袍、戴珍珠项链的年长女性在打电话，面带笑容",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "我儿子长得还帅吧"
+    },
+    {
+      "timestamp": "00:16:40-00:16:42",
+      "scene_desc": "女子看着手机，表情平静",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "满意吧"
+    },
+    {
+      "timestamp": "00:16:42-00:16:45",
+      "scene_desc": "男子看着前方，表情严肃",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "别看他是一个纨绔子弟"
+    },
+    {
+      "timestamp": "00:16:45-00:16:48",
+      "scene_desc": "年长女性在打电话，面带笑容",
+      "drama_episode": "种地吧！少爷 第2集",
+      "dialogue": "你尽管调教 不用看我的面子"
     }
   ],
-  "currentSegment": 66,
+  "currentSegment": 67,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:02:59.154Z"
+  "lastUpdate": "2026-07-14T14:03:26.735Z"
 }
