@@ -1562,9 +1562,87 @@
       "scene_desc": "穿浅灰色外套的男子，表情坚定",
       "drama_episode": "暗恋背后的泪与情 第2集",
       "dialogue": "要是我 一定去"
+    },
+    {
+      "timestamp": "00:05:45-00:05:47",
+      "scene_desc": "快手界面，显示视频播放页面，一位穿白衬衫的年轻男子看向右侧",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "一定去"
+    },
+    {
+      "timestamp": "00:05:47-00:05:49",
+      "scene_desc": "一位戴眼镜、穿背带裤的年轻男子，表情惊讶",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "不是你去啥去"
+    },
+    {
+      "timestamp": "00:05:49-00:05:50",
+      "scene_desc": "两位年轻男子在教室内，其中一人举着手机，另一人看着",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "不是你去啥去"
+    },
+    {
+      "timestamp": "00:05:50-00:05:52",
+      "scene_desc": "教室全景，学生们坐着，一位老师/工作人员在讲台前",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "哥这"
+    },
+    {
+      "timestamp": "00:05:52-00:05:54",
+      "scene_desc": "穿白衬衫的男子抬头看向讲台方向",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "加油"
+    },
+    {
+      "timestamp": "00:05:54-00:05:56",
+      "scene_desc": "一位穿黑衬衫的男子起身走向讲台，旁边有人挥手",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "加油"
+    },
+    {
+      "timestamp": "00:05:56-00:05:57",
+      "scene_desc": "穿白衬衫的男子，表情坚定",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "去了"
+    },
+    {
+      "timestamp": "00:05:57-00:05:59",
+      "scene_desc": "戴眼镜的男子，表情慌张",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "完了"
+    },
+    {
+      "timestamp": "00:05:59-00:06:01",
+      "scene_desc": "穿白衬衫的男子，面带笑容",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:06:01-00:06:04",
+      "scene_desc": "一位年轻男子骑着黑色电动自行车在街上",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:06:04-00:06:06",
+      "scene_desc": "电动自行车驶过“精品沙县”店门口",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:06:06-00:06:08",
+      "scene_desc": "两位女生在“精品沙县”店门口，看着骑车的男子",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "佳宜"
+    },
+    {
+      "timestamp": "00:06:08-00:06:10",
+      "scene_desc": "一位扎着双麻花辫的女生，表情严肃",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 23,
+  "currentSegment": 24,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:47:27.596Z"
+  "lastUpdate": "2026-07-14T06:48:16.542Z"
 }
