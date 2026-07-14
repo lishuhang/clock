@@ -2732,9 +2732,45 @@
       "scene_desc": "女子继续接电话，镜头拉近，字幕为“爸”",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:00-00:11:05",
+      "scene_desc": "一位年轻女士正在打电话，她穿着黑色亮片上衣，表情平静。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "我在这挺好的"
+    },
+    {
+      "timestamp": "00:11:06-00:11:09",
+      "scene_desc": "女士继续打电话，表情依然平静。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "同事们都友善<br>工作也轻松"
+    },
+    {
+      "timestamp": "00:11:10-00:11:11",
+      "scene_desc": "女士表情平静，说了一句“好啊”。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "好啊"
+    },
+    {
+      "timestamp": "00:11:12-00:11:14",
+      "scene_desc": "画面切换到一位穿西装的男士，他表情严肃，似乎在思考。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "看来<br>天联这帮人<br>还挺懂事的嘛"
+    },
+    {
+      "timestamp": "00:11:15-00:11:17",
+      "scene_desc": "画面切回女士，她表情变得有些担忧或疑惑。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "既然这样"
+    },
+    {
+      "timestamp": "00:11:18-00:11:20",
+      "scene_desc": "画面切回男士，他表情激动，从座位上站起来，表情愤怒。",
+      "drama_episode": "被造谣后，千金不装了 第1集",
+      "dialogue": "爸爸决定了<br>给天联集团<br>投资五个亿"
     }
   ],
-  "currentSegment": 44,
+  "currentSegment": 45,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:33:51.386Z"
+  "lastUpdate": "2026-07-14T13:35:24.658Z"
 }
