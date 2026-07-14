@@ -2408,9 +2408,45 @@
       "scene_desc": "女子站在门口，表情惊讶",
       "drama_episode": "第2集",
       "dialogue": "我正在洗澡"
+    },
+    {
+      "timestamp": "00:09:30-00:09:35",
+      "scene_desc": "一位女士裹着浴巾，表情略显尴尬，正在与一位男士对话",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "我正在洗澡"
+    },
+    {
+      "timestamp": "00:09:35-00:09:40",
+      "scene_desc": "女士继续说话，表情略显焦急",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "热水器突然坏了 你大哥王力不在家 能不能麻烦你帮忙看看"
+    },
+    {
+      "timestamp": "00:09:40-00:09:45",
+      "scene_desc": "画面切换到男士，他表情严肃",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "前一世 大嫂可怜我被王力欺负 偷偷给我塞了不少吃的"
+    },
+    {
+      "timestamp": "00:09:45-00:09:50",
+      "scene_desc": "男女面对面，男士微笑回应",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "好啊嫂子 我帮你看看"
+    },
+    {
+      "timestamp": "00:09:50-00:09:55",
+      "scene_desc": "两人一前一后走向浴室",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:55-00:10:00",
+      "scene_desc": "（亲密）浴室内，一位粉色头发的女士在浴缸中，表情惊恐，被两人发现",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 38,
+  "currentSegment": 39,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T07:10:55.687Z"
+  "lastUpdate": "2026-07-14T13:28:10.895Z"
 }
