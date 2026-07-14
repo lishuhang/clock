@@ -1196,9 +1196,51 @@
       "scene_desc": "皇帝与大臣在桌前，皇帝催促。",
       "drama_episode": "《大赵王朝》第5集",
       "dialogue": "你就从头 开始讲吧"
+    },
+    {
+      "timestamp": "00:04:30-00:04:34",
+      "scene_desc": "快手直播界面，下方有剧集推荐条，显示“第5集！大赵王朝殿外突然出现一辆铁盒子（汽车）...”，画面中一名穿黄色龙袍的男子和一名古装女子坐在桌前，一只手递给女子一块食物。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:34-00:04:35",
+      "scene_desc": "画面切换，一名穿绿色外套、蒙着眼睛的男子正在吃一块食物。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:35-00:04:38",
+      "scene_desc": "画面切回古装女子，她看着食物，表情惊讶。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:38-00:04:39",
+      "scene_desc": "画面切回穿黄色龙袍的男子，他看向女子。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:39-00:04:43",
+      "scene_desc": "画面切回古装女子，她开始说话，字幕显示“说这个开国皇帝”。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:43-00:04:44",
+      "scene_desc": "画面切回穿黄色龙袍的男子，字幕显示“兵不血刃”。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:44-00:04:45",
+      "scene_desc": "画面切回穿绿色外套、蒙着眼睛的男子，字幕显示“定鼎中原”。",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 18,
+  "currentSegment": 19,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:41:53.600Z"
+  "lastUpdate": "2026-07-14T06:42:54.716Z"
 }
