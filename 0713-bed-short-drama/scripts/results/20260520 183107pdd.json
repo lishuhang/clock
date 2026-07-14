@@ -104,9 +104,81 @@
       "scene_desc": "女子站在梳妆台前，拿起一个物品，画面切换到一只手将烟头按灭在烟灰缸中",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:30-00:00:31",
+      "scene_desc": "一位穿着白色连衣裙、戴着珍珠项链的女士，表情严肃",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:31-00:00:33",
+      "scene_desc": "一个豪华餐厅内，两位男士坐在餐桌前，一位手持红酒杯，一位低头看手机，远处一位穿白色连衣裙的女士正走进来",
+      "drama_episode": "-",
+      "dialogue": "回到正常了吗"
+    },
+    {
+      "timestamp": "00:00:33-00:00:35",
+      "scene_desc": "一位穿着深蓝色西装、戴着眼镜的男士，表情严肃",
+      "drama_episode": "-",
+      "dialogue": "面对两位"
+    },
+    {
+      "timestamp": "00:00:35-00:00:37",
+      "scene_desc": "三位年轻女士在服装店外，其中一位穿白色连衣裙的女士被另外两位穿校服的女士搀扶着",
+      "drama_episode": "-",
+      "dialogue": "晚上想吃什么"
+    },
+    {
+      "timestamp": "00:00:37-00:00:38",
+      "scene_desc": "三位年轻女士在服装店外，其中一位穿白色连衣裙的女士被另外两位穿校服的女士搀扶着",
+      "drama_episode": "-",
+      "dialogue": "嗯"
+    },
+    {
+      "timestamp": "00:00:38-00:00:39",
+      "scene_desc": "三位年轻女士在服装店外，其中一位穿白色连衣裙的女士被另外两位穿校服的女士搀扶着",
+      "drama_episode": "《断供后，吸血鬼哭求我原谅》第7集",
+      "dialogue": "火锅吧"
+    },
+    {
+      "timestamp": "00:00:39-00:00:40",
+      "scene_desc": "一位穿校服的女士背对镜头，看着另外两位女士",
+      "drama_episode": "-",
+      "dialogue": "婶婶"
+    },
+    {
+      "timestamp": "00:00:40-00:00:41",
+      "scene_desc": "一位穿校服的女士，表情有些不悦",
+      "drama_episode": "-",
+      "dialogue": "这些裙子都好漂亮"
+    },
+    {
+      "timestamp": "00:00:41-00:00:42",
+      "scene_desc": "一位穿校服的女士，表情委屈，正在说话",
+      "drama_episode": "-",
+      "dialogue": "还是没有把我当一家人"
+    },
+    {
+      "timestamp": "00:00:42-00:00:43",
+      "scene_desc": "一位穿白色上衣的女士，表情有些无奈",
+      "drama_episode": "-",
+      "dialogue": "喜欢就买"
+    },
+    {
+      "timestamp": "00:00:43-00:00:44",
+      "scene_desc": "一位穿校服的女士，表情有些不悦，看着另外一位女士",
+      "drama_episode": "-",
+      "dialogue": "不好意思小姐"
+    },
+    {
+      "timestamp": "00:00:44-00:00:45",
+      "scene_desc": "一位穿校服的女士，表情委屈，正在说话",
+      "drama_episode": "-",
+      "dialogue": "你给欣欣买项链就不给我买"
     }
   ],
-  "currentSegment": 2,
+  "currentSegment": 3,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:01:19.911Z"
+  "lastUpdate": "2026-07-14T16:02:39.489Z"
 }
