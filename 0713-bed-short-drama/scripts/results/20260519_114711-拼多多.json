@@ -1154,9 +1154,51 @@
       "scene_desc": "一位穿着白色古装、头戴白色发饰的年轻女子，表情严肃。",
       "drama_episode": "《大赵王朝》第5集",
       "dialogue": "那怎么就大赵全是耻辱了"
+    },
+    {
+      "timestamp": "00:04:15-00:04:17",
+      "scene_desc": "一位身着古装的年轻女子，头戴精美发饰，面露不悦。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "那怎么就大赵全是耻辱了"
+    },
+    {
+      "timestamp": "00:04:17-00:04:19",
+      "scene_desc": "一位身着紫色古装的男子，面露不忿。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "他们的开国皇帝"
+    },
+    {
+      "timestamp": "00:04:19-00:04:23",
+      "scene_desc": "一位身着黄色龙袍的皇帝，表情夸张，情绪激动。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "怎么就 是窝囊蛋了"
+    },
+    {
+      "timestamp": "00:04:23-00:04:25",
+      "scene_desc": "一位身着现代休闲装的男子，蒙着眼睛，坐在桌前。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "好"
+    },
+    {
+      "timestamp": "00:04:25-00:04:26",
+      "scene_desc": "皇帝与大臣在桌前，皇帝面露期待。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "那你们要实在想听这段"
+    },
+    {
+      "timestamp": "00:04:26-00:04:30",
+      "scene_desc": "蒙眼男子，表情严肃。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "我就给你们讲讲 大赵的历史吧 夏老师"
+    },
+    {
+      "timestamp": "00:04:30-00:04:31",
+      "scene_desc": "皇帝与大臣在桌前，皇帝催促。",
+      "drama_episode": "《大赵王朝》第5集",
+      "dialogue": "你就从头 开始讲吧"
     }
   ],
-  "currentSegment": 17,
+  "currentSegment": 18,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:41:12.441Z"
+  "lastUpdate": "2026-07-14T06:41:53.600Z"
 }
