@@ -902,9 +902,57 @@
       "scene_desc": "屏幕切换，显示一部短剧，男主为穿西装的男子",
       "drama_episode": "《狐狸传说》第5集",
       "dialogue": "你这么一直盯着 人家看干什么"
+    },
+    {
+      "timestamp": "00:03:00-00:03:02",
+      "scene_desc": "一位穿着棕色西装的男子站在室内，表情惊讶。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "人家看干什么"
+    },
+    {
+      "timestamp": "00:03:02-00:03:08",
+      "scene_desc": "一位穿着黑色连衣裙的女子坐在白色沙发上，随后起身。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "该不会"
+    },
+    {
+      "timestamp": "00:03:08-00:03:11",
+      "scene_desc": "穿着黑色连衣裙的女子边说话边整理自己的衣服。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "是看上妹妹的美色了吧"
+    },
+    {
+      "timestamp": "00:03:11-00:03:12",
+      "scene_desc": "一位穿着白色旗袍的女子出现在画面中。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:12-00:03:14",
+      "scene_desc": "穿着棕色西装的男子侧头，表情不悦。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "讨厌"
+    },
+    {
+      "timestamp": "00:03:14-00:03:15",
+      "scene_desc": "一位穿着深绿色连衣裙的女子出现。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:15-00:03:16",
+      "scene_desc": "穿着深绿色连衣裙的女子被部分遮挡，露出腹部。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "臭丫头又乱说"
+    },
+    {
+      "timestamp": "00:03:16-00:03:17",
+      "scene_desc": "穿着黑色连衣裙的女子低头。",
+      "drama_episode": "狐媚传说 第5集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 12,
+  "currentSegment": 13,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:35:22.094Z"
+  "lastUpdate": "2026-07-14T06:36:18.021Z"
 }
