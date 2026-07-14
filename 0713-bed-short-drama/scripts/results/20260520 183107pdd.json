@@ -2048,9 +2048,99 @@
       "scene_desc": "现代剧场景，一名女子坐在沙发上，字幕显示\"《暗恋》的项目嘉禾撤资了\"。",
       "drama_episode": "《暗恋成婚》第3集",
       "dialogue": "《暗恋》的项目嘉禾撤资了"
+    },
+    {
+      "timestamp": "00:08:15-00:08:16",
+      "scene_desc": "一名穿着白衬衫和领带的男子闭着眼睛，表情平静。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:16-00:08:17",
+      "scene_desc": "该男子侧身，手里拿着一个杯子，看着前方说话。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "不就全解决了"
+    },
+    {
+      "timestamp": "00:08:17-00:08:18",
+      "scene_desc": "该男子低头，看着下方说话。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "那也不一定"
+    },
+    {
+      "timestamp": "00:08:18-00:08:19",
+      "scene_desc": "该男子坐在沙发上，与一名穿米色毛衣的女子交谈。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "你在家啊"
+    },
+    {
+      "timestamp": "00:08:19-00:08:20",
+      "scene_desc": "该男子坐在沙发上，看着女子。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:20-00:08:21",
+      "scene_desc": "该男子靠近女子，女子显得有些惊讶。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:21-00:08:22",
+      "scene_desc": "（亲密）该男子靠近女子，女子显得有些惊讶。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "三二一走"
+    },
+    {
+      "timestamp": "00:08:22-00:08:23",
+      "scene_desc": "（亲密）该男子从背后抱住女子，女子手里拿着一个杯子。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:23-00:08:24",
+      "scene_desc": "（亲密）该男子从背后抱住女子，女子手里拿着一个杯子，两人都面带微笑。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:24-00:08:25",
+      "scene_desc": "该男子俯身靠近女子，手里端着一盘食物。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "好了"
+    },
+    {
+      "timestamp": "00:08:25-00:08:26",
+      "scene_desc": "女子看着男子手里的食物，表情有些无奈。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "我重新做一份吧"
+    },
+    {
+      "timestamp": "00:08:26-00:08:27",
+      "scene_desc": "女子手里拿着一盘食物，表情平静。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:27-00:08:28",
+      "scene_desc": "女子看着前方说话。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "不用了"
+    },
+    {
+      "timestamp": "00:08:28-00:08:29",
+      "scene_desc": "该男子手里拿着一个杯子，表情平静。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:29-00:08:30",
+      "scene_desc": "女子手里拿着一盘食物，表情平静。",
+      "drama_episode": "《暗恋成婚》第3集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 33,
+  "currentSegment": 34,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:33:44.731Z"
+  "lastUpdate": "2026-07-14T16:34:31.882Z"
 }
