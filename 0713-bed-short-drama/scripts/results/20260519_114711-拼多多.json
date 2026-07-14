@@ -1298,9 +1298,129 @@
       "scene_desc": "手机界面出现一个广告，显示一个房间和“摇一摇”字样",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:00-00:05:01",
+      "scene_desc": "模拟器启动，显示手机桌面，顶部有“待支付”状态栏，中间有“工具”文件夹，内含多个应用图标",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:01-00:05:02",
+      "scene_desc": "点击“工具”文件夹，打开应用列表",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:02-00:05:03",
+      "scene_desc": "点击“腾讯视频”应用图标，启动应用",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:03-00:05:04",
+      "scene_desc": "应用加载中，显示“待支付”状态栏",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:04-00:05:05",
+      "scene_desc": "加载短剧播放界面，显示一位蒙眼男子，下方有剧集标题“我都要讲世界大战了你说这是古代 第5集”，底部有“点击看短剧 领40万金币”按钮",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:05-00:05:06",
+      "scene_desc": "画面切换至教室，多名学生入座，下方字幕显示“暗恋背后的泪与情 第2集 首富继承人要手为证明自身能力，隐姓埋名进...”",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:06-00:05:07",
+      "scene_desc": "教室中，一戴眼镜男生夸张表情，另一男生手指前方",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:07-00:05:08",
+      "scene_desc": "黑衣男生被手指，表情疑惑",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:08-00:05:09",
+      "scene_desc": "一长发女生手持卡片，展示给镜头",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:09-00:05:10",
+      "scene_desc": "长发女生低头看卡片",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:10-00:05:11",
+      "scene_desc": "粉衣女生入座，转头看向镜头",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:11-00:05:12",
+      "scene_desc": "粉衣女生特写，表情严肃",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:12-00:05:13",
+      "scene_desc": "黑衣男生被手指，表情疑惑",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:13-00:05:14",
+      "scene_desc": "长发女生手持卡片，展示给镜头",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:14-00:05:15",
+      "scene_desc": "长发女生放下卡片，表情无奈",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:15-00:05:16",
+      "scene_desc": "长发女生起身，准备离开座位",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:16-00:05:17",
+      "scene_desc": "长发女生起身，露出腰间粉色枪套",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:17-00:05:18",
+      "scene_desc": "手伸向粉色枪套",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:18-00:05:19",
+      "scene_desc": "黑衣男生闭眼，表情痛苦",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:19-00:05:20",
+      "scene_desc": "长发女生起身离开，黑衣男生睁眼，表情震惊",
+      "drama_episode": "《暗恋背后的泪与情》第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 20,
+  "currentSegment": 21,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:44:23.175Z"
+  "lastUpdate": "2026-07-14T06:46:13.113Z"
 }
