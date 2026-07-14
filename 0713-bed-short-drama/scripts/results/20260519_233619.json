@@ -1,7 +1,7 @@
 {
   "video": "20260519_233619.mp4",
-  "status": "in_progress",
-  "count": 0,
+  "status": "completed",
+  "count": 319,
   "rows": [
     {
       "timestamp": "00:00:02-00:00:03",
@@ -920,9 +920,1005 @@
       "scene_desc": "画面切换，女士和男士站在一起，男士将手搭在女士肩上，女士表情惊讶。",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:15-00:02:17",
+      "scene_desc": "一位身穿黑色西装的女士表情严肃地说话",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "乡巴佬在这里闹事"
+    },
+    {
+      "timestamp": "00:02:17-00:02:19",
+      "scene_desc": "一位戴墨镜的男士指着两位女士，周围有其他人",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "赶紧把她们抓起来"
+    },
+    {
+      "timestamp": "00:02:19-00:02:21",
+      "scene_desc": "穿黑西装的女士表情愤怒",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "你们竟然敢不听"
+    },
+    {
+      "timestamp": "00:02:21-00:02:23",
+      "scene_desc": "穿黑西装的女士侧身，字幕显示“少夫人打电话”",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "少夫人打电话"
+    },
+    {
+      "timestamp": "00:02:23-00:02:25",
+      "scene_desc": "一位穿浅蓝色衬衫的年轻女士表情担忧",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:25-00:02:27",
+      "scene_desc": "穿黑西装的女士正在打电话",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "我们找到那两个"
+    },
+    {
+      "timestamp": "00:02:27-00:02:29",
+      "scene_desc": "一位穿米色西装的男士表情严肃",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "老夫人"
+    },
+    {
+      "timestamp": "00:02:29-00:02:31",
+      "scene_desc": "穿黑西装的女士放下电话，表情凝重",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:31-00:02:33",
+      "scene_desc": "穿浅蓝色衬衫的女士表情惊讶",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "要不然"
+    },
+    {
+      "timestamp": "00:02:33-00:02:35",
+      "scene_desc": "一位穿米色开衫的女士表情坚定",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "我今天就要在"
+    },
+    {
+      "timestamp": "00:02:35-00:02:37",
+      "scene_desc": "穿黑西装的女士表情严肃",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "您可是集团的创始人"
+    },
+    {
+      "timestamp": "00:02:37-00:02:39",
+      "scene_desc": "穿米色西装的男士表情凝重",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:39-00:02:41",
+      "scene_desc": "戴墨镜的男士和穿黑西装的女士转身离开",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:41-00:02:43",
+      "scene_desc": "穿米色开衫的女士表情激动",
+      "drama_episode": "短剧·惹上老夫人，赵家变天了 第49集",
+      "dialogue": "你还知道"
+    },
+    {
+      "timestamp": "00:02:43-00:02:45",
+      "scene_desc": "画面切换，两位女士在餐厅聚餐，字幕显示“好友聚会上”",
+      "drama_episode": "（掌心微橙语）好友聚会上",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:45-00:02:47",
+      "scene_desc": "画面切换，一群穿制服的人在办公室，字幕显示“去上课了”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:47-00:02:49",
+      "scene_desc": "画面切换，一间病房内，一位男士俯身查看床上的人",
+      "drama_episode": "龙首腾云 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:49-00:02:51",
+      "scene_desc": "病房内，一位男士跪在床边，字幕显示“我的女儿啊”",
+      "drama_episode": "龙首腾云 第1集",
+      "dialogue": "我的女儿啊"
+    },
+    {
+      "timestamp": "00:02:30-00:02:32",
+      "scene_desc": "打开快手，加载一部短剧，画面中一位穿金色外套的男子俯身看着床上躺着的女子",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:32-00:02:33",
+      "scene_desc": "男子俯身看着床上躺着的女子，表情悲伤",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "我的女儿啊"
+    },
+    {
+      "timestamp": "00:02:33-00:02:34",
+      "scene_desc": "男子俯身看着床上躺着的女子，表情悲伤",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "我的女儿啊"
+    },
+    {
+      "timestamp": "00:02:34-00:02:35",
+      "scene_desc": "一位穿黑色皮夹克的年轻男子拿着手机，表情严肃",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "你要是有个三长两短"
+    },
+    {
+      "timestamp": "00:02:35-00:02:36",
+      "scene_desc": "男子俯身看着床上躺着的女子，表情悲伤",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "心地也算善良"
+    },
+    {
+      "timestamp": "00:02:36-00:02:37",
+      "scene_desc": "一位留着长长白胡子的老人拿着一个木制物品，表情平静",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "就是华佗在世"
+    },
+    {
+      "timestamp": "00:02:37-00:02:38",
+      "scene_desc": "男子俯身看着床上躺着的女子，床边站着一位老人，另一位老人背对镜头",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "一手遮天"
+    },
+    {
+      "timestamp": "00:02:38-00:02:39",
+      "scene_desc": "一位头发花白的老人，脖子上挂着佛珠，表情严肃",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "准备后事吧"
+    },
+    {
+      "timestamp": "00:02:39-00:02:40",
+      "scene_desc": "男子俯身看着床上躺着的女子，表情悲伤",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:40-00:02:41",
+      "scene_desc": "年轻男子被两位老人架着，表情挣扎",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:41-00:02:42",
+      "scene_desc": "一位穿黑色西装、红色领带的老人表情愤怒，手指向上指",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:42-00:02:43",
+      "scene_desc": "男子俯身看着床上躺着的女子，床边站着几位老人，房间内还有其他人",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:43-00:02:44",
+      "scene_desc": "穿黑色西装、红色领带的老人表情愤怒，手指向上指",
+      "drama_episode": "《龙首腾云》第4集",
+      "dialogue": "这分明是耍流氓"
+    },
+    {
+      "timestamp": "00:02:44-00:02:45",
+      "scene_desc": "画面切换，显示一个蓝色界面，似乎在加载新内容",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:45-00:02:46",
+      "scene_desc": "画面切换，显示一个帐篷内部，一位女子穿着古装，表情痛苦",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:46-00:02:47",
+      "scene_desc": "画面切换，显示一个帐篷内部，一位女子穿着古装，表情痛苦",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:47-00:02:48",
+      "scene_desc": "画面切换，显示一个帐篷内部，一位女子穿着古装，表情痛苦",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:48-00:02:49",
+      "scene_desc": "画面切换，显示夜晚的森林，一张桌子旁有一把空椅子",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:49-00:02:50",
+      "scene_desc": "画面切换，显示夜晚的森林，一位男子坐在桌子旁",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:50-00:02:51",
+      "scene_desc": "画面切换，显示一个帐篷内部，一位女子穿着古装，表情惊恐",
+      "drama_episode": "《虎山依鬼》第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:45-00:02:47",
+      "scene_desc": "夜晚，一名女子在帐篷内，神情紧张地看向一侧",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:47-00:02:49",
+      "scene_desc": "女子起身，镜头向下移动，画面模糊",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:49-00:02:53",
+      "scene_desc": "镜头切换，展示夜晚的露营场景，有帐篷、篝火和几个人",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:53-00:02:57",
+      "scene_desc": "女子表情痛苦，似乎在挣扎或行动",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:57-00:03:01",
+      "scene_desc": "一名光头男子出现，他抬头向上看，字幕显示“你干什么呀”",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "你干什么呀"
+    },
+    {
+      "timestamp": "00:03:01-00:03:05",
+      "scene_desc": "镜头切换，展示篝火旁的物品，如灯笼、饮料瓶等",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:05-00:03:09",
+      "scene_desc": "光头男子低头，表情凝重",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:09-00:03:13",
+      "scene_desc": "光头男子抬起手，做出一个动作",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:13-00:03:17",
+      "scene_desc": "镜头再次切换到露营场景，光头男子走向篝火",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:17-00:03:21",
+      "scene_desc": "女子与光头男子面对面，神情严肃",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:21-00:03:25",
+      "scene_desc": "光头男子表情沉重，似乎在思考或回应",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:25-00:03:29",
+      "scene_desc": "光头男子说话，字幕显示“就后半夜吧”",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "就后半夜吧"
+    },
+    {
+      "timestamp": "00:03:29-00:03:33",
+      "scene_desc": "镜头切换到露营场景，有几个人在活动",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:33-00:03:37",
+      "scene_desc": "一名穿绿色外套的女子在车内，神情紧张",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:37-00:03:41",
+      "scene_desc": "光头男子再次出现，表情严肃",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:41-00:03:45",
+      "scene_desc": "三人站在露营场景中，似乎在交谈",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:45-00:03:49",
+      "scene_desc": "女子表情严肃，字幕显示“山里的规矩不是开玩笑的”",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "山里的规矩不是开玩笑的"
+    },
+    {
+      "timestamp": "00:03:49-00:03:53",
+      "scene_desc": "女子继续说话，字幕显示“肯定是被脏东西缠上了”",
+      "drama_episode": "短剧·虎山伥鬼<br>第7集",
+      "dialogue": "肯定是被脏东西缠上了"
+    },
+    {
+      "timestamp": "00:03:00-00:03:02",
+      "scene_desc": "夜晚树林中，一名穿绿色外套、脖子被黑布条绑住的女子抬头看向左侧",
+      "drama_episode": "短剧·虎山伥鬼 第7集",
+      "dialogue": "肯定是被脏东西缠上了"
+    },
+    {
+      "timestamp": "00:03:02-00:03:04",
+      "scene_desc": "夜晚树林中，一名戴眼镜、穿蓝色外套的男子看向左侧，随后转头看向镜头",
+      "drama_episode": "短剧·虎山伥鬼 第7集",
+      "dialogue": "也好我拍下来涨涨粉"
+    },
+    {
+      "timestamp": "00:03:04-00:03:05",
+      "scene_desc": "夜晚树林中，戴眼镜的男子看向镜头",
+      "drama_episode": "短剧·虎山伥鬼 第7集",
+      "dialogue": "争吵是没有用的"
+    },
+    {
+      "timestamp": "00:03:05-00:03:06",
+      "scene_desc": "画面切换，显示短剧《虎山伥鬼》的标题卡",
+      "drama_episode": "短剧·虎山伥鬼 第7集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:06-00:03:07",
+      "scene_desc": "夜晚树林中，穿绿色外套的女子低头，表情沮丧",
+      "drama_episode": "短剧·虎山伥鬼 第7集",
+      "dialogue": "我无能为力"
+    },
+    {
+      "timestamp": "00:03:07-00:03:10",
+      "scene_desc": "画面切换到一间教室，老师站在讲台上，学生们坐在座位上",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "安静"
+    },
+    {
+      "timestamp": "00:03:10-00:03:11",
+      "scene_desc": "教室场景，老师宣布成绩",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "下面公布成绩"
+    },
+    {
+      "timestamp": "00:03:11-00:03:12",
+      "scene_desc": "教室场景，老师念出名字",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "李婷婷"
+    },
+    {
+      "timestamp": "00:03:12-00:03:14",
+      "scene_desc": "教室场景，一名扎双马尾的女孩面无表情地坐着",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "英语九十八分"
+    },
+    {
+      "timestamp": "00:03:14-00:03:15",
+      "scene_desc": "教室场景，女孩面无表情地坐着",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "我要更加努力学习了呢"
+    },
+    {
+      "timestamp": "00:03:15-00:03:16",
+      "scene_desc": "教室场景，女孩转头看向旁边",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "小棠同学"
+    },
+    {
+      "timestamp": "00:03:16-00:03:17",
+      "scene_desc": "教室场景，女孩面无表情地坐着",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "你说你要是连排名"
+    },
+    {
+      "timestamp": "00:03:17-00:03:18",
+      "scene_desc": "教室场景，女孩面无表情地坐着",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "都进不了"
+    },
+    {
+      "timestamp": "00:03:18-00:03:19",
+      "scene_desc": "教室场景，一名男孩面无表情地坐着",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "这得努力多少"
+    },
+    {
+      "timestamp": "00:03:19-00:03:20",
+      "scene_desc": "教室场景，女孩面无表情地坐着，并整理领带",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "我差点忘了"
+    },
+    {
+      "timestamp": "00:03:15-00:03:19",
+      "scene_desc": "教室里，一个扎马尾辫的女孩坐在课桌前，表情严肃。",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "年级前二十名"
+    },
+    {
+      "timestamp": "00:03:19-00:03:20",
+      "scene_desc": "女孩转过身，表情变得惊讶，对着旁边说话。",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "可是"
+    },
+    {
+      "timestamp": "00:03:20-00:03:21",
+      "scene_desc": "女孩继续说话，表情激动。",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "要退出咱们优等班级的"
+    },
+    {
+      "timestamp": "00:03:21-00:03:22",
+      "scene_desc": "教室全景，老师站在讲台上，学生们坐在课桌前。",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:22-00:03:23",
+      "scene_desc": "一个胖男孩坐在课桌前，表情沮丧。",
+      "drama_episode": "短剧·硬核小村姑 第89集",
+      "dialogue": "讨厌的绿茶妹"
+    },
+    {
+      "timestamp": "00:03:23-00:03:25",
+      "scene_desc": "画面切换，一个医生对着镜头说话，上方有关于洗衣的黄色广告横幅。",
+      "drama_episode": "-",
+      "dialogue": "长期开水烫肥皂搓内裤的危害 当心“花园”抓挠有异味 专家：混洗衣服一定要消毒杀菌 但你们来的有点晚了"
+    },
+    {
+      "timestamp": "00:03:25-00:03:28",
+      "scene_desc": "画面切换，一个穿红色上衣的女人在吧台前，背景是酒吧。",
+      "drama_episode": "神探救援 第53集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:28-00:03:32",
+      "scene_desc": "画面切换，一个穿金色亮片长裙的女人，镜头从她的腿部向上移动。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:32-00:03:33",
+      "scene_desc": "女人的脸部特写，她面带微笑。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:33-00:03:35",
+      "scene_desc": "女人穿着金色长裙，从楼梯上走下来。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "但在我出席完慈善晚宴"
+    },
+    {
+      "timestamp": "00:03:35-00:03:36",
+      "scene_desc": "舞会上，一群人正在跳舞。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "准备回家时 星好星好我爱你"
+    },
+    {
+      "timestamp": "00:03:36-00:03:38",
+      "scene_desc": "一个戴黑色帽子和口罩的男人，表情严肃。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "意外却来了 我爱你"
+    },
+    {
+      "timestamp": "00:03:38-00:03:39",
+      "scene_desc": "女人的脸部特写，她戴着绿色宝石项链。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:39-00:03:44",
+      "scene_desc": "男人扶着女人的腰，两人一起走下楼梯。",
+      "drama_episode": "重生影后去神恋爱脑后 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:30-00:03:32",
+      "scene_desc": "模拟器启动，显示手机桌面",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:32-00:03:35",
+      "scene_desc": "打开快手，界面加载中",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:35-00:03:42",
+      "scene_desc": "加载短剧《短剧·重生影后丢掉恋爱脑后》第1集，画面中一名穿金色亮片礼服、戴绿色珠宝的女子，表情震惊，手抚腹部，腹部有血迹",
+      "drama_episode": "《短剧·重生影后丢掉恋爱脑后》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:42-00:03:48",
+      "scene_desc": "女子低头皱眉，表情痛苦",
+      "drama_episode": "《短剧·重生影后丢掉恋爱脑后》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:48-00:03:56",
+      "scene_desc": "画面切换，一只手拿起一个白色小瓶子，随后拿起手机，屏幕显示微信聊天记录：“今晚餐费按人头AA，你需出8888，记得转我，别想占平哥便宜”，下方字幕“今晚餐费按人头AA”",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "今晚餐费按人头AA"
+    },
+    {
+      "timestamp": "00:03:56-00:04:01",
+      "scene_desc": "女子穿浅色礼服，站在红色背景前看手机，表情疑惑",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:01-00:04:04",
+      "scene_desc": "女子低头看手机，表情凝重",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:04-00:04:07",
+      "scene_desc": "一名穿西装的男子拿手机，旁边有穿白色礼服的女子",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:07-00:04:10",
+      "scene_desc": "男子打开一个红色礼盒",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:10-00:04:13",
+      "scene_desc": "男子看着礼盒说话，字幕“你不是一直喜欢”",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "你不是一直喜欢"
+    },
+    {
+      "timestamp": "00:04:13-00:04:15",
+      "scene_desc": "女子表情不悦，字幕“这表也太村我沈哥了”",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "这表也太村我沈哥了"
+    },
+    {
+      "timestamp": "00:04:15-00:04:18",
+      "scene_desc": "男子双手放腹前，字幕“我们大家都好期待呢”",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "我们大家都好期待呢"
+    },
+    {
+      "timestamp": "00:04:18-00:04:23",
+      "scene_desc": "女子拿一个白色礼盒，字幕“别藏了”",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "别藏了"
+    },
+    {
+      "timestamp": "00:04:23-00:04:25",
+      "scene_desc": "女子将礼盒递给男子",
+      "drama_episode": "《短剧·致命AA》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:45-00:03:48",
+      "scene_desc": "一位穿白色羽毛装饰礼服的女士看向左侧，左侧有一只手拿着粉色盒子",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:48-00:03:49",
+      "scene_desc": "一位穿亮片透视礼服的女士双手交叠放在身前",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:49-00:03:50",
+      "scene_desc": "一位穿深色西装的男士拿着粉色盒子，表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:50-00:03:51",
+      "scene_desc": "穿亮片透视礼服的女士面向前方",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "就在所有朋友的面前"
+    },
+    {
+      "timestamp": "00:03:51-00:03:52",
+      "scene_desc": "一只手拿着一个白色小物件（可能是戒指盒）的特写",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:52-00:03:53",
+      "scene_desc": "穿白色羽毛礼服的女士和穿深色西装的男士站在一群人前，女士表情惊讶",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "就在所有朋友的面前"
+    },
+    {
+      "timestamp": "00:03:53-00:03:55",
+      "scene_desc": "一位穿酒红色连衣裙的女士坐着，表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "我亲手养大的女儿"
+    },
+    {
+      "timestamp": "00:03:55-00:03:56",
+      "scene_desc": "穿酒红色连衣裙的女士继续坐着",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "在我丈夫的寿宴上"
+    },
+    {
+      "timestamp": "00:03:56-00:03:57",
+      "scene_desc": "一对男女亲密地站在一起，男士搂着女士",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "当众宣布她儿子"
+    },
+    {
+      "timestamp": "00:03:57-00:03:58",
+      "scene_desc": "一对男女亲密地站在一起，男士搂着女士",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "以后就跟她老婆姓林"
+    },
+    {
+      "timestamp": "00:03:58-00:03:59",
+      "scene_desc": "一只手握着红酒杯的特写",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "我丈夫裴敬之"
+    },
+    {
+      "timestamp": "00:03:59-00:04:00",
+      "scene_desc": "一对男女亲密地拥抱跳舞",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "女儿裴语安"
+    },
+    {
+      "timestamp": "00:04:00-00:04:01",
+      "scene_desc": "一位穿浅色蕾丝礼服的女士微笑看向镜头",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "向我们询问"
+    },
+    {
+      "timestamp": "00:04:01-00:04:02",
+      "scene_desc": "穿浅色蕾丝礼服的女士表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "还说林哲是独生子"
+    },
+    {
+      "timestamp": "00:04:02-00:04:03",
+      "scene_desc": "一位戴眼镜的男士表情严肃的特写",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "是毫不掩饰的挑衅"
+    },
+    {
+      "timestamp": "00:04:03-00:04:04",
+      "scene_desc": "穿酒红色连衣裙的女士表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "询问她"
+    },
+    {
+      "timestamp": "00:04:04-00:04:05",
+      "scene_desc": "穿酒红色连衣裙的女士表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "是否确定想好了"
+    },
+    {
+      "timestamp": "00:04:05-00:04:06",
+      "scene_desc": "穿浅色蕾丝礼服的女士表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "称现在都什么年代了"
+    },
+    {
+      "timestamp": "00:04:06-00:04:07",
+      "scene_desc": "穿浅色蕾丝礼服的女士表情严肃",
+      "drama_episode": "短剧·致命AA 第10集",
+      "dialogue": "当然不一样"
+    },
+    {
+      "timestamp": "00:04:00-00:04:02",
+      "scene_desc": "快手界面，显示短剧播放页，下方有“弃女后诞龙凤双胎 第1集”字样",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:02-00:04:04",
+      "scene_desc": "女主特写，字幕“这是在告诉我”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "这是告诉我"
+    },
+    {
+      "timestamp": "00:04:04-00:04:05",
+      "scene_desc": "画面切换，泳池边女主穿比基尼，男主赤裸上身，字幕“老公今天找闺蜜来”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "老公今天找闺蜜来"
+    },
+    {
+      "timestamp": "00:04:05-00:04:07",
+      "scene_desc": "画面切换，女主穿白色连衣裙，背对镜头，身后有西装男",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:07-00:04:09",
+      "scene_desc": "女主转身，看向左侧",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:09-00:04:11",
+      "scene_desc": "男主穿浅灰色西装，字幕“装什么啊”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "装什么啊"
+    },
+    {
+      "timestamp": "00:04:11-00:04:13",
+      "scene_desc": "女主低头看黄色物品，字幕“这摆上谱了”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "这摆上谱了"
+    },
+    {
+      "timestamp": "00:04:13-00:04:15",
+      "scene_desc": "女主举黄色物品至耳边，字幕“打电话用儿童手表”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "打电话用儿童手表"
+    },
+    {
+      "timestamp": "00:04:15-00:04:17",
+      "scene_desc": "女主打电话，字幕“把顾修远的主管给撤了”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "把顾修远的主管给撤了"
+    },
+    {
+      "timestamp": "00:04:17-00:04:19",
+      "scene_desc": "宴会场景，人群围观，字幕“配不上你”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "配不上你"
+    },
+    {
+      "timestamp": "00:04:19-00:04:21",
+      "scene_desc": "宴会场景，字幕“而且还没能力”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "而且还没能力"
+    },
+    {
+      "timestamp": "00:04:21-00:04:23",
+      "scene_desc": "男主特写，字幕“你想通了就好”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "你想通了就好"
+    },
+    {
+      "timestamp": "00:04:23-00:04:25",
+      "scene_desc": "女主打电话，字幕“现在我现在我跟他”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "现在我现在我跟他"
+    },
+    {
+      "timestamp": "00:04:25-00:04:27",
+      "scene_desc": "宴会场景，女主走向人群",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:27-00:04:29",
+      "scene_desc": "宴会场景，人群聚集，字幕“听见没”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "听见没"
+    },
+    {
+      "timestamp": "00:04:29-00:04:31",
+      "scene_desc": "男主特写，字幕“我这就给徐董打电话”",
+      "drama_episode": "弃女后诞龙凤双胎 第1集",
+      "dialogue": "我这就给徐董打电话"
+    },
+    {
+      "timestamp": "00:04:15-00:04:17",
+      "scene_desc": "一位穿黑色西装、棕色衬衫、黑色领带的男子站在蓝色背景前，字幕显示“天盛总部的人事部”",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:17-00:04:18",
+      "scene_desc": "一位穿白色披风、扎着马尾的女子背对镜头，身后站着穿西装的男子",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:18-00:04:19",
+      "scene_desc": "一位穿深色西装、白色衬衫、蓝白条纹领带的男子，字幕显示“去核实顾修远的职位”",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:19-00:04:20",
+      "scene_desc": "黑暗房间内多人聚集，字幕显示“神探教授 打脸逆袭”",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:20-00:04:21",
+      "scene_desc": "一名穿黑色连衣裙的女子被另一名穿黑色上衣的女子抓住，字幕显示“顾明月”",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:21-00:04:22",
+      "scene_desc": "一名穿黑色连衣裙的女子被另一名穿黑色上衣的女子抓住，字幕显示“顾明月”",
+      "drama_episode": "《这一世，我要你百口莫辩》第31集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:22-00:04:23",
+      "scene_desc": "一位戴眼镜、穿深色西装、蓝白条纹领带的男子，字幕显示“你闹够了没有”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:23-00:04:24",
+      "scene_desc": "一位戴珍珠项链、穿黑色上衣的女子，字幕显示“老顾”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:24-00:04:25",
+      "scene_desc": "一位戴珍珠项链、穿黑色上衣的女子，字幕显示“病情很严重”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:25-00:04:26",
+      "scene_desc": "一位穿黑色连衣裙的女子，字幕显示“在我面前”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:26-00:04:27",
+      "scene_desc": "一位穿黑色连衣裙的女子，字幕显示“她一直很乖的呀”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:27-00:04:28",
+      "scene_desc": "一位穿黑色连衣裙的女子，字幕显示“妈”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:28-00:04:29",
+      "scene_desc": "一位戴眼镜、穿深色西装、蓝白条纹领带的男子，字幕显示“肾”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:29-00:04:30",
+      "scene_desc": "一位穿黑色连衣裙的女子，字幕显示“是我捐的”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:30-00:04:31",
+      "scene_desc": "一位穿黑色连衣裙的女子，字幕显示“到现在你还敢说谎”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:31-00:04:32",
+      "scene_desc": "一位戴珍珠项链、穿黑色上衣的女子，字幕显示“你又打她”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:32-00:04:33",
+      "scene_desc": "一位戴眼镜、穿深色西装、蓝白条纹领带的男子，字幕显示“她是怎么演戏”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:33-00:04:34",
+      "scene_desc": "一位戴珍珠项链、穿黑色上衣的女子，字幕显示“这不是清风推的”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:34-00:04:35",
+      "scene_desc": "一位戴珍珠项链、穿黑色上衣的女子，字幕显示“这也没什么”",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:30-00:04:32",
+      "scene_desc": "一位穿着黑色衣服、戴着珍珠项链的女士，她闭着眼睛，面带微笑。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "这也没什么"
+    },
+    {
+      "timestamp": "00:04:32-00:04:33",
+      "scene_desc": "画面切换，出现一片绿色的植物。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:33-00:04:34",
+      "scene_desc": "画面切换，一位穿着红色衣服的人骑着一辆绿色的三轮车。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:34-00:04:35",
+      "scene_desc": "画面切换，一位穿着黑色西装的男士从三轮车上下来，走到穿红色衣服的人旁边。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:35-00:04:36",
+      "scene_desc": "画面切换，穿黑色西装的男士弯腰，手撑在地上。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:36-00:04:37",
+      "scene_desc": "画面切换，穿黑色西装的男士和穿红色衣服的女士站在一个门口，两人正在交谈。",
+      "drama_episode": "《分道扬镳，他后悔了》第38集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:37-00:04:38",
+      "scene_desc": "画面切换，穿黑色西装的男士戴着墨镜，对着穿红色衣服的女士比了一个“V”字手势。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "第"
+    },
+    {
+      "timestamp": "00:04:38-00:04:39",
+      "scene_desc": "画面切换，穿红色衣服的女士看着穿黑色西装的男士。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:39-00:04:40",
+      "scene_desc": "画面切换，穿黑色西装的男士扛着一袋大米，旁边放着一个行李箱。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:40-00:04:41",
+      "scene_desc": "画面切换，穿黑色西装的男士戴着墨镜，正在打电话。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "对"
+    },
+    {
+      "timestamp": "00:04:41-00:04:42",
+      "scene_desc": "画面切换，穿黑色西装的男士表情严肃。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:42-00:04:43",
+      "scene_desc": "画面切换，出现一个行李箱和一袋大米。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:43-00:04:44",
+      "scene_desc": "画面切换，穿黑色西装的男士拖着行李箱，走向一扇贴着“福”字的大门。",
+      "drama_episode": "《单身狗的春节保卫战》第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 9,
-  "totalSegments": 19,
-  "lastUpdate": "2026-07-13T23:18:07.571Z"
+  "currentSegment": 0,
+  "totalSegments": 0,
+  "lastUpdate": "2026-07-14T13:00:00Z"
 }

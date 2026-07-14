@@ -1,7 +1,7 @@
 {
   "video": "20260519_235318.mp4",
-  "status": "in_progress",
-  "count": 0,
+  "status": "completed",
+  "count": 327,
   "rows": [
     {
       "timestamp": "00:00:00-00:00:02",
@@ -1640,9 +1640,333 @@
       "scene_desc": "视频界面切换，扎着双麻花辫的女子表情悲伤，说“城里的男朋友”",
       "drama_episode": "《问君几许13》第1集",
       "dialogue": "城里的男朋友"
+    },
+    {
+      "timestamp": "00:04:00-00:04:02",
+      "scene_desc": "一位年轻女性，穿着浅色碎花衬衫，面露忧愁",
+      "drama_episode": "《重生机会》",
+      "dialogue": "重生的机会"
+    },
+    {
+      "timestamp": "00:04:02-00:04:05",
+      "scene_desc": "一位年轻女性，穿着白色衬衫连衣裙，扎着双马尾，坐在火车上",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "姜柠一等也是一辈子"
+    },
+    {
+      "timestamp": "00:04:05-00:04:06",
+      "scene_desc": "一位年轻女性，穿着白色衬衫连衣裙，扎着双马尾，坐在火车上",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "穿带这等功绩的姜逢"
+    },
+    {
+      "timestamp": "00:04:06-00:04:07",
+      "scene_desc": "一位年轻女性，穿着白色衬衫连衣裙，扎着双马尾，坐在火车上",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "穿书这个小众的赛道"
+    },
+    {
+      "timestamp": "00:04:07-00:04:08",
+      "scene_desc": "一位年轻女性，穿着白色衬衫连衣裙，扎着双马尾，坐在火车上",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "可我不能坐以待毙啊"
+    },
+    {
+      "timestamp": "00:04:08-00:04:09",
+      "scene_desc": "一位年轻女性，穿着白色衬衫连衣裙，扎着双马尾，坐在火车上，看向窗外",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:09-00:04:10",
+      "scene_desc": "火车上，一位穿军装的男子站在一位女性座位旁，座位上还坐着一位女性",
+      "drama_episode": "《问君几许》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:10-00:04:12",
+      "scene_desc": "界面切换，显示一部名为《五行诡事录1》的短剧，画面为深蓝色调，显示一个门，门上贴着“示 告”和“書心水孤子”的符纸",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:12-00:04:13",
+      "scene_desc": "一位身穿粉色古装的女子，头戴发饰，表情严肃",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:13-00:04:14",
+      "scene_desc": "深蓝色调画面，出现一个发光的绿色物体，背景是水面",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:14-00:04:15",
+      "scene_desc": "一位身穿粉色古装的女子，头戴发饰，表情悲伤",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:15-00:04:16",
+      "scene_desc": "一座古风建筑前的石阶上，站着几位身着黑色长袍的人，远处有一个人影",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:16-00:04:17",
+      "scene_desc": "一位身着黑色长袍、手持拂尘的男子，身后跟着两位身着黑色马甲的随从",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:17-00:04:18",
+      "scene_desc": "一位身着黑色长袍、手持拂尘的男子，表情严肃",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:18-00:04:19",
+      "scene_desc": "一位身着白色古装的年轻男子，表情凝重",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "天师可有灭门案的进展"
+    },
+    {
+      "timestamp": "00:04:19-00:04:20",
+      "scene_desc": "两位身着黑色马甲的年轻男子，表情严肃",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:20-00:04:21",
+      "scene_desc": "一位身着黑色长袍、手持拂尘的男子，表情严肃",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "恭送天师大人"
+    },
+    {
+      "timestamp": "00:04:21-00:04:22",
+      "scene_desc": "一位身着灰色古装的年轻男子，背着剑，手持物品",
+      "drama_episode": "《五行诡事录1》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:22-00:04:24",
+      "scene_desc": "界面切换，显示一部名为《重生90年代5》的动画短剧，画面为90年代风格的街道",
+      "drama_episode": "《重生90年代5》第1集",
+      "dialogue": "90年代"
+    },
+    {
+      "timestamp": "00:04:24-00:04:25",
+      "scene_desc": "90年代风格的街道上，一个动画角色向前走，街道两旁有摊贩和行人",
+      "drama_episode": "《重生90年代5》第1集",
+      "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:04:15-00:04:17",
+      "scene_desc": "快手界面，加载短剧《苦心人天不负》第1集，男主白衣带血，额头有伤口，表情痛苦",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:17-00:04:19",
+      "scene_desc": "男主睁眼，画面切换，女主黑衣华丽古装，额间有装饰，表情凝重",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:19-00:04:21",
+      "scene_desc": "女主白衣古装，背景模糊，画面切换，男主蓝衣古装，字幕“小师弟失去的”",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "小师弟失去的"
+    },
+    {
+      "timestamp": "00:04:21-00:04:23",
+      "scene_desc": "男主白衣带血，被持剑者刺中，字幕“这一剑”",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "这一剑"
+    },
+    {
+      "timestamp": "00:04:23-00:04:25",
+      "scene_desc": "剑光特效，画面切换，男主白衣带血，字幕“被绿茶师弟”",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "被绿茶师弟"
+    },
+    {
+      "timestamp": "00:04:25-00:04:27",
+      "scene_desc": "男主白衣带血，字幕“师兄”",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "师兄"
+    },
+    {
+      "timestamp": "00:04:27-00:04:29",
+      "scene_desc": "男主白衣带血，字幕“畅享美好人生”",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "畅享美好人生"
+    },
+    {
+      "timestamp": "00:04:29-00:04:31",
+      "scene_desc": "铁链门，画面切换，短剧海报《苦心人天不负》",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:31-00:04:33",
+      "scene_desc": "男主白衣带血，表情痛苦",
+      "drama_episode": "《苦心人天不负》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:33-00:04:35",
+      "scene_desc": "快手滑屏，显示其他视频",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:30-00:04:32",
+      "scene_desc": "手机桌面，显示快手应用图标及时间23:57",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:32-00:04:33",
+      "scene_desc": "点击快手图标，打开快手应用",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:33-00:04:34",
+      "scene_desc": "进入快手界面，显示“快手短剧”加载页面",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:34-00:04:35",
+      "scene_desc": "快手短剧加载完成，显示短剧列表，选择并打开一部短剧",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:35-00:04:36",
+      "scene_desc": "短剧播放页面，显示一位穿浅色连衣裙的女主背影，背景为夜晚街道",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:36-00:04:37",
+      "scene_desc": "女主继续在夜晚街道行走，画面左侧出现“M国边陲小镇”文字",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:37-00:04:38",
+      "scene_desc": "女主背影，右侧出现互动按钮（点赞、评论等）",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:38-00:04:39",
+      "scene_desc": "女主背影，下方出现“我要拿回属于我的一切”字幕",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "我要拿回属于我的一切"
+    },
+    {
+      "timestamp": "00:04:39-00:04:40",
+      "scene_desc": "画面切换，三位男性出现，中间男性穿花纹衬衫，下方出现“你赔欠了我们青龙帮的赌债”字幕",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "你赔欠了我们青龙帮的赌债"
+    },
+    {
+      "timestamp": "00:04:40-00:04:41",
+      "scene_desc": "女主特写，表情严肃",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:41-00:04:42",
+      "scene_desc": "女主背影，下方出现“我大哥感兴趣的女人”字幕",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "我大哥感兴趣的女人"
+    },
+    {
+      "timestamp": "00:04:42-00:04:43",
+      "scene_desc": "女主特写，表情坚定",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:43-00:04:44",
+      "scene_desc": "画面切换，一位穿西装的男性微笑",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:44-00:04:45",
+      "scene_desc": "女主特写，表情愤怒",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:45-00:04:46",
+      "scene_desc": "画面切换，穿花纹衬衫的男性与女主对峙",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:46-00:04:47",
+      "scene_desc": "女主在走廊行走，背景为夜晚建筑",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:47-00:04:48",
+      "scene_desc": "女主在走廊行走，下方出现小窗预览",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:48-00:04:49",
+      "scene_desc": "女主特写，表情坚定",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:49-00:04:50",
+      "scene_desc": "画面切换，穿花纹衬衫的男性动作模糊，右侧出现“愿你快快救救我”文字",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "愿你快快救救我"
+    },
+    {
+      "timestamp": "00:04:50-00:04:51",
+      "scene_desc": "穿花纹衬衫的男性特写，表情严肃",
+      "drama_episode": "《M国边陲小镇》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:45-00:04:47",
+      "scene_desc": "手机桌面，显示快手应用图标",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:47-00:04:50",
+      "scene_desc": "打开快手应用，进入短视频播放界面",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:50-00:05:34",
+      "scene_desc": "播放短剧《短剧·星夜回响23》第1集，画面中一位长发女性角色在夜晚场景中，表情平静",
+      "drama_episode": "《短剧·星夜回响23》第1集",
+      "dialogue": "没事吧"
+    },
+    {
+      "timestamp": "00:05:34-00:05:35",
+      "scene_desc": "视频播放结束，页面跳转至快手“发现”页，显示多个推荐视频缩略图",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 16,
-  "totalSegments": 20,
-  "lastUpdate": "2026-07-14T01:01:09.346Z"
+  "currentSegment": 0,
+  "totalSegments": 0,
+  "lastUpdate": "2026-07-14T13:00:00Z"
 }
