@@ -4544,9 +4544,57 @@
       "scene_desc": "镜头切回年轻男子，他站在柜台前，表情严肃。",
       "drama_episode": "我有财富之眼 第4集",
       "dialogue": "下集"
+    },
+    {
+      "timestamp": "00:19:00-00:19:02",
+      "scene_desc": "一名穿白色外套的男子站在室内，表情惊讶",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "我说这还有没有新的"
+    },
+    {
+      "timestamp": "00:19:02-00:19:05",
+      "scene_desc": "一名穿黑色外套的男子坐在室内，看着对面的男子",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "五百多还不够你刮啊"
+    },
+    {
+      "timestamp": "00:19:05-00:19:07",
+      "scene_desc": "穿白色外套的男子表情坚定",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "那我再试试手气"
+    },
+    {
+      "timestamp": "00:19:07-00:19:09",
+      "scene_desc": "镜头下移，展示桌上的刮刮乐彩票",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "这些没你刮了吧"
+    },
+    {
+      "timestamp": "00:19:09-00:19:11",
+      "scene_desc": "穿白色外套的男子低头看着桌面，表情失望",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "张强这开组"
+    },
+    {
+      "timestamp": "00:19:11-00:19:13",
+      "scene_desc": "穿黑色外套的男子看着对面的男子说话",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "你得多刮才能中大奖"
+    },
+    {
+      "timestamp": "00:19:13-00:19:15",
+      "scene_desc": "穿白色外套的男子看着对面的男子",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "像你这样挑来挑去的"
+    },
+    {
+      "timestamp": "00:19:15-00:19:17",
+      "scene_desc": "一只手拿起桌上的刮刮乐彩票",
+      "drama_episode": "我有财富2.0 第4集",
+      "dialogue": "可中不了哦"
     }
   ],
-  "currentSegment": 76,
+  "currentSegment": 77,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:13:09.771Z"
+  "lastUpdate": "2026-07-14T14:13:39.397Z"
 }
