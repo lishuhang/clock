@@ -56,9 +56,45 @@
       "scene_desc": "男子坐在桌前，出现“李承泽”字样",
       "drama_episode": "《一枕海棠醉君怀》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:45-00:01:48",
+      "scene_desc": "一位身着华丽金色龙纹长袍、头戴金冠的年轻男子（李承泽，大凉皇帝）坐在书案前，闭着眼，手边堆着书卷，表情慵懒",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "我真的不是暴君"
+    },
+    {
+      "timestamp": "00:01:48-00:01:51",
+      "scene_desc": "一位身着深蓝色官服、头戴乌纱帽的太监（侯公公）手持拂尘，手持奏折，表情严肃地站在皇帝面前",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "您刚才说什么"
+    },
+    {
+      "timestamp": "00:01:51-00:01:54",
+      "scene_desc": "皇帝睁开眼，面带微笑，身体前倾",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "你穿成这样<br>干什么呀"
+    },
+    {
+      "timestamp": "00:01:54-00:01:57",
+      "scene_desc": "太监低头，面露难色",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "傻傻的"
+    },
+    {
+      "timestamp": "00:01:57-00:02:00",
+      "scene_desc": "皇帝坐在桌前，侧身看向一旁，做出吩咐的手势",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "给我拿桶泡面"
+    },
+    {
+      "timestamp": "00:02:00-00:02:03",
+      "scene_desc": "太监站在皇帝面前，表情困惑",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "何为泡面"
     }
   ],
-  "currentSegment": 7,
+  "currentSegment": 8,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:22:11.868Z"
+  "lastUpdate": "2026-07-14T06:23:46.864Z"
 }
