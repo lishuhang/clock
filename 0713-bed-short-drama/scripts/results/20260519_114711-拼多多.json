@@ -5558,9 +5558,63 @@
       "scene_desc": "特写镜头，一双手抓住另一人的手臂，背景模糊，光线昏暗，呈现亲密互动场景",
       "drama_episode": "《坠入春夜》第16集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:00-00:24:02",
+      "scene_desc": "（亲密）一男一女在室内亲密互动，男子靠近女子，女子闭眼，男子低头靠近女子。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:02-00:24:04",
+      "scene_desc": "（亲密）男子亲吻女子，画面特写两人亲吻。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:04-00:24:07",
+      "scene_desc": "女子面向男子，表情平静，男子注视女子。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:07-00:24:09",
+      "scene_desc": "女子面向男子，表情平静，男子注视女子。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "深爷也知道"
+    },
+    {
+      "timestamp": "00:24:09-00:24:11",
+      "scene_desc": "女子面向男子，表情平静，男子注视女子。",
+      "drama_episode": "《坠入春夜》第16集",
+      "dialogue": "这个药引子啊"
+    },
+    {
+      "timestamp": "00:24:11-00:24:12",
+      "scene_desc": "城市夜景，高楼大厦，车流。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:12-00:24:13",
+      "scene_desc": "男子面向女子，女子背对镜头。",
+      "drama_episode": "《坠入春夜》第17集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:13-00:24:14",
+      "scene_desc": "广告页面，展示“酷塑冷冻减脂3.0”产品。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:24:14-00:24:15",
+      "scene_desc": "男子面向女子，女子背对镜头。",
+      "drama_episode": "《坠入春夜》第17集",
+      "dialogue": "黑甘草是治病的药"
     }
   ],
-  "currentSegment": 96,
+  "currentSegment": 97,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:08:34.474Z"
+  "lastUpdate": "2026-07-14T15:09:11.503Z"
 }
