@@ -6494,9 +6494,75 @@
       "scene_desc": "一栋土楼，一条蛇从二楼窗户爬出，身上沾有红色液体。",
       "drama_episode": "《蛇村》第23集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:15-00:28:17",
+      "scene_desc": "特写镜头，一个男人的脸部，表情惊恐，眼睛睁大，嘴巴张开。",
+      "drama_episode": "《摄像师智斗乡村巨蟒》第23集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:17-00:28:19",
+      "scene_desc": "男人侧躺在地上，嘴角有血迹，一只手在拉扯他的衣服。",
+      "drama_episode": "《摄像师智斗乡村巨蟒》第23集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:19-00:28:21",
+      "scene_desc": "一座老旧的砖房，一个人从二楼的窗户探出头来。",
+      "drama_episode": "《摄像师智斗乡村巨蟒》第23集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:21-00:28:23",
+      "scene_desc": "特写镜头，一只手抓住另一只手的手腕，手指甲涂有红色指甲油。",
+      "drama_episode": "《豪门假面婚约》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:23-00:28:26",
+      "scene_desc": "（亲密）一个穿着白色丝绸睡衣的女人躺在床上，表情痛苦，字幕显示“叔疼”。",
+      "drama_episode": "《豪门假面婚约》第2集",
+      "dialogue": "叔疼"
+    },
+    {
+      "timestamp": "00:28:26-00:28:28",
+      "scene_desc": "一只手握拳敲击着门。",
+      "drama_episode": "《豪门假面婚约》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:28-00:28:30",
+      "scene_desc": "（亲密）女人躺在床上，表情平静，字幕显示“是我老公”。",
+      "drama_episode": "《豪门假面婚约》第2集",
+      "dialogue": "是我老公"
+    },
+    {
+      "timestamp": "00:28:30-00:28:32",
+      "scene_desc": "（亲密）一个穿白色T恤的男人俯身靠近女人，字幕显示“怎么怕了”。",
+      "drama_episode": "《豪门假面婚约》第2集",
+      "dialogue": "怎么怕了"
+    },
+    {
+      "timestamp": "00:28:32-00:28:34",
+      "scene_desc": "一个穿着古装的男人，背着绿色双肩包，表情惊讶，字幕显示“吊带”。",
+      "drama_episode": "《这个古代不对劲》第9集",
+      "dialogue": "吊带"
+    },
+    {
+      "timestamp": "00:28:34-00:28:36",
+      "scene_desc": "一个穿着古装的女人坐在地上，整理衣服，面前有一个装满布的盆。",
+      "drama_episode": "《这个古代不对劲》第9集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:36-00:28:38",
+      "scene_desc": "一个穿着古装的男人被另一个男人抓住，表情痛苦，字幕显示“放开我”。",
+      "drama_episode": "《这个古代不对劲》第9集",
+      "dialogue": "放开我"
     }
   ],
-  "currentSegment": 113,
+  "currentSegment": 114,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:40:50.386Z"
+  "lastUpdate": "2026-07-14T15:42:38.222Z"
 }
