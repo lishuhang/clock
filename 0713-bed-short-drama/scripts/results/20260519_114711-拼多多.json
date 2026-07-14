@@ -2354,9 +2354,63 @@
       "scene_desc": "男子继续抬头，表情依然惊讶",
       "drama_episode": "《富二代继承一家之主》第2集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:15-00:09:17",
+      "scene_desc": "一名穿蓝白条纹病号服的男子躺在床上，表情痛苦，背景有输液架",
+      "drama_episode": "第2集",
+      "dialogue": "大爷，你的外挂已到账"
+    },
+    {
+      "timestamp": "00:09:17-00:09:20",
+      "scene_desc": "一名穿粉色护士服、戴护士帽的女子站在床边，表情担忧",
+      "drama_episode": "第2集",
+      "dialogue": "第2集 富二代陆沉一夜之间穿越到同名同姓的古稀老..."
+    },
+    {
+      "timestamp": "00:09:20-00:09:22",
+      "scene_desc": "男子双手前伸，表情夸张，似在解释或辩解",
+      "drama_episode": "第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:22-00:09:25",
+      "scene_desc": "男子继续说话，表情从委屈到得意",
+      "drama_episode": "第2集",
+      "dialogue": "我跟你开玩笑的"
+    },
+    {
+      "timestamp": "00:09:25-00:09:28",
+      "scene_desc": "男子抬头，表情得意，似在炫耀",
+      "drama_episode": "第2集",
+      "dialogue": "你真以为大爷是个小可爱啊"
+    },
+    {
+      "timestamp": "00:09:28-00:09:30",
+      "scene_desc": "护士表情惊讶，随后低头",
+      "drama_episode": "第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:30-00:09:32",
+      "scene_desc": "护士转身离开",
+      "drama_episode": "第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:09:32-00:09:35",
+      "scene_desc": "画面切换，一名穿白色浴袍的女子开门，表情惊讶",
+      "drama_episode": "第2集",
+      "dialogue": "陆函"
+    },
+    {
+      "timestamp": "00:09:35-00:09:37",
+      "scene_desc": "女子站在门口，表情惊讶",
+      "drama_episode": "第2集",
+      "dialogue": "我正在洗澡"
     }
   ],
-  "currentSegment": 37,
+  "currentSegment": 38,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T07:07:13.416Z"
+  "lastUpdate": "2026-07-14T07:10:55.687Z"
 }
