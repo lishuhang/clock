@@ -92,9 +92,63 @@
       "scene_desc": "太监站在皇帝面前，表情困惑",
       "drama_episode": "《我真的不是暴君》第1集",
       "dialogue": "何为泡面"
+    },
+    {
+      "timestamp": "00:02:00-00:02:02",
+      "scene_desc": "一位身着华丽金色古装、头戴金冠的年轻男子，面带微笑，眼神看向侧方。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:02-00:02:04",
+      "scene_desc": "男子表情变为惊讶，嘴巴微张，似乎在说话。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "圣上"
+    },
+    {
+      "timestamp": "00:02:04-00:02:05",
+      "scene_desc": "一位身着深蓝色官服、头戴官帽的年长男子，手持木笏，表情严肃。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:05-00:02:06",
+      "scene_desc": "画面切换回年轻男子，他表情依然惊讶。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:06-00:02:08",
+      "scene_desc": "宫殿门口，有侍卫站立，一位身着古装的女子站在一旁。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:08-00:02:09",
+      "scene_desc": "室内场景，有桌椅、烛台和盆栽。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:09-00:02:10",
+      "scene_desc": "桌上摆放着信件和物品。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:10-00:02:15",
+      "scene_desc": "画面回到年轻男子，他表情从惊讶转为震惊，嘴巴大张。",
+      "drama_episode": "《我真的不是暴君》第1集",
+      "dialogue": "我穿越成皇帝了"
+    },
+    {
+      "timestamp": "00:02:15-00:02:16",
+      "scene_desc": "画面切换，显示一个戴着耳机的人，正在使用手机。",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 8,
+  "currentSegment": 9,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:23:46.864Z"
+  "lastUpdate": "2026-07-14T06:24:36.784Z"
 }
