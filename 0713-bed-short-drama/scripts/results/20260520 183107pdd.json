@@ -2204,9 +2204,63 @@
       "scene_desc": "一名身穿红色传统服饰、头戴传统发饰的女子，表情坚定。",
       "drama_episode": "《谋风冠》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:45-00:08:47",
+      "scene_desc": "特写镜头，两只手放在一个穿浅蓝色古装马甲的人的腹部，字幕显示“她把我们骗到地宫里”",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "她把我们骗到地宫里"
+    },
+    {
+      "timestamp": "00:08:47-00:08:50",
+      "scene_desc": "穿浅蓝色古装马甲的女子表情严肃，身后有另一个穿同样衣服的女子",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "活活杀害"
+    },
+    {
+      "timestamp": "00:08:50-00:08:51",
+      "scene_desc": "穿浅蓝色古装马甲的女子侧躺，头枕在手臂上，眼睛微睁",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:51-00:08:53",
+      "scene_desc": "穿浅蓝色古装马甲的女子表情悲伤，字幕显示“还去了性命”",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "还去了性命"
+    },
+    {
+      "timestamp": "00:08:53-00:08:54",
+      "scene_desc": "穿浅蓝色古装马甲的女子表情坚定，字幕显示“是我”",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "是我"
+    },
+    {
+      "timestamp": "00:08:54-00:08:55",
+      "scene_desc": "特写镜头，穿紫色花卉古装的年长女子表情震惊，字幕显示“是我”",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "是我"
+    },
+    {
+      "timestamp": "00:08:55-00:08:56",
+      "scene_desc": "穿浅蓝色古装马甲的女子表情坚定，字幕显示“是我的”",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "是我的"
+    },
+    {
+      "timestamp": "00:08:56-00:08:57",
+      "scene_desc": "穿紫色花卉古装的年长女子表情震惊",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:08:57-00:08:59",
+      "scene_desc": "穿浅蓝色古装马甲的女子表情坚定，身后有其他穿同样衣服的女子",
+      "drama_episode": "《谋凤冠》第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 35,
+  "currentSegment": 36,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:36:07.815Z"
+  "lastUpdate": "2026-07-14T16:36:48.892Z"
 }
