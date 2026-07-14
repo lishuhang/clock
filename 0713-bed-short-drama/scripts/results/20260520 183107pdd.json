@@ -1,0 +1,64 @@
+{
+  "video": "20260520 183107pdd.mp4",
+  "status": "in_progress",
+  "count": 0,
+  "rows": [
+    {
+      "timestamp": "00:00:00-00:00:03",
+      "scene_desc": "一男一女两位主播在直播，桌上摆满食物，女子手持食物，男子戴墨镜，女子头上出现\"紧张\"字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:03-00:00:05",
+      "scene_desc": "画面切换到室外草坪，多人布置场地，有白色椅子和拱门，字幕显示\"梦落于星辰之间\"",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:05-00:00:06",
+      "scene_desc": "婚礼现场，新郎面对两位新娘，字幕显示\"已经到了尾声\"",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "已经到了尾声"
+    },
+    {
+      "timestamp": "00:00:06-00:00:07",
+      "scene_desc": "新郎特写，字幕显示\"面对两位\"",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "面对两位"
+    },
+    {
+      "timestamp": "00:00:07-00:00:08",
+      "scene_desc": "新娘特写，字幕显示\"钟情于你的女士\"",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "钟情于你的女士"
+    },
+    {
+      "timestamp": "00:00:08-00:00:09",
+      "scene_desc": "新郎特写，字幕显示\"我周靳野\"",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "我周靳野"
+    },
+    {
+      "timestamp": "00:00:09-00:00:10",
+      "scene_desc": "女子特写，字幕显示\"正式认识一下\"",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "正式认识一下"
+    },
+    {
+      "timestamp": "00:00:10-00:00:11",
+      "scene_desc": "女子特写，字幕显示\"哎\"，她低头看手中物品",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "哎"
+    },
+    {
+      "timestamp": "00:00:11-00:00:15",
+      "scene_desc": "女子手持居民户口簿，表情惊讶",
+      "drama_episode": "《梦落于星辰之间》第1集",
+      "dialogue": "-"
+    }
+  ],
+  "currentSegment": 1,
+  "totalSegments": 56,
+  "lastUpdate": "2026-07-14T16:00:29.980Z"
+}
