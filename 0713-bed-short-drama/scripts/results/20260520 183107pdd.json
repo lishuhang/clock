@@ -2474,9 +2474,39 @@
       "scene_desc": "一个穿白色衬衫的年轻男子，正在抽烟，表情冷漠。",
       "drama_episode": "《蝴蝶与小狗》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:00-00:10:05",
+      "scene_desc": "酒吧场景，红光环境，三位女性坐在吧台，中间女性说话，字幕显示\"你马上...祁家了\"",
+      "drama_episode": "《蝴蝶与小狗》第1集",
+      "dialogue": "你马上...祁家了"
+    },
+    {
+      "timestamp": "00:10:05-00:10:08",
+      "scene_desc": "戴圆框眼镜的女性特写，手托下巴，表情严肃，字幕显示\"我还下线\"",
+      "drama_episode": "《蝴蝶与小狗》第1集",
+      "dialogue": "我还下线"
+    },
+    {
+      "timestamp": "00:10:08-00:10:11",
+      "scene_desc": "戴圆框眼镜的女性侧脸，手捂嘴，字幕显示\"他还下线\"",
+      "drama_episode": "《蝴蝶与小狗》第1集",
+      "dialogue": "他还下线"
+    },
+    {
+      "timestamp": "00:10:11-00:10:13",
+      "scene_desc": "戴圆框眼镜的女性特写，字幕显示\"蝴蝶与小狗\"",
+      "drama_episode": "《蝴蝶与小狗》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:13-00:10:15",
+      "scene_desc": "男性特写，表情严肃，字幕显示\"连夜店都不敢来\"",
+      "drama_episode": "《蝴蝶与小狗》第1集",
+      "dialogue": "连夜店都不敢来"
     }
   ],
-  "currentSegment": 40,
+  "currentSegment": 41,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:40:16.638Z"
+  "lastUpdate": "2026-07-14T16:42:15.442Z"
 }
