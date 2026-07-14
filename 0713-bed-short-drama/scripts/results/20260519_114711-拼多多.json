@@ -4976,9 +4976,57 @@
       "scene_desc": "画面切换，一栋白色建筑前，几个穿制服的人打着黑伞，中间是一辆黑色的车。画面下方有一个穿粉色吊带裙的女孩的图片。",
       "drama_episode": "《班花别怕，重生我是校花老公》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "21:15-21:17",
+      "scene_desc": "一男一女并肩站立，男子穿白色西装，女子穿白色连衣裙，两人表情惊讶，男子手臂搭在女子身后。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "21:17-21:19",
+      "scene_desc": "教室场景，一男一女坐在课桌前，女子穿校服，手指向男子，男子表情惊讶。背景有其他学生。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "21:19-21:21",
+      "scene_desc": "一名中年男子穿黑色短袖，表情震惊，用手扶额，随后看向一侧。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "怎么"
+    },
+    {
+      "timestamp": "21:21-21:23",
+      "scene_desc": "一名穿亮片裙的女子手持鲜花，表情惊讶。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "我就说"
+    },
+    {
+      "timestamp": "21:23-21:25",
+      "scene_desc": "穿亮片裙的女子，表情惊讶。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "我是名副其实的"
+    },
+    {
+      "timestamp": "21:25-21:27",
+      "scene_desc": "一名扎双马尾的女孩，表情得意。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "省状元吧 婷婷"
+    },
+    {
+      "timestamp": "21:27-21:29",
+      "scene_desc": "穿白色连衣裙的女子表情震惊，手指向前方。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "你怎么能考出 这样的分数啊"
+    },
+    {
+      "timestamp": "21:29-21:30",
+      "scene_desc": "穿白色西装的男子表情无奈，看向一侧。",
+      "drama_episode": "《天降系统，自食其果》第10集",
+      "dialogue": "再怎么说 你现在说考 你也不能只考"
     }
   ],
-  "currentSegment": 85,
+  "currentSegment": 86,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:56:28.418Z"
+  "lastUpdate": "2026-07-14T14:57:08.933Z"
 }
