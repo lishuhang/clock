@@ -1640,9 +1640,75 @@
       "scene_desc": "一位扎着双麻花辫的女生，表情严肃",
       "drama_episode": "暗恋背后的泪与情 第2集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:06:00-00:06:02",
+      "scene_desc": "一位扎着双麻花辫、穿浅蓝色连衣裙的女生闭眼皱眉，双臂交叉",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:06:02-00:06:04",
+      "scene_desc": "扎双麻花辫的女生睁眼，看向右侧",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "你怎么会选这么一个"
+    },
+    {
+      "timestamp": "00:06:04-00:06:06",
+      "scene_desc": "一位长发、穿红黑格子吊带裙的女生出现，表情略带不屑",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "你怎么会选这么一个"
+    },
+    {
+      "timestamp": "00:06:06-00:06:08",
+      "scene_desc": "扎双麻花辫的女生再次出现，右手摸耳，表情不满",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "一个屌丝来做测验呀"
+    },
+    {
+      "timestamp": "00:06:08-00:06:10",
+      "scene_desc": "扎双麻花辫的女生表情更不满，看向右侧",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "我都替你感到憋屈"
+    },
+    {
+      "timestamp": "00:06:10-00:06:12",
+      "scene_desc": "两位女生并排站立，都双臂交叉，背景是街道和绿植",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "我都替你感到憋屈"
+    },
+    {
+      "timestamp": "00:06:12-00:06:14",
+      "scene_desc": "扎双麻花辫的女生再次出现，表情不满",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "你看看他"
+    },
+    {
+      "timestamp": "00:06:14-00:06:16",
+      "scene_desc": "两位女生背对镜头，看向街道，前方有“精品沙县”招牌，一个男生在修自行车",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "骑这么个"
+    },
+    {
+      "timestamp": "00:06:16-00:06:18",
+      "scene_desc": "男生在修自行车的特写，字幕显示“破车还要上个锁”",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "破车还要上个锁"
+    },
+    {
+      "timestamp": "00:06:18-00:06:20",
+      "scene_desc": "男生修车动作特写，字幕显示“也是绝了”",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "也是绝了"
+    },
+    {
+      "timestamp": "00:06:20-00:06:22",
+      "scene_desc": "长发女生出现，字幕显示“姜洋”",
+      "drama_episode": "暗恋背后的泪与情 第2集",
+      "dialogue": "姜洋"
     }
   ],
-  "currentSegment": 24,
+  "currentSegment": 25,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:48:16.542Z"
+  "lastUpdate": "2026-07-14T06:51:37.098Z"
 }
