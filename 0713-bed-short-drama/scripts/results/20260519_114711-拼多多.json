@@ -3332,9 +3332,75 @@
       "scene_desc": "男子表情恍然大悟，画面中出现字幕“我这是穿越了”",
       "drama_episode": "一品军侯 第1集",
       "dialogue": "我这是穿越了"
+    },
+    {
+      "timestamp": "00:14:00-00:14:02",
+      "scene_desc": "快手APP界面，显示“直播 关注 短剧 推荐”导航栏，右上角“3Q热剧”按钮，界面中间为短剧画面，下方显示“一品军侯 第1集”及“点击看短剧 再领38万金币”按钮",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:14:02-00:14:04",
+      "scene_desc": "画面中古装男子眼神震惊，字幕显示“我这是穿越了”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "我这是穿越了"
+    },
+    {
+      "timestamp": "00:14:04-00:14:07",
+      "scene_desc": "男子眼神略带疑惑，字幕显示“还穿成了”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "还穿成了"
+    },
+    {
+      "timestamp": "00:14:07-00:14:10",
+      "scene_desc": "男子眼神惊讶，字幕显示“一个流落民间的皇子”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "一个流落民间的皇子"
+    },
+    {
+      "timestamp": "00:14:10-00:14:13",
+      "scene_desc": "男子眼神坚定，字幕显示“本想着从军建功立业”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "本想着从军建功立业"
+    },
+    {
+      "timestamp": "00:14:13-00:14:16",
+      "scene_desc": "男子眼神严肃，字幕显示“认祖归宗”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "认祖归宗"
+    },
+    {
+      "timestamp": "00:14:16-00:14:19",
+      "scene_desc": "男子眼神低沉，字幕显示“没想到”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "没想到"
+    },
+    {
+      "timestamp": "00:14:19-00:14:22",
+      "scene_desc": "男子眼神阴沉，字幕显示“被人构陷犯了军规”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "被人构陷犯了军规"
+    },
+    {
+      "timestamp": "00:14:22-00:14:25",
+      "scene_desc": "男子低头，字幕显示“送来了流放”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "送来了流放"
+    },
+    {
+      "timestamp": "00:14:25-00:14:28",
+      "scene_desc": "男子抬头，字幕显示“罪女组建的女囚营”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "罪女组建的女囚营"
+    },
+    {
+      "timestamp": "00:14:28-00:14:31",
+      "scene_desc": "男子低头查看手中物品，字幕显示“这个不错块头大”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "这个不错块头大"
     }
   ],
-  "currentSegment": 56,
+  "currentSegment": 57,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:52:26.881Z"
+  "lastUpdate": "2026-07-14T13:53:33.177Z"
 }
