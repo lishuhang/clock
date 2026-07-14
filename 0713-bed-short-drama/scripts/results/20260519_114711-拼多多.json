@@ -1022,9 +1022,63 @@
       "scene_desc": "画面出现广告，内容为“点击看短剧 领40万金币”。",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:30-00:03:31",
+      "scene_desc": "室内场景，四人在客厅交谈，一男子穿棕色西装，一女子穿白色连衣裙，一女子穿绿色旗袍，一女子穿黑色连衣裙弯腰",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:03:31-00:03:32",
+      "scene_desc": "男子特写，表情严肃",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "你这小姨子啊"
+    },
+    {
+      "timestamp": "00:03:32-00:03:33",
+      "scene_desc": "女子特写，表情自信",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "天生就爱开玩笑"
+    },
+    {
+      "timestamp": "00:03:33-00:03:36",
+      "scene_desc": "绿色旗袍女子特写，表情激动",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "至于灵儿 从未跟你提起我们"
+    },
+    {
+      "timestamp": "00:03:36-00:03:38",
+      "scene_desc": "白色连衣裙女子特写，表情平静",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "那是我不让她说"
+    },
+    {
+      "timestamp": "00:03:38-00:03:42",
+      "scene_desc": "男子特写，表情疑惑",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "不让说 为什么啊"
+    },
+    {
+      "timestamp": "00:03:42-00:03:45",
+      "scene_desc": "三人交谈，白色连衣裙女子伸手",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "因为"
+    },
+    {
+      "timestamp": "00:03:45-00:03:46",
+      "scene_desc": "绿色旗袍女子特写，表情平静",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "妈妈因为妹妹"
+    },
+    {
+      "timestamp": "00:03:46-00:03:47",
+      "scene_desc": "黑色连衣裙女子特写，表情平静",
+      "drama_episode": "乖女婿 第5集",
+      "dialogue": "一直在深山的道观里面"
     }
   ],
-  "currentSegment": 14,
+  "currentSegment": 15,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:37:53.822Z"
+  "lastUpdate": "2026-07-14T06:38:45.570Z"
 }
