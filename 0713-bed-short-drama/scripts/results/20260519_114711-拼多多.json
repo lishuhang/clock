@@ -806,9 +806,51 @@
       "scene_desc": "男子坐在电脑前，电脑屏幕是黑色的",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:30-00:02:31",
+      "scene_desc": "一名穿黑色背心的男子出现在蓝色背景前，表情夸张",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:31-00:02:33",
+      "scene_desc": "画面切换到古装场景，一名男子趴在桌案上，周围散落着纸张，背景有“大殿”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:33-00:02:34",
+      "scene_desc": "趴在桌案的男子抬起头，头顶出现一道蓝光",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:34-00:02:36",
+      "scene_desc": "男子坐直身体，表情坚定",
+      "drama_episode": "-",
+      "dialogue": "上天给了我机会"
+    },
+    {
+      "timestamp": "00:02:36-00:02:38",
+      "scene_desc": "男子继续说话，眼神坚定",
+      "drama_episode": "-",
+      "dialogue": "让我从头再来"
+    },
+    {
+      "timestamp": "00:02:38-00:02:40",
+      "scene_desc": "男子继续说话，表情严肃",
+      "drama_episode": "-",
+      "dialogue": "这世"
+    },
+    {
+      "timestamp": "00:02:40-00:02:42",
+      "scene_desc": "男子继续说话，表情坚定",
+      "drama_episode": "-",
+      "dialogue": "我定要大展宏图"
     }
   ],
-  "currentSegment": 10,
+  "currentSegment": 11,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:33:30.878Z"
+  "lastUpdate": "2026-07-14T06:34:36.108Z"
 }
