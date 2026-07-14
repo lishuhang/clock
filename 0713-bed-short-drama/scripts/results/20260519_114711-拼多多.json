@@ -2690,9 +2690,51 @@
       "scene_desc": "一栋现代化高楼大厦，背景有河流和城市天际线，大楼上有“沈氏集团总部”字样",
       "drama_episode": "被造谣后，千金不疯了 第1集",
       "dialogue": "1.2万亿资产"
+    },
+    {
+      "timestamp": "00:10:45-00:10:47",
+      "scene_desc": "手机屏幕显示短视频平台界面，背景为城市建筑，画面中央有“三个小时前”字样，下方有剧集标题和简介，底部有红色按钮",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:47-00:10:50",
+      "scene_desc": "画面切换，一位穿灰色西装的男子坐在桌前，手放在桌上，镜头逐渐上移，露出他的脸，他看向左侧",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:50-00:10:52",
+      "scene_desc": "男子继续看向左侧，画面左侧出现“沈建”字样，随后出现“爸”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:52-00:10:56",
+      "scene_desc": "画面切换，一只手拿着手机，屏幕显示通话界面，背景有笔记本电脑，下方字幕为“星星啊”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:56-00:11:00",
+      "scene_desc": "男子拿着手机说话，字幕依次为“整整一个月了”“他也不说”“给爸爸来个电话”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:00-00:11:05",
+      "scene_desc": "画面切换，一位穿黑色衣服的女子在办公室接电话，字幕为“最近”“在天联那个小地方”“待的还习惯吗”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:05-00:11:08",
+      "scene_desc": "女子继续接电话，镜头拉近，字幕为“爸”",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 43,
+  "currentSegment": 44,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:33:17.560Z"
+  "lastUpdate": "2026-07-14T13:33:51.386Z"
 }
