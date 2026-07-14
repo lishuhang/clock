@@ -2594,9 +2594,57 @@
       "scene_desc": "城市航拍画面，有河流、高楼、道路",
       "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:15-00:10:17",
+      "scene_desc": "快手APP界面，展示城市航拍远景，底部有剧集简介和“点击看短剧领40万金币”按钮",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:17-00:10:19",
+      "scene_desc": "画面切换，一位穿白衬衫打黑领带的男性（字幕“陆先生”）对着镜头说话",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:19-00:10:21",
+      "scene_desc": "画面切换，一双手拿着一份“招商银行”的贷款文件，字幕显示“您的贷款一共是5,000万”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:21-00:10:23",
+      "scene_desc": "画面切换，一位穿黑T恤戴项链的男性低头看手机，字幕显示“已经划入您的账号了”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:23-00:10:26",
+      "scene_desc": "画面切换，一双手在笔记本电脑键盘上打字，屏幕上方弹出聊天消息“老父亲太骄傲了！...”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:26-00:10:31",
+      "scene_desc": "画面切换，一位穿黑亮片外套的女性（字幕“沈建山的女儿”“沈若星”“沈氏继承人”）对着镜头说话，背景有雪花特效",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:31-00:10:35",
+      "scene_desc": "画面切换，穿黑亮片外套的女性继续对着镜头说话，字幕显示“由于我爸实在太有钱”“又总是对我过分溺爱”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:35-00:10:37",
+      "scene_desc": "画面切换，办公室场景，多位员工在工位上工作",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 41,
+  "currentSegment": 42,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:31:09.477Z"
+  "lastUpdate": "2026-07-14T13:32:20.411Z"
 }
