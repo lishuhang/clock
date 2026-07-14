@@ -2834,9 +2834,81 @@
       "scene_desc": "穿黑白制服的女子，名字显示为“司念”",
       "drama_episode": "《念念不死劫》第1集",
       "dialogue": "当时"
+    },
+    {
+      "timestamp": "00:11:30-00:11:31",
+      "scene_desc": "一位穿着水手服的年轻女子站在酒吧里，面对着一位背对镜头的男子。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "他喝得醉醺醺的"
+    },
+    {
+      "timestamp": "00:11:31-00:11:32",
+      "scene_desc": "镜头切换，一只手将一杯酒放在桌上。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:32-00:11:34",
+      "scene_desc": "镜头切回女子，她表情有些紧张。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:34-00:11:35",
+      "scene_desc": "镜头切换，一个打开的箱子，里面装着钱。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:35-00:11:36",
+      "scene_desc": "镜头切回女子，她表情惊讶。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:36-00:11:37",
+      "scene_desc": "一位穿着西装的男子，他举起一根手指。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "我要包你"
+    },
+    {
+      "timestamp": "00:11:37-00:11:40",
+      "scene_desc": "镜头切回女子，她表情震惊。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:40-00:11:41",
+      "scene_desc": "一位穿着马甲的男子，他面前有一个打开的箱子。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "像"
+    },
+    {
+      "timestamp": "00:11:41-00:11:42",
+      "scene_desc": "镜头切换到打开的箱子，里面装着钱。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "真像"
+    },
+    {
+      "timestamp": "00:11:42-00:11:43",
+      "scene_desc": "镜头切回男子，他看着箱子。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "太像了"
+    },
+    {
+      "timestamp": "00:11:43-00:11:44",
+      "scene_desc": "镜头切回男子，他看着箱子。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:11:44-00:11:45",
+      "scene_desc": "镜头切回女子，她表情复杂。",
+      "drama_episode": "念念不死劫 第1集",
+      "dialogue": "没人会跟钱过不去"
     }
   ],
-  "currentSegment": 46,
+  "currentSegment": 47,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:36:58.392Z"
+  "lastUpdate": "2026-07-14T13:38:04.548Z"
 }
