@@ -1394,9 +1394,63 @@
       "scene_desc": "画面停留在分享弹窗上。",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:45-00:05:47",
+      "scene_desc": "一名身着黑色古装的男性角色侧身站立，表情平静",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:47-00:05:50",
+      "scene_desc": "一名身着蓝色古装、头戴发冠的女性角色正面站立，表情平静",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:50-00:05:52",
+      "scene_desc": "蓝色古装女性角色低头，表情略带羞涩",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:52-00:05:54",
+      "scene_desc": "黑色古装男性角色侧身站立，表情平静",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:54-00:05:56",
+      "scene_desc": "一名身着绿色古装、头戴发冠的女性角色站立，表情严肃",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "咱们做女人的"
+    },
+    {
+      "timestamp": "00:05:56-00:05:57",
+      "scene_desc": "绿色古装女性角色俯身靠近，表情严肃",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "关键这手里呀"
+    },
+    {
+      "timestamp": "00:05:57-00:05:58",
+      "scene_desc": "绿色古装女性角色俯身靠近，表情严肃",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "就看妹妹你"
+    },
+    {
+      "timestamp": "00:05:58-00:05:59",
+      "scene_desc": "蓝色古装女性角色手持书本，表情疑惑",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "什么财路啊"
+    },
+    {
+      "timestamp": "00:05:59-00:06:00",
+      "scene_desc": "蓝色古装女性角色手持书本，表情疑惑",
+      "drama_episode": "《藏娇念》第3集",
+      "dialogue": "就写什么才子佳人"
     }
   ],
-  "currentSegment": 23,
+  "currentSegment": 24,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:22:12.902Z"
+  "lastUpdate": "2026-07-14T16:22:51.876Z"
 }
