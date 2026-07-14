@@ -1,7 +1,7 @@
 {
   "video": "20260519_114711-拼多多.mp4",
-  "status": "in_progress",
-  "count": 0,
+  "status": "completed",
+  "count": 1149,
   "rows": [
     {
       "timestamp": "00:01:30-00:01:34",
@@ -6890,9 +6890,15 @@
       "scene_desc": "中年女性，留着齐肩短发，戴着黑色渔夫帽，穿着米白色大衣，站在户外街道上，表情忧虑地对着前方说话。字幕显示\"不\"。",
       "drama_episode": "《幸好姐姐力挽狂澜》第10集",
       "dialogue": "不"
+    },
+    {
+      "timestamp": "00:30:15-00:30:26",
+      "scene_desc": "一位穿着白色外套、米色上衣，戴着黑色帽子的女性站在户外，表情惊讶，双手交叠放在身前。画面下方有短剧字幕，显示\"女儿当众揭露自己母亲的丑事！\"，底部有\"幸好姐姐力挽狂澜·第10集\"的剧集信息。",
+      "drama_episode": "幸好姐姐力挽狂澜 第10集",
+      "dialogue": "女儿当众揭露自己母亲的丑事！"
     }
   ],
-  "currentSegment": 121,
-  "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:57:44.714Z"
+  "currentSegment": 0,
+  "totalSegments": 0,
+  "lastUpdate": "2026-07-14T15:58:20.416Z"
 }
