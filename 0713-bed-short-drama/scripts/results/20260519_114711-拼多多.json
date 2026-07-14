@@ -1868,9 +1868,93 @@
       "scene_desc": "（亲密）亲吻结束，女士低头，男士看着她",
       "drama_episode": "说好演戏，结果你真的 第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:15-00:07:17",
+      "scene_desc": "快手界面，顶部显示时间11:54，底部有剧集信息“末日漂流：重生保安的救世... 第20集”，画面中四人在游艇甲板上，中间黑衣男子，左侧红裙女子，右侧白衬衫黑裙女子，右侧灰衣女子部分入镜",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "我们四个一起洗吧"
+    },
+    {
+      "timestamp": "00:07:17-00:07:19",
+      "scene_desc": "红裙女子特写，表情震惊",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:19-00:07:21",
+      "scene_desc": "灰衣女子特写，双手捂胸，表情震惊",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:21-00:07:23",
+      "scene_desc": "黑衣男子特写，表情严肃",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:23-00:07:25",
+      "scene_desc": "四人全景，黑衣男子伸手向灰衣女子，白衬衫女子微笑",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "一起洗"
+    },
+    {
+      "timestamp": "00:07:25-00:07:27",
+      "scene_desc": "白衬衫女子特写，表情拒绝",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "不行 绝对不行"
+    },
+    {
+      "timestamp": "00:07:27-00:07:29",
+      "scene_desc": "白衬衫女子特写，表情严肃",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "虽然是末日"
+    },
+    {
+      "timestamp": "00:07:29-00:07:31",
+      "scene_desc": "白衬衫女子特写，表情坚定",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "但我们怎么能"
+    },
+    {
+      "timestamp": "00:07:31-00:07:33",
+      "scene_desc": "白衬衫女子特写，表情羞愤",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "这也太羞耻了"
+    },
+    {
+      "timestamp": "00:07:33-00:07:35",
+      "scene_desc": "灰衣女子特写，表情愤怒",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "这也太羞耻了"
+    },
+    {
+      "timestamp": "00:07:35-00:07:37",
+      "scene_desc": "黑衣男子与灰衣女子对视，灰衣女子喊出名字",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "赵川"
+    },
+    {
+      "timestamp": "00:07:37-00:07:39",
+      "scene_desc": "黑衣男子与灰衣女子对视，黑衣男子说话",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "我告诉你"
+    },
+    {
+      "timestamp": "00:07:39-00:07:41",
+      "scene_desc": "四人全景，黑衣男子说话",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "虽然你救了我们"
+    },
+    {
+      "timestamp": "00:07:41-00:07:43",
+      "scene_desc": "灰衣女子特写，表情愤怒",
+      "drama_episode": "末日漂流：重生保安的救世 第20集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 29,
+  "currentSegment": 30,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:57:09.955Z"
+  "lastUpdate": "2026-07-14T06:58:53.766Z"
 }
