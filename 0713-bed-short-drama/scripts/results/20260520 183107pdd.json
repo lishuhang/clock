@@ -1304,9 +1304,99 @@
       "scene_desc": "穿着黑色吊带裙的年轻女士，她侧头看向左侧，表情微笑。她的头发上插着花朵发饰。背景是模糊的室内环境。",
       "drama_episode": "《闻香》第1集",
       "dialogue": "咱们这新研发了一款香水"
+    },
+    {
+      "timestamp": "00:05:30-00:05:31",
+      "scene_desc": "一个穿着粉色衣服的小女孩趴在地上，伸手去拿一个竹篮里的红色花瓣，竹篮被放在地上，周围散落着花瓣。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:31-00:05:32",
+      "scene_desc": "小女孩从地上爬起来，用手捂着脸，表情委屈。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:32-00:05:33",
+      "scene_desc": "一个穿着黑色吊带裙的女人坐在椅子上，表情严肃，对着小女孩说话。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "妈妈跟你说过多少次"
+    },
+    {
+      "timestamp": "00:05:33-00:05:34",
+      "scene_desc": "女人继续说话，画面中可以看到她的上半身和部分背景。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "不许你靠近制香坊"
+    },
+    {
+      "timestamp": "00:05:34-00:05:35",
+      "scene_desc": "小女孩站在女人面前，表情倔强，用手捂着脸。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "你为什么就是不听"
+    },
+    {
+      "timestamp": "00:05:35-00:05:36",
+      "scene_desc": "一个穿着黑色长裙和高跟鞋的女人从门口走进来，踩在花瓣上，手里拿着一个手包。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:36-00:05:37",
+      "scene_desc": "小女孩看着走进来的女人，表情惊讶。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "这是怎么回事"
+    },
+    {
+      "timestamp": "00:05:37-00:05:38",
+      "scene_desc": "走进来的女人，穿着黑色蕾丝裙和皮草披肩，手里拿着手包，表情优雅。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:38-00:05:39",
+      "scene_desc": "女人用手抚摸着自己的脸，表情自信。",
+      "drama_episode": "《苏氏制香坊》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:39-00:05:40",
+      "scene_desc": "画面切换到短剧的片头，显示剧名《苏氏制香坊》和第1集。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:40-00:05:41",
+      "scene_desc": "画面切换到短剧的片头，显示剧名《苏氏制香坊》和第1集。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:41-00:05:42",
+      "scene_desc": "画面切换到短剧的片头，显示剧名《苏氏制香坊》和第1集。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:42-00:05:43",
+      "scene_desc": "画面切换到另一个短剧《藏娇念》的片头，显示第3集。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:43-00:05:44",
+      "scene_desc": "画面切换到拼多多平台的分享弹窗，提示分享短剧立得3元现金。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:44-00:05:45",
+      "scene_desc": "画面停留在分享弹窗上。",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 22,
+  "currentSegment": 23,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:21:09.182Z"
+  "lastUpdate": "2026-07-14T16:22:12.902Z"
 }
