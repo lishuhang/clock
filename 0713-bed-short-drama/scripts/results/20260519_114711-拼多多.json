@@ -6560,9 +6560,99 @@
       "scene_desc": "一个穿着古装的男人被另一个男人抓住，表情痛苦，字幕显示“放开我”。",
       "drama_episode": "《这个古代不对劲》第9集",
       "dialogue": "放开我"
+    },
+    {
+      "timestamp": "00:28:45-00:28:48",
+      "scene_desc": "一名男性角色在户外，表情严肃，字幕显示\"鱼上钩了\"",
+      "drama_episode": "《石龟劫》第1集",
+      "dialogue": "鱼上钩了"
+    },
+    {
+      "timestamp": "00:28:48-00:28:52",
+      "scene_desc": "一名女性角色在户外，表情担忧，字幕显示\"青山\"",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "青山"
+    },
+    {
+      "timestamp": "00:28:52-00:28:55",
+      "scene_desc": "女性角色继续担忧地说话，字幕显示\"你小心\"",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "你小心"
+    },
+    {
+      "timestamp": "00:28:55-00:28:58",
+      "scene_desc": "男性角色在水里，手持工具，似乎在捕鱼",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:28:58-00:29:00",
+      "scene_desc": "男性角色在水里，手持工具，似乎在捕鱼",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:00-00:29:02",
+      "scene_desc": "男性角色在水里，手持工具，似乎在捕鱼",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:02-00:29:04",
+      "scene_desc": "女性角色在岸边，表情担忧",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:04-00:29:06",
+      "scene_desc": "男性角色在水里，手持工具，似乎在捕鱼",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:29:06-00:29:08",
+      "scene_desc": "女性角色在岸边，表情担忧，字幕显示\"青山\"",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "青山"
+    },
+    {
+      "timestamp": "00:29:08-00:29:10",
+      "scene_desc": "女性角色在岸边，表情担忧，字幕显示\"你没事吧\"",
+      "drama_episode": "《石龟劫》第2集",
+      "dialogue": "你没事吧"
+    },
+    {
+      "timestamp": "00:29:10-00:29:12",
+      "scene_desc": "一名女性角色走进室内，字幕显示\"这都快开学了\"",
+      "drama_episode": "《全世界最爱你的他》第6集",
+      "dialogue": "这都快开学了"
+    },
+    {
+      "timestamp": "00:29:12-00:29:14",
+      "scene_desc": "女性角色走进室内，字幕显示\"这大学录取通知书\"",
+      "drama_episode": "《全世界最爱你的他》第6集",
+      "dialogue": "这大学录取通知书"
+    },
+    {
+      "timestamp": "00:29:14-00:29:16",
+      "scene_desc": "女性角色走进室内，字幕显示\"还没下来\"",
+      "drama_episode": "《全世界最爱你的他》第6集",
+      "dialogue": "还没下来"
+    },
+    {
+      "timestamp": "00:29:16-00:29:18",
+      "scene_desc": "一名男性角色坐着，表情忧虑，字幕显示\"这心里总是有点\"",
+      "drama_episode": "《全世界最爱你的他》第6集",
+      "dialogue": "这心里总是有点"
+    },
+    {
+      "timestamp": "00:29:18-00:29:20",
+      "scene_desc": "男性角色坐着，表情忧虑，字幕显示\"不太踏实\"",
+      "drama_episode": "《全世界最爱你的他》第6集",
+      "dialogue": "不太踏实"
     }
   ],
-  "currentSegment": 115,
+  "currentSegment": 116,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:48:15.324Z"
+  "lastUpdate": "2026-07-14T15:49:08.313Z"
 }
