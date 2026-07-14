@@ -218,9 +218,51 @@
       "scene_desc": "一名身穿黑色古装、头戴黑色帽子的男人，表情严肃。字幕显示“我的...妃”。",
       "drama_episode": "《一不小心，我全家都穿了》第10集",
       "dialogue": "我的...妃"
+    },
+    {
+      "timestamp": "00:01:00-00:01:02",
+      "scene_desc": "一名身着古装的女子，表情痛苦，紧闭双眼，皱着眉头，似乎在说话",
+      "drama_episode": "《一不小心，我全家都穿了》第11集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:02-00:01:04",
+      "scene_desc": "一名身着古装的女子，低头看着什么，面带微笑",
+      "drama_episode": "《一不小心，我全家都穿了》第10集",
+      "dialogue": "让他们相信"
+    },
+    {
+      "timestamp": "00:01:04-00:01:07",
+      "scene_desc": "一名身着西装的男子，坐在桌前，看着前方",
+      "drama_episode": "《月光·永不坠落》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:07-00:01:10",
+      "scene_desc": "一名身着西装的女子，面露惊讶的表情",
+      "drama_episode": "《月光·永不坠落》第3集",
+      "dialogue": "杨璟之怎么会是他"
+    },
+    {
+      "timestamp": "00:01:10-00:01:12",
+      "scene_desc": "一名身着西装的女子，面露悲伤的表情，闭上眼睛",
+      "drama_episode": "《月光·永不坠落》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:12-00:01:14",
+      "scene_desc": "一名身着西装的女子，在吧台倒酒，视频播放速度为2倍速",
+      "drama_episode": "《月光·永不坠落》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:14-00:01:15",
+      "scene_desc": "一名身着深色衣服的女子，双臂交叉放在桌上，面带微笑",
+      "drama_episode": "《月光·永不坠落》第3集",
+      "dialogue": "知道她爱吃橙子又嫌麻烦"
     }
   ],
-  "currentSegment": 4,
+  "currentSegment": 5,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:03:34.191Z"
+  "lastUpdate": "2026-07-14T16:04:23.189Z"
 }
