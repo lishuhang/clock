@@ -3560,9 +3560,75 @@
       "scene_desc": "一名身着盔甲的男子在室内场景中",
       "drama_episode": "《一品军侯》第1集",
       "dialogue": "离开女囚营"
+    },
+    {
+      "timestamp": "00:14:45-00:14:47",
+      "scene_desc": "一名身穿铠甲的男子，表情严肃地对着镜头说话",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "离开女囚营"
+    },
+    {
+      "timestamp": "00:14:47-00:14:49",
+      "scene_desc": "镜头切换，在一个古代的院子里，一个穿铠甲的男子站在高台上，台下有一群人，字幕显示“现在开始挑选男人”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "现在开始挑选男人"
+    },
+    {
+      "timestamp": "00:14:49-00:14:51",
+      "scene_desc": "镜头切换，一名身穿古装的年轻男子，表情震惊，字幕显示“我第一个我第一个来的”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "我第一个我第一个来的"
+    },
+    {
+      "timestamp": "00:14:51-00:14:52",
+      "scene_desc": "镜头切换，一群人围着一个戴头巾的女子，表情激动，字幕显示“我第一个我第一个来的”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "我第一个我第一个来的"
+    },
+    {
+      "timestamp": "00:14:52-00:14:53",
+      "scene_desc": "镜头切换回院子，人群开始骚动，字幕显示“第一个我先来的”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "第一个我先来的"
+    },
+    {
+      "timestamp": "00:14:53-00:14:55",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“狼多肉少”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "狼多肉少"
+    },
+    {
+      "timestamp": "00:14:55-00:14:57",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“被送进来的人”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "被送进来的人"
+    },
+    {
+      "timestamp": "00:14:57-00:14:59",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“都会被哄抢”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "都会被哄抢"
+    },
+    {
+      "timestamp": "00:14:59-00:15:01",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“经常都被抬出去”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "经常都被抬出去"
+    },
+    {
+      "timestamp": "00:15:01-00:15:03",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“他们个个都是”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "他们个个都是"
+    },
+    {
+      "timestamp": "00:15:03-00:15:05",
+      "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“满脸无情”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "满脸无情"
     }
   ],
-  "currentSegment": 59,
+  "currentSegment": 60,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:54:44.860Z"
+  "lastUpdate": "2026-07-14T13:55:34.038Z"
 }
