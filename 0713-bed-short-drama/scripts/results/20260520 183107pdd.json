@@ -56,9 +56,57 @@
       "scene_desc": "女子手持居民户口簿，表情惊讶",
       "drama_episode": "《梦落于星辰之间》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:15-00:00:17",
+      "scene_desc": "一名穿着白色连衣裙、戴着珍珠项链的女子手持一个深色文件夹，表情震惊，字幕显示\"周爱林\"",
+      "drama_episode": "-",
+      "dialogue": "周爱林"
+    },
+    {
+      "timestamp": "00:00:17-00:00:19",
+      "scene_desc": "女子捂着嘴，表情痛苦，字幕显示\"离婚协议已经签好了\"",
+      "drama_episode": "-",
+      "dialogue": "离婚协议已经签好了"
+    },
+    {
+      "timestamp": "00:00:19-00:00:21",
+      "scene_desc": "女子表情震惊，字幕显示\"二十一天以后\"",
+      "drama_episode": "-",
+      "dialogue": "二十一天以后"
+    },
+    {
+      "timestamp": "00:00:21-00:00:23",
+      "scene_desc": "女子表情震惊，字幕显示\"我会给你一个协议\"",
+      "drama_episode": "-",
+      "dialogue": "我会给你一个协议"
+    },
+    {
+      "timestamp": "00:00:23-00:00:25",
+      "scene_desc": "一名穿着深色西装、戴着眼镜的男子，字幕显示\"协议我都看过了\"",
+      "drama_episode": "-",
+      "dialogue": "协议我都看过了"
+    },
+    {
+      "timestamp": "00:00:25-00:00:27",
+      "scene_desc": "男子表情平静，字幕显示\"没问题\"",
+      "drama_episode": "-",
+      "dialogue": "没问题"
+    },
+    {
+      "timestamp": "00:00:27-00:00:29",
+      "scene_desc": "女子表情震惊，随后低头看向地面",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:00:29-00:00:30",
+      "scene_desc": "女子站在梳妆台前，拿起一个物品，画面切换到一只手将烟头按灭在烟灰缸中",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 1,
+  "currentSegment": 2,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:00:29.980Z"
+  "lastUpdate": "2026-07-14T16:01:19.911Z"
 }
