@@ -6104,9 +6104,51 @@
       "scene_desc": "一名穿西装的男子与另一名男子碰杯，字幕显示\"张老板\"",
       "drama_episode": "《秘恋》第40集",
       "dialogue": "张老板"
+    },
+    {
+      "timestamp": "00:26:45-00:26:48",
+      "scene_desc": "一男一女在超市购物，两人都推着购物车，男子穿着白色衬衫和黑色背心，女子穿着黑色皮夹克，两人脸上都有血迹，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:48-00:26:50",
+      "scene_desc": "女子特写，脸上带血，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:50-00:26:52",
+      "scene_desc": "男子特写，脸上带血，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:52-00:26:55",
+      "scene_desc": "女子特写，脸上带血，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:55-00:26:57",
+      "scene_desc": "男子特写，脸上带血，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:57-00:26:59",
+      "scene_desc": "女子特写，脸上带血，表情紧张",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:26:59-00:27:00",
+      "scene_desc": "女子特写，脸上带血，表情紧张，字幕显示\"这么敬业的吗\"",
+      "drama_episode": "《非正常师妹》第16集",
+      "dialogue": "这么敬业的吗"
     }
   ],
-  "currentSegment": 107,
+  "currentSegment": 108,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T15:24:17.161Z"
+  "lastUpdate": "2026-07-14T15:24:52.895Z"
 }
