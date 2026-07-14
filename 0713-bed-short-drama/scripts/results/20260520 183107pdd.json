@@ -1,7 +1,7 @@
 {
   "video": "20260520 183107pdd.mp4",
-  "status": "in_progress",
-  "count": 0,
+  "status": "completed",
+  "count": 563,
   "rows": [
     {
       "timestamp": "00:00:00-00:00:03",
@@ -3326,9 +3326,63 @@
       "scene_desc": "一只手，指甲上有血迹。字幕显示\"只因他觉得我害死了\"。",
       "drama_episode": "《在他爱我爱时长眠》第1集",
       "dialogue": "只因他觉得我害死了"
+    },
+    {
+      "timestamp": "00:13:45-00:13:46",
+      "scene_desc": "医院走廊，前景有模糊人物，背景有三人（一男两女）牵手向前走，字幕显示\"如果西泽哥能颠覆夏家\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "如果西泽哥能颠覆夏家"
+    },
+    {
+      "timestamp": "00:13:46-00:13:48",
+      "scene_desc": "男性特写，穿绿色衬衫，表情凝重，字幕显示\"怎么没想过她也会疼\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "怎么没想过她也会疼"
+    },
+    {
+      "timestamp": "00:13:48-00:13:49",
+      "scene_desc": "男性特写，穿绿色衬衫，表情严肃，字幕显示\"死的人是你\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "死的人是你"
+    },
+    {
+      "timestamp": "00:13:49-00:13:50",
+      "scene_desc": "（亲密）女性躺在床上，男性俯身靠近，字幕显示\"你终于报仇了\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "你终于报仇了"
+    },
+    {
+      "timestamp": "00:13:50-00:13:51",
+      "scene_desc": "男性特写，穿黑色衬衫，手持酒杯，字幕显示\"离不开我\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "离不开我"
+    },
+    {
+      "timestamp": "00:13:51-00:13:52",
+      "scene_desc": "（亲密）男女亲密拥抱，女性穿浅色长裙，男性穿深色衣服，场景为室内",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:52-00:13:53",
+      "scene_desc": "男性特写，穿黑色衬衫，表情严肃，字幕显示\"还有小兰的心脏\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "还有小兰的心脏"
+    },
+    {
+      "timestamp": "00:13:53-00:13:54",
+      "scene_desc": "男性特写，穿黑色衬衫，表情激动，字幕显示\"都敢不出来迎接我了\"",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "都敢不出来迎接我了"
+    },
+    {
+      "timestamp": "00:13:54-00:13:55",
+      "scene_desc": "地面有血迹，背景有金属物体，场景为室内",
+      "drama_episode": "《在他爱我时长眠》第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 55,
-  "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:56:16.009Z"
+  "currentSegment": 0,
+  "totalSegments": 0,
+  "lastUpdate": "2026-07-14T16:56:47.935Z"
 }
