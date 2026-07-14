@@ -1238,9 +1238,69 @@
       "scene_desc": "画面切回穿绿色外套、蒙着眼睛的男子，字幕显示“定鼎中原”。",
       "drama_episode": "-",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:45-00:04:48",
+      "scene_desc": "一位身着古装、头戴花饰头冠的年轻女子，面露惊讶表情，眼角有泪光",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "结束乱世"
+    },
+    {
+      "timestamp": "00:04:48-00:04:49",
+      "scene_desc": "一位身着黄色龙袍的皇帝，表情严肃",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "一统海内"
+    },
+    {
+      "timestamp": "00:04:49-00:04:50",
+      "scene_desc": "皇帝表情严肃",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "开创盛世的功绩"
+    },
+    {
+      "timestamp": "00:04:50-00:04:53",
+      "scene_desc": "女子表情从惊讶转为沉思",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "这不堪比汉武唐宗吗"
+    },
+    {
+      "timestamp": "00:04:53-00:04:55",
+      "scene_desc": "一位身着绿色外套、头戴黑色帽子的男子，眼睛被白色布条蒙住，低头看着手机",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "就他"
+    },
+    {
+      "timestamp": "00:04:55-00:04:57",
+      "scene_desc": "女子低头，表情沮丧",
+      "drama_episode": "《我都要讲世界大战了你说这是古代》第5集",
+      "dialogue": "唐宗没武比"
+    },
+    {
+      "timestamp": "00:04:57-00:04:59",
+      "scene_desc": "手机界面出现一个广告，显示一个房间和“摇一摇”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:04:59-00:05:00",
+      "scene_desc": "手机界面出现一个广告，显示一个房间和“摇一摇”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:00-00:05:01",
+      "scene_desc": "手机界面出现一个广告，显示一个房间和“摇一摇”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:05:01-00:05:02",
+      "scene_desc": "手机界面出现一个广告，显示一个房间和“摇一摇”字样",
+      "drama_episode": "-",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 19,
+  "currentSegment": 20,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:42:54.716Z"
+  "lastUpdate": "2026-07-14T06:44:23.175Z"
 }
