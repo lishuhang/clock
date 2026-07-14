@@ -848,9 +848,63 @@
       "scene_desc": "男子继续说话，表情坚定",
       "drama_episode": "-",
       "dialogue": "我定要大展宏图"
+    },
+    {
+      "timestamp": "00:02:45-00:02:49",
+      "scene_desc": "打开快手，界面加载，显示一部短剧，男主为穿古装的男子",
+      "drama_episode": "《我真的不是善君》第1集",
+      "dialogue": "我定要大展宏图"
+    },
+    {
+      "timestamp": "00:02:49-00:02:50",
+      "scene_desc": "屏幕切换为蓝色，显示“50 日,星期二”",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:50-00:02:51",
+      "scene_desc": "屏幕切换，显示一部短剧，男主为穿西装的男子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "王烁白天才说完"
+    },
+    {
+      "timestamp": "00:02:51-00:02:53",
+      "scene_desc": "屏幕切换，显示一部短剧，女主为穿白色礼服的女子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "狐狸是群居动物"
+    },
+    {
+      "timestamp": "00:02:53-00:02:54",
+      "scene_desc": "屏幕切换，显示一部短剧，女主为穿绿色礼服的女子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "晚上素未蒙面的岳母"
+    },
+    {
+      "timestamp": "00:02:54-00:02:56",
+      "scene_desc": "屏幕切换，显示一部短剧，女主为穿黑色礼服的女子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "和小姨子就出现在了家中"
+    },
+    {
+      "timestamp": "00:02:56-00:02:57",
+      "scene_desc": "屏幕切换，显示一部短剧，男主为穿西装的男子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "这"
+    },
+    {
+      "timestamp": "00:02:57-00:02:59",
+      "scene_desc": "屏幕切换，显示一部短剧，女主为穿黑色礼服的女子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "哎呀姐夫"
+    },
+    {
+      "timestamp": "00:02:59-00:03:01",
+      "scene_desc": "屏幕切换，显示一部短剧，男主为穿西装的男子",
+      "drama_episode": "《狐狸传说》第5集",
+      "dialogue": "你这么一直盯着 人家看干什么"
     }
   ],
-  "currentSegment": 11,
+  "currentSegment": 12,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:34:36.108Z"
+  "lastUpdate": "2026-07-14T06:35:22.094Z"
 }
