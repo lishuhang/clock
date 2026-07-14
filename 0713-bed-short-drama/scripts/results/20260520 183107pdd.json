@@ -2948,9 +2948,69 @@
       "scene_desc": "画面出现一个半透明的系统界面，字幕显示“能量不足 已将宿主传送至三年后”。",
       "drama_episode": "《剧名》第1集",
       "dialogue": "能量不足 已将宿主传送至三年后"
+    },
+    {
+      "timestamp": "00:12:15-00:12:17",
+      "scene_desc": "一名古装女子在庭院中，表情震惊，字幕显示\"三年后\"",
+      "drama_episode": "《假死离开三年，暴君彻底黑化》第1集",
+      "dialogue": "三年后"
+    },
+    {
+      "timestamp": "00:12:17-00:12:20",
+      "scene_desc": "古装女子特写，表情震惊",
+      "drama_episode": "《假死离开三年，暴君彻底黑化》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:20-00:12:21",
+      "scene_desc": "室内场景，红色双喜字，蜡烛",
+      "drama_episode": "《假死离开三年，暴君彻底黑化》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:21-00:12:22",
+      "scene_desc": "现代场景，一男一女，女子蒙眼，站在桌子前",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:22-00:12:23",
+      "scene_desc": "分享短剧立得3元现金弹窗",
+      "drama_episode": "-",
+      "dialogue": "分享短剧立得3元现金"
+    },
+    {
+      "timestamp": "00:12:23-00:12:25",
+      "scene_desc": "一双手在纸上写字，字幕显示\"锁骨\"、\"耳朵\"",
+      "drama_episode": "-",
+      "dialogue": "锁骨 耳朵"
+    },
+    {
+      "timestamp": "00:12:25-00:12:26",
+      "scene_desc": "女子拿起写有\"耳朵\"的纸",
+      "drama_episode": "-",
+      "dialogue": "咬耳朵"
+    },
+    {
+      "timestamp": "00:12:26-00:12:27",
+      "scene_desc": "一男一女站在桌子前，字幕显示\"好刺激啊\"",
+      "drama_episode": "-",
+      "dialogue": "好刺激啊"
+    },
+    {
+      "timestamp": "00:12:27-00:12:28",
+      "scene_desc": "男子将纸递给女子，字幕显示\"我要看咬耳朵\"",
+      "drama_episode": "-",
+      "dialogue": "我要看咬耳朵"
+    },
+    {
+      "timestamp": "00:12:28-00:12:30",
+      "scene_desc": "女子特写，蒙眼，字幕显示\"然后呢\"",
+      "drama_episode": "-",
+      "dialogue": "然后呢"
     }
   ],
-  "currentSegment": 49,
+  "currentSegment": 50,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:50:40.318Z"
+  "lastUpdate": "2026-07-14T16:51:25.717Z"
 }
