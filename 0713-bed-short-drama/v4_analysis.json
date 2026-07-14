@@ -6,49 +6,49 @@
   "total_unique_dramas": 789,
   "by_platform": {
     "支付宝": {
-      "videos": 2,
-      "videos_with_bed": 2,
-      "shots": 52,
-      "intimate_shots": 10,
+      "videos": 6,
+      "videos_with_bed": 6,
+      "shots": 208,
+      "intimate_shots": 30,
       "has_bed_rate": 100.0,
-      "intimate_freq": 19.23,
-      "first_bed_pos": 2.0
+      "intimate_freq": 14.42,
+      "first_bed_pos": 7.67
     },
     "拼多多": {
-      "videos": 2,
-      "videos_with_bed": 2,
-      "shots": 126,
-      "intimate_shots": 24,
-      "has_bed_rate": 100.0,
-      "intimate_freq": 19.05,
-      "first_bed_pos": 3.5
+      "videos": 7,
+      "videos_with_bed": 6,
+      "shots": 295,
+      "intimate_shots": 49,
+      "has_bed_rate": 85.71,
+      "intimate_freq": 16.61,
+      "first_bed_pos": 7.33
     },
     "美团": {
-      "videos": 2,
-      "videos_with_bed": 1,
-      "shots": 21,
-      "intimate_shots": 2,
-      "has_bed_rate": 50.0,
-      "intimate_freq": 9.52,
-      "first_bed_pos": 2.0
+      "videos": 6,
+      "videos_with_bed": 5,
+      "shots": 160,
+      "intimate_shots": 28,
+      "has_bed_rate": 83.33,
+      "intimate_freq": 17.5,
+      "first_bed_pos": 7.8
     },
     "红果": {
-      "videos": 2,
-      "videos_with_bed": 2,
-      "shots": 70,
-      "intimate_shots": 6,
+      "videos": 6,
+      "videos_with_bed": 6,
+      "shots": 219,
+      "intimate_shots": 30,
       "has_bed_rate": 100.0,
-      "intimate_freq": 8.57,
-      "first_bed_pos": 5.5
+      "intimate_freq": 13.7,
+      "first_bed_pos": 3.5
     },
     "快手": {
-      "videos": 22,
-      "videos_with_bed": 21,
-      "shots": 759,
-      "intimate_shots": 113,
-      "has_bed_rate": 95.45,
-      "intimate_freq": 14.89,
-      "first_bed_pos": 8.19
+      "videos": 5,
+      "videos_with_bed": 5,
+      "shots": 146,
+      "intimate_shots": 18,
+      "has_bed_rate": 100.0,
+      "intimate_freq": 12.33,
+      "first_bed_pos": 9.2
     }
   },
   "by_time_period": {
@@ -180,7 +180,7 @@
       "is_intimate": true
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "短剧·天降小福星，欢喜过大年 第174集",
       "drama_name": "天降小福星欢喜过大年",
       "episode_num": 174,
@@ -189,7 +189,7 @@
       "is_intimate": false
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "正牌学霸归来 第171集",
       "drama_name": "正牌学霸归来",
       "episode_num": 171,
@@ -198,7 +198,7 @@
       "is_intimate": false
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "短剧·风月不渡旧时人 第169集",
       "drama_name": "风月不渡旧时人",
       "episode_num": 169,
@@ -207,7 +207,7 @@
       "is_intimate": false
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "短剧·妈妈别怕，福星来了 第145集",
       "drama_name": "妈妈别怕福星来了",
       "episode_num": 145,
@@ -225,7 +225,7 @@
       "is_intimate": false
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "闪婚赘夫，他的身份藏不住了 第140集",
       "drama_name": "闪婚赘夫他的身份藏不住了",
       "episode_num": 140,
@@ -234,7 +234,7 @@
       "is_intimate": false
     },
     {
-      "platform": "快手",
+      "platform": "支付宝",
       "drama_episode": "《旧梦不僵，新景方长》第134集",
       "drama_name": "旧梦不僵新景方长",
       "episode_num": 134,
