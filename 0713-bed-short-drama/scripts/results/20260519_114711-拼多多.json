@@ -4502,9 +4502,51 @@
       "scene_desc": "镜头切换，年轻男性继续刮彩票",
       "drama_episode": "我有财富之眼 第4集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:18:45-00:18:47",
+      "scene_desc": "一名年轻男子坐在桌前，低头看着手中的物品，背景是玻璃窗，窗外有绿植和建筑。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "第4集 张进，一个平凡青年，多年供奉财神却屡遭打..."
+    },
+    {
+      "timestamp": "00:18:47-00:18:49",
+      "scene_desc": "镜头特写男子的脸部，他眼神专注，似乎在思考。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "太好了"
+    },
+    {
+      "timestamp": "00:18:49-00:18:50",
+      "scene_desc": "镜头切换，一双手拿着一张绿色的卡片，上面写着“刮大乐”，正在刮开。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "这能力果然有用啊"
+    },
+    {
+      "timestamp": "00:18:50-00:18:53",
+      "scene_desc": "镜头再次切回男子脸部特写，他露出自信的微笑。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "只要能找到刮大乐的彩票，我就能翻身了"
+    },
+    {
+      "timestamp": "00:18:53-00:18:56",
+      "scene_desc": "男子站起身，手持卡片，走到一个室内场景，背景有彩旗和装饰画，他走向柜台。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "老板"
+    },
+    {
+      "timestamp": "00:18:56-00:18:59",
+      "scene_desc": "镜头切换到一位中年男子，他看着镜头，面带笑容。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "小伙子运气不错嘛"
+    },
+    {
+      "timestamp": "00:18:59-00:19:00",
+      "scene_desc": "镜头切回年轻男子，他站在柜台前，表情严肃。",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "下集"
     }
   ],
-  "currentSegment": 75,
+  "currentSegment": 76,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:12:42.605Z"
+  "lastUpdate": "2026-07-14T14:13:09.771Z"
 }
