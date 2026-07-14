@@ -1814,9 +1814,63 @@
       "scene_desc": "女子将酒泼向男子，两人近距离对峙",
       "drama_episode": "《第1集 外卖员江莫误入江氏集团董事长江震的灵堂...》",
       "dialogue": "（无）"
+    },
+    {
+      "timestamp": "00:07:00-00:07:02",
+      "scene_desc": "快手界面，一位戴眼镜、涂红唇的女士特写，表情惊讶",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:02-00:07:06",
+      "scene_desc": "一位穿深色上衣、戴项链的男士特写，表情惊讶，背景有其他人",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:06-00:07:09",
+      "scene_desc": "男士表情变为惊喜，字幕显示“还是个美人儿啊”",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "还是个美人儿啊"
+    },
+    {
+      "timestamp": "00:07:09-00:07:10",
+      "scene_desc": "男士表情变为笑容，字幕显示“老板”",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "老板"
+    },
+    {
+      "timestamp": "00:07:10-00:07:12",
+      "scene_desc": "女士特写，表情惊讶，字幕显示“您这是要做什么”",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "您这是要做什么"
+    },
+    {
+      "timestamp": "00:07:12-00:07:13",
+      "scene_desc": "男女对视，男士伸手触碰女士下巴",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:13-00:07:15",
+      "scene_desc": "（亲密）男女亲吻，女士用手捂脸",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:15-00:07:16",
+      "scene_desc": "（亲密）亲吻继续，女士将手放在男士头上",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:07:16-00:07:17",
+      "scene_desc": "（亲密）亲吻结束，女士低头，男士看着她",
+      "drama_episode": "说好演戏，结果你真的 第1集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 28,
+  "currentSegment": 29,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T06:56:41.546Z"
+  "lastUpdate": "2026-07-14T06:57:09.955Z"
 }
