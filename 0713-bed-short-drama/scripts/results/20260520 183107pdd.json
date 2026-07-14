@@ -2918,9 +2918,39 @@
       "scene_desc": "女子仰头，字幕显示“系统送我离开”，随后女子身体变透明，逐渐消失。",
       "drama_episode": "《系统逼我做皇后》第1集",
       "dialogue": "系统送我离开"
+    },
+    {
+      "timestamp": "00:12:00-00:12:03",
+      "scene_desc": "夜晚，一座传统中式建筑“养心殿”上空出现闪电，随后画面闪白。",
+      "drama_episode": "《剧名》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:03-00:12:06",
+      "scene_desc": "一名身穿古装的女子出现，她表情平静，字幕显示“【家仪】”。",
+      "drama_episode": "《剧名》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:06-00:12:09",
+      "scene_desc": "画面切换到一个庭院，庭院里有木桶和井，字幕显示“三年后 洗衣局”。",
+      "drama_episode": "《剧名》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:09-00:12:12",
+      "scene_desc": "女子坐在木桶边，表情愤怒，双手抬起，字幕显示“狗系统你给我出来”。",
+      "drama_episode": "《剧名》第1集",
+      "dialogue": "狗系统你给我出来"
+    },
+    {
+      "timestamp": "00:12:12-00:12:15",
+      "scene_desc": "画面出现一个半透明的系统界面，字幕显示“能量不足 已将宿主传送至三年后”。",
+      "drama_episode": "《剧名》第1集",
+      "dialogue": "能量不足 已将宿主传送至三年后"
     }
   ],
-  "currentSegment": 48,
+  "currentSegment": 49,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:49:14.294Z"
+  "lastUpdate": "2026-07-14T16:50:40.318Z"
 }
