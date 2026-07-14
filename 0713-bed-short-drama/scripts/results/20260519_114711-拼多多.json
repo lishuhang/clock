@@ -3278,9 +3278,63 @@
       "scene_desc": "夜晚场景，多人持武器",
       "drama_episode": "《一品军侯》第1集",
       "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:45-00:13:47",
+      "scene_desc": "夜晚的古代街道上，一群人围着一个被绑住的人，旁边有士兵看守，背景是古建筑",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:47-00:13:49",
+      "scene_desc": "镜头拉近，一个被蒙住眼睛的男子，他穿着深色长袍，有人正在解开他眼上的布条",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:49-00:13:53",
+      "scene_desc": "男子睁开眼睛，露出震惊的表情，环顾四周",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:13:53-00:13:55",
+      "scene_desc": "男子看着前方，画面中出现字幕“这是哪”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "这是哪"
+    },
+    {
+      "timestamp": "00:13:55-00:13:57",
+      "scene_desc": "镜头转向人群，有穿着古装的男女，画面中出现字幕“好多女人”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "好多女人"
+    },
+    {
+      "timestamp": "00:13:57-00:13:59",
+      "scene_desc": "镜头回到男子，他表情复杂，画面中出现字幕“我不是为了救队友”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "我不是为了救队友"
+    },
+    {
+      "timestamp": "00:13:59-00:14:01",
+      "scene_desc": "男子低头，画面中出现字幕“被小日子的特工”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "被小日子的特工"
+    },
+    {
+      "timestamp": "00:14:01-00:14:03",
+      "scene_desc": "男子抬头，画面中出现字幕“炸死了吗”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "炸死了吗"
+    },
+    {
+      "timestamp": "00:14:03-00:14:05",
+      "scene_desc": "男子表情恍然大悟，画面中出现字幕“我这是穿越了”",
+      "drama_episode": "一品军侯 第1集",
+      "dialogue": "我这是穿越了"
     }
   ],
-  "currentSegment": 55,
+  "currentSegment": 56,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:49:11.822Z"
+  "lastUpdate": "2026-07-14T13:52:26.881Z"
 }
