@@ -3032,9 +3032,81 @@
       "scene_desc": "男子看着女子，画面出现字幕",
       "drama_episode": "《念念不死劫》第1集",
       "dialogue": "你需要上"
+    },
+    {
+      "timestamp": "00:12:30-00:12:32",
+      "scene_desc": "一位穿着白色衬衫、黑色背带、扎着马尾的年轻女性出现在画面中，她表情严肃。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "过一阵子我会来检验"
+    },
+    {
+      "timestamp": "00:12:32-00:12:36",
+      "scene_desc": "画面切换到一位穿着黑色西装的年轻男性，他坐在沙发上，表情严肃，一只手放在腹部，似乎在说话。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "如果不合格"
+    },
+    {
+      "timestamp": "00:12:36-00:12:37",
+      "scene_desc": "画面上方出现一条评论：“直播吧 来解尔诚交好蓝场 这TM就是全世界最绿的绿鱼！”",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:37-00:12:38",
+      "scene_desc": "画面回到男性角色，他继续说话。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "我们之间的交易"
+    },
+    {
+      "timestamp": "00:12:38-00:12:39",
+      "scene_desc": "画面再次切换到女性角色，她表情凝重。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "便结束"
+    },
+    {
+      "timestamp": "00:12:39-00:12:40",
+      "scene_desc": "画面回到男性角色，他表情严肃地看着对面的女性。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:40-00:12:41",
+      "scene_desc": "画面回到女性角色，她低着头，表情沮丧。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:41-00:12:42",
+      "scene_desc": "画面切换到特写镜头，一双手将一张黑色的卡片递给另一只手。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:42-00:12:43",
+      "scene_desc": "画面回到女性角色，她看着手中的卡片，表情复杂。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:43-00:12:44",
+      "scene_desc": "画面回到男性角色，他表情严肃地说话。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "你不想说点什么"
+    },
+    {
+      "timestamp": "00:12:44-00:12:46",
+      "scene_desc": "画面回到女性角色，她先是低头，然后抬起头，脸上露出一个微笑。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:46-00:12:48",
+      "scene_desc": "女性角色微笑着，然后抬头看向画面外，似乎在回应某人。",
+      "drama_episode": "《念念不无助》第1集",
+      "dialogue": "有大房子住"
     }
   ],
-  "currentSegment": 50,
+  "currentSegment": 51,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:43:57.615Z"
+  "lastUpdate": "2026-07-14T13:45:35.434Z"
 }
