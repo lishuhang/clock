@@ -2516,9 +2516,87 @@
       "scene_desc": "陆函表情惊讶，字幕显示“10分钟后”",
       "drama_episode": "末世奉朝，我国爆整个冰原 第2集",
       "dialogue": "10分钟后"
+    },
+    {
+      "timestamp": "00:10:00-00:10:02",
+      "scene_desc": "一名穿黑色T恤戴项链的男子站在室内，背景有玻璃门",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:10:02-00:10:05",
+      "scene_desc": "两名穿白色浴袍的女子站在室内，左粉发右黑发，左臂交叉",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "实在太谢谢你了"
+    },
+    {
+      "timestamp": "00:10:05-00:10:08",
+      "scene_desc": "黑发女子面向镜头，左粉发女子在背景",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "陆函"
+    },
+    {
+      "timestamp": "00:10:08-00:10:11",
+      "scene_desc": "黑色T恤男子面向镜头",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "待会等你王哥回来"
+    },
+    {
+      "timestamp": "00:10:11-00:10:14",
+      "scene_desc": "黑色T恤男子低头看手机",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "请你吃饭吧"
+    },
+    {
+      "timestamp": "00:10:14-00:10:17",
+      "scene_desc": "一只手拿着显示时间的手机，屏幕有“距离末日降临还有11小时”字样",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "距离末日降临还有11小时"
+    },
+    {
+      "timestamp": "00:10:17-00:10:20",
+      "scene_desc": "黑色T恤男子面向镜头",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "时间不多了"
+    },
+    {
+      "timestamp": "00:10:20-00:10:23",
+      "scene_desc": "黑色T恤男子低头看手机",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "我得赶紧去准备"
+    },
+    {
+      "timestamp": "00:10:23-00:10:26",
+      "scene_desc": "黑色T恤男子低头看手机",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "末日物资了"
+    },
+    {
+      "timestamp": "00:10:26-00:10:29",
+      "scene_desc": "黑色T恤男子与黑发女子面对面",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "不了嫂子"
+    },
+    {
+      "timestamp": "00:10:29-00:10:32",
+      "scene_desc": "黑色T恤男子面向镜头",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "我还有事"
+    },
+    {
+      "timestamp": "00:10:32-00:10:35",
+      "scene_desc": "黑色T恤男子与两名女子面对面，左粉发女子坐在马桶上",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "过会儿我们还会再见的"
+    },
+    {
+      "timestamp": "00:10:35-00:10:38",
+      "scene_desc": "城市航拍画面，有河流、高楼、道路",
+      "drama_episode": "末世寒潮，我国爆整个冰原 第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 40,
+  "currentSegment": 41,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:29:04.025Z"
+  "lastUpdate": "2026-07-14T13:31:09.477Z"
 }
