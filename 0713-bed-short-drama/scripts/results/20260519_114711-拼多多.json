@@ -1,0 +1,64 @@
+{
+  "video": "20260519_114711-拼多多.mp4",
+  "status": "in_progress",
+  "count": 0,
+  "rows": [
+    {
+      "timestamp": "00:01:30-00:01:34",
+      "scene_desc": "一位古装女子面带微笑，背景模糊有光效",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "第1集：虞晚棠前世被逼成为病娇虞皇后的陪嫁侍女..."
+    },
+    {
+      "timestamp": "00:01:34-00:01:37",
+      "scene_desc": "（亲密）女子在装满花瓣的浴池中沐浴，画面朦胧",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:37-00:01:40",
+      "scene_desc": "（亲密）女子在浴池中，一只手轻抚她的脸",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:40-00:01:43",
+      "scene_desc": "（亲密）女子在浴池中，一只手轻抚她的脖子",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:43-00:01:45",
+      "scene_desc": "浴池场景结束，画面切换到室内环境",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:45-00:01:47",
+      "scene_desc": "室内环境，桌上散落着纸张，出现“尚书房”字样",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "第1集：魏阳城穿过大凉谋主李承泽，一心只想当闲散..."
+    },
+    {
+      "timestamp": "00:01:47-00:01:49",
+      "scene_desc": "男子趴在桌上，出现“加俩小时”字样",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:49-00:01:51",
+      "scene_desc": "男子做出胜利手势",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:01:51-00:01:53",
+      "scene_desc": "男子坐在桌前，出现“李承泽”字样",
+      "drama_episode": "《一枕海棠醉君怀》第1集",
+      "dialogue": "-"
+    }
+  ],
+  "currentSegment": 7,
+  "totalSegments": 122,
+  "lastUpdate": "2026-07-14T06:22:11.868Z"
+}
