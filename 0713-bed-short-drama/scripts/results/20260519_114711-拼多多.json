@@ -3626,9 +3626,75 @@
       "scene_desc": "镜头切换，年轻男子表情严肃，字幕显示“满脸无情”",
       "drama_episode": "一品军侯 第1集",
       "dialogue": "满脸无情"
+    },
+    {
+      "timestamp": "00:15:00-00:15:02",
+      "scene_desc": "打开快手APP，进入短剧播放界面",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:15:02-00:15:05",
+      "scene_desc": "一名身穿白色古装的女子被一群身穿红色古装的女子围住，场面混乱",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "满脸无情"
+    },
+    {
+      "timestamp": "00:15:05-00:15:10",
+      "scene_desc": "一名身穿白色古装的女子被一群身穿红色古装的女子围住，场面混乱",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "个个都是精尽人亡"
+    },
+    {
+      "timestamp": "00:15:10-00:15:15",
+      "scene_desc": "一名身穿古装的男子，表情震惊，双手被绑，看着前方",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "这是拿人"
+    },
+    {
+      "timestamp": "00:15:15-00:15:20",
+      "scene_desc": "一名身穿古装的男子，表情震惊，看着前方",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "当配种的猪用啊这是"
+    },
+    {
+      "timestamp": "00:15:20-00:15:25",
+      "scene_desc": "一名身穿古装的男子，表情震惊，仰头向上看",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "这是什么天崩开局啊"
+    },
+    {
+      "timestamp": "00:15:25-00:15:28",
+      "scene_desc": "一群身穿白色古装的男子手持棍棒，将一名身穿黑色古装的男子围在中间",
+      "drama_episode": "《一品军侯》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:15:28-00:15:35",
+      "scene_desc": "画面切换，一名身穿白色上衣、棕色马甲的女子与一名身穿棕色西装的男子在户外对话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:15:35-00:15:40",
+      "scene_desc": "一名身穿棕色西装的男子与一名身穿白色上衣、棕色马甲的女子在户外对话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "肯定搞错了"
+    },
+    {
+      "timestamp": "00:15:40-00:15:45",
+      "scene_desc": "一名身穿棕色西装的男子与一名身穿白色上衣、棕色马甲的女子在户外对话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "我打个电话"
+    },
+    {
+      "timestamp": "00:15:45-00:15:50",
+      "scene_desc": "一名身穿白色上衣、棕色马甲的女子表情忧虑",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 60,
+  "currentSegment": 61,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:55:34.038Z"
+  "lastUpdate": "2026-07-14T13:56:27.082Z"
 }
