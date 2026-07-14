@@ -2960,9 +2960,81 @@
       "scene_desc": "男性特写镜头，字幕显示“司念”。",
       "drama_episode": "《念念不死劫》第1集",
       "dialogue": "司念"
+    },
+    {
+      "timestamp": "00:12:15-00:12:17",
+      "scene_desc": "一位穿黑色西装的男子坐在沙发上，看着画面左侧一位部分可见的女子",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:17-00:12:19",
+      "scene_desc": "男子看着女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "名字倒是挺别致"
+    },
+    {
+      "timestamp": "00:12:19-00:12:21",
+      "scene_desc": "画面切换到一位穿白色水手服的女子，她正看着前方",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:12:21-00:12:23",
+      "scene_desc": "男子手持一张黑色的卡片，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "以后我会定期往"
+    },
+    {
+      "timestamp": "00:12:23-00:12:25",
+      "scene_desc": "男子将卡片递出，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "这张卡里打钱"
+    },
+    {
+      "timestamp": "00:12:25-00:12:27",
+      "scene_desc": "画面切换到女子，她看着前方，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "来之前也会告诉你"
+    },
+    {
+      "timestamp": "00:12:27-00:12:29",
+      "scene_desc": "男子和女子并排坐在沙发上，男子拿着手机，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "家里有阿姨"
+    },
+    {
+      "timestamp": "00:12:29-00:12:31",
+      "scene_desc": "画面拉远，显示男子和女子坐在沙发上，前方站着三位穿制服的女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "有需要就跟她们说"
+    },
+    {
+      "timestamp": "00:12:31-00:12:33",
+      "scene_desc": "画面切回男子，他看着女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "还有"
+    },
+    {
+      "timestamp": "00:12:33-00:12:35",
+      "scene_desc": "男子看着女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "我喜欢听钢琴曲"
+    },
+    {
+      "timestamp": "00:12:35-00:12:37",
+      "scene_desc": "男子看着女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "每周两节课"
+    },
+    {
+      "timestamp": "00:12:37-00:12:39",
+      "scene_desc": "男子看着女子，画面出现字幕",
+      "drama_episode": "《念念不死劫》第1集",
+      "dialogue": "你需要上"
     }
   ],
-  "currentSegment": 49,
+  "currentSegment": 50,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T13:43:27.582Z"
+  "lastUpdate": "2026-07-14T13:43:57.615Z"
 }
