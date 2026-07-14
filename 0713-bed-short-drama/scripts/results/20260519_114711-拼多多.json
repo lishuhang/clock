@@ -4088,9 +4088,81 @@
       "scene_desc": "穿棕色西装的男士继续说话，字幕显示“会跟一个农民结婚的”",
       "drama_episode": "种地吧！少爷 第2集",
       "dialogue": "会跟一个农民结婚的"
+    },
+    {
+      "timestamp": "00:17:00-00:17:02",
+      "scene_desc": "打开快手，界面加载中",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:17:02-00:17:04",
+      "scene_desc": "加载短剧，穿棕色西装的男主与女主在田野对话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "会跟一个农民结婚的"
+    },
+    {
+      "timestamp": "00:17:04-00:17:06",
+      "scene_desc": "男主继续与女主对话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "合适吗"
+    },
+    {
+      "timestamp": "00:17:06-00:17:08",
+      "scene_desc": "男主与女主对话，画面出现另一名穿米色西装的男子",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "还有"
+    },
+    {
+      "timestamp": "00:17:08-00:17:10",
+      "scene_desc": "三人对话，背景有红色汽车，女主背对镜头",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你骗得了我妈"
+    },
+    {
+      "timestamp": "00:17:10-00:17:12",
+      "scene_desc": "男主面向镜头说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你可骗不了我"
+    },
+    {
+      "timestamp": "00:17:12-00:17:14",
+      "scene_desc": "女主面向男主说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你可骗不了我"
+    },
+    {
+      "timestamp": "00:17:14-00:17:16",
+      "scene_desc": "男主面向镜头说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你有什么资格看不起我"
+    },
+    {
+      "timestamp": "00:17:16-00:17:18",
+      "scene_desc": "男主面向镜头说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "我是高定哦"
+    },
+    {
+      "timestamp": "00:17:18-00:17:20",
+      "scene_desc": "女主面向男主说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你离了爸妈算什么东西呀"
+    },
+    {
+      "timestamp": "00:17:20-00:17:22",
+      "scene_desc": "女主面向男主说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "你离了爸妈算什么东西呀"
+    },
+    {
+      "timestamp": "00:17:22-00:17:24",
+      "scene_desc": "男主面向镜头说话",
+      "drama_episode": "《种地吧！少爷》第2集",
+      "dialogue": "不是你手消毒了吗"
     }
   ],
-  "currentSegment": 68,
+  "currentSegment": 69,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:04:20.685Z"
+  "lastUpdate": "2026-07-14T14:06:18.874Z"
 }
