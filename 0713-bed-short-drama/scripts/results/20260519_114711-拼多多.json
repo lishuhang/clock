@@ -4592,9 +4592,69 @@
       "scene_desc": "一只手拿起桌上的刮刮乐彩票",
       "drama_episode": "我有财富2.0 第4集",
       "dialogue": "可中不了哦"
+    },
+    {
+      "timestamp": "00:19:15-00:19:16",
+      "scene_desc": "一只手拿着一张印有卡通熊的彩票，桌上散落着多张彩票，其中一张上面有红色数字“7”",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:19:16-00:19:18",
+      "scene_desc": "一名穿白色T恤的男子看着镜头，表情严肃",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "等等"
+    },
+    {
+      "timestamp": "00:19:18-00:19:20",
+      "scene_desc": "一只手在书本上比划，背景模糊",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "这本上面的数字是"
+    },
+    {
+      "timestamp": "00:19:20-00:19:22",
+      "scene_desc": "回到彩票画面，手在彩票上移动",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:19:22-00:19:24",
+      "scene_desc": "男子表情凝重，低头看向下方",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "100万"
+    },
+    {
+      "timestamp": "00:19:24-00:19:26",
+      "scene_desc": "男子看着镜头，字幕显示“这张彩票里有100万”",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "这张彩票里有100万"
+    },
+    {
+      "timestamp": "00:19:26-00:19:28",
+      "scene_desc": "男子表情坚定，字幕显示“我一定要拿到它”",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "我一定要拿到它"
+    },
+    {
+      "timestamp": "00:19:28-00:19:30",
+      "scene_desc": "男子表情自信，字幕显示“小兄弟你买不买”",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "小兄弟你买不买"
+    },
+    {
+      "timestamp": "00:19:30-00:19:31",
+      "scene_desc": "穿黑色“YOTOA MLST”T恤的男子出现，桌上是彩票",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:19:31-00:19:32",
+      "scene_desc": "回到白衣男子，他表情惊讶",
+      "drama_episode": "我有财富之眼 第4集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 77,
+  "currentSegment": 78,
   "totalSegments": 122,
-  "lastUpdate": "2026-07-14T14:13:39.397Z"
+  "lastUpdate": "2026-07-14T14:14:18.961Z"
 }
