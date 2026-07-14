@@ -1,0 +1,134 @@
+[
+  {
+    "idx": 1,
+    "source": "batch1/分账电影成本与ROI分布.html",
+    "title": "分账电影成本与ROI分布：（剔除1亿以上成本项目）",
+    "source_footer": "数据来源：娱乐资本论 整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img1-styled.html",
+    "size_kb": 279,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 2,
+    "source": "batch1/在横店拍摄时长最久剧组top20.html",
+    "title": "2025.1-2026.6：在横店拍摄时长最久剧组TOP20",
+    "source_footer": "数据来源：横店影视城片场公众号、猫眼专业版，。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至20",
+    "min_height": 1350,
+    "rows": 21,
+    "output": "v219-img2-styled.html",
+    "size_kb": 270,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 3,
+    "source": "batch1/横店在组时间最久演员TOP20.html",
+    "title": "2025.1-2026.6横店在组时间最久演员TOP20",
+    "source_footer": "数据来源：横店影视城片场公众号。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去",
+    "min_height": 1350,
+    "rows": 21,
+    "output": "v219-img3-styled.html",
+    "size_kb": 266,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 4,
+    "source": "batch1/网大六年沉浮.html",
+    "title": "网大六年沉浮：成本翻了三倍，赚钱的概率跌至一成",
+    "source_footer": "数据来源：娱乐资本论 整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img4-styled.html",
+    "size_kb": 267,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 5,
+    "source": "batch1/网大题材图鉴.html",
+    "title": "网络电影题材图鉴：悬疑惊悚闷声发财，喜剧沦为“绞肉机”",
+    "source_footer": "数据来源：娱乐资本论 整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img5-styled.html",
+    "size_kb": 267,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 6,
+    "source": "batch1/院线电影制作成本ROI.html",
+    "title": "院线电影制作成本\\ROI统计",
+    "source_footer": "数据来源：娱乐资本论 整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后",
+    "min_height": 1080,
+    "rows": 16,
+    "output": "v219-img6-styled.html",
+    "size_kb": 264,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 7,
+    "source": "batch2/2025年Q1代言人汇总.html",
+    "title": "2025年Q1代言人汇总（部分）",
+    "source_footer": "数据来源：娱乐资本论整理及网络数据采集。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年",
+    "min_height": 1350,
+    "rows": 19,
+    "output": "v219-img7-styled.html",
+    "size_kb": 270,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 8,
+    "source": "batch2/Netflix会员情况.html",
+    "title": "Netflix会员情况",
+    "source_footer": "数据来源：公司财报。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后统计。",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img8-styled.html",
+    "size_kb": 265,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 9,
+    "source": "batch2/各韩娱公司近三年营业收入增长情况.html",
+    "title": "各韩娱公司近三年营业收入增长情况",
+    "source_footer": "数据来源：Capital IQ。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img9-styled.html",
+    "size_kb": 267,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 10,
+    "source": "batch2/横店每周竖屏短剧在拍剧组.html",
+    "title": "2025.1-2026.6横店每周竖屏短剧在拍剧组",
+    "source_footer": "数据来源：横店影视城片场公众号。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img10-styled.html",
+    "size_kb": 271,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 11,
+    "source": "batch2/演员投资回报榜TOP10.html",
+    "title": "演员投资回报榜TOP10",
+    "source_footer": "数据来源：娱乐资本论 整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2025年1月至2026年6月，去重后",
+    "min_height": 1080,
+    "rows": 0,
+    "output": "v219-img11-styled.html",
+    "size_kb": 262,
+    "remaining_placeholders": []
+  },
+  {
+    "idx": 12,
+    "source": "batch2/系列化短剧（未播）.html",
+    "title": "系列化短剧（未播）",
+    "source_footer": "数据来源：Dataeye剧查查、红果短剧APP，娱乐资本论整理。测试概述：基于6个平台每周2次录屏的26个片段，时间段2",
+    "min_height": 1080,
+    "rows": 17,
+    "output": "v219-img12-styled.html",
+    "size_kb": 271,
+    "remaining_placeholders": []
+  }
+]
