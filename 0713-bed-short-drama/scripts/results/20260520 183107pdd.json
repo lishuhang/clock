@@ -464,9 +464,69 @@
       "scene_desc": "（亲密）镜头再次切到男子，他突然睁开眼睛，表情震惊，字幕显示“怎么会突然做春梦了”。",
       "drama_episode": "《布衣镇山河》第1集",
       "dialogue": "怎么会突然做春梦了"
+    },
+    {
+      "timestamp": "00:02:00-00:02:03",
+      "scene_desc": "（亲密）一名男性躺在床上，表情痛苦，鼻孔有液体流出，一只手抚摸他的头发。字幕显示\"张青 中医药大学学生\"。",
+      "drama_episode": "《布衣镇山河》第1集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:03-00:02:04",
+      "scene_desc": "（亲密）一名女性正在给另一名女性的手进行针灸或按摩。背景有书法字帖。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:04-00:02:06",
+      "scene_desc": "一名女性对着镜头说话，表情惊讶。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:06-00:02:07",
+      "scene_desc": "一名女性做出\"嘘\"的手势，表情严肃。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:07-00:02:09",
+      "scene_desc": "一个弹窗广告，显示\"看3分钟短剧，赚10万金币\"和\"必得10万金币\"按钮。背景是宿舍场景。",
+      "drama_episode": "-",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:09-00:02:10",
+      "scene_desc": "一名女性对着镜头说话，表情平静。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "行那你问"
+    },
+    {
+      "timestamp": "00:02:10-00:02:11",
+      "scene_desc": "一名女性看着前方，表情平静。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:11-00:02:12",
+      "scene_desc": "一名女性站着说话，字幕显示\"故意在这里捣乱\"。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "故意在这里捣乱"
+    },
+    {
+      "timestamp": "00:02:12-00:02:13",
+      "scene_desc": "一只手正在给另一只手进行针灸或按摩。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
+    },
+    {
+      "timestamp": "00:02:13-00:02:15",
+      "scene_desc": "一名女性闭着眼睛，表情痛苦或疲惫。",
+      "drama_episode": "《逃离女生宿舍》第3集",
+      "dialogue": "-"
     }
   ],
-  "currentSegment": 8,
+  "currentSegment": 9,
   "totalSegments": 56,
-  "lastUpdate": "2026-07-14T16:08:56.525Z"
+  "lastUpdate": "2026-07-14T16:11:09.087Z"
 }
