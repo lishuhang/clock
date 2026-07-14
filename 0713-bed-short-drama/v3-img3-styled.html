@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>时段对比分析</title>
+<style>
+:root {
+  --yz-accent: #fc8166;
+  --yz-accent-deep: #e55b46;
+  --yz-text: #312e2e;
+  --yz-text-secondary: #6b6666;
+  --yz-bg: #ffffff;
+  --yz-bg-canvas: #efefef;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+  background: var(--yz-bg);
+  color: var(--yz-text);
+  width: 1080px;
+  height: 900px;
+  overflow: hidden;
+  position: relative;
+}
+.container {
+  width: 100%; height: 100%;
+  padding: 36px 48px 60px 48px;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+h2 {
+  text-align: center;
+  font-size: 24px; font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  color: var(--yz-text);
+}
+.subtitle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--yz-text-secondary);
+  margin-bottom: 24px;
+}
+.chart-body {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.watermark {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 72px; font-weight: 900;
+  color: rgba(252, 129, 102, 0.06);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 0;
+  letter-spacing: 8px;
+}
+.chart-content {
+  position: relative;
+  z-index: 1;
+  width: 100%; height: 100%;
+}
+.footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 48px 16px 48px;
+}
+.footer-source {
+  font-size: 10px;
+  color: var(--yz-text-secondary);
+  line-height: 1.5;
+  max-width: 70%;
+}
+.footer-logo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--yz-accent);
+  letter-spacing: 2px;
+}
+</style></head><body>
+<div class="container">
+  <h2>时段对比分析</h2>
+  <div class="subtitle">下午 · 晚间 · 深夜 | 深夜推送更激进</div>
+  <div class="chart-body">
+    <div class="watermark">娱乐资本论 娱乐资本论 娱乐资本论</div>
+    <div class="chart-content"><div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%;">
+<div class="subchart"><h3>床戏频率（亲密戏片段/总片段）</h3><div class="bars"><div class="bar-col"><div class="bar" style="height:166px;background:#fac063">13.37%</div><div class="bar-label">下午</div><div class="bar-sub">10段 / 389片段</div></div><div class="bar-col"><div class="bar" style="height:120px;background:#fc8166">9.68%</div><div class="bar-label">晚间</div><div class="bar-sub">1段 / 31片段</div></div><div class="bar-col"><div class="bar" style="height:180px;background:#e55b46">14.52%</div><div class="bar-label">深夜</div><div class="bar-sub">6段 / 248片段</div></div></div></div>
+<div class="subchart"><h3>亲密戏片段数</h3><div class="bars"><div class="bar-col"><div class="bar" style="height:180px;background:#fac063">52</div><div class="bar-label">下午</div><div class="bar-sub">14-18点</div></div><div class="bar-col"><div class="bar" style="height:10px;background:#fc8166">3</div><div class="bar-label">晚间</div><div class="bar-sub">19-21点</div></div><div class="bar-col"><div class="bar" style="height:125px;background:#e55b46">36</div><div class="bar-label">深夜</div><div class="bar-sub">22-23点</div></div></div></div>
+</div>
+<style>
+.subchart { background: var(--yz-bg-canvas); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
+.subchart h3 { text-align: center; font-size: 14px; margin-bottom: 16px; font-weight: 600; }
+.bars { display: flex; justify-content: center; align-items: flex-end; gap: 40px; flex: 1; padding: 20px 0; }
+.bar-col { display: flex; flex-direction: column; align-items: center; }
+.bar { width: 80px; border-radius: 6px 6px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; color: #fff; font-size: 13px; font-weight: 600; }
+.bar-label { font-size: 13px; margin-top: 8px; font-weight: 500; }
+.bar-sub { font-size: 10px; color: var(--yz-text-secondary); margin-top: 2px; }
+</style></div>
+  </div>
+  <div class="footer">
+    <div class="footer-source">数据来源：娱乐资本论于2026年5月19日至5月20日期间，对红果、拼多多、美团、快手、支付宝5个短剧平台进行34段信息流录屏（截至发稿已识别21段），通过多模态模型逐帧识别后按片段合并去重，共771个短剧片段 | 时段：下午14-18点 · 晚间19-21点 · 深夜22-23点</div>
+    <div class="footer-logo">娱乐资本论</div>
+  </div>
+</div>
+</body></html>
