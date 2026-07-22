@@ -1,1 +1,3 @@
 0722-gpt2/.deploy/
+.secrets
+.state
