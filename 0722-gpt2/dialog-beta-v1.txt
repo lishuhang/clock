@@ -1,0 +1,42 @@
+我已经摸清了v27.2的结构:
+/account/checkin
+架构:单文件Cloudflare Worker，前端HTML+CSS+JS全部内嵌，后端只是把/api/*透传到
+https://grok.17nas.com/local-api/*("马良生图"的镜像站)，加/api/image-proxy媒体代理。
+上游API:/auth/register、 /auth/login、/account/quota 、
+(上游已下
+/proxy/videos, session token 通 x-Session-
+线)、
+/account/invite、 /proxy/image-tasks、
+Token 头+grok_webui_local_auth cookie 传递。
+模型: gpt-image-2/ grok-imagine-image / -image-edit / -pro/ -lite / -video.
+alpha map +所有
+待剥离:#watermarkPanel
+(加水印面板)+#removewmPanel
+(去水印面板)+内嵌的3张base64
+openwatermarkModal/closeWatermarkModal/handlewm*/exporthatermarkImage/openRemovenModal/closeRemove
+WmModal/setRwmType/handleRwmFiles/processAllRwmFiles/autoDetectAlphaGain/removeWatermarkAlpha K
+数+changelog中v27/v271/v27.2关于水印的描述。
+现在去V2EX调研无注册白嫖站。
+已运行3条命令
+例子1(喵绘miaodraw.com)要求邮箱注册送积分，例子2(nodeai.click)需要回帖留ID送额
+度，都不符合"无注册/无邮箱"。我自行搜V2EX同类自荐帖。
+Y已运行6杀命令>
+找到几个高度相关的帖子:
+1173809「免注册免费直接生图一image.aitool.cfd」一标题就明确"免注册"
+1222012 keydraw.97api.com- “每天1000张免费额度”，gpt-image-2模型，看广告获取key
+1207905「GPTImage 2生图网站可白嫖」
+1216811 Pixae.app - Nano Banana/GPT Image
+已运行1条命令>
+keydraw.97api.com看起来最理想(每天1000张免费gpt-image-2，看广告拿key)。让我立刻测
+已运行2条命令>
+完美命中!keydraw.97api.com的JS里有:
+fetch("/api/gift-key"，{cache:"no-store"})一免登录拿key
+PosT /api/image-tasks/generations一文生图
+posT/api/image-tasks/edits一图生图
+Base URL:https://www.97api.com/v1 (OpenAl兼容
+立刻测试gift-key接口和生图。
+已运行5条命令>
+完整跑通!47秒生成图片，URL公开可访问。让我验证图片可直接访问、并测OpenAI兼容端
+点是否也能用gift-key。
+已运行6条命令
+Long poll for edit task
