@@ -1,4 +1,4 @@
-v2ex文章id,检查日期,费率,涉及中转站域名,原帖标题,备注
+﻿v2ex文章id,检查日期,费率,涉及中转站域名,原帖标题,备注
 1209728,2026-07-22,约¥0.12/张(轻享月卡¥69/700算力,gpt-image-2每张1算力),oimi.ai,纯免费GPT-Image-2 AI 生图服务：限时无需任何登录,标题宣称免登录但实际接入NextAuth（Google/邮箱/手机登录）；不能直接调用API；月卡最低¥0.12/张
 1173809,2026-07-22,DNS失效无法核查,image.aitool.cfd,"[免费工具推荐] 免注册免费直接生图 — AI 绘图助手「image.aitool.cfd」",DNS解析失败（域名可能已下线）；待后续重试DNS
 1222012,2026-07-22,免费(共享Gift Key,日限额) / ¥0.015/1k,¥0.1/2k,¥0.1/4k(用户自填97api key),keydraw.97api.com,一个简陋的免费生图网站。模型image2,v1.1已使用；当前共享Gift Key（Gift-Key-V2EX999）每日额度耗尽；上游97api.com需付费API key；keydraw.97api.com/api/gift-key 永远返回同一key；用户自填97api key时按97api官方价计费
