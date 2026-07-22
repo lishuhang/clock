@@ -1,0 +1,27 @@
+v2ex文章id,检查日期,费率,涉及中转站域名,原帖标题,备注
+1209728,2026-07-22,约¥0.12/张(轻享月卡¥69/700算力,gpt-image-2每张1算力),oimi.ai,纯免费GPT-Image-2 AI 生图服务：限时无需任何登录,标题宣称免登录但实际接入NextAuth（Google/邮箱/手机登录）；不能直接调用API；月卡最低¥0.12/张
+1173809,2026-07-22,DNS失效无法核查,image.aitool.cfd,"[免费工具推荐] 免注册免费直接生图 — AI 绘图助手「image.aitool.cfd」",DNS解析失败（域名可能已下线）；待后续重试DNS
+1222012,2026-07-22,免费(共享Gift Key,日限额) / ¥0.015/1k,¥0.1/2k,¥0.1/4k(用户自填97api key),keydraw.97api.com,一个简陋的免费生图网站。模型image2,v1.1已使用；当前共享Gift Key（Gift-Key-V2EX999）每日额度耗尽；上游97api.com需付费API key；keydraw.97api.com/api/gift-key 永远返回同一key；用户自填97api key时按97api官方价计费
+1222163,2026-07-22,0.2倍官方(约¥0.014/1k,需登录确认),yuntoken.app,"[开业福利] 白嫖$10（可抵500张图），支持gpt-image-2，GPT 0.2倍起，Claude 0.7倍起，可以生图的中转站！",需注册账号并回帖/加群送$10额度（约抵500张图≈$0.02/张≈¥0.14/张）；GPT 0.2倍起为文本模型倍率；不符合"无注册"要求
+1216942,2026-07-22,需登录查看(公开页未显示),ainb.plus,欢迎体验我的中转站 claude 4.8、image2、gpt5.5,中转站需注册并充值；SPA无公开价格；不符合"无注册"要求
+1207905,2026-07-22,区域封锁无法核查,gpt-image-prompt.com,自己做的GPT Image 2 生图网站可白嫖,HTTP 451（区域封锁）；且需登录后才能用更多额度
+1207896,2026-07-22,月订阅$10起/300credits(≤2K),gptimage2.im,做了一个GPT Image 2 生成器不得不说GPT Image 2 生成的美女真漂亮,需Sign in/Create account；Basic$10/月(300credits,≤2K),Pro$20/月(1000credits),Max$50/月(3000credits)；不符合"无注册"要求
+1207807,2026-07-22,月订阅$14.9起/年(年付,~2400张/年),squido.ai,可以免费白嫖GPT Image 2的网站每天都有刷新额度,需注册登录；Basic$14.9/月(年付,7200credits/年=2400张),Premium$19.9/月(6000张/年),Pro$39.9/月(16000张/年)；免费用户6 credits/日
+1207630,2026-07-22,¥0.30/1k,¥0.50/2k,¥0.80/4k,gptimage2.top,今天把GPT Image 2接进来了做了个小站可以免费体验2次,按量¥20/400credits；1K=6积分,2K=10积分,4K=16积分 → ¥0.30/1k, ¥0.50/2k, ¥0.80/4k；需登录
+1208564,2026-07-22,¥0.2/张(不分1K/2K/4K),grok.17nas.com,我做了一个可以免费使用的GPT-image-2生图网站也接了Grok图片/视频,v1.1已使用（马良通道）；2026-07-22测试发现上游已加Cloudflare Challenge墙，server-side proxy已无法直接访问/local-api/*；需浏览器自动化才可用；价格¥0.2/张,注册赠送¥1,10元起充
+1208692,2026-07-22,$0.009/张(约¥0.065/张,不分1K/2K/4K),atlascloud.ai / gptimagegenerator.com,GPT image 2图片生成器提供免费额度,Atlas Cloud公开价：Text-to-Image $0.009/PIC, Edit $0.01/PIC；gptimagegenerator.com HTTP 402(需付费)；需注册账号
+1216811,2026-07-22,需登录查看(公开页未显示),pixae.app,Pixae.app：一个集成了Nano Banana/GPT Image和多种AI修图工具的生图站,需注册登录才能Start Free；SPA无公开价格；不符合"无注册"要求
+1208564-alt,2026-07-22,仅图床非生图API,nodeimage.com,（同1208564，B站作者的图床CDN）,仅是图床不是生图API
+liuliuqiu,2026-07-22,需登录查看(公开页未显示),liuliuqiu.net,溜溜球 - 关联1222012提到,需登录；有"邀请好友注册双方得糖果"机制；不符合"无注册"要求
+freegpt.im,2026-07-22,Cloudflare封锁无法核查,freegpt.im,（非v2ex来源，搜索引擎发现）,Cloudflare封锁curl访问；宣称免登录但实际无法server-side验证
+gptimages2.ai,2026-07-22,月订阅$10起/300credits(≤2K),gptimages2.ai,（非v2ex来源，搜索引擎发现）,需Sign in/Create account；Basic$10/月(300credits),Pro$20/月(1000credits)；不符合"无注册"要求
+gptimager.com,2026-07-22,月订阅$19.9起/~250张,gptimager.com,（非v2ex来源，搜索引擎发现）,Starter$19.9/月(500credits≈250张),Creator$49.9/月(1500credits≈750张),Plus更高；Self-host需付费
+97api.com,2026-07-22,¥0.015/1k,¥0.1/2k,¥0.1/4k,www.97api.com,（keydraw的上游API gateway）,AI API Gateway；需Bearer API key；官方价：廉价分组¥0.015/张(限1K,2K/4K也降级为1K),2K-4K分组¥0.1/张(支持1K/2K/4K)；价格透明,适合自定义通道
+
+价格对比说明:
+- 最便宜: 97api.com 廉价分组 ¥0.015/张(限1K) - 推荐用于1K出图
+- 1K/2K/4K 都支持且最便宜: 97api.com 2K-4K分组 ¥0.1/张(三档同价)
+- gptimage2.top 按量付费但比 97api 贵3-8倍(¥0.30/0.50/0.80)
+- 马良 grok.17nas.com ¥0.2/张 不分分辨率(已加CF墙不可用)
+- atlascloud.ai $0.009/张≈¥0.065/张 不分分辨率(需注册)
+- 月订阅站(gptimage2.im/squido/gptimager/oimi)适合重度用户,不适合按张计费对比
