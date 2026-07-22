@@ -1,0 +1,19 @@
+v2ex文章id,检查日期,可用性,涉及中转站域名,原帖标题,备注
+1209728,2026-07-22,否,oimi.ai,纯免费GPT-Image-2 AI 生图服务：限时无需任何登录,标题宣称免登录但实际接入NextAuth（Google/邮箱/手机登录）；不能直接调用API
+1173809,2026-07-22,未知,image.aitool.cfd,"[免费工具推荐] 免注册免费直接生图 — AI 绘图助手「image.aitool.cfd」",DNS解析失败（域名可能已下线）；待后续重试DNS
+1222012,2026-07-22,部分可用,keydraw.97api.com,一个简陋的免费生图网站。模型image2,v1.1已使用；当前共享Gift Key（Gift-Key-V2EX999）每日额度耗尽；上游97api.com需付费API key；keydraw.97api.com/api/gift-key 永远返回同一key
+1222163,2026-07-22,否,yuntoken.app,"[开业福利] 白嫖$10（可抵500张图），支持gpt-image-2，GPT 0.2倍起，Claude 0.7倍起，可以生图的中转站！",需注册账号并领取开业福利额度；不符合"无注册"要求
+1216942,2026-07-22,否,ainb.plus,欢迎体验我的中转站 claude 4.8、image2、gpt5.5,中转站需注册并充值；不符合"无注册"要求
+1207905,2026-07-22,否,gpt-image-prompt.com,自己做的GPT Image 2 生图网站可白嫖,HTTP 451（区域封锁）；且需登录后才能用更多额度
+1207896,2026-07-22,否,gptimage2.im,做了一个GPT Image 2 生成器不得不说GPT Image 2 生成的美女真漂亮,需Sign in/Create account；不符合"无注册"要求
+1207807,2026-07-22,否,squido.ai,可以免费白嫖GPT Image 2的网站每天都有刷新额度,需注册登录才能使用
+1207630,2026-07-22,否,gptimage2.top,今天把GPT Image 2接进来了做了个小站可以免费体验2次,需登录后才能体验；免费2次后需付费
+1208564,2026-07-22,否,grok.17nas.com,我做了一个可以免费使用的GPT-image-2生图网站也接了Grok图片/视频,v1.1已使用（马良通道）；2026-07-22测试发现上游已加Cloudflare Challenge墙，server-side proxy已无法直接访问/local-api/*；需浏览器自动化才可用
+1208692,2026-07-22,否,atlascloud.ai / gptimagegenerator.com,GPT image 2图片生成器提供免费额度,需注册账号；不符合"无注册"要求
+1216811,2026-07-22,否,pixae.app,Pixae.app：一个集成了Nano Banana/GPT Image和多种AI修图工具的生图站,需注册登录才能Start Free；不符合"无注册"要求
+1208564-alt,2026-07-22,否,nodeimage.com,（同1208564，B站作者的图床CDN）,仅是图床不是生图API
+liuliuqiu,2026-07-22,否,liuliuqiu.net,溜溜球 - 关联1222012提到,需登录；有"邀请好友注册双方得糖果"机制；不符合"无注册"要求
+freegpt.im,2026-07-22,否,freegpt.im,（非v2ex来源，搜索引擎发现）,Cloudflare封锁curl访问；宣称免登录但实际无法server-side验证
+gptimages2.ai,2026-07-22,否,gptimages2.ai,（非v2ex来源，搜索引擎发现）,需Sign in/Create account；不符合"无注册"要求
+gptimager.com,2026-07-22,否,gptimager.com,（非v2ex来源，搜索引擎发现）,Self-host需付费；线上版需注册
+97api.com,2026-07-22,否,www.97api.com,（keydraw的上游API gateway）,AI API Gateway；需Bearer API key；非免费
