@@ -12,13 +12,7 @@ https://iptv345.lishuhang.workers.dev/gt5.m3u8 时，相当于打开了 tid=gt&i
 如最终成功，也请把 worker js 输出一份到 iptv345-v1.0.js 以便我备份。
 
 Cloudflare token
-
-260514-glm
-cfat_neyR5qerEFYKtkpKZ0zuL6r0TVyDXH5YrOfLAOMI26d2f730
-帐户 ID
-ec44dddde866c789a9dd26f5d0cdb248
-lishuhang@gmail.com
-无过期时间  显示完整信息
+（略）
 
 思考过程
 我将开始这个任务。这是一个 Cloudflare Workers 中转站开发任务，需要：
@@ -729,7 +723,7 @@ gt:5 OK，fjitv:1 报 404！让我手工测一下 fjitv:1 是否真的不能播�
 
 确认 fjitv:1 在源站就是 404！让我用浏览器方式访问 m.345iptv.com 的 fjitv 频道页确认这是源站问题：
 
-注意：源站列表里的 token 是 3bf10f3e48cccef8c056416ed36de5a0（特定 token），不是 dummy。让我用源站的真实 token 测试：
+注意：源站列表里的 token 是 （特定 token），不是 dummy。让我用源站的真实 token 测试：
 
 让我看 fjitv:1 的实际 HTML 结构：
 
@@ -1317,12 +1311,7 @@ list-ysp.txt （在其他iptv源不变的前提下仅放置新增的央视频源
 
 Cloudflare token
 
-260514-glm
-cfat_neyR5qerEFYKtkpKZ0zuL6r0TVyDXH5YrOfLAOMI26d2f730
-帐户 ID
-ec44dddde866c789a9dd26f5d0cdb248
-lishuhang@gmail.com
-无过期时间  显示完整信息
+
 
 思考过程
 我将首先调查 yangshipin.cn 网站，以了解 m3u8 URL 是如何生成的。
@@ -1635,17 +1624,6 @@ ysp URL 也已过期，需运行 node scripts/gen_ysp_urls3.js 刷新后重新�
 
 自己研究怎么自动运行，反正最后目标是保证用户的m3u8地址始终不变。解决ysp和xuexi的失效问题，同时解决ysp在没有referer或其他原因导致的外部访问时画面是一滩绿色的问题。
 
-github token
-260622-glm
-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
-
-Cloudflare token
-260514-glm
-cfat_neyR5qerEFYKtkpKZ0zuL6r0TVyDXH5YrOfLAOMI26d2f730
-帐户 ID
-ec44dddde866c789a9dd26f5d0cdb248
-lishuhang@gmail.com
-无过期时间  显示完整信息
 继续直到完成 
 GitHub Actions 自动化完成！所有步骤全部 ✓ 通过。
 
