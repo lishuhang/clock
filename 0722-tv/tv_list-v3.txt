@@ -1,0 +1,208 @@
+## 国际
+
+ABC Australia,https://abc-news-dmd-streams-1.akamaized.net/out/v1/abc83881886746b0802dc3e7ca2bc792/index.m3u8
+ABC News Live,https://aegis-cloudfront-1.tubi.video/d6cbb0de-68e4-4f3b-82f9-bf5d526e0bde/index.m3u8
+ABC News Live,https://d4ybyqrhce41r.cloudfront.net/v1/master/3fec3e5cac39a52b2132f9c66c83dae043dc17d4/prod-xumo-linear-nbcu-hlsv3/master.m3u8?ads.channelId=99991626
+AJE,https://live-hls-web-aje-fa.getaj.net/AJE/index.m3u8
+Arirang,https://amdlive-ch01-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/chunklist_b3256000_sleng.m3u8
+BBC News,https://vs-hls-push-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_news_channel_hd/mobile_wifi_main_sd_abr_v2.m3u8
+CBS News,https://cbsn-us-vtt.cbsnstream.cbsnews.com/out/v1/ef868690d34144509eda696884bf1619/master.m3u8
+CBS News,https://cbsn-us.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master.m3u8
+CBS News,https://jmp2.uk/plu-6350fdd266e9ea0007bedec5.m3u8
+CBS News,https://jmp2.uk/plu-6231eb3865be650007f59595.m3u8
+CBS News,https://jmp2.uk/plu-5a6b92f6e22a617379789618.m3u8
+CGTN,https://english-livebkali.cgtn.com/live/encgtn.m3u8
+CGTN,http://english-livetx.cgtn.com/hls/yypdyyctzb_hd.m3u8
+CGTN,https://0472.org/hls/cgtn.m3u8
+CGTN,https://play.kankanlive.com/live/1698423645566913.m3u8
+CGTN Doc,https://english-livetx.cgtn.com/hls/yypdjlctzb_hd.m3u8
+CGTN Doc,https://0472.org/hls/cgtnd.m3u8
+CNA,https://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index_5.m3u8
+CNBC,https://stream.livenewsplay.com:9443/hls/cnbc/cnbcsd.m3u8
+CNN,https://d3bp6dwmpbdajl.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ury0meh5m4nzm/index.m3u8
+Fox News,https://stream.livenewsplay.com:9443/hls/foxnews/foxsd.m3u8
+GB News,https://live-gbnews.simplestreamcdn.com/live5/gbnews/bitrate1.isml/manifest.m3u8
+GB News,https://live-gbnews-ssai-test.simplestreamcdn.com/v1/master/82267e84b9e5053b3fd0ade12cb1a146df74169a/gbnews-live-TEST/index.m3u8
+GB News,https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-gbnewsnz-samsungnz/playlist.m3u8
+GB News,https://amg01076-lightningintern-gbnewsau-samsungau-et7fz.amagi.tv/playlist/amg01076-lightningintern-gbnewsau-samsungau/playlist.m3u8
+GB News,https://amg01076-lightningintern-gbnewsse-samsungse-q7qjc.amagi.tv/playlist/amg01076-lightningintern-gbnewsse-samsungse/playlist.m3u8
+GB News,https://amg01076-lightningintern-gbnews-samsunguk-0lu52.amagi.tv/playlist/amg01076-lightningintern-gbnews-samsunguk/playlist.m3u8
+GB News,https://rakutenaa-lightning-gbnews-rakuten-ccoa9.amagi.tv/playlist/rakutenAA-lightning-gbnews-rakuten/playlist.m3u8
+Newsmax,http://nmxlive.akamaized.net/hls/live/529965/Live_1/index.m3u8
+PressTV,https://live.presstv.ir/hls/presstv.m3u8
+RT,https://rt-glb.rttv.com/dvr/rtnews/playlist.m3u8
+Wion,https://d7x8z4yuq42qn.cloudfront.net/index_7.m3u8
+
+## 香港
+
+HOY 76,https://iptv345.lishuhang.workers.dev/gt22.m3u8
+HOY 77,https://iptv345.lishuhang.workers.dev/gt24.m3u8
+HOY 78,https://iptv345.lishuhang.workers.dev/gt11.m3u8
+HOY 78,https://iptv345.lishuhang.workers.dev/gt23.m3u8
+NOW新闻台,https://iptv345.lishuhang.workers.dev/gt17.m3u8
+NOW直播台,https://iptv345.lishuhang.workers.dev/gt16.m3u8
+NOW财经台,https://iptv345.lishuhang.workers.dev/gt18.m3u8
+TVB Plus,https://iptv345.lishuhang.workers.dev/gt8.m3u8
+TVB无线新闻台,https://iptv345.lishuhang.workers.dev/gt6.m3u8
+TVB明珠台,https://iptv345.lishuhang.workers.dev/gt9.m3u8
+TVB明珠台,https://o11.163189.xyz/stream/tvb/mzt/
+TVB翡翠台,https://iptv345.lishuhang.workers.dev/gt5.m3u8
+TVB翡翠台,https://o11.163189.xyz/stream/tvb/fct/
+ViuTV,https://iptv345.lishuhang.workers.dev/gt19.m3u8
+ViuTV6,https://iptv345.lishuhang.workers.dev/gt20.m3u8
+凤凰卫视中文台,https://iptv345.lishuhang.workers.dev/gt1.m3u8
+凤凰卫视资讯台,https://iptv345.lishuhang.workers.dev/gt2.m3u8
+凤凰卫视香港台,https://iptv345.lishuhang.workers.dev/gt3.m3u8
+港台电视31,https://iptv345.lishuhang.workers.dev/gt26.m3u8
+港台电视32,https://iptv345.lishuhang.workers.dev/gt27.m3u8
+
+## 台湾
+
+TVBS新闻台,https://iptv345.lishuhang.workers.dev/gt55.m3u8
+TVBS新闻台,http://61.221.215.25:8800/hls/9/index.m3u8
+三立新闻台,https://iptv345.lishuhang.workers.dev/gt48.m3u8
+东森新闻台,https://iptv345.lishuhang.workers.dev/gt44.m3u8
+东森财经新闻台,https://iptv345.lishuhang.workers.dev/gt45.m3u8
+中天新闻台,https://iptv345.lishuhang.workers.dev/gt43.m3u8
+中视新闻台,https://iptv345.lishuhang.workers.dev/gt46.m3u8
+华视新闻台,https://iptv345.lishuhang.workers.dev/gt51.m3u8
+台视新闻台,https://iptv345.lishuhang.workers.dev/gt47.m3u8
+寰宇新闻台,https://iptv345.lishuhang.workers.dev/gt53.m3u8
+寰宇新闻台湾台,https://iptv345.lishuhang.workers.dev/gt54.m3u8
+民视新闻台,https://iptv345.lishuhang.workers.dev/gt50.m3u8
+
+## 大陆
+
+CETV1教育综合,https://345.lishuhang.com/xuexi_416c4a41.m3u8
+上海新闻综合,https://iptv345.lishuhang.workers.dev/migu83.m3u8
+东南卫视,https://345.lishuhang.com/xuexi_74cd6a04.m3u8
+东方卫视,https://iptv345.lishuhang.workers.dev/ws4.m3u8
+东方卫视,https://iptv345.lishuhang.workers.dev/itv40.m3u8
+东方卫视,https://iptv345.lishuhang.workers.dev/migu41.m3u8
+东方卫视,https://345.lishuhang.com/yspw03.m3u8
+东方卫视,https://345.lishuhang.com/xuexi_b03d633a.m3u8
+云南卫视,https://345.lishuhang.com/yspw27.m3u8
+云南卫视,https://345.lishuhang.com/xuexi_f79e9c26.m3u8
+兵团卫视,https://345.lishuhang.com/xuexi_16bcdb12.m3u8
+内蒙古卫视,https://345.lishuhang.com/yspw26.m3u8
+内蒙古卫视,https://345.lishuhang.com/xuexi_74dd173b.m3u8
+内蒙古蒙语卫视,https://345.lishuhang.com/xuexi_3072aafb.m3u8
+北京卫视,https://345.lishuhang.com/yspw01.m3u8
+北京卫视,https://345.lishuhang.com/xuexi_b2e730bc.m3u8
+吉林卫视,https://345.lishuhang.com/yspw23.m3u8
+吉林卫视,https://345.lishuhang.com/xuexi_0bb93494.m3u8
+四川卫视,https://345.lishuhang.com/yspw13.m3u8
+四川卫视,https://345.lishuhang.com/xuexi_90edcdb6.m3u8
+大湾区卫视,https://345.lishuhang.com/xuexi_b3b303ac.m3u8
+天津卫视,https://345.lishuhang.com/yspw22.m3u8
+天津卫视,https://345.lishuhang.com/xuexi_f34309e5.m3u8
+宁夏卫视,https://345.lishuhang.com/yspw25.m3u8
+宁夏卫视,https://345.lishuhang.com/xuexi_782bc32a.m3u8
+安徽卫视,https://345.lishuhang.com/yspw19.m3u8
+安徽卫视,https://345.lishuhang.com/xuexi_633fd677.m3u8
+山东卫视,https://345.lishuhang.com/yspw21.m3u8
+山东卫视,https://345.lishuhang.com/xuexi_15d651d2.m3u8
+山西卫视,https://345.lishuhang.com/yspw28.m3u8
+山西卫视,https://345.lishuhang.com/xuexi_39c3c722.m3u8
+广东卫视,https://345.lishuhang.com/yspw07.m3u8
+广东卫视,https://345.lishuhang.com/xuexi_6766ec77.m3u8
+广西卫视,https://345.lishuhang.com/yspw08.m3u8
+广西卫视,https://345.lishuhang.com/xuexi_d45e1b2d.m3u8
+康巴卫视,https://345.lishuhang.com/xuexi_2e1b591d.m3u8
+延边卫视,https://345.lishuhang.com/xuexi_9e532e80.m3u8
+新疆卫视,https://345.lishuhang.com/yspw31.m3u8
+新疆卫视,https://345.lishuhang.com/xuexi_95b30ad2.m3u8
+江苏卫视,https://345.lishuhang.com/yspw02.m3u8
+江苏卫视,https://345.lishuhang.com/xuexi_f485de42.m3u8
+江西卫视,https://345.lishuhang.com/yspw17.m3u8
+江西卫视,https://345.lishuhang.com/xuexi_06219123.m3u8
+河北卫视,https://345.lishuhang.com/yspw20.m3u8
+河北卫视,https://345.lishuhang.com/xuexi_39f6908c.m3u8
+河南卫视,https://345.lishuhang.com/yspw14.m3u8
+河南卫视,https://345.lishuhang.com/xuexi_47ebcda8.m3u8
+浙江卫视,https://345.lishuhang.com/yspw04.m3u8
+浙江卫视,https://345.lishuhang.com/xuexi_0b093694.m3u8
+海南卫视,https://345.lishuhang.com/yspw10.m3u8
+海南卫视,https://345.lishuhang.com/xuexi_54e5f81a.m3u8
+海峡卫视,https://345.lishuhang.com/xuexi_2eb43b20.m3u8
+深圳卫视,https://345.lishuhang.com/yspw12.m3u8
+深圳卫视,https://345.lishuhang.com/xuexi_f9a9f782.m3u8
+湖北卫视,https://345.lishuhang.com/yspw06.m3u8
+湖北卫视,https://345.lishuhang.com/xuexi_894c6f10.m3u8
+湖南卫视,https://345.lishuhang.com/yspw05.m3u8
+甘肃卫视,https://345.lishuhang.com/xuexi_dc13ed51.m3u8
+福建东南卫视,https://345.lishuhang.com/yspw15.m3u8
+西藏卫视,https://345.lishuhang.com/yspw30.m3u8
+西藏卫视,https://345.lishuhang.com/xuexi_c52bd0a9.m3u8
+西藏藏语卫视,https://345.lishuhang.com/xuexi_c6f0ce26.m3u8
+贵州卫视,https://345.lishuhang.com/yspw16.m3u8
+贵州卫视,https://345.lishuhang.com/xuexi_d6fc64f8.m3u8
+辽宁卫视,https://345.lishuhang.com/yspw18.m3u8
+辽宁卫视,https://345.lishuhang.com/xuexi_196d1fb7.m3u8
+重庆卫视,https://345.lishuhang.com/yspw11.m3u8
+重庆卫视,https://345.lishuhang.com/xuexi_8751b623.m3u8
+陕西卫视,https://345.lishuhang.com/yspw24.m3u8
+陕西卫视,https://345.lishuhang.com/xuexi_63fbcee7.m3u8
+青海卫视,https://345.lishuhang.com/yspw29.m3u8
+青海卫视,https://345.lishuhang.com/xuexi_49718a9c.m3u8
+青海安多卫视,https://345.lishuhang.com/xuexi_c6d8fd41.m3u8
+黑龙江卫视,https://345.lishuhang.com/yspw09.m3u8
+黑龙江卫视,https://345.lishuhang.com/xuexi_c77741c7.m3u8
+CCTV1,http://play.kankanlive.com/live/1698234869325962.m3u8
+CCTV1,https://iptv345.lishuhang.workers.dev/yspc01.m3u8
+CCTV1,https://iptv345.lishuhang.workers.dev/ys1.m3u8
+CCTV1,https://iptv345.lishuhang.workers.dev/itv7.m3u8
+CCTV1,https://345.lishuhang.com/yspc01.m3u8
+CCTV10,https://play.kankanlive.com/live/1698423445959919.m3u8
+CCTV10,https://iptv345.lishuhang.workers.dev/ys11.m3u8
+CCTV10,https://iptv345.lishuhang.workers.dev/itv17.m3u8
+CCTV10,https://345.lishuhang.com/yspc11.m3u8
+CCTV11,https://345.lishuhang.com/yspc12.m3u8
+CCTV12,https://345.lishuhang.com/yspc13.m3u8
+CCTV13,https://play.kankanlive.com/live/1698423543275916.m3u8
+CCTV13,https://iptv345.lishuhang.workers.dev/ys14.m3u8
+CCTV13,https://iptv345.lishuhang.workers.dev/itv20.m3u8
+CCTV13,https://iptv345.lishuhang.workers.dev/yspc14.m3u8
+CCTV13,https://345.lishuhang.com/yspc14.m3u8
+CCTV14,https://345.lishuhang.com/yspc15.m3u8
+CCTV15,https://345.lishuhang.com/yspc16.m3u8
+CCTV17,https://345.lishuhang.com/yspc17.m3u8
+CCTV2,https://play.kankanlive.com/live/1698234898628961.m3u8
+CCTV2,https://iptv345.lishuhang.workers.dev/ys2.m3u8
+CCTV2,https://iptv345.lishuhang.workers.dev/itv8.m3u8
+CCTV2,https://345.lishuhang.com/yspc02.m3u8
+CCTV3,https://345.lishuhang.com/yspc03.m3u8
+CCTV4,https://play.kankanlive.com/live/1698234936258960.m3u8
+CCTV4,https://iptv345.lishuhang.workers.dev/ys4.m3u8
+CCTV4,https://iptv345.lishuhang.workers.dev/itv10.m3u8
+CCTV4,https://345.lishuhang.com/yspc04.m3u8
+CCTV6,https://345.lishuhang.com/yspc07.m3u8
+CCTV7,https://345.lishuhang.com/yspc08.m3u8
+CCTV8,https://345.lishuhang.com/yspc09.m3u8
+CCTV9,https://play.kankanlive.com/live/1698423397390920.m3u8
+CCTV9,https://iptv345.lishuhang.workers.dev/ys10.m3u8
+CCTV9,https://iptv345.lishuhang.workers.dev/itv16.m3u8
+CCTV9,https://345.lishuhang.com/yspc10.m3u8
+
+## 其他
+
+ABC News 1,https://abcnews-streams.akamaized.net/hls/live/2023560/abcnewshudson1/master_4000.m3u8
+ABC News 10,https://abcnews-streams.akamaized.net/hls/live/2023569/abcnewshudson10/master_4000.m3u8
+ABC News 2,https://abcnews-streams.akamaized.net/hls/live/2023561/abcnewshudson2/master_4000.m3u8
+ABC News 3,https://abcnews-streams.akamaized.net/hls/live/2023562/abcnewshudson3/master_4000.m3u8
+ABC News 4,https://abcnews-streams.akamaized.net/hls/live/2023563/abcnewshudson4/master_4000.m3u8
+ABC News 5,https://abcnews-streams.akamaized.net/hls/live/2023564/abcnewshudson5/master_4000.m3u8
+ABC News 6,https://abcnews-streams.akamaized.net/hls/live/2023565/abcnewshudson6/master_4000.m3u8
+ABC News 7,https://abcnews-streams.akamaized.net/hls/live/2023566/abcnewshudson7/master_4000.m3u8
+ABC News 8,https://abcnews-streams.akamaized.net/hls/live/2023567/abcnewshudson8/master_4000.m3u8
+ABC News 9,https://abcnews-streams.akamaized.net/hls/live/2023568/abcnewshudson9/master_4000.m3u8
+Bloomberg TV+,https://www.bloomberg.com/media-manifest/streams/phoenix-us.m3u8
+NBD AI,https://swiftplay.hxkjmedia.com/tv/spbW.m3u8
+Sky News Weather,https://distro001-gb-hls1-prd.delivery.skycdp.com/easel_cdn/ngrp:weather_loop.stream_all/playlist.m3u8
+Wild Earth,https://wildearth-plex.amagi.tv/masterR1080p.m3u8
+熊猫频道,https://gcwbndali.v.myalicdn.com/gcwbnd/ipanda1000_2/index.m3u8
+CCTV Plus 1,https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL1.smil/playlist.m3u8
+CCTV Plus 2,https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL2.smil/playlist.m3u8
+CCTV Plus 3,https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL3.smil/playlist.m3u8
+CCTV Plus 4,https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL4.smil/playlist.m3u8
+CCTV Plus 5,https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL5.smil/playlist.m3u8
