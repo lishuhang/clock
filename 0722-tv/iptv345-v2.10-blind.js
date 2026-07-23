@@ -1,0 +1,1246 @@
+// 345 - live stream proxy worker · v2.10-blind
+//
+// Routes:
+//   GET /                       Blind status page (returns "status: ... ok" or debug log)
+//   GET /<tid><id>.m3u8         m3u8 playlist proxy (e.g. /gt5.m3u8 -> tid=gt&id=5)
+//   GET /seg/<tid>/<id>/<file>  .ts segment proxy
+//   GET /cat/<tid>              Plain-text list of items in a category
+//   GET /refresh/<tid><id>      Force refresh cached session URL for a channel
+//   GET /health/<tid><id>       Quick health check for a specific channel
+//   GET /wso-<name>.m3u8        卫视官网源 proxy (calls official API to get fresh m3u8)
+//   GET /wseg/<wsoKey>/<file>   卫视官网 segment proxy
+//
+// v2.10 changes (vs v2.9-blind):
+//   - Add wso-guizhou (贵州卫视) — api.gzstv.com API (returns txSecret m3u8)
+//   - Add wso-jiangsu (江苏卫视) — zjcn-live-play.jstv.com fixed URL (needs Referer)
+//
+// v2.9 changes (vs v2.8-blind):
+//   - Add wso- (卫视官网) source support:
+//     * wso-hainan  (海南卫视)  — http://ps.hnntv.cn/ps/livePlayUrl API
+//     * wso-dongnan (东南卫视)  — https://live.fjtv.net/m2o/channel/channel_info.php API
+//     * wso-shaanxi (陕西卫视)  — http://qidian.sxtvs.com/sxtoutiao/getLiveTvV11 API
+//   - WSO_CACHE: 5 min TTL for resolved m3u8 URLs (they have _upt timestamps)
+//   - /wseg/<wsoKey>/<file> proxies segments with proper Referer per source
+//   - Status page includes wso health check
+//   - Version bumped to v2.9
+//
+// v2.8 changes (vs v2.7-blind):
+//   - Add version "v2.8" to status output
+//   - Fix: 302 from play page (gt15/itv40 etc.) now returns 404 "channel not available"
+//   - Fix: 302 from m3u8 server (migu41/83 etc.) now returns 502 "channel moved at source"
+//   - Add /refresh/<tid><id> endpoint to force-refresh a channel's session URL
+//   - Add /health/<tid><id> endpoint for per-channel health check
+//   - Add #EXT-X-PROGRAM-DATE-TIME to m3u8 response (helps hls.js live edge detection)
+//   - Add /refresh-gha endpoint to manually trigger GitHub Actions refresh (for ysp/xuexi)
+//   - Better error messages distinguish source-side issues from worker issues
+
+// =================== CONFIG ===================
+const UA_IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
+const XOR_KEY = "iptv.com";          // hardcoded XOR key inside pvjs.js
+const DUMMY_TOKEN = "00000000000000000000000000000000";  // any 32-hex works in play page URL
+const ORIGIN = "https://m.345iptv.com";
+
+const WORKER_VERSION = 'v2.10';
+
+// Cache TTLs
+const PLAYPHP_URL_TTL = 90 * 1000;        // 90 sec: cache resolved play.php URL (shorter = fresher token)
+const SESSION_URL_TTL = 60 * 1000;        // 60 sec: cache session URL (shorter = avoids stale session)
+const TS_CACHE_TTL = 600;                 // 10 min: cache .ts segments (immutable once published)
+
+// Cache for known-broken channels (source-side 404 / 302). Avoids hammering source.
+// TTL: 10 minutes — source may fix the channel, so re-check periodically.
+const BROKEN_CHANNEL_TTL = 10 * 60 * 1000;
+const brokenChannelCache = new Map();    // key "tid:id" -> { ts, reason }
+
+// v2.9: WSO (卫视官网) source configuration.
+// Each wso source has:
+//   name: display name
+//   api: URL to call to get fresh m3u8
+//   parseM3u8: function(responseText) -> { m3u8Url } (extracts m3u8 from API response)
+//   referer: Referer header to use when fetching m3u8 and segments
+const WSO_CATALOG = {
+  'wso-hainan': {
+    name: '海南卫视',
+    api: 'http://ps.hnntv.cn/ps/livePlayUrl?appCode=&token=&channelCode=STHaiNan_channel_lywsgq',
+    referer: 'https://www.hnntv.cn/',
+    parseM3u8: (text) => {
+      try {
+        const d = JSON.parse(text);
+        const url = (d.resultSet && d.resultSet[0] && d.resultSet[0].url) || d.url || '';
+        return url ? { m3u8Url: url } : null;
+      } catch(e) { return null; }
+    }
+  },
+  'wso-dongnan': {
+    name: '东南卫视',
+    api: 'https://live.fjtv.net/m2o/channel/channel_info.php?channel_id=5',
+    referer: 'https://www.fjtv.net/',
+    parseM3u8: (text) => {
+      try {
+        const arr = JSON.parse(text);
+        if (Array.isArray(arr)) {
+          for (const ch of arr) {
+            if (ch.m3u8) return { m3u8Url: ch.m3u8 };
+          }
+        }
+      } catch(e) {}
+      return null;
+    }
+  },
+  'wso-shaanxi': {
+    name: '陕西卫视',
+    api: 'http://qidian.sxtvs.com/sxtoutiao/getLiveTvV11?cnwestAppId=3&cnwestPlatformId=1&cnwestVersion=1.0.0&cnwestDeviceId=abcdef',
+    referer: 'https://www.sxtvs.com/',
+    parseM3u8: (text) => {
+      try {
+        const d = JSON.parse(text);
+        const list = d.data || [];
+        for (const ch of list) {
+          if (ch.id === 1131 || ch.tvChannel === 'SXBC-STAR') {
+            const url = ch.onlineUrlForandroid || ch.onlineUrlForiphone || '';
+            return url ? { m3u8Url: url } : null;
+          }
+        }
+      } catch(e) {}
+      return null;
+    }
+  },
+  'wso-guizhou': {
+    name: '贵州卫视',
+    api: 'https://api.gzstv.com/v1/tv/ch01',
+    referer: 'https://www.gzstv.com/',
+    parseM3u8: (text) => {
+      try {
+        const d = JSON.parse(text);
+        const url = d.stream_url || (d.data && d.data.stream_url) || '';
+        return url ? { m3u8Url: url } : null;
+      } catch(e) { return null; }
+    }
+  },
+  'wso-jiangsu': {
+    name: '江苏卫视',
+    api: 'direct:https://zjcn-live-play.jstv.com/live.m3u8/jsws_live.m3u8',
+    referer: 'https://api.chinaaudiovisual.cn/',
+    parseM3u8: (text) => { return { m3u8Url: 'https://zjcn-live-play.jstv.com/live.m3u8/jsws_live.m3u8' }; }
+  }
+};
+
+// v2.9: WSO cache — resolved m3u8 URLs (5 min TTL, since they have _upt timestamps)
+const WSO_CACHE_TTL = 5 * 60 * 1000;
+const wsoCache = new Map();    // wsoKey -> { m3u8Url, ts }
+
+
+// Auto-refresh: trigger GitHub Actions when ysp/xuexi m3u8 returns 403
+// (only useful if GitHub Actions automation is set up — see v2.8-plan-0722-1822.md)
+let lastRefreshTrigger = 0;
+const REFRESH_COOLDOWN = 5 * 60 * 1000;
+async function triggerRefresh() {
+  const now = Date.now();
+  if (now - lastRefreshTrigger < REFRESH_COOLDOWN) return;
+  lastRefreshTrigger = now;
+  try {
+    // If GH_TOKEN env var is set, dispatch workflow on lishuhang/345 repo
+    const ghToken = (typeof GH_TOKEN !== 'undefined') ? GH_TOKEN : '';
+    if (!ghToken) return; // no token configured, skip
+    await fetch('https://api.github.com/repos/lishuhang/345/actions/workflows/refresh.yml/dispatches', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'token ' + ghToken,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'cloudflare-worker',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+  } catch (e) {}
+}
+
+// =================== CATALOG ===================
+// Items across 5 categories, scraped from source list pages.
+const CATALOG = JSON.parse('{"cctv":{"name":"cctv","channels":[{"name":"fjitv1","lines":[{"tid":"fjitv","id":1,"src":"fjitv"},{"tid":"fjitv","id":57,"src":"fjitv"},{"tid":"fjitv","id":131,"src":"fjitv"},{"tid":"fjitv","id":147,"src":"fjitv"},{"tid":"fjitv","id":205,"src":"fjitv"},{"tid":"fjitv","id":241,"src":"fjitv"},{"tid":"fjitv","id":257,"src":"fjitv"},{"tid":"fjitv","id":274,"src":"fjitv"},{"tid":"fjitv","id":281,"src":"fjitv"},{"tid":"fjitv","id":300,"src":"fjitv"},{"tid":"hlitv","id":1,"src":"hlitv"},{"tid":"hlitv","id":19,"src":"hlitv"},{"tid":"hlitv","id":120,"src":"hlitv"},{"tid":"hlitv","id":124,"src":"hlitv"},{"tid":"ipv6","id":1,"src":"ipv6"},{"tid":"itv","id":7,"src":"itv"},{"tid":"migu","id":1,"src":"migu"},{"tid":"ys","id":1,"src":"ys"}]},{"name":"fjitv10","lines":[{"tid":"fjitv","id":10,"src":"fjitv"},{"tid":"fjitv","id":62,"src":"fjitv"},{"tid":"fjitv","id":133,"src":"fjitv"},{"tid":"fjitv","id":214,"src":"fjitv"},{"tid":"fjitv","id":240,"src":"fjitv"},{"tid":"fjitv","id":273,"src":"fjitv"},{"tid":"hlitv","id":10,"src":"hlitv"},{"tid":"hlitv","id":144,"src":"hlitv"},{"tid":"ipv6","id":11,"src":"ipv6"},{"tid":"itv","id":17,"src":"itv"},{"tid":"migu","id":13,"src":"migu"},{"tid":"ys","id":11,"src":"ys"}]},{"name":"fjitv63","lines":[{"tid":"fjitv","id":63,"src":"fjitv"},{"tid":"fjitv","id":134,"src":"fjitv"},{"tid":"fjitv","id":242,"src":"fjitv"},{"tid":"hlitv","id":11,"src":"hlitv"},{"tid":"hlitv","id":136,"src":"hlitv"},{"tid":"hlitv","id":138,"src":"hlitv"},{"tid":"ipv6","id":12,"src":"ipv6"},{"tid":"itv","id":18,"src":"itv"},{"tid":"migu","id":14,"src":"migu"},{"tid":"ys","id":12,"src":"ys"}]},{"name":"fjitv11","lines":[{"tid":"fjitv","id":11,"src":"fjitv"},{"tid":"fjitv","id":64,"src":"fjitv"},{"tid":"fjitv","id":135,"src":"fjitv"},{"tid":"fjitv","id":215,"src":"fjitv"},{"tid":"fjitv","id":247,"src":"fjitv"},{"tid":"fjitv","id":259,"src":"fjitv"},{"tid":"hlitv","id":12,"src":"hlitv"},{"tid":"hlitv","id":145,"src":"hlitv"},{"tid":"ipv6","id":13,"src":"ipv6"},{"tid":"itv","id":19,"src":"itv"},{"tid":"migu","id":15,"src":"migu"},{"tid":"ys","id":13,"src":"ys"}]},{"name":"fjitv65","lines":[{"tid":"fjitv","id":65,"src":"fjitv"},{"tid":"fjitv","id":136,"src":"fjitv"},{"tid":"fjitv","id":244,"src":"fjitv"},{"tid":"hlitv","id":13,"src":"hlitv"},{"tid":"ipv6","id":14,"src":"ipv6"},{"tid":"itv","id":20,"src":"itv"},{"tid":"migu","id":16,"src":"migu"},{"tid":"ys","id":14,"src":"ys"}]},{"name":"fjitv12","lines":[{"tid":"fjitv","id":12,"src":"fjitv"},{"tid":"fjitv","id":66,"src":"fjitv"},{"tid":"fjitv","id":138,"src":"fjitv"},{"tid":"fjitv","id":216,"src":"fjitv"},{"tid":"fjitv","id":243,"src":"fjitv"},{"tid":"hlitv","id":14,"src":"hlitv"},{"tid":"hlitv","id":146,"src":"hlitv"},{"tid":"ipv6","id":15,"src":"ipv6"},{"tid":"itv","id":21,"src":"itv"},{"tid":"migu","id":17,"src":"migu"},{"tid":"ys","id":15,"src":"ys"}]},{"name":"fjitv67","lines":[{"tid":"fjitv","id":67,"src":"fjitv"},{"tid":"fjitv","id":137,"src":"fjitv"},{"tid":"fjitv","id":248,"src":"fjitv"},{"tid":"hlitv","id":15,"src":"hlitv"},{"tid":"hlitv","id":135,"src":"hlitv"},{"tid":"hlitv","id":137,"src":"hlitv"},{"tid":"hlitv","id":140,"src":"hlitv"},{"tid":"ipv6","id":16,"src":"ipv6"},{"tid":"itv","id":22,"src":"itv"},{"tid":"migu","id":18,"src":"migu"},{"tid":"ys","id":16,"src":"ys"}]},{"name":"itv23","lines":[{"tid":"itv","id":23,"src":"itv"},{"tid":"ty","id":7,"src":"ty"},{"tid":"ys","id":17,"src":"ys"}]},{"name":"ipv617","lines":[{"tid":"ipv6","id":17,"src":"ipv6"},{"tid":"itv","id":24,"src":"itv"},{"tid":"migu","id":20,"src":"migu"},{"tid":"ys","id":18,"src":"ys"}]},{"name":"fjitv2","lines":[{"tid":"fjitv","id":2,"src":"fjitv"},{"tid":"fjitv","id":58,"src":"fjitv"},{"tid":"fjitv","id":124,"src":"fjitv"},{"tid":"fjitv","id":206,"src":"fjitv"},{"tid":"fjitv","id":249,"src":"fjitv"},{"tid":"hlitv","id":2,"src":"hlitv"},{"tid":"ipv6","id":2,"src":"ipv6"},{"tid":"itv","id":8,"src":"itv"},{"tid":"migu","id":2,"src":"migu"},{"tid":"ys","id":2,"src":"ys"}]},{"name":"fjitv3","lines":[{"tid":"fjitv","id":3,"src":"fjitv"},{"tid":"fjitv","id":28,"src":"fjitv"},{"tid":"fjitv","id":191,"src":"fjitv"},{"tid":"hlitv","id":3,"src":"hlitv"},{"tid":"hlitv","id":20,"src":"hlitv"},{"tid":"ipv6","id":3,"src":"ipv6"},{"tid":"itv","id":9,"src":"itv"},{"tid":"migu","id":3,"src":"migu"},{"tid":"ys","id":3,"src":"ys"}]},{"name":"fjitv59","lines":[{"tid":"fjitv","id":59,"src":"fjitv"},{"tid":"fjitv","id":126,"src":"fjitv"},{"tid":"fjitv","id":246,"src":"fjitv"},{"tid":"hlitv","id":4,"src":"hlitv"},{"tid":"hlitv","id":139,"src":"hlitv"},{"tid":"ipv6","id":4,"src":"ipv6"},{"tid":"itv","id":10,"src":"itv"},{"tid":"itv","id":27,"src":"itv"},{"tid":"itv","id":28,"src":"itv"},{"tid":"migu","id":4,"src":"migu"},{"tid":"migu","id":5,"src":"migu"},{"tid":"migu","id":6,"src":"migu"},{"tid":"ys","id":4,"src":"ys"},{"tid":"ys","id":21,"src":"ys"},{"tid":"ys","id":22,"src":"ys"}]},{"name":"itv25","lines":[{"tid":"itv","id":25,"src":"itv"},{"tid":"ys","id":19,"src":"ys"}]},{"name":"fjitv4","lines":[{"tid":"fjitv","id":4,"src":"fjitv"},{"tid":"fjitv","id":29,"src":"fjitv"},{"tid":"fjitv","id":250,"src":"fjitv"},{"tid":"fjitv","id":282,"src":"fjitv"},{"tid":"fjitv","id":283,"src":"fjitv"},{"tid":"hlitv","id":5,"src":"hlitv"},{"tid":"hlitv","id":104,"src":"hlitv"},{"tid":"hlitv","id":125,"src":"hlitv"},{"tid":"itv","id":11,"src":"itv"},{"tid":"migu","id":7,"src":"migu"},{"tid":"ty","id":1,"src":"ty"},{"tid":"ys","id":5,"src":"ys"}]},{"name":"fjitv5","lines":[{"tid":"fjitv","id":5,"src":"fjitv"},{"tid":"fjitv","id":30,"src":"fjitv"},{"tid":"fjitv","id":140,"src":"fjitv"},{"tid":"fjitv","id":222,"src":"fjitv"},{"tid":"hlitv","id":17,"src":"hlitv"},{"tid":"hlitv","id":103,"src":"hlitv"},{"tid":"ipv6","id":6,"src":"ipv6"},{"tid":"itv","id":12,"src":"itv"},{"tid":"migu","id":8,"src":"migu"},{"tid":"ty","id":2,"src":"ty"},{"tid":"ys","id":6,"src":"ys"}]},{"name":"fjitv6","lines":[{"tid":"fjitv","id":6,"src":"fjitv"},{"tid":"fjitv","id":31,"src":"fjitv"},{"tid":"hlitv","id":6,"src":"hlitv"},{"tid":"hlitv","id":21,"src":"hlitv"},{"tid":"ipv6","id":7,"src":"ipv6"},{"tid":"itv","id":13,"src":"itv"},{"tid":"migu","id":9,"src":"migu"},{"tid":"ys","id":7,"src":"ys"}]},{"name":"fjitv7","lines":[{"tid":"fjitv","id":7,"src":"fjitv"},{"tid":"fjitv","id":60,"src":"fjitv"},{"tid":"fjitv","id":129,"src":"fjitv"},{"tid":"fjitv","id":210,"src":"fjitv"},{"tid":"fjitv","id":251,"src":"fjitv"},{"tid":"hlitv","id":7,"src":"hlitv"},{"tid":"hlitv","id":147,"src":"hlitv"},{"tid":"ipv6","id":8,"src":"ipv6"},{"tid":"itv","id":14,"src":"itv"},{"tid":"migu","id":10,"src":"migu"},{"tid":"ys","id":8,"src":"ys"}]},{"name":"fjitv8","lines":[{"tid":"fjitv","id":8,"src":"fjitv"},{"tid":"fjitv","id":32,"src":"fjitv"},{"tid":"hlitv","id":8,"src":"hlitv"},{"tid":"hlitv","id":22,"src":"hlitv"},{"tid":"ipv6","id":9,"src":"ipv6"},{"tid":"itv","id":15,"src":"itv"},{"tid":"migu","id":11,"src":"migu"},{"tid":"ys","id":9,"src":"ys"}]},{"name":"itv26","lines":[{"tid":"itv","id":26,"src":"itv"},{"tid":"ys","id":20,"src":"ys"}]},{"name":"fjitv9","lines":[{"tid":"fjitv","id":9,"src":"fjitv"},{"tid":"fjitv","id":61,"src":"fjitv"},{"tid":"fjitv","id":139,"src":"fjitv"},{"tid":"fjitv","id":212,"src":"fjitv"},{"tid":"fjitv","id":254,"src":"fjitv"},{"tid":"hlitv","id":9,"src":"hlitv"},{"tid":"hlitv","id":149,"src":"hlitv"},{"tid":"ipv6","id":10,"src":"ipv6"},{"tid":"itv","id":16,"src":"itv"},{"tid":"migu","id":12,"src":"migu"},{"tid":"ys","id":10,"src":"ys"}]},{"name":"ys39","lines":[{"tid":"ys","id":39,"src":"ys"}]},{"name":"migu24","lines":[{"tid":"migu","id":24,"src":"migu"}]},{"name":"hlitv123","lines":[{"tid":"hlitv","id":123,"src":"hlitv"}]},{"name":"ys33","lines":[{"tid":"ys","id":33,"src":"ys"}]},{"name":"migu23","lines":[{"tid":"migu","id":23,"src":"migu"}]},{"name":"ys41","lines":[{"tid":"ys","id":41,"src":"ys"}]},{"name":"ys43","lines":[{"tid":"ys","id":43,"src":"ys"}]},{"name":"ys34","lines":[{"tid":"ys","id":34,"src":"ys"}]},{"name":"ys40","lines":[{"tid":"ys","id":40,"src":"ys"}]},{"name":"ys35","lines":[{"tid":"ys","id":35,"src":"ys"}]},{"name":"ys36","lines":[{"tid":"ys","id":36,"src":"ys"}]},{"name":"ty21","lines":[{"tid":"ty","id":21,"src":"ty"},{"tid":"ys","id":38,"src":"ys"}]},{"name":"ys37","lines":[{"tid":"ys","id":37,"src":"ys"}]},{"name":"ys42","lines":[{"tid":"ys","id":42,"src":"ys"}]},{"name":"ipv621","lines":[{"tid":"ipv6","id":21,"src":"ipv6"},{"tid":"ipv6","id":101,"src":"ipv6"},{"tid":"itv","id":35,"src":"itv"},{"tid":"ys","id":29,"src":"ys"}]},{"name":"ys30","lines":[{"tid":"ys","id":30,"src":"ys"}]},{"name":"ipv6102","lines":[{"tid":"ipv6","id":102,"src":"ipv6"},{"tid":"ys","id":31,"src":"ys"}]},{"name":"ipv6103","lines":[{"tid":"ipv6","id":103,"src":"ipv6"},{"tid":"ys","id":32,"src":"ys"}]},{"name":"fjitv176","lines":[{"tid":"fjitv","id":176,"src":"fjitv"},{"tid":"hlitv","id":66,"src":"hlitv"},{"tid":"fjitv","id":102,"src":"fjitv"}]},{"name":"migu33","lines":[{"tid":"migu","id":33,"src":"migu"}]},{"name":"migu34","lines":[{"tid":"migu","id":34,"src":"migu"}]},{"name":"migu35","lines":[{"tid":"migu","id":35,"src":"migu"}]},{"name":"fjitv69","lines":[{"tid":"fjitv","id":69,"src":"fjitv"},{"tid":"fjitv","id":141,"src":"fjitv"},{"tid":"hlitv","id":18,"src":"hlitv"},{"tid":"ipv6","id":18,"src":"ipv6"},{"tid":"itv","id":29,"src":"itv"},{"tid":"migu","id":25,"src":"migu"},{"tid":"ys","id":23,"src":"ys"}]},{"name":"itv34","lines":[{"tid":"itv","id":34,"src":"itv"},{"tid":"migu","id":30,"src":"migu"},{"tid":"ys","id":28,"src":"ys"}]},{"name":"itv32","lines":[{"tid":"itv","id":32,"src":"itv"},{"tid":"migu","id":28,"src":"migu"},{"tid":"ys","id":26,"src":"ys"}]},{"name":"hlitv16","lines":[{"tid":"hlitv","id":16,"src":"hlitv"},{"tid":"itv","id":30,"src":"itv"},{"tid":"migu","id":26,"src":"migu"},{"tid":"ys","id":24,"src":"ys"},{"tid":"fjitv","id":132,"src":"fjitv"},{"tid":"fjitv","id":245,"src":"fjitv"},{"tid":"ipv6","id":19,"src":"ipv6"},{"tid":"fjitv","id":68,"src":"fjitv"}]},{"name":"itv33","lines":[{"tid":"itv","id":33,"src":"itv"},{"tid":"migu","id":29,"src":"migu"},{"tid":"ys","id":27,"src":"ys"}]},{"name":"itv31","lines":[{"tid":"itv","id":31,"src":"itv"},{"tid":"migu","id":27,"src":"migu"},{"tid":"ys","id":25,"src":"ys"}]},{"name":"migu78","lines":[{"tid":"migu","id":78,"src":"migu"}]},{"name":"migu77","lines":[{"tid":"migu","id":77,"src":"migu"}]},{"name":"ipv622","lines":[{"tid":"ipv6","id":22,"src":"ipv6"}]},{"name":"fjitv260","lines":[{"tid":"fjitv","id":260,"src":"fjitv"},{"tid":"fjitv","id":261,"src":"fjitv"},{"tid":"fjitv","id":262,"src":"fjitv"},{"tid":"fjitv","id":263,"src":"fjitv"},{"tid":"fjitv","id":264,"src":"fjitv"},{"tid":"fjitv","id":265,"src":"fjitv"},{"tid":"fjitv","id":267,"src":"fjitv"},{"tid":"fjitv","id":269,"src":"fjitv"},{"tid":"fjitv","id":271,"src":"fjitv"},{"tid":"fjitv","id":272,"src":"fjitv"}]}]},"ws":{"name":"ws","channels":[{"name":"ipv698","lines":[{"tid":"ipv6","id":98,"src":"ipv6"},{"tid":"ws","id":41,"src":"ws"}]},{"name":"fjitv73","lines":[{"tid":"fjitv","id":73,"src":"fjitv"},{"tid":"fjitv","id":151,"src":"fjitv"},{"tid":"hlitv","id":34,"src":"hlitv"},{"tid":"ipv6","id":45,"src":"ipv6"},{"tid":"itv","id":45,"src":"itv"},{"tid":"migu","id":70,"src":"migu"},{"tid":"ws","id":9,"src":"ws"}]},{"name":"fjitv17","lines":[{"tid":"fjitv","id":17,"src":"fjitv"},{"tid":"fjitv","id":39,"src":"fjitv"},{"tid":"fjitv","id":146,"src":"fjitv"},{"tid":"fjitv","id":219,"src":"fjitv"},{"tid":"hlitv","id":30,"src":"hlitv"},{"tid":"hlitv","id":61,"src":"hlitv"},{"tid":"hlitv","id":114,"src":"hlitv"},{"tid":"ipv6","id":35,"src":"ipv6"},{"tid":"ipv6","id":68,"src":"ipv6"},{"tid":"itv","id":40,"src":"itv"},{"tid":"migu","id":41,"src":"migu"},{"tid":"ws","id":4,"src":"ws"}]},{"name":"fjitv88","lines":[{"tid":"fjitv","id":88,"src":"fjitv"},{"tid":"fjitv","id":170,"src":"fjitv"},{"tid":"hlitv","id":50,"src":"hlitv"},{"tid":"ipv6","id":89,"src":"ipv6"},{"tid":"itv","id":62,"src":"itv"},{"tid":"migu","id":60,"src":"migu"},{"tid":"ws","id":26,"src":"ws"}]},{"name":"ipv696","lines":[{"tid":"ipv6","id":96,"src":"ipv6"},{"tid":"itv","id":66,"src":"itv"},{"tid":"migu","id":71,"src":"migu"},{"tid":"ws","id":30,"src":"ws"}]},{"name":"fjitv93","lines":[{"tid":"fjitv","id":93,"src":"fjitv"},{"tid":"fjitv","id":163,"src":"fjitv"},{"tid":"hlitv","id":48,"src":"hlitv"},{"tid":"ipv6","id":80,"src":"ipv6"},{"tid":"itv","id":63,"src":"itv"},{"tid":"migu","id":56,"src":"migu"},{"tid":"ws","id":27,"src":"ws"}]},{"name":"ws40","lines":[{"tid":"ws","id":40,"src":"ws"}]},{"name":"hlitv68","lines":[{"tid":"hlitv","id":68,"src":"hlitv"},{"tid":"ipv6","id":63,"src":"ipv6"},{"tid":"itv","id":74,"src":"itv"}]},{"name":"fjitv18","lines":[{"tid":"fjitv","id":18,"src":"fjitv"},{"tid":"fjitv","id":71,"src":"fjitv"},{"tid":"fjitv","id":144,"src":"fjitv"},{"tid":"fjitv","id":220,"src":"fjitv"},{"tid":"hlitv","id":23,"src":"hlitv"},{"tid":"hlitv","id":65,"src":"hlitv"},{"tid":"hlitv","id":115,"src":"hlitv"},{"tid":"hlitv","id":142,"src":"hlitv"},{"tid":"ipv6","id":26,"src":"ipv6"},{"tid":"ipv6","id":55,"src":"ipv6"},{"tid":"itv","id":41,"src":"itv"},{"tid":"migu","id":40,"src":"migu"},{"tid":"ws","id":5,"src":"ws"}]},{"name":"itv91","lines":[{"tid":"itv","id":91,"src":"itv"}]},{"name":"fjitv178","lines":[{"tid":"fjitv","id":178,"src":"fjitv"}]},{"name":"ipv686","lines":[{"tid":"ipv6","id":86,"src":"ipv6"},{"tid":"itv","id":184,"src":"itv"},{"tid":"ws","id":38,"src":"ws"}]},{"name":"fjitv86","lines":[{"tid":"fjitv","id":86,"src":"fjitv"},{"tid":"fjitv","id":168,"src":"fjitv"},{"tid":"hlitv","id":51,"src":"hlitv"},{"tid":"ipv6","id":51,"src":"ipv6"},{"tid":"ipv6","id":76,"src":"ipv6"},{"tid":"itv","id":57,"src":"itv"},{"tid":"migu","id":65,"src":"migu"},{"tid":"ws","id":21,"src":"ws"}]},{"name":"itv95","lines":[{"tid":"itv","id":95,"src":"itv"}]},{"name":"fjitv74","lines":[{"tid":"fjitv","id":74,"src":"fjitv"},{"tid":"fjitv","id":153,"src":"fjitv"},{"tid":"hlitv","id":35,"src":"hlitv"},{"tid":"ipv6","id":46,"src":"ipv6"},{"tid":"ipv6","id":82,"src":"ipv6"},{"tid":"itv","id":53,"src":"itv"},{"tid":"migu","id":51,"src":"migu"},{"tid":"ws","id":17,"src":"ws"}]},{"name":"itv72","lines":[{"tid":"itv","id":72,"src":"itv"},{"tid":"migu","id":49,"src":"migu"},{"tid":"ws","id":36,"src":"ws"}]},{"name":"fjitv20","lines":[{"tid":"fjitv","id":20,"src":"fjitv"},{"tid":"fjitv","id":37,"src":"fjitv"},{"tid":"fjitv","id":148,"src":"fjitv"},{"tid":"fjitv","id":224,"src":"fjitv"},{"tid":"hlitv","id":31,"src":"hlitv"},{"tid":"hlitv","id":62,"src":"hlitv"},{"tid":"hlitv","id":116,"src":"hlitv"},{"tid":"hlitv","id":154,"src":"hlitv"},{"tid":"ipv6","id":41,"src":"ipv6"},{"tid":"ipv6","id":83,"src":"ipv6"},{"tid":"itv","id":54,"src":"itv"},{"tid":"migu","id":68,"src":"migu"},{"tid":"ws","id":18,"src":"ws"}]},{"name":"fjitv83","lines":[{"tid":"fjitv","id":83,"src":"fjitv"},{"tid":"fjitv","id":166,"src":"fjitv"},{"tid":"hlitv","id":46,"src":"hlitv"},{"tid":"ipv6","id":93,"src":"ipv6"},{"tid":"itv","id":69,"src":"itv"},{"tid":"migu","id":58,"src":"migu"},{"tid":"ws","id":33,"src":"ws"}]},{"name":"hlitv73","lines":[{"tid":"hlitv","id":73,"src":"hlitv"},{"tid":"ws","id":39,"src":"ws"}]},{"name":"fjitv13","lines":[{"tid":"fjitv","id":13,"src":"fjitv"},{"tid":"fjitv","id":70,"src":"fjitv"},{"tid":"fjitv","id":161,"src":"fjitv"},{"tid":"fjitv","id":226,"src":"fjitv"},{"tid":"hlitv","id":45,"src":"hlitv"},{"tid":"hlitv","id":141,"src":"hlitv"},{"tid":"ipv6","id":36,"src":"ipv6"},{"tid":"ipv6","id":70,"src":"ipv6"},{"tid":"itv","id":44,"src":"itv"},{"tid":"migu","id":42,"src":"migu"},{"tid":"ws","id":8,"src":"ws"}]},{"name":"fjitv22","lines":[{"tid":"fjitv","id":22,"src":"fjitv"},{"tid":"fjitv","id":42,"src":"fjitv"},{"tid":"hlitv","id":44,"src":"hlitv"},{"tid":"hlitv","id":64,"src":"hlitv"},{"tid":"hlitv","id":118,"src":"hlitv"},{"tid":"hlitv","id":151,"src":"hlitv"},{"tid":"ipv6","id":43,"src":"ipv6"},{"tid":"ipv6","id":72,"src":"ipv6"},{"tid":"itv","id":52,"src":"itv"},{"tid":"migu","id":53,"src":"migu"},{"tid":"ws","id":16,"src":"ws"}]},{"name":"hlitv69","lines":[{"tid":"hlitv","id":69,"src":"hlitv"}]},{"name":"fjitv78","lines":[{"tid":"fjitv","id":78,"src":"fjitv"},{"tid":"fjitv","id":157,"src":"fjitv"},{"tid":"hlitv","id":38,"src":"hlitv"},{"tid":"ipv6","id":84,"src":"ipv6"},{"tid":"itv","id":64,"src":"itv"},{"tid":"migu","id":67,"src":"migu"},{"tid":"ws","id":28,"src":"ws"}]},{"name":"fjitv21","lines":[{"tid":"fjitv","id":21,"src":"fjitv"},{"tid":"fjitv","id":44,"src":"fjitv"},{"tid":"fjitv","id":142,"src":"fjitv"},{"tid":"fjitv","id":225,"src":"fjitv"},{"tid":"hlitv","id":25,"src":"hlitv"},{"tid":"hlitv","id":55,"src":"hlitv"},{"tid":"hlitv","id":113,"src":"hlitv"},{"tid":"hlitv","id":150,"src":"hlitv"},{"tid":"ipv6","id":40,"src":"ipv6"},{"tid":"ipv6","id":71,"src":"ipv6"},{"tid":"itv","id":43,"src":"itv"},{"tid":"migu","id":47,"src":"migu"},{"tid":"ws","id":7,"src":"ws"}]},{"name":"fjitv75","lines":[{"tid":"fjitv","id":75,"src":"fjitv"},{"tid":"fjitv","id":154,"src":"fjitv"},{"tid":"hlitv","id":36,"src":"hlitv"},{"tid":"ipv6","id":50,"src":"ipv6"},{"tid":"ipv6","id":77,"src":"ipv6"},{"tid":"itv","id":58,"src":"itv"},{"tid":"migu","id":50,"src":"migu"},{"tid":"ws","id":22,"src":"ws"}]},{"name":"fjitv91","lines":[{"tid":"fjitv","id":91,"src":"fjitv"},{"tid":"fjitv","id":173,"src":"fjitv"},{"tid":"hlitv","id":74,"src":"hlitv"},{"tid":"itv","id":71,"src":"itv"},{"tid":"ws","id":35,"src":"ws"}]},{"name":"ipv697","lines":[{"tid":"ipv6","id":97,"src":"ipv6"},{"tid":"itv","id":70,"src":"itv"},{"tid":"ws","id":34,"src":"ws"}]},{"name":"fjitv87","lines":[{"tid":"fjitv","id":87,"src":"fjitv"},{"tid":"fjitv","id":169,"src":"fjitv"},{"tid":"hlitv","id":49,"src":"hlitv"},{"tid":"ipv6","id":87,"src":"ipv6"},{"tid":"itv","id":67,"src":"itv"},{"tid":"migu","id":55,"src":"migu"},{"tid":"ws","id":31,"src":"ws"}]},{"name":"fjitv90","lines":[{"tid":"fjitv","id":90,"src":"fjitv"},{"tid":"fjitv","id":172,"src":"fjitv"},{"tid":"hlitv","id":53,"src":"hlitv"}]},{"name":"fjitv14","lines":[{"tid":"fjitv","id":14,"src":"fjitv"},{"tid":"fjitv","id":43,"src":"fjitv"},{"tid":"fjitv","id":164,"src":"fjitv"},{"tid":"fjitv","id":213,"src":"fjitv"},{"tid":"hlitv","id":27,"src":"hlitv"},{"tid":"hlitv","id":58,"src":"hlitv"},{"tid":"hlitv","id":112,"src":"hlitv"},{"tid":"ipv6","id":34,"src":"ipv6"},{"tid":"ipv6","id":67,"src":"ipv6"},{"tid":"itv","id":38,"src":"itv"},{"tid":"migu","id":46,"src":"migu"},{"tid":"ws","id":2,"src":"ws"}]},{"name":"fjitv40","lines":[{"tid":"fjitv","id":40,"src":"fjitv"},{"tid":"fjitv","id":41,"src":"fjitv"},{"tid":"fjitv","id":152,"src":"fjitv"},{"tid":"fjitv","id":175,"src":"fjitv"},{"tid":"hlitv","id":29,"src":"hlitv"},{"tid":"hlitv","id":56,"src":"hlitv"},{"tid":"ipv6","id":48,"src":"ipv6"},{"tid":"ipv6","id":90,"src":"ipv6"},{"tid":"itv","id":49,"src":"itv"},{"tid":"migu","id":63,"src":"migu"},{"tid":"ws","id":13,"src":"ws"}]},{"name":"fjitv155","lines":[{"tid":"fjitv","id":155,"src":"fjitv"},{"tid":"hlitv","id":37,"src":"hlitv"},{"tid":"ipv6","id":47,"src":"ipv6"},{"tid":"ipv6","id":78,"src":"ipv6"},{"tid":"itv","id":46,"src":"itv"},{"tid":"migu","id":69,"src":"migu"},{"tid":"ws","id":10,"src":"ws"}]},{"name":"fjitv80","lines":[{"tid":"fjitv","id":80,"src":"fjitv"},{"tid":"fjitv","id":160,"src":"fjitv"},{"tid":"fjitv","id":201,"src":"fjitv"},{"tid":"ipv6","id":49,"src":"ipv6"},{"tid":"ipv6","id":74,"src":"ipv6"},{"tid":"itv","id":59,"src":"itv"},{"tid":"migu","id":52,"src":"migu"},{"tid":"ws","id":23,"src":"ws"}]},{"name":"fjitv15","lines":[{"tid":"fjitv","id":15,"src":"fjitv"},{"tid":"fjitv","id":36,"src":"fjitv"},{"tid":"fjitv","id":143,"src":"fjitv"},{"tid":"fjitv","id":217,"src":"fjitv"},{"tid":"hlitv","id":26,"src":"hlitv"},{"tid":"hlitv","id":57,"src":"hlitv"},{"tid":"hlitv","id":111,"src":"hlitv"},{"tid":"ipv6","id":33,"src":"ipv6"},{"tid":"ipv6","id":65,"src":"ipv6"},{"tid":"itv","id":39,"src":"itv"},{"tid":"migu","id":39,"src":"migu"},{"tid":"ws","id":3,"src":"ws"}]},{"name":"ipv652","lines":[{"tid":"ipv6","id":52,"src":"ipv6"},{"tid":"ipv6","id":99,"src":"ipv6"},{"tid":"itv","id":51,"src":"itv"},{"tid":"migu","id":57,"src":"migu"},{"tid":"ws","id":15,"src":"ws"}]},{"name":"fjitv33","lines":[{"tid":"fjitv","id":33,"src":"fjitv"},{"tid":"fjitv","id":82,"src":"fjitv"},{"tid":"fjitv","id":165,"src":"fjitv"},{"tid":"fjitv","id":221,"src":"fjitv"},{"tid":"hlitv","id":28,"src":"hlitv"},{"tid":"hlitv","id":59,"src":"hlitv"},{"tid":"hlitv","id":117,"src":"hlitv"},{"tid":"hlitv","id":153,"src":"hlitv"},{"tid":"ipv6","id":39,"src":"ipv6"},{"tid":"ipv6","id":73,"src":"ipv6"},{"tid":"itv","id":42,"src":"itv"},{"tid":"migu","id":48,"src":"migu"},{"tid":"ws","id":6,"src":"ws"}]},{"name":"fjitv34","lines":[{"tid":"fjitv","id":34,"src":"fjitv"},{"tid":"fjitv","id":35,"src":"fjitv"},{"tid":"fjitv","id":76,"src":"fjitv"},{"tid":"fjitv","id":158,"src":"fjitv"},{"tid":"fjitv","id":228,"src":"fjitv"},{"tid":"fjitv","id":301,"src":"fjitv"},{"tid":"hlitv","id":41,"src":"hlitv"},{"tid":"hlitv","id":63,"src":"hlitv"},{"tid":"hlitv","id":119,"src":"hlitv"},{"tid":"ipv6","id":42,"src":"ipv6"},{"tid":"ipv6","id":69,"src":"ipv6"},{"tid":"itv","id":48,"src":"itv"},{"tid":"migu","id":43,"src":"migu"},{"tid":"ws","id":12,"src":"ws"}]},{"name":"fjitv16","lines":[{"tid":"fjitv","id":16,"src":"fjitv"},{"tid":"fjitv","id":38,"src":"fjitv"},{"tid":"fjitv","id":145,"src":"fjitv"},{"tid":"fjitv","id":218,"src":"fjitv"},{"tid":"fjitv","id":231,"src":"fjitv"},{"tid":"fjitv","id":315,"src":"fjitv"},{"tid":"hlitv","id":24,"src":"hlitv"},{"tid":"hlitv","id":60,"src":"hlitv"},{"tid":"ipv6","id":32,"src":"ipv6"},{"tid":"ipv6","id":66,"src":"ipv6"},{"tid":"itv","id":37,"src":"itv"},{"tid":"migu","id":38,"src":"migu"},{"tid":"ws","id":1,"src":"ws"}]},{"name":"itv252","lines":[{"tid":"itv","id":252,"src":"itv"}]},{"name":"itv253","lines":[{"tid":"itv","id":253,"src":"itv"}]},{"name":"fjitv81","lines":[{"tid":"fjitv","id":81,"src":"fjitv"},{"tid":"fjitv","id":162,"src":"fjitv"},{"tid":"hlitv","id":47,"src":"hlitv"},{"tid":"ipv6","id":94,"src":"ipv6"},{"tid":"itv","id":60,"src":"itv"},{"tid":"migu","id":59,"src":"migu"},{"tid":"ws","id":24,"src":"ws"}]},{"name":"ipv691","lines":[{"tid":"ipv6","id":91,"src":"ipv6"}]},{"name":"fjitv89","lines":[{"tid":"fjitv","id":89,"src":"fjitv"},{"tid":"fjitv","id":171,"src":"fjitv"},{"tid":"hlitv","id":52,"src":"hlitv"},{"tid":"ipv6","id":79,"src":"ipv6"},{"tid":"itv","id":68,"src":"itv"},{"tid":"migu","id":54,"src":"migu"},{"tid":"ws","id":32,"src":"ws"}]},{"name":"fjitv77","lines":[{"tid":"fjitv","id":77,"src":"fjitv"},{"tid":"fjitv","id":156,"src":"fjitv"},{"tid":"hlitv","id":40,"src":"hlitv"},{"tid":"ipv6","id":53,"src":"ipv6"},{"tid":"ipv6","id":92,"src":"ipv6"},{"tid":"itv","id":56,"src":"itv"},{"tid":"migu","id":62,"src":"migu"},{"tid":"ws","id":20,"src":"ws"}]},{"name":"fjitv23","lines":[{"tid":"fjitv","id":23,"src":"fjitv"},{"tid":"fjitv","id":85,"src":"fjitv"},{"tid":"fjitv","id":150,"src":"fjitv"},{"tid":"fjitv","id":227,"src":"fjitv"},{"tid":"hlitv","id":33,"src":"hlitv"},{"tid":"ipv6","id":38,"src":"ipv6"},{"tid":"ipv6","id":85,"src":"ipv6"},{"tid":"itv","id":50,"src":"itv"},{"tid":"migu","id":44,"src":"migu"},{"tid":"ws","id":14,"src":"ws"}]},{"name":"fjitv24","lines":[{"tid":"fjitv","id":24,"src":"fjitv"},{"tid":"fjitv","id":72,"src":"fjitv"},{"tid":"fjitv","id":149,"src":"fjitv"},{"tid":"fjitv","id":229,"src":"fjitv"},{"tid":"hlitv","id":32,"src":"hlitv"},{"tid":"ipv6","id":44,"src":"ipv6"},{"tid":"ipv6","id":95,"src":"ipv6"},{"tid":"itv","id":55,"src":"itv"},{"tid":"migu","id":64,"src":"migu"},{"tid":"ws","id":19,"src":"ws"}]},{"name":"fjitv103","lines":[{"tid":"fjitv","id":103,"src":"fjitv"},{"tid":"fjitv","id":177,"src":"fjitv"},{"tid":"fjitv","id":294,"src":"fjitv"},{"tid":"fjitv","id":312,"src":"fjitv"},{"tid":"hlitv","id":67,"src":"hlitv"},{"tid":"itv","id":254,"src":"itv"}]},{"name":"fjitv270","lines":[{"tid":"fjitv","id":270,"src":"fjitv"},{"tid":"fjitv","id":308,"src":"fjitv"},{"tid":"ipv6","id":24,"src":"ipv6"},{"tid":"itv","id":255,"src":"itv"}]},{"name":"fjitv84","lines":[{"tid":"fjitv","id":84,"src":"fjitv"},{"tid":"fjitv","id":167,"src":"fjitv"},{"tid":"hlitv","id":39,"src":"hlitv"},{"tid":"ipv6","id":75,"src":"ipv6"},{"tid":"itv","id":65,"src":"itv"},{"tid":"migu","id":66,"src":"migu"},{"tid":"ws","id":29,"src":"ws"}]},{"name":"fjitv79","lines":[{"tid":"fjitv","id":79,"src":"fjitv"},{"tid":"fjitv","id":159,"src":"fjitv"},{"tid":"hlitv","id":42,"src":"hlitv"},{"tid":"ipv6","id":81,"src":"ipv6"},{"tid":"itv","id":61,"src":"itv"},{"tid":"migu","id":61,"src":"migu"},{"tid":"ws","id":25,"src":"ws"}]},{"name":"fjitv19","lines":[{"tid":"fjitv","id":19,"src":"fjitv"},{"tid":"fjitv","id":92,"src":"fjitv"},{"tid":"fjitv","id":174,"src":"fjitv"},{"tid":"fjitv","id":223,"src":"fjitv"},{"tid":"hlitv","id":54,"src":"hlitv"},{"tid":"hlitv","id":72,"src":"hlitv"},{"tid":"ipv6","id":37,"src":"ipv6"},{"tid":"ipv6","id":88,"src":"ipv6"},{"tid":"itv","id":47,"src":"itv"},{"tid":"migu","id":45,"src":"migu"},{"tid":"ws","id":11,"src":"ws"}]}]},"gt":{"name":"gt","channels":[{"name":"gt76","lines":[{"tid":"gt","id":76,"src":"gt"},{"tid":"ty","id":24,"src":"ty"}]},{"name":"gt77","lines":[{"tid":"gt","id":77,"src":"gt"},{"tid":"ty","id":25,"src":"ty"}]},{"name":"gt24","lines":[{"tid":"gt","id":24,"src":"gt"}]},{"name":"gt22","lines":[{"tid":"gt","id":22,"src":"gt"}]},{"name":"gt23","lines":[{"tid":"gt","id":23,"src":"gt"}]},{"name":"gt17","lines":[{"tid":"gt","id":17,"src":"gt"}]},{"name":"gt16","lines":[{"tid":"gt","id":16,"src":"gt"}]},{"name":"gt18","lines":[{"tid":"gt","id":18,"src":"gt"}]},{"name":"ty52","lines":[{"tid":"ty","id":52,"src":"ty"}]},{"name":"gt8","lines":[{"tid":"gt","id":8,"src":"gt"}]},{"name":"gt56","lines":[{"tid":"gt","id":56,"src":"gt"}]},{"name":"gt55","lines":[{"tid":"gt","id":55,"src":"gt"}]},{"name":"movie7","lines":[{"tid":"movie","id":7,"src":"movie"}]},{"name":"gt6","lines":[{"tid":"gt","id":6,"src":"gt"}]},{"name":"gt9","lines":[{"tid":"gt","id":9,"src":"gt"}]},{"name":"gt5","lines":[{"tid":"gt","id":5,"src":"gt"}]},{"name":"gt19","lines":[{"tid":"gt","id":19,"src":"gt"}]},{"name":"gt20","lines":[{"tid":"gt","id":20,"src":"gt"}]},{"name":"gt48","lines":[{"tid":"gt","id":48,"src":"gt"}]},{"name":"gt44","lines":[{"tid":"gt","id":44,"src":"gt"}]},{"name":"gt45","lines":[{"tid":"gt","id":45,"src":"gt"}]},{"name":"gt43","lines":[{"tid":"gt","id":43,"src":"gt"}]},{"name":"gt60","lines":[{"tid":"gt","id":60,"src":"gt"}]},{"name":"gt46","lines":[{"tid":"gt","id":46,"src":"gt"}]},{"name":"gt1","lines":[{"tid":"gt","id":1,"src":"gt"},{"tid":"fjitv","id":55,"src":"fjitv"},{"tid":"fjitv","id":203,"src":"fjitv"},{"tid":"fjitv","id":122,"src":"fjitv"},{"tid":"hlitv","id":98,"src":"hlitv"}]},{"name":"gt2","lines":[{"tid":"gt","id":2,"src":"gt"},{"tid":"hlitv","id":100,"src":"hlitv"},{"tid":"fjitv","id":56,"src":"fjitv"},{"tid":"fjitv","id":204,"src":"fjitv"},{"tid":"fjitv","id":121,"src":"fjitv"}]},{"name":"gt3","lines":[{"tid":"gt","id":3,"src":"gt"}]},{"name":"gt63","lines":[{"tid":"gt","id":63,"src":"gt"}]},{"name":"gt51","lines":[{"tid":"gt","id":51,"src":"gt"}]},{"name":"ty50","lines":[{"tid":"ty","id":50,"src":"ty"}]},{"name":"ty51","lines":[{"tid":"ty","id":51,"src":"ty"}]},{"name":"ty49","lines":[{"tid":"ty","id":49,"src":"ty"}]},{"name":"ty47","lines":[{"tid":"ty","id":47,"src":"ty"}]},{"name":"ty48","lines":[{"tid":"ty","id":48,"src":"ty"}]},{"name":"ty45","lines":[{"tid":"ty","id":45,"src":"ty"}]},{"name":"ty46","lines":[{"tid":"ty","id":46,"src":"ty"}]},{"name":"ty44","lines":[{"tid":"ty","id":44,"src":"ty"}]},{"name":"gt61","lines":[{"tid":"gt","id":61,"src":"gt"}]},{"name":"gt47","lines":[{"tid":"gt","id":47,"src":"gt"}]},{"name":"gt53","lines":[{"tid":"gt","id":53,"src":"gt"}]},{"name":"gt54","lines":[{"tid":"gt","id":54,"src":"gt"}]},{"name":"ty41","lines":[{"tid":"ty","id":41,"src":"ty"}]},{"name":"gt62","lines":[{"tid":"gt","id":62,"src":"gt"}]},{"name":"gt50","lines":[{"tid":"gt","id":50,"src":"gt"}]},{"name":"gt26","lines":[{"tid":"gt","id":26,"src":"gt"}]},{"name":"gt27","lines":[{"tid":"gt","id":27,"src":"gt"}]},{"name":"gt41","lines":[{"tid":"gt","id":41,"src":"gt"}]},{"name":"gt38","lines":[{"tid":"gt","id":38,"src":"gt"}]},{"name":"gt40","lines":[{"tid":"gt","id":40,"src":"gt"}]},{"name":"gt37","lines":[{"tid":"gt","id":37,"src":"gt"}]},{"name":"gt36","lines":[{"tid":"gt","id":36,"src":"gt"}]},{"name":"gt39","lines":[{"tid":"gt","id":39,"src":"gt"}]},{"name":"gt35","lines":[{"tid":"gt","id":35,"src":"gt"}]},{"name":"gt79","lines":[{"tid":"gt","id":79,"src":"gt"},{"tid":"ty","id":28,"src":"ty"}]},{"name":"gt80","lines":[{"tid":"gt","id":80,"src":"gt"},{"tid":"ty","id":29,"src":"ty"}]},{"name":"gt81","lines":[{"tid":"gt","id":81,"src":"gt"},{"tid":"ty","id":30,"src":"ty"}]},{"name":"gt82","lines":[{"tid":"gt","id":82,"src":"gt"},{"tid":"ty","id":31,"src":"ty"}]},{"name":"gt73","lines":[{"tid":"gt","id":73,"src":"gt"},{"tid":"ty","id":23,"src":"ty"}]},{"name":"gt74","lines":[{"tid":"gt","id":74,"src":"gt"}]},{"name":"gt75","lines":[{"tid":"gt","id":75,"src":"gt"}]},{"name":"gt52","lines":[{"tid":"gt","id":52,"src":"gt"}]},{"name":"ty43","lines":[{"tid":"ty","id":43,"src":"ty"}]},{"name":"gt49","lines":[{"tid":"gt","id":49,"src":"gt"}]},{"name":"movie108","lines":[{"tid":"movie","id":108,"src":"movie"}]},{"name":"movie15","lines":[{"tid":"movie","id":15,"src":"movie"}]},{"name":"gt30","lines":[{"tid":"gt","id":30,"src":"gt"}]},{"name":"gt12","lines":[{"tid":"gt","id":12,"src":"gt"}]},{"name":"gt11","lines":[{"tid":"gt","id":11,"src":"gt"}]},{"name":"movie367","lines":[{"tid":"movie","id":367,"src":"movie"}]}]},"local":{"name":"local","channels":[{"name":"fjitv253","lines":[{"tid":"fjitv","id":253,"src":"fjitv"}]},{"name":"fjitv255","lines":[{"tid":"fjitv","id":255,"src":"fjitv"}]},{"name":"fjitv256","lines":[{"tid":"fjitv","id":256,"src":"fjitv"}]},{"name":"fjitv258","lines":[{"tid":"fjitv","id":258,"src":"fjitv"}]},{"name":"fjitv266","lines":[{"tid":"fjitv","id":266,"src":"fjitv"}]},{"name":"fjitv268","lines":[{"tid":"fjitv","id":268,"src":"fjitv"}]},{"name":"fjitv278","lines":[{"tid":"fjitv","id":278,"src":"fjitv"}]},{"name":"fjitv279","lines":[{"tid":"fjitv","id":279,"src":"fjitv"}]},{"name":"fjitv280","lines":[{"tid":"fjitv","id":280,"src":"fjitv"}]},{"name":"fjitv180","lines":[{"tid":"fjitv","id":180,"src":"fjitv"}]},{"name":"migu88","lines":[{"tid":"migu","id":88,"src":"migu"}]},{"name":"itv203","lines":[{"tid":"itv","id":203,"src":"itv"}]},{"name":"itv201","lines":[{"tid":"itv","id":201,"src":"itv"}]},{"name":"itv199","lines":[{"tid":"itv","id":199,"src":"itv"}]},{"name":"migu83","lines":[{"tid":"migu","id":83,"src":"migu"}]},{"name":"itv200","lines":[{"tid":"itv","id":200,"src":"itv"}]},{"name":"itv204","lines":[{"tid":"itv","id":204,"src":"itv"},{"tid":"migu","id":86,"src":"migu"}]},{"name":"itv326","lines":[{"tid":"itv","id":326,"src":"itv"}]},{"name":"migu85","lines":[{"tid":"migu","id":85,"src":"migu"}]},{"name":"itv108","lines":[{"tid":"itv","id":108,"src":"itv"}]},{"name":"itv107","lines":[{"tid":"itv","id":107,"src":"itv"}]},{"name":"itv276","lines":[{"tid":"itv","id":276,"src":"itv"}]},{"name":"itv372","lines":[{"tid":"itv","id":372,"src":"itv"}]},{"name":"itv330","lines":[{"tid":"itv","id":330,"src":"itv"}]},{"name":"itv329","lines":[{"tid":"itv","id":329,"src":"itv"}]},{"name":"itv122","lines":[{"tid":"itv","id":122,"src":"itv"}]},{"name":"migu90","lines":[{"tid":"migu","id":90,"src":"migu"}]},{"name":"itv128","lines":[{"tid":"itv","id":128,"src":"itv"}]},{"name":"itv339","lines":[{"tid":"itv","id":339,"src":"itv"}]},{"name":"itv3","lines":[{"tid":"itv","id":3,"src":"itv"},{"tid":"migu","id":91,"src":"migu"},{"tid":"ty","id":5,"src":"ty"}]},{"name":"itv142","lines":[{"tid":"itv","id":142,"src":"itv"}]},{"name":"fjitv107","lines":[{"tid":"fjitv","id":107,"src":"fjitv"},{"tid":"fjitv","id":181,"src":"fjitv"},{"tid":"hlitv","id":70,"src":"hlitv"}]},{"name":"itv244","lines":[{"tid":"itv","id":244,"src":"itv"}]},{"name":"itv125","lines":[{"tid":"itv","id":125,"src":"itv"}]},{"name":"itv127","lines":[{"tid":"itv","id":127,"src":"itv"}]},{"name":"itv332","lines":[{"tid":"itv","id":332,"src":"itv"}]},{"name":"itv333","lines":[{"tid":"itv","id":333,"src":"itv"}]},{"name":"itv331","lines":[{"tid":"itv","id":331,"src":"itv"}]},{"name":"itv375","lines":[{"tid":"itv","id":375,"src":"itv"}]},{"name":"itv376","lines":[{"tid":"itv","id":376,"src":"itv"}]},{"name":"itv379","lines":[{"tid":"itv","id":379,"src":"itv"}]},{"name":"itv380","lines":[{"tid":"itv","id":380,"src":"itv"}]},{"name":"itv377","lines":[{"tid":"itv","id":377,"src":"itv"}]},{"name":"itv374","lines":[{"tid":"itv","id":374,"src":"itv"}]},{"name":"itv378","lines":[{"tid":"itv","id":378,"src":"itv"}]},{"name":"itv381","lines":[{"tid":"itv","id":381,"src":"itv"}]},{"name":"fjitv97","lines":[{"tid":"fjitv","id":97,"src":"fjitv"},{"tid":"fjitv","id":235,"src":"fjitv"},{"tid":"itv","id":1,"src":"itv"},{"tid":"migu","id":93,"src":"migu"},{"tid":"ty","id":4,"src":"ty"}]},{"name":"itv109","lines":[{"tid":"itv","id":109,"src":"itv"}]},{"name":"ipv628","lines":[{"tid":"ipv6","id":28,"src":"ipv6"},{"tid":"ipv6","id":58,"src":"ipv6"},{"tid":"itv","id":77,"src":"itv"}]},{"name":"ipv627","lines":[{"tid":"ipv6","id":27,"src":"ipv6"},{"tid":"ipv6","id":56,"src":"ipv6"},{"tid":"itv","id":82,"src":"itv"}]},{"name":"ipv629","lines":[{"tid":"ipv6","id":29,"src":"ipv6"},{"tid":"ipv6","id":62,"src":"ipv6"},{"tid":"itv","id":75,"src":"itv"}]},{"name":"ipv660","lines":[{"tid":"ipv6","id":60,"src":"ipv6"},{"tid":"itv","id":76,"src":"itv"}]},{"name":"ipv657","lines":[{"tid":"ipv6","id":57,"src":"ipv6"},{"tid":"itv","id":81,"src":"itv"}]},{"name":"migu79","lines":[{"tid":"migu","id":79,"src":"migu"},{"tid":"ipv6","id":30,"src":"ipv6"},{"tid":"itv","id":79,"src":"itv"},{"tid":"fjitv","id":25,"src":"fjitv"},{"tid":"hlitv","id":143,"src":"hlitv"}]},{"name":"ipv659","lines":[{"tid":"ipv6","id":59,"src":"ipv6"},{"tid":"itv","id":78,"src":"itv"}]},{"name":"ipv661","lines":[{"tid":"ipv6","id":61,"src":"ipv6"},{"tid":"itv","id":80,"src":"itv"}]},{"name":"itv301","lines":[{"tid":"itv","id":301,"src":"itv"}]},{"name":"itv302","lines":[{"tid":"itv","id":302,"src":"itv"}]},{"name":"itv300","lines":[{"tid":"itv","id":300,"src":"itv"}]},{"name":"itv97","lines":[{"tid":"itv","id":97,"src":"itv"},{"tid":"ty","id":19,"src":"ty"}]},{"name":"itv143","lines":[{"tid":"itv","id":143,"src":"itv"}]},{"name":"fjitv104","lines":[{"tid":"fjitv","id":104,"src":"fjitv"}]},{"name":"itv185","lines":[{"tid":"itv","id":185,"src":"itv"}]},{"name":"itv187","lines":[{"tid":"itv","id":187,"src":"itv"}]},{"name":"itv186","lines":[{"tid":"itv","id":186,"src":"itv"}]},{"name":"itv365","lines":[{"tid":"itv","id":365,"src":"itv"}]},{"name":"itv134","lines":[{"tid":"itv","id":134,"src":"itv"}]},{"name":"itv147","lines":[{"tid":"itv","id":147,"src":"itv"}]},{"name":"hlitv71","lines":[{"tid":"hlitv","id":71,"src":"hlitv"},{"tid":"itv","id":207,"src":"itv"},{"tid":"migu","id":89,"src":"migu"}]},{"name":"itv148","lines":[{"tid":"itv","id":148,"src":"itv"}]},{"name":"itv150","lines":[{"tid":"itv","id":150,"src":"itv"}]},{"name":"itv149","lines":[{"tid":"itv","id":149,"src":"itv"}]},{"name":"itv211","lines":[{"tid":"itv","id":211,"src":"itv"}]},{"name":"itv291","lines":[{"tid":"itv","id":291,"src":"itv"}]},{"name":"itv287","lines":[{"tid":"itv","id":287,"src":"itv"}]},{"name":"itv288","lines":[{"tid":"itv","id":288,"src":"itv"}]},{"name":"itv289","lines":[{"tid":"itv","id":289,"src":"itv"}]},{"name":"itv290","lines":[{"tid":"itv","id":290,"src":"itv"}]},{"name":"itv292","lines":[{"tid":"itv","id":292,"src":"itv"}]},{"name":"migu80","lines":[{"tid":"migu","id":80,"src":"migu"},{"tid":"ty","id":14,"src":"ty"}]},{"name":"itv385","lines":[{"tid":"itv","id":385,"src":"itv"}]},{"name":"itv144","lines":[{"tid":"itv","id":144,"src":"itv"}]},{"name":"itv370","lines":[{"tid":"itv","id":370,"src":"itv"}]},{"name":"itv371","lines":[{"tid":"itv","id":371,"src":"itv"}]},{"name":"fjitv276","lines":[{"tid":"fjitv","id":276,"src":"fjitv"}]},{"name":"fjitv277","lines":[{"tid":"fjitv","id":277,"src":"fjitv"}]},{"name":"itv227","lines":[{"tid":"itv","id":227,"src":"itv"}]},{"name":"itv228","lines":[{"tid":"itv","id":228,"src":"itv"}]},{"name":"itv229","lines":[{"tid":"itv","id":229,"src":"itv"}]},{"name":"itv278","lines":[{"tid":"itv","id":278,"src":"itv"}]},{"name":"itv277","lines":[{"tid":"itv","id":277,"src":"itv"}]},{"name":"itv268","lines":[{"tid":"itv","id":268,"src":"itv"}]},{"name":"fjitv106","lines":[{"tid":"fjitv","id":106,"src":"fjitv"},{"tid":"ipv6","id":104,"src":"ipv6"}]},{"name":"itv266","lines":[{"tid":"itv","id":266,"src":"itv"}]},{"name":"itv267","lines":[{"tid":"itv","id":267,"src":"itv"}]},{"name":"itv265","lines":[{"tid":"itv","id":265,"src":"itv"}]},{"name":"itv353","lines":[{"tid":"itv","id":353,"src":"itv"}]},{"name":"itv311","lines":[{"tid":"itv","id":311,"src":"itv"}]},{"name":"itv310","lines":[{"tid":"itv","id":310,"src":"itv"}]},{"name":"itv4","lines":[{"tid":"itv","id":4,"src":"itv"},{"tid":"ty","id":3,"src":"ty"}]},{"name":"itv86","lines":[{"tid":"itv","id":86,"src":"itv"}]},{"name":"itv87","lines":[{"tid":"itv","id":87,"src":"itv"}]},{"name":"itv94","lines":[{"tid":"itv","id":94,"src":"itv"}]},{"name":"itv93","lines":[{"tid":"itv","id":93,"src":"itv"}]},{"name":"itv89","lines":[{"tid":"itv","id":89,"src":"itv"}]},{"name":"itv85","lines":[{"tid":"itv","id":85,"src":"itv"}]},{"name":"itv5","lines":[{"tid":"itv","id":5,"src":"itv"},{"tid":"itv","id":84,"src":"itv"},{"tid":"ws","id":37,"src":"ws"}]},{"name":"itv90","lines":[{"tid":"itv","id":90,"src":"itv"}]},{"name":"itv92","lines":[{"tid":"itv","id":92,"src":"itv"}]},{"name":"itv324","lines":[{"tid":"itv","id":324,"src":"itv"}]},{"name":"itv117","lines":[{"tid":"itv","id":117,"src":"itv"}]},{"name":"itv323","lines":[{"tid":"itv","id":323,"src":"itv"}]},{"name":"itv104","lines":[{"tid":"itv","id":104,"src":"itv"}]},{"name":"itv101","lines":[{"tid":"itv","id":101,"src":"itv"}]},{"name":"itv99","lines":[{"tid":"itv","id":99,"src":"itv"}]},{"name":"itv102","lines":[{"tid":"itv","id":102,"src":"itv"}]},{"name":"itv98","lines":[{"tid":"itv","id":98,"src":"itv"}]},{"name":"itv103","lines":[{"tid":"itv","id":103,"src":"itv"},{"tid":"ty","id":20,"src":"ty"}]},{"name":"itv100","lines":[{"tid":"itv","id":100,"src":"itv"}]},{"name":"itv325","lines":[{"tid":"itv","id":325,"src":"itv"}]},{"name":"itv121","lines":[{"tid":"itv","id":121,"src":"itv"}]},{"name":"itv280","lines":[{"tid":"itv","id":280,"src":"itv"}]},{"name":"itv279","lines":[{"tid":"itv","id":279,"src":"itv"}]},{"name":"itv338","lines":[{"tid":"itv","id":338,"src":"itv"}]},{"name":"itv112","lines":[{"tid":"itv","id":112,"src":"itv"}]},{"name":"itv119","lines":[{"tid":"itv","id":119,"src":"itv"}]},{"name":"itv131","lines":[{"tid":"itv","id":131,"src":"itv"}]},{"name":"itv271","lines":[{"tid":"itv","id":271,"src":"itv"}]},{"name":"itv270","lines":[{"tid":"itv","id":270,"src":"itv"}]},{"name":"itv322","lines":[{"tid":"itv","id":322,"src":"itv"}]},{"name":"itv321","lines":[{"tid":"itv","id":321,"src":"itv"}]},{"name":"itv130","lines":[{"tid":"itv","id":130,"src":"itv"}]},{"name":"itv118","lines":[{"tid":"itv","id":118,"src":"itv"}]},{"name":"itv129","lines":[{"tid":"itv","id":129,"src":"itv"}]},{"name":"itv297","lines":[{"tid":"itv","id":297,"src":"itv"}]},{"name":"itv298","lines":[{"tid":"itv","id":298,"src":"itv"}]},{"name":"itv296","lines":[{"tid":"itv","id":296,"src":"itv"}]},{"name":"itv299","lines":[{"tid":"itv","id":299,"src":"itv"}]},{"name":"itv344","lines":[{"tid":"itv","id":344,"src":"itv"}]},{"name":"itv343","lines":[{"tid":"itv","id":343,"src":"itv"}]},{"name":"itv242","lines":[{"tid":"itv","id":242,"src":"itv"}]},{"name":"itv135","lines":[{"tid":"itv","id":135,"src":"itv"}]},{"name":"itv240","lines":[{"tid":"itv","id":240,"src":"itv"}]},{"name":"itv239","lines":[{"tid":"itv","id":239,"src":"itv"}]},{"name":"itv363","lines":[{"tid":"itv","id":363,"src":"itv"}]},{"name":"itv364","lines":[{"tid":"itv","id":364,"src":"itv"}]},{"name":"itv359","lines":[{"tid":"itv","id":359,"src":"itv"}]},{"name":"itv358","lines":[{"tid":"itv","id":358,"src":"itv"}]},{"name":"itv357","lines":[{"tid":"itv","id":357,"src":"itv"}]},{"name":"itv356","lines":[{"tid":"itv","id":356,"src":"itv"}]},{"name":"itv362","lines":[{"tid":"itv","id":362,"src":"itv"}]},{"name":"itv360","lines":[{"tid":"itv","id":360,"src":"itv"}]},{"name":"itv361","lines":[{"tid":"itv","id":361,"src":"itv"}]},{"name":"itv192","lines":[{"tid":"itv","id":192,"src":"itv"}]},{"name":"itv2","lines":[{"tid":"itv","id":2,"src":"itv"},{"tid":"ty","id":6,"src":"ty"}]},{"name":"fjitv296","lines":[{"tid":"fjitv","id":296,"src":"fjitv"},{"tid":"fjitv","id":306,"src":"fjitv"},{"tid":"fjitv","id":307,"src":"fjitv"},{"tid":"fjitv","id":310,"src":"fjitv"},{"tid":"fjitv","id":311,"src":"fjitv"}]},{"name":"fjitv314","lines":[{"tid":"fjitv","id":314,"src":"fjitv"},{"tid":"fjitv","id":316,"src":"fjitv"}]},{"name":"itv340","lines":[{"tid":"itv","id":340,"src":"itv"}]},{"name":"itv373","lines":[{"tid":"itv","id":373,"src":"itv"}]},{"name":"itv190","lines":[{"tid":"itv","id":190,"src":"itv"}]},{"name":"itv123","lines":[{"tid":"itv","id":123,"src":"itv"}]},{"name":"itv232","lines":[{"tid":"itv","id":232,"src":"itv"}]},{"name":"itv225","lines":[{"tid":"itv","id":225,"src":"itv"}]},{"name":"itv224","lines":[{"tid":"itv","id":224,"src":"itv"}]},{"name":"itv222","lines":[{"tid":"itv","id":222,"src":"itv"}]},{"name":"itv223","lines":[{"tid":"itv","id":223,"src":"itv"}]},{"name":"itv221","lines":[{"tid":"itv","id":221,"src":"itv"}]},{"name":"itv220","lines":[{"tid":"itv","id":220,"src":"itv"}]},{"name":"itv219","lines":[{"tid":"itv","id":219,"src":"itv"}]},{"name":"itv241","lines":[{"tid":"itv","id":241,"src":"itv"}]},{"name":"itv336","lines":[{"tid":"itv","id":336,"src":"itv"}]},{"name":"itv282","lines":[{"tid":"itv","id":282,"src":"itv"}]},{"name":"itv281","lines":[{"tid":"itv","id":281,"src":"itv"}]},{"name":"itv351","lines":[{"tid":"itv","id":351,"src":"itv"}]},{"name":"itv293","lines":[{"tid":"itv","id":293,"src":"itv"}]},{"name":"itv193","lines":[{"tid":"itv","id":193,"src":"itv"}]},{"name":"itv106","lines":[{"tid":"itv","id":106,"src":"itv"}]},{"name":"itv105","lines":[{"tid":"itv","id":105,"src":"itv"}]},{"name":"fjitv101","lines":[{"tid":"fjitv","id":101,"src":"fjitv"},{"tid":"fjitv","id":239,"src":"fjitv"}]},{"name":"itv317","lines":[{"tid":"itv","id":317,"src":"itv"}]},{"name":"itv318","lines":[{"tid":"itv","id":318,"src":"itv"}]},{"name":"itv316","lines":[{"tid":"itv","id":316,"src":"itv"}]},{"name":"itv269","lines":[{"tid":"itv","id":269,"src":"itv"}]},{"name":"itv216","lines":[{"tid":"itv","id":216,"src":"itv"}]},{"name":"itv213","lines":[{"tid":"itv","id":213,"src":"itv"}]},{"name":"itv212","lines":[{"tid":"itv","id":212,"src":"itv"}]},{"name":"itv214","lines":[{"tid":"itv","id":214,"src":"itv"}]},{"name":"itv218","lines":[{"tid":"itv","id":218,"src":"itv"}]},{"name":"itv217","lines":[{"tid":"itv","id":217,"src":"itv"}]},{"name":"itv215","lines":[{"tid":"itv","id":215,"src":"itv"}]},{"name":"itv210","lines":[{"tid":"itv","id":210,"src":"itv"}]},{"name":"itv124","lines":[{"tid":"itv","id":124,"src":"itv"}]},{"name":"itv335","lines":[{"tid":"itv","id":335,"src":"itv"}]},{"name":"itv233","lines":[{"tid":"itv","id":233,"src":"itv"}]},{"name":"fjitv100","lines":[{"tid":"fjitv","id":100,"src":"fjitv"},{"tid":"fjitv","id":238,"src":"fjitv"},{"tid":"migu","id":92,"src":"migu"},{"tid":"ty","id":13,"src":"ty"}]},{"name":"itv259","lines":[{"tid":"itv","id":259,"src":"itv"}]},{"name":"itv257","lines":[{"tid":"itv","id":257,"src":"itv"}]},{"name":"itv260","lines":[{"tid":"itv","id":260,"src":"itv"}]},{"name":"itv256","lines":[{"tid":"itv","id":256,"src":"itv"}]},{"name":"itv258","lines":[{"tid":"itv","id":258,"src":"itv"}]},{"name":"itv231","lines":[{"tid":"itv","id":231,"src":"itv"}]},{"name":"itv230","lines":[{"tid":"itv","id":230,"src":"itv"}]},{"name":"itv285","lines":[{"tid":"itv","id":285,"src":"itv"}]},{"name":"itv283","lines":[{"tid":"itv","id":283,"src":"itv"}]},{"name":"itv284","lines":[{"tid":"itv","id":284,"src":"itv"}]},{"name":"itv136","lines":[{"tid":"itv","id":136,"src":"itv"}]},{"name":"fjitv105","lines":[{"tid":"fjitv","id":105,"src":"fjitv"},{"tid":"fjitv","id":179,"src":"fjitv"}]},{"name":"fjitv275","lines":[{"tid":"fjitv","id":275,"src":"fjitv"},{"tid":"itv","id":197,"src":"itv"}]},{"name":"itv140","lines":[{"tid":"itv","id":140,"src":"itv"}]},{"name":"itv349","lines":[{"tid":"itv","id":349,"src":"itv"}]},{"name":"itv235","lines":[{"tid":"itv","id":235,"src":"itv"}]},{"name":"itv234","lines":[{"tid":"itv","id":234,"src":"itv"}]},{"name":"itv337","lines":[{"tid":"itv","id":337,"src":"itv"}]},{"name":"itv327","lines":[{"tid":"itv","id":327,"src":"itv"}]},{"name":"fjitv252","lines":[{"tid":"fjitv","id":252,"src":"fjitv"}]},{"name":"itv306","lines":[{"tid":"itv","id":306,"src":"itv"}]},{"name":"itv305","lines":[{"tid":"itv","id":305,"src":"itv"}]},{"name":"itv367","lines":[{"tid":"itv","id":367,"src":"itv"}]},{"name":"itv369","lines":[{"tid":"itv","id":369,"src":"itv"}]},{"name":"itv368","lines":[{"tid":"itv","id":368,"src":"itv"}]},{"name":"itv366","lines":[{"tid":"itv","id":366,"src":"itv"}]},{"name":"itv194","lines":[{"tid":"itv","id":194,"src":"itv"}]},{"name":"itv183","lines":[{"tid":"itv","id":183,"src":"itv"}]},{"name":"itv181","lines":[{"tid":"itv","id":181,"src":"itv"}]},{"name":"itv182","lines":[{"tid":"itv","id":182,"src":"itv"}]},{"name":"itv180","lines":[{"tid":"itv","id":180,"src":"itv"}]},{"name":"itv386","lines":[{"tid":"itv","id":386,"src":"itv"}]},{"name":"itv198","lines":[{"tid":"itv","id":198,"src":"itv"},{"tid":"migu","id":84,"src":"migu"}]},{"name":"itv113","lines":[{"tid":"itv","id":113,"src":"itv"}]},{"name":"itv350","lines":[{"tid":"itv","id":350,"src":"itv"}]},{"name":"fjitv26","lines":[{"tid":"fjitv","id":26,"src":"fjitv"}]},{"name":"itv226","lines":[{"tid":"itv","id":226,"src":"itv"}]},{"name":"itv294","lines":[{"tid":"itv","id":294,"src":"itv"}]},{"name":"itv137","lines":[{"tid":"itv","id":137,"src":"itv"}]},{"name":"itv341","lines":[{"tid":"itv","id":341,"src":"itv"}]},{"name":"itv237","lines":[{"tid":"itv","id":237,"src":"itv"}]},{"name":"itv238","lines":[{"tid":"itv","id":238,"src":"itv"}]},{"name":"itv236","lines":[{"tid":"itv","id":236,"src":"itv"}]},{"name":"itv342","lines":[{"tid":"itv","id":342,"src":"itv"}]},{"name":"fjitv289","lines":[{"tid":"fjitv","id":289,"src":"fjitv"}]},{"name":"itv115","lines":[{"tid":"itv","id":115,"src":"itv"}]},{"name":"fjitv95","lines":[{"tid":"fjitv","id":95,"src":"fjitv"},{"tid":"fjitv","id":234,"src":"fjitv"},{"tid":"itv","id":248,"src":"itv"}]},{"name":"itv328","lines":[{"tid":"itv","id":328,"src":"itv"}]},{"name":"itv162","lines":[{"tid":"itv","id":162,"src":"itv"}]},{"name":"itv345","lines":[{"tid":"itv","id":345,"src":"itv"}]},{"name":"itv346","lines":[{"tid":"itv","id":346,"src":"itv"}]},{"name":"itv275","lines":[{"tid":"itv","id":275,"src":"itv"}]},{"name":"itv273","lines":[{"tid":"itv","id":273,"src":"itv"}]},{"name":"itv274","lines":[{"tid":"itv","id":274,"src":"itv"}]},{"name":"itv295","lines":[{"tid":"itv","id":295,"src":"itv"}]},{"name":"itv315","lines":[{"tid":"itv","id":315,"src":"itv"}]},{"name":"itv314","lines":[{"tid":"itv","id":314,"src":"itv"}]},{"name":"itv138","lines":[{"tid":"itv","id":138,"src":"itv"}]},{"name":"itv347","lines":[{"tid":"itv","id":347,"src":"itv"}]},{"name":"itv348","lines":[{"tid":"itv","id":348,"src":"itv"}]},{"name":"itv304","lines":[{"tid":"itv","id":304,"src":"itv"}]},{"name":"itv303","lines":[{"tid":"itv","id":303,"src":"itv"}]},{"name":"itv132","lines":[{"tid":"itv","id":132,"src":"itv"}]},{"name":"itv384","lines":[{"tid":"itv","id":384,"src":"itv"}]},{"name":"itv383","lines":[{"tid":"itv","id":383,"src":"itv"}]},{"name":"itv382","lines":[{"tid":"itv","id":382,"src":"itv"}]},{"name":"itv243","lines":[{"tid":"itv","id":243,"src":"itv"}]},{"name":"itv262","lines":[{"tid":"itv","id":262,"src":"itv"}]},{"name":"itv261","lines":[{"tid":"itv","id":261,"src":"itv"}]},{"name":"itv263","lines":[{"tid":"itv","id":263,"src":"itv"}]},{"name":"itv191","lines":[{"tid":"itv","id":191,"src":"itv"}]},{"name":"itv116","lines":[{"tid":"itv","id":116,"src":"itv"}]},{"name":"itv110","lines":[{"tid":"itv","id":110,"src":"itv"}]},{"name":"itv111","lines":[{"tid":"itv","id":111,"src":"itv"}]},{"name":"itv133","lines":[{"tid":"itv","id":133,"src":"itv"}]},{"name":"itv313","lines":[{"tid":"itv","id":313,"src":"itv"}]},{"name":"itv312","lines":[{"tid":"itv","id":312,"src":"itv"}]},{"name":"itv388","lines":[{"tid":"itv","id":388,"src":"itv"}]},{"name":"itv387","lines":[{"tid":"itv","id":387,"src":"itv"}]},{"name":"itv352","lines":[{"tid":"itv","id":352,"src":"itv"}]},{"name":"itv334","lines":[{"tid":"itv","id":334,"src":"itv"}]},{"name":"itv320","lines":[{"tid":"itv","id":320,"src":"itv"}]},{"name":"itv319","lines":[{"tid":"itv","id":319,"src":"itv"}]},{"name":"itv141","lines":[{"tid":"itv","id":141,"src":"itv"}]},{"name":"itv96","lines":[{"tid":"itv","id":96,"src":"itv"}]},{"name":"itv126","lines":[{"tid":"itv","id":126,"src":"itv"}]},{"name":"itv189","lines":[{"tid":"itv","id":189,"src":"itv"}]},{"name":"itv188","lines":[{"tid":"itv","id":188,"src":"itv"}]}]},"loop":{"name":"loop","channels":[{"name":"movie60","lines":[{"tid":"movie","id":60,"src":"movie"}]},{"name":"movie312","lines":[{"tid":"movie","id":312,"src":"movie"}]},{"name":"movie172","lines":[{"tid":"movie","id":172,"src":"movie"}]},{"name":"movie135","lines":[{"tid":"movie","id":135,"src":"movie"},{"tid":"movie","id":149,"src":"movie"}]},{"name":"movie317","lines":[{"tid":"movie","id":317,"src":"movie"}]},{"name":"movie141","lines":[{"tid":"movie","id":141,"src":"movie"}]},{"name":"movie47","lines":[{"tid":"movie","id":47,"src":"movie"},{"tid":"movie","id":164,"src":"movie"}]},{"name":"movie118","lines":[{"tid":"movie","id":118,"src":"movie"}]},{"name":"movie173","lines":[{"tid":"movie","id":173,"src":"movie"}]},{"name":"movie223","lines":[{"tid":"movie","id":223,"src":"movie"}]},{"name":"movie251","lines":[{"tid":"movie","id":251,"src":"movie"}]},{"name":"movie320","lines":[{"tid":"movie","id":320,"src":"movie"}]},{"name":"movie241","lines":[{"tid":"movie","id":241,"src":"movie"}]},{"name":"movie283","lines":[{"tid":"movie","id":283,"src":"movie"}]},{"name":"movie503","lines":[{"tid":"movie","id":503,"src":"movie"}]},{"name":"movie119","lines":[{"tid":"movie","id":119,"src":"movie"}]},{"name":"hlitv155","lines":[{"tid":"hlitv","id":155,"src":"hlitv"}]},{"name":"hlitv95","lines":[{"tid":"hlitv","id":95,"src":"hlitv"}]},{"name":"hlitv87","lines":[{"tid":"hlitv","id":87,"src":"hlitv"}]},{"name":"hlitv82","lines":[{"tid":"hlitv","id":82,"src":"hlitv"}]},{"name":"hlitv90","lines":[{"tid":"hlitv","id":90,"src":"hlitv"}]},{"name":"hlitv97","lines":[{"tid":"hlitv","id":97,"src":"hlitv"}]},{"name":"hlitv75","lines":[{"tid":"hlitv","id":75,"src":"hlitv"}]},{"name":"hlitv76","lines":[{"tid":"hlitv","id":76,"src":"hlitv"}]},{"name":"hlitv77","lines":[{"tid":"hlitv","id":77,"src":"hlitv"}]},{"name":"hlitv91","lines":[{"tid":"hlitv","id":91,"src":"hlitv"}]},{"name":"hlitv79","lines":[{"tid":"hlitv","id":79,"src":"hlitv"}]},{"name":"hlitv94","lines":[{"tid":"hlitv","id":94,"src":"hlitv"}]},{"name":"hlitv78","lines":[{"tid":"hlitv","id":78,"src":"hlitv"}]},{"name":"hlitv156","lines":[{"tid":"hlitv","id":156,"src":"hlitv"}]},{"name":"hlitv85","lines":[{"tid":"hlitv","id":85,"src":"hlitv"}]},{"name":"hlitv99","lines":[{"tid":"hlitv","id":99,"src":"hlitv"}]},{"name":"hlitv133","lines":[{"tid":"hlitv","id":133,"src":"hlitv"}]},{"name":"hlitv83","lines":[{"tid":"hlitv","id":83,"src":"hlitv"}]},{"name":"hlitv89","lines":[{"tid":"hlitv","id":89,"src":"hlitv"},{"tid":"hlitv","id":126,"src":"hlitv"},{"tid":"hlitv","id":127,"src":"hlitv"}]},{"name":"hlitv88","lines":[{"tid":"hlitv","id":88,"src":"hlitv"}]},{"name":"hlitv84","lines":[{"tid":"hlitv","id":84,"src":"hlitv"}]},{"name":"hlitv81","lines":[{"tid":"hlitv","id":81,"src":"hlitv"}]},{"name":"hlitv86","lines":[{"tid":"hlitv","id":86,"src":"hlitv"}]},{"name":"hlitv129","lines":[{"tid":"hlitv","id":129,"src":"hlitv"}]},{"name":"hlitv131","lines":[{"tid":"hlitv","id":131,"src":"hlitv"}]},{"name":"hlitv130","lines":[{"tid":"hlitv","id":130,"src":"hlitv"}]},{"name":"hlitv128","lines":[{"tid":"hlitv","id":128,"src":"hlitv"}]},{"name":"hlitv80","lines":[{"tid":"hlitv","id":80,"src":"hlitv"}]},{"name":"fjitv119","lines":[{"tid":"fjitv","id":119,"src":"fjitv"},{"tid":"fjitv","id":202,"src":"fjitv"}]},{"name":"fjitv114","lines":[{"tid":"fjitv","id":114,"src":"fjitv"},{"tid":"fjitv","id":190,"src":"fjitv"}]},{"name":"fjitv116","lines":[{"tid":"fjitv","id":116,"src":"fjitv"},{"tid":"fjitv","id":197,"src":"fjitv"}]},{"name":"fjitv115","lines":[{"tid":"fjitv","id":115,"src":"fjitv"},{"tid":"fjitv","id":194,"src":"fjitv"}]},{"name":"fjitv46","lines":[{"tid":"fjitv","id":46,"src":"fjitv"},{"tid":"fjitv","id":186,"src":"fjitv"}]},{"name":"fjitv45","lines":[{"tid":"fjitv","id":45,"src":"fjitv"},{"tid":"fjitv","id":185,"src":"fjitv"}]},{"name":"fjitv112","lines":[{"tid":"fjitv","id":112,"src":"fjitv"},{"tid":"fjitv","id":187,"src":"fjitv"}]},{"name":"fjitv117","lines":[{"tid":"fjitv","id":117,"src":"fjitv"}]},{"name":"fjitv47","lines":[{"tid":"fjitv","id":47,"src":"fjitv"},{"tid":"fjitv","id":189,"src":"fjitv"}]},{"name":"fjitv49","lines":[{"tid":"fjitv","id":49,"src":"fjitv"},{"tid":"fjitv","id":192,"src":"fjitv"}]},{"name":"fjitv120","lines":[{"tid":"fjitv","id":120,"src":"fjitv"}]},{"name":"fjitv53","lines":[{"tid":"fjitv","id":53,"src":"fjitv"},{"tid":"fjitv","id":199,"src":"fjitv"}]},{"name":"fjitv113","lines":[{"tid":"fjitv","id":113,"src":"fjitv"},{"tid":"fjitv","id":188,"src":"fjitv"}]},{"name":"fjitv118","lines":[{"tid":"fjitv","id":118,"src":"fjitv"},{"tid":"fjitv","id":230,"src":"fjitv"}]},{"name":"fjitv293","lines":[{"tid":"fjitv","id":293,"src":"fjitv"}]},{"name":"fjitv111","lines":[{"tid":"fjitv","id":111,"src":"fjitv"},{"tid":"fjitv","id":184,"src":"fjitv"}]},{"name":"fjitv200","lines":[{"tid":"fjitv","id":200,"src":"fjitv"},{"tid":"fjitv","id":286,"src":"fjitv"},{"tid":"fjitv","id":287,"src":"fjitv"}]},{"name":"fjitv54","lines":[{"tid":"fjitv","id":54,"src":"fjitv"},{"tid":"fjitv","id":193,"src":"fjitv"}]},{"name":"fjitv51","lines":[{"tid":"fjitv","id":51,"src":"fjitv"},{"tid":"fjitv","id":196,"src":"fjitv"}]},{"name":"fjitv52","lines":[{"tid":"fjitv","id":52,"src":"fjitv"},{"tid":"fjitv","id":198,"src":"fjitv"}]},{"name":"fjitv50","lines":[{"tid":"fjitv","id":50,"src":"fjitv"},{"tid":"fjitv","id":195,"src":"fjitv"}]},{"name":"fjitv127","lines":[{"tid":"fjitv","id":127,"src":"fjitv"},{"tid":"fjitv","id":208,"src":"fjitv"}]},{"name":"fjitv128","lines":[{"tid":"fjitv","id":128,"src":"fjitv"},{"tid":"fjitv","id":209,"src":"fjitv"}]},{"name":"fjitv130","lines":[{"tid":"fjitv","id":130,"src":"fjitv"},{"tid":"fjitv","id":211,"src":"fjitv"}]},{"name":"fjitv125","lines":[{"tid":"fjitv","id":125,"src":"fjitv"},{"tid":"fjitv","id":207,"src":"fjitv"}]},{"name":"fjitv48","lines":[{"tid":"fjitv","id":48,"src":"fjitv"}]},{"name":"movie67","lines":[{"tid":"movie","id":67,"src":"movie"},{"tid":"movie","id":232,"src":"movie"}]},{"name":"movie287","lines":[{"tid":"movie","id":287,"src":"movie"}]},{"name":"movie114","lines":[{"tid":"movie","id":114,"src":"movie"}]},{"name":"movie63","lines":[{"tid":"movie","id":63,"src":"movie"}]},{"name":"movie109","lines":[{"tid":"movie","id":109,"src":"movie"}]},{"name":"fjitv236","lines":[{"tid":"fjitv","id":236,"src":"fjitv"}]},{"name":"movie88","lines":[{"tid":"movie","id":88,"src":"movie"}]},{"name":"movie103","lines":[{"tid":"movie","id":103,"src":"movie"}]},{"name":"movie142","lines":[{"tid":"movie","id":142,"src":"movie"},{"tid":"movie","id":150,"src":"movie"}]},{"name":"movie186","lines":[{"tid":"movie","id":186,"src":"movie"}]},{"name":"movie286","lines":[{"tid":"movie","id":286,"src":"movie"}]},{"name":"movie210","lines":[{"tid":"movie","id":210,"src":"movie"}]},{"name":"movie90","lines":[{"tid":"movie","id":90,"src":"movie"}]},{"name":"movie229","lines":[{"tid":"movie","id":229,"src":"movie"}]},{"name":"movie66","lines":[{"tid":"movie","id":66,"src":"movie"}]},{"name":"movie336","lines":[{"tid":"movie","id":336,"src":"movie"}]},{"name":"movie276","lines":[{"tid":"movie","id":276,"src":"movie"}]},{"name":"movie254","lines":[{"tid":"movie","id":254,"src":"movie"}]},{"name":"movie532","lines":[{"tid":"movie","id":532,"src":"movie"}]},{"name":"movie531","lines":[{"tid":"movie","id":531,"src":"movie"}]},{"name":"migu87","lines":[{"tid":"migu","id":87,"src":"migu"}]},{"name":"hlitv152","lines":[{"tid":"hlitv","id":152,"src":"hlitv"},{"tid":"ipv6","id":23,"src":"ipv6"},{"tid":"itv","id":202,"src":"itv"}]},{"name":"movie130","lines":[{"tid":"movie","id":130,"src":"movie"},{"tid":"movie","id":157,"src":"movie"}]},{"name":"movie506","lines":[{"tid":"movie","id":506,"src":"movie"}]},{"name":"movie231","lines":[{"tid":"movie","id":231,"src":"movie"}]},{"name":"movie545","lines":[{"tid":"movie","id":545,"src":"movie"}]},{"name":"movie508","lines":[{"tid":"movie","id":508,"src":"movie"}]},{"name":"movie292","lines":[{"tid":"movie","id":292,"src":"movie"}]},{"name":"movie397","lines":[{"tid":"movie","id":397,"src":"movie"}]},{"name":"movie48","lines":[{"tid":"movie","id":48,"src":"movie"}]},{"name":"movie159","lines":[{"tid":"movie","id":159,"src":"movie"}]},{"name":"movie161","lines":[{"tid":"movie","id":161,"src":"movie"}]},{"name":"movie219","lines":[{"tid":"movie","id":219,"src":"movie"}]},{"name":"movie20","lines":[{"tid":"movie","id":20,"src":"movie"}]},{"name":"movie206","lines":[{"tid":"movie","id":206,"src":"movie"}]},{"name":"movie124","lines":[{"tid":"movie","id":124,"src":"movie"}]},{"name":"movie253","lines":[{"tid":"movie","id":253,"src":"movie"}]},{"name":"movie65","lines":[{"tid":"movie","id":65,"src":"movie"}]},{"name":"movie492","lines":[{"tid":"movie","id":492,"src":"movie"}]},{"name":"movie349","lines":[{"tid":"movie","id":349,"src":"movie"}]},{"name":"movie207","lines":[{"tid":"movie","id":207,"src":"movie"}]},{"name":"movie237","lines":[{"tid":"movie","id":237,"src":"movie"}]},{"name":"movie145","lines":[{"tid":"movie","id":145,"src":"movie"},{"tid":"movie","id":155,"src":"movie"}]},{"name":"movie112","lines":[{"tid":"movie","id":112,"src":"movie"}]},{"name":"movie474","lines":[{"tid":"movie","id":474,"src":"movie"}]},{"name":"movie475","lines":[{"tid":"movie","id":475,"src":"movie"}]},{"name":"movie476","lines":[{"tid":"movie","id":476,"src":"movie"}]},{"name":"movie477","lines":[{"tid":"movie","id":477,"src":"movie"}]},{"name":"movie78","lines":[{"tid":"movie","id":78,"src":"movie"}]},{"name":"movie4","lines":[{"tid":"movie","id":4,"src":"movie"}]},{"name":"movie102","lines":[{"tid":"movie","id":102,"src":"movie"}]},{"name":"fjitv94","lines":[{"tid":"fjitv","id":94,"src":"fjitv"},{"tid":"fjitv","id":232,"src":"fjitv"},{"tid":"itv","id":251,"src":"itv"},{"tid":"ty","id":16,"src":"ty"}]},{"name":"movie225","lines":[{"tid":"movie","id":225,"src":"movie"}]},{"name":"movie53","lines":[{"tid":"movie","id":53,"src":"movie"}]},{"name":"movie511","lines":[{"tid":"movie","id":511,"src":"movie"}]},{"name":"fjitv309","lines":[{"tid":"fjitv","id":309,"src":"fjitv"}]},{"name":"movie359","lines":[{"tid":"movie","id":359,"src":"movie"}]},{"name":"movie294","lines":[{"tid":"movie","id":294,"src":"movie"}]},{"name":"movie488","lines":[{"tid":"movie","id":488,"src":"movie"}]},{"name":"movie462","lines":[{"tid":"movie","id":462,"src":"movie"}]},{"name":"movie52","lines":[{"tid":"movie","id":52,"src":"movie"},{"tid":"movie","id":195,"src":"movie"}]},{"name":"movie25","lines":[{"tid":"movie","id":25,"src":"movie"}]},{"name":"movie99","lines":[{"tid":"movie","id":99,"src":"movie"}]},{"name":"movie344","lines":[{"tid":"movie","id":344,"src":"movie"}]},{"name":"movie8","lines":[{"tid":"movie","id":8,"src":"movie"}]},{"name":"movie389","lines":[{"tid":"movie","id":389,"src":"movie"}]},{"name":"movie194","lines":[{"tid":"movie","id":194,"src":"movie"}]},{"name":"movie36","lines":[{"tid":"movie","id":36,"src":"movie"}]},{"name":"movie64","lines":[{"tid":"movie","id":64,"src":"movie"}]},{"name":"movie551","lines":[{"tid":"movie","id":551,"src":"movie"}]},{"name":"movie526","lines":[{"tid":"movie","id":526,"src":"movie"}]},{"name":"fjitv99","lines":[{"tid":"fjitv","id":99,"src":"fjitv"},{"tid":"fjitv","id":237,"src":"fjitv"},{"tid":"itv","id":208,"src":"itv"}]},{"name":"movie471","lines":[{"tid":"movie","id":471,"src":"movie"}]},{"name":"movie472","lines":[{"tid":"movie","id":472,"src":"movie"}]},{"name":"movie337","lines":[{"tid":"movie","id":337,"src":"movie"}]},{"name":"movie46","lines":[{"tid":"movie","id":46,"src":"movie"}]},{"name":"movie107","lines":[{"tid":"movie","id":107,"src":"movie"}]},{"name":"movie54","lines":[{"tid":"movie","id":54,"src":"movie"}]},{"name":"movie197","lines":[{"tid":"movie","id":197,"src":"movie"}]},{"name":"movie529","lines":[{"tid":"movie","id":529,"src":"movie"}]},{"name":"movie89","lines":[{"tid":"movie","id":89,"src":"movie"}]},{"name":"movie374","lines":[{"tid":"movie","id":374,"src":"movie"}]},{"name":"movie18","lines":[{"tid":"movie","id":18,"src":"movie"},{"tid":"movie","id":523,"src":"movie"}]},{"name":"movie220","lines":[{"tid":"movie","id":220,"src":"movie"}]},{"name":"movie70","lines":[{"tid":"movie","id":70,"src":"movie"}]},{"name":"movie218","lines":[{"tid":"movie","id":218,"src":"movie"}]},{"name":"movie140","lines":[{"tid":"movie","id":140,"src":"movie"},{"tid":"movie","id":151,"src":"movie"}]},{"name":"movie120","lines":[{"tid":"movie","id":120,"src":"movie"}]},{"name":"movie14","lines":[{"tid":"movie","id":14,"src":"movie"}]},{"name":"movie350","lines":[{"tid":"movie","id":350,"src":"movie"}]},{"name":"movie115","lines":[{"tid":"movie","id":115,"src":"movie"}]},{"name":"movie129","lines":[{"tid":"movie","id":129,"src":"movie"}]},{"name":"movie2","lines":[{"tid":"movie","id":2,"src":"movie"}]},{"name":"movie342","lines":[{"tid":"movie","id":342,"src":"movie"}]},{"name":"movie174","lines":[{"tid":"movie","id":174,"src":"movie"}]},{"name":"movie348","lines":[{"tid":"movie","id":348,"src":"movie"}]},{"name":"movie10","lines":[{"tid":"movie","id":10,"src":"movie"}]},{"name":"movie473","lines":[{"tid":"movie","id":473,"src":"movie"}]},{"name":"movie127","lines":[{"tid":"movie","id":127,"src":"movie"}]},{"name":"movie522","lines":[{"tid":"movie","id":522,"src":"movie"}]},{"name":"movie512","lines":[{"tid":"movie","id":512,"src":"movie"}]},{"name":"movie493","lines":[{"tid":"movie","id":493,"src":"movie"}]},{"name":"movie305","lines":[{"tid":"movie","id":305,"src":"movie"}]},{"name":"movie193","lines":[{"tid":"movie","id":193,"src":"movie"}]},{"name":"movie202","lines":[{"tid":"movie","id":202,"src":"movie"}]},{"name":"movie131","lines":[{"tid":"movie","id":131,"src":"movie"}]},{"name":"movie146","lines":[{"tid":"movie","id":146,"src":"movie"}]},{"name":"movie458","lines":[{"tid":"movie","id":458,"src":"movie"}]},{"name":"movie222","lines":[{"tid":"movie","id":222,"src":"movie"}]},{"name":"movie169","lines":[{"tid":"movie","id":169,"src":"movie"}]},{"name":"movie375","lines":[{"tid":"movie","id":375,"src":"movie"}]},{"name":"movie153","lines":[{"tid":"movie","id":153,"src":"movie"}]},{"name":"movie165","lines":[{"tid":"movie","id":165,"src":"movie"}]},{"name":"movie285","lines":[{"tid":"movie","id":285,"src":"movie"}]},{"name":"movie180","lines":[{"tid":"movie","id":180,"src":"movie"}]},{"name":"movie371","lines":[{"tid":"movie","id":371,"src":"movie"}]},{"name":"movie449","lines":[{"tid":"movie","id":449,"src":"movie"}]},{"name":"movie533","lines":[{"tid":"movie","id":533,"src":"movie"}]},{"name":"movie398","lines":[{"tid":"movie","id":398,"src":"movie"}]},{"name":"movie517","lines":[{"tid":"movie","id":517,"src":"movie"}]},{"name":"movie121","lines":[{"tid":"movie","id":121,"src":"movie"}]},{"name":"movie538","lines":[{"tid":"movie","id":538,"src":"movie"}]},{"name":"movie527","lines":[{"tid":"movie","id":527,"src":"movie"}]},{"name":"movie203","lines":[{"tid":"movie","id":203,"src":"movie"}]},{"name":"movie392","lines":[{"tid":"movie","id":392,"src":"movie"}]},{"name":"movie495","lines":[{"tid":"movie","id":495,"src":"movie"}]},{"name":"movie98","lines":[{"tid":"movie","id":98,"src":"movie"}]},{"name":"movie323","lines":[{"tid":"movie","id":323,"src":"movie"}]},{"name":"movie291","lines":[{"tid":"movie","id":291,"src":"movie"}]},{"name":"movie453","lines":[{"tid":"movie","id":453,"src":"movie"}]},{"name":"movie261","lines":[{"tid":"movie","id":261,"src":"movie"},{"tid":"movie","id":274,"src":"movie"}]},{"name":"movie356","lines":[{"tid":"movie","id":356,"src":"movie"}]},{"name":"movie468","lines":[{"tid":"movie","id":468,"src":"movie"}]},{"name":"movie402","lines":[{"tid":"movie","id":402,"src":"movie"}]},{"name":"movie528","lines":[{"tid":"movie","id":528,"src":"movie"}]},{"name":"fjitv110","lines":[{"tid":"fjitv","id":110,"src":"fjitv"},{"tid":"fjitv","id":183,"src":"fjitv"},{"tid":"hlitv","id":96,"src":"hlitv"}]},{"name":"movie519","lines":[{"tid":"movie","id":519,"src":"movie"}]},{"name":"movie250","lines":[{"tid":"movie","id":250,"src":"movie"}]},{"name":"movie74","lines":[{"tid":"movie","id":74,"src":"movie"}]},{"name":"movie264","lines":[{"tid":"movie","id":264,"src":"movie"},{"tid":"movie","id":269,"src":"movie"}]},{"name":"movie340","lines":[{"tid":"movie","id":340,"src":"movie"}]},{"name":"movie38","lines":[{"tid":"movie","id":38,"src":"movie"}]},{"name":"movie260","lines":[{"tid":"movie","id":260,"src":"movie"}]},{"name":"movie187","lines":[{"tid":"movie","id":187,"src":"movie"}]},{"name":"movie410","lines":[{"tid":"movie","id":410,"src":"movie"}]},{"name":"movie29","lines":[{"tid":"movie","id":29,"src":"movie"}]},{"name":"movie221","lines":[{"tid":"movie","id":221,"src":"movie"}]},{"name":"movie325","lines":[{"tid":"movie","id":325,"src":"movie"}]},{"name":"movie310","lines":[{"tid":"movie","id":310,"src":"movie"}]},{"name":"movie451","lines":[{"tid":"movie","id":451,"src":"movie"}]},{"name":"movie148","lines":[{"tid":"movie","id":148,"src":"movie"}]},{"name":"movie156","lines":[{"tid":"movie","id":156,"src":"movie"}]},{"name":"movie51","lines":[{"tid":"movie","id":51,"src":"movie"}]},{"name":"movie33","lines":[{"tid":"movie","id":33,"src":"movie"}]},{"name":"movie405","lines":[{"tid":"movie","id":405,"src":"movie"}]},{"name":"movie84","lines":[{"tid":"movie","id":84,"src":"movie"}]},{"name":"movie144","lines":[{"tid":"movie","id":144,"src":"movie"},{"tid":"movie","id":154,"src":"movie"}]},{"name":"movie35","lines":[{"tid":"movie","id":35,"src":"movie"}]},{"name":"movie259","lines":[{"tid":"movie","id":259,"src":"movie"},{"tid":"movie","id":267,"src":"movie"}]},{"name":"movie113","lines":[{"tid":"movie","id":113,"src":"movie"}]},{"name":"movie302","lines":[{"tid":"movie","id":302,"src":"movie"}]},{"name":"movie17","lines":[{"tid":"movie","id":17,"src":"movie"}]},{"name":"itv307","lines":[{"tid":"itv","id":307,"src":"itv"}]},{"name":"movie515","lines":[{"tid":"movie","id":515,"src":"movie"}]},{"name":"movie160","lines":[{"tid":"movie","id":160,"src":"movie"}]},{"name":"movie411","lines":[{"tid":"movie","id":411,"src":"movie"}]},{"name":"movie470","lines":[{"tid":"movie","id":470,"src":"movie"}]},{"name":"movie189","lines":[{"tid":"movie","id":189,"src":"movie"}]},{"name":"movie516","lines":[{"tid":"movie","id":516,"src":"movie"}]},{"name":"movie510","lines":[{"tid":"movie","id":510,"src":"movie"}]},{"name":"movie83","lines":[{"tid":"movie","id":83,"src":"movie"}]},{"name":"movie347","lines":[{"tid":"movie","id":347,"src":"movie"}]},{"name":"movie419","lines":[{"tid":"movie","id":419,"src":"movie"}]},{"name":"movie353","lines":[{"tid":"movie","id":353,"src":"movie"}]},{"name":"movie381","lines":[{"tid":"movie","id":381,"src":"movie"}]},{"name":"movie299","lines":[{"tid":"movie","id":299,"src":"movie"}]},{"name":"movie425","lines":[{"tid":"movie","id":425,"src":"movie"}]},{"name":"movie313","lines":[{"tid":"movie","id":313,"src":"movie"}]},{"name":"movie245","lines":[{"tid":"movie","id":245,"src":"movie"}]},{"name":"movie421","lines":[{"tid":"movie","id":421,"src":"movie"}]},{"name":"movie209","lines":[{"tid":"movie","id":209,"src":"movie"}]},{"name":"movie514","lines":[{"tid":"movie","id":514,"src":"movie"}]},{"name":"movie399","lines":[{"tid":"movie","id":399,"src":"movie"}]},{"name":"movie171","lines":[{"tid":"movie","id":171,"src":"movie"}]},{"name":"fjitv27","lines":[{"tid":"fjitv","id":27,"src":"fjitv"},{"tid":"fjitv","id":233,"src":"fjitv"},{"tid":"itv","id":250,"src":"itv"},{"tid":"ty","id":15,"src":"ty"}]},{"name":"fjitv108","lines":[{"tid":"fjitv","id":108,"src":"fjitv"}]},{"name":"movie499","lines":[{"tid":"movie","id":499,"src":"movie"}]},{"name":"movie490","lines":[{"tid":"movie","id":490,"src":"movie"}]},{"name":"movie137","lines":[{"tid":"movie","id":137,"src":"movie"}]},{"name":"movie272","lines":[{"tid":"movie","id":272,"src":"movie"}]},{"name":"movie370","lines":[{"tid":"movie","id":370,"src":"movie"}]},{"name":"movie504","lines":[{"tid":"movie","id":504,"src":"movie"}]},{"name":"movie383","lines":[{"tid":"movie","id":383,"src":"movie"}]},{"name":"movie518","lines":[{"tid":"movie","id":518,"src":"movie"}]},{"name":"movie343","lines":[{"tid":"movie","id":343,"src":"movie"}]},{"name":"movie11","lines":[{"tid":"movie","id":11,"src":"movie"}]},{"name":"movie384","lines":[{"tid":"movie","id":384,"src":"movie"}]},{"name":"movie303","lines":[{"tid":"movie","id":303,"src":"movie"}]},{"name":"movie166","lines":[{"tid":"movie","id":166,"src":"movie"}]},{"name":"movie104","lines":[{"tid":"movie","id":104,"src":"movie"}]},{"name":"movie382","lines":[{"tid":"movie","id":382,"src":"movie"}]},{"name":"movie105","lines":[{"tid":"movie","id":105,"src":"movie"}]},{"name":"movie179","lines":[{"tid":"movie","id":179,"src":"movie"}]},{"name":"movie58","lines":[{"tid":"movie","id":58,"src":"movie"}]},{"name":"movie69","lines":[{"tid":"movie","id":69,"src":"movie"}]},{"name":"movie40","lines":[{"tid":"movie","id":40,"src":"movie"}]},{"name":"movie91","lines":[{"tid":"movie","id":91,"src":"movie"}]},{"name":"movie316","lines":[{"tid":"movie","id":316,"src":"movie"}]},{"name":"movie92","lines":[{"tid":"movie","id":92,"src":"movie"}]},{"name":"movie386","lines":[{"tid":"movie","id":386,"src":"movie"}]},{"name":"movie77","lines":[{"tid":"movie","id":77,"src":"movie"}]},{"name":"movie387","lines":[{"tid":"movie","id":387,"src":"movie"}]},{"name":"movie388","lines":[{"tid":"movie","id":388,"src":"movie"}]},{"name":"movie461","lines":[{"tid":"movie","id":461,"src":"movie"}]},{"name":"movie224","lines":[{"tid":"movie","id":224,"src":"movie"}]},{"name":"movie548","lines":[{"tid":"movie","id":548,"src":"movie"}]},{"name":"movie491","lines":[{"tid":"movie","id":491,"src":"movie"}]},{"name":"movie355","lines":[{"tid":"movie","id":355,"src":"movie"}]},{"name":"movie72","lines":[{"tid":"movie","id":72,"src":"movie"}]},{"name":"movie87","lines":[{"tid":"movie","id":87,"src":"movie"}]},{"name":"movie143","lines":[{"tid":"movie","id":143,"src":"movie"},{"tid":"movie","id":158,"src":"movie"}]},{"name":"movie306","lines":[{"tid":"movie","id":306,"src":"movie"}]},{"name":"movie478","lines":[{"tid":"movie","id":478,"src":"movie"}]},{"name":"movie543","lines":[{"tid":"movie","id":543,"src":"movie"}]},{"name":"movie239","lines":[{"tid":"movie","id":239,"src":"movie"}]},{"name":"movie395","lines":[{"tid":"movie","id":395,"src":"movie"}]},{"name":"fjitv285","lines":[{"tid":"fjitv","id":285,"src":"fjitv"},{"tid":"fjitv","id":291,"src":"fjitv"},{"tid":"fjitv","id":298,"src":"fjitv"},{"tid":"fjitv","id":299,"src":"fjitv"},{"tid":"fjitv","id":302,"src":"fjitv"},{"tid":"fjitv","id":304,"src":"fjitv"}]},{"name":"fjitv284","lines":[{"tid":"fjitv","id":284,"src":"fjitv"},{"tid":"fjitv","id":288,"src":"fjitv"},{"tid":"fjitv","id":292,"src":"fjitv"},{"tid":"fjitv","id":295,"src":"fjitv"},{"tid":"fjitv","id":297,"src":"fjitv"},{"tid":"fjitv","id":303,"src":"fjitv"},{"tid":"fjitv","id":313,"src":"fjitv"}]},{"name":"movie268","lines":[{"tid":"movie","id":268,"src":"movie"}]},{"name":"movie391","lines":[{"tid":"movie","id":391,"src":"movie"}]},{"name":"movie494","lines":[{"tid":"movie","id":494,"src":"movie"}]},{"name":"ty42","lines":[{"tid":"ty","id":42,"src":"ty"}]},{"name":"movie479","lines":[{"tid":"movie","id":479,"src":"movie"}]},{"name":"movie192","lines":[{"tid":"movie","id":192,"src":"movie"}]},{"name":"movie213","lines":[{"tid":"movie","id":213,"src":"movie"}]},{"name":"movie500","lines":[{"tid":"movie","id":500,"src":"movie"}]},{"name":"movie262","lines":[{"tid":"movie","id":262,"src":"movie"},{"tid":"movie","id":277,"src":"movie"}]},{"name":"movie452","lines":[{"tid":"movie","id":452,"src":"movie"}]},{"name":"movie454","lines":[{"tid":"movie","id":454,"src":"movie"}]},{"name":"movie243","lines":[{"tid":"movie","id":243,"src":"movie"}]},{"name":"movie101","lines":[{"tid":"movie","id":101,"src":"movie"}]},{"name":"movie242","lines":[{"tid":"movie","id":242,"src":"movie"}]},{"name":"movie80","lines":[{"tid":"movie","id":80,"src":"movie"}]},{"name":"movie199","lines":[{"tid":"movie","id":199,"src":"movie"}]},{"name":"movie372","lines":[{"tid":"movie","id":372,"src":"movie"}]},{"name":"movie530","lines":[{"tid":"movie","id":530,"src":"movie"}]},{"name":"movie208","lines":[{"tid":"movie","id":208,"src":"movie"}]},{"name":"movie265","lines":[{"tid":"movie","id":265,"src":"movie"}]},{"name":"movie152","lines":[{"tid":"movie","id":152,"src":"movie"}]},{"name":"movie341","lines":[{"tid":"movie","id":341,"src":"movie"}]},{"name":"movie9","lines":[{"tid":"movie","id":9,"src":"movie"}]},{"name":"movie32","lines":[{"tid":"movie","id":32,"src":"movie"}]},{"name":"movie85","lines":[{"tid":"movie","id":85,"src":"movie"}]},{"name":"movie162","lines":[{"tid":"movie","id":162,"src":"movie"}]},{"name":"movie407","lines":[{"tid":"movie","id":407,"src":"movie"}]},{"name":"fjitv98","lines":[{"tid":"fjitv","id":98,"src":"fjitv"},{"tid":"ty","id":12,"src":"ty"}]},{"name":"movie6","lines":[{"tid":"movie","id":6,"src":"movie"}]},{"name":"movie95","lines":[{"tid":"movie","id":95,"src":"movie"}]},{"name":"movie41","lines":[{"tid":"movie","id":41,"src":"movie"}]},{"name":"movie214","lines":[{"tid":"movie","id":214,"src":"movie"}]},{"name":"movie385","lines":[{"tid":"movie","id":385,"src":"movie"}]},{"name":"movie96","lines":[{"tid":"movie","id":96,"src":"movie"}]},{"name":"movie400","lines":[{"tid":"movie","id":400,"src":"movie"}]},{"name":"fjitv96","lines":[{"tid":"fjitv","id":96,"src":"fjitv"},{"tid":"fjitv","id":305,"src":"fjitv"},{"tid":"itv","id":205,"src":"itv"},{"tid":"movie","id":28,"src":"movie"}]},{"name":"movie334","lines":[{"tid":"movie","id":334,"src":"movie"}]},{"name":"movie450","lines":[{"tid":"movie","id":450,"src":"movie"}]},{"name":"movie167","lines":[{"tid":"movie","id":167,"src":"movie"}]},{"name":"movie280","lines":[{"tid":"movie","id":280,"src":"movie"}]},{"name":"movie252","lines":[{"tid":"movie","id":252,"src":"movie"},{"tid":"movie","id":273,"src":"movie"}]},{"name":"movie16","lines":[{"tid":"movie","id":16,"src":"movie"}]},{"name":"movie5","lines":[{"tid":"movie","id":5,"src":"movie"}]},{"name":"movie61","lines":[{"tid":"movie","id":61,"src":"movie"}]},{"name":"movie147","lines":[{"tid":"movie","id":147,"src":"movie"}]},{"name":"movie246","lines":[{"tid":"movie","id":246,"src":"movie"}]},{"name":"movie390","lines":[{"tid":"movie","id":390,"src":"movie"}]},{"name":"movie403","lines":[{"tid":"movie","id":403,"src":"movie"}]},{"name":"movie332","lines":[{"tid":"movie","id":332,"src":"movie"}]},{"name":"movie13","lines":[{"tid":"movie","id":13,"src":"movie"}]},{"name":"movie256","lines":[{"tid":"movie","id":256,"src":"movie"},{"tid":"movie","id":275,"src":"movie"}]},{"name":"movie263","lines":[{"tid":"movie","id":263,"src":"movie"}]},{"name":"movie184","lines":[{"tid":"movie","id":184,"src":"movie"}]},{"name":"movie373","lines":[{"tid":"movie","id":373,"src":"movie"}]},{"name":"movie507","lines":[{"tid":"movie","id":507,"src":"movie"}]},{"name":"movie535","lines":[{"tid":"movie","id":535,"src":"movie"}]},{"name":"movie71","lines":[{"tid":"movie","id":71,"src":"movie"}]},{"name":"movie408","lines":[{"tid":"movie","id":408,"src":"movie"}]},{"name":"movie238","lines":[{"tid":"movie","id":238,"src":"movie"}]},{"name":"movie255","lines":[{"tid":"movie","id":255,"src":"movie"}]},{"name":"movie284","lines":[{"tid":"movie","id":284,"src":"movie"}]},{"name":"movie339","lines":[{"tid":"movie","id":339,"src":"movie"}]},{"name":"movie413","lines":[{"tid":"movie","id":413,"src":"movie"}]},{"name":"movie393","lines":[{"tid":"movie","id":393,"src":"movie"}]},{"name":"movie175","lines":[{"tid":"movie","id":175,"src":"movie"}]},{"name":"movie281","lines":[{"tid":"movie","id":281,"src":"movie"}]},{"name":"movie406","lines":[{"tid":"movie","id":406,"src":"movie"}]},{"name":"movie513","lines":[{"tid":"movie","id":513,"src":"movie"}]},{"name":"movie501","lines":[{"tid":"movie","id":501,"src":"movie"}]},{"name":"movie116","lines":[{"tid":"movie","id":116,"src":"movie"}]},{"name":"movie196","lines":[{"tid":"movie","id":196,"src":"movie"}]},{"name":"movie424","lines":[{"tid":"movie","id":424,"src":"movie"}]},{"name":"movie181","lines":[{"tid":"movie","id":181,"src":"movie"}]},{"name":"movie55","lines":[{"tid":"movie","id":55,"src":"movie"}]},{"name":"movie536","lines":[{"tid":"movie","id":536,"src":"movie"}]},{"name":"movie282","lines":[{"tid":"movie","id":282,"src":"movie"}]},{"name":"movie417","lines":[{"tid":"movie","id":417,"src":"movie"}]},{"name":"movie191","lines":[{"tid":"movie","id":191,"src":"movie"}]},{"name":"movie279","lines":[{"tid":"movie","id":279,"src":"movie"}]},{"name":"movie448","lines":[{"tid":"movie","id":448,"src":"movie"}]},{"name":"movie201","lines":[{"tid":"movie","id":201,"src":"movie"}]},{"name":"movie412","lines":[{"tid":"movie","id":412,"src":"movie"}]},{"name":"movie139","lines":[{"tid":"movie","id":139,"src":"movie"}]},{"name":"movie547","lines":[{"tid":"movie","id":547,"src":"movie"}]},{"name":"movie418","lines":[{"tid":"movie","id":418,"src":"movie"}]},{"name":"movie296","lines":[{"tid":"movie","id":296,"src":"movie"}]},{"name":"movie487","lines":[{"tid":"movie","id":487,"src":"movie"}]},{"name":"itv209","lines":[{"tid":"itv","id":209,"src":"itv"}]},{"name":"movie304","lines":[{"tid":"movie","id":304,"src":"movie"}]},{"name":"hlitv157","lines":[{"tid":"hlitv","id":157,"src":"hlitv"}]},{"name":"movie427","lines":[{"tid":"movie","id":427,"src":"movie"}]},{"name":"movie434","lines":[{"tid":"movie","id":434,"src":"movie"}]},{"name":"movie435","lines":[{"tid":"movie","id":435,"src":"movie"}]},{"name":"movie436","lines":[{"tid":"movie","id":436,"src":"movie"}]},{"name":"movie437","lines":[{"tid":"movie","id":437,"src":"movie"}]},{"name":"movie438","lines":[{"tid":"movie","id":438,"src":"movie"}]},{"name":"movie439","lines":[{"tid":"movie","id":439,"src":"movie"}]},{"name":"movie440","lines":[{"tid":"movie","id":440,"src":"movie"}]},{"name":"movie441","lines":[{"tid":"movie","id":441,"src":"movie"}]},{"name":"movie379","lines":[{"tid":"movie","id":379,"src":"movie"}]},{"name":"movie428","lines":[{"tid":"movie","id":428,"src":"movie"}]},{"name":"movie442","lines":[{"tid":"movie","id":442,"src":"movie"}]},{"name":"movie443","lines":[{"tid":"movie","id":443,"src":"movie"}]},{"name":"movie444","lines":[{"tid":"movie","id":444,"src":"movie"}]},{"name":"movie445","lines":[{"tid":"movie","id":445,"src":"movie"}]},{"name":"movie377","lines":[{"tid":"movie","id":377,"src":"movie"}]},{"name":"movie429","lines":[{"tid":"movie","id":429,"src":"movie"}]},{"name":"movie430","lines":[{"tid":"movie","id":430,"src":"movie"}]},{"name":"movie378","lines":[{"tid":"movie","id":378,"src":"movie"}]},{"name":"movie431","lines":[{"tid":"movie","id":431,"src":"movie"}]},{"name":"movie432","lines":[{"tid":"movie","id":432,"src":"movie"}]},{"name":"movie433","lines":[{"tid":"movie","id":433,"src":"movie"}]},{"name":"movie327","lines":[{"tid":"movie","id":327,"src":"movie"}]},{"name":"movie240","lines":[{"tid":"movie","id":240,"src":"movie"}]},{"name":"movie315","lines":[{"tid":"movie","id":315,"src":"movie"}]},{"name":"movie307","lines":[{"tid":"movie","id":307,"src":"movie"}]},{"name":"itv309","lines":[{"tid":"itv","id":309,"src":"itv"}]},{"name":"movie426","lines":[{"tid":"movie","id":426,"src":"movie"}]},{"name":"movie93","lines":[{"tid":"movie","id":93,"src":"movie"}]},{"name":"movie198","lines":[{"tid":"movie","id":198,"src":"movie"}]},{"name":"movie228","lines":[{"tid":"movie","id":228,"src":"movie"}]},{"name":"movie544","lines":[{"tid":"movie","id":544,"src":"movie"}]},{"name":"movie244","lines":[{"tid":"movie","id":244,"src":"movie"}]},{"name":"movie394","lines":[{"tid":"movie","id":394,"src":"movie"}]},{"name":"movie446","lines":[{"tid":"movie","id":446,"src":"movie"}]},{"name":"movie447","lines":[{"tid":"movie","id":447,"src":"movie"}]},{"name":"movie380","lines":[{"tid":"movie","id":380,"src":"movie"}]},{"name":"movie24","lines":[{"tid":"movie","id":24,"src":"movie"}]},{"name":"movie489","lines":[{"tid":"movie","id":489,"src":"movie"}]},{"name":"movie126","lines":[{"tid":"movie","id":126,"src":"movie"}]},{"name":"movie81","lines":[{"tid":"movie","id":81,"src":"movie"}]},{"name":"movie293","lines":[{"tid":"movie","id":293,"src":"movie"}]},{"name":"movie509","lines":[{"tid":"movie","id":509,"src":"movie"}]},{"name":"movie211","lines":[{"tid":"movie","id":211,"src":"movie"}]},{"name":"movie39","lines":[{"tid":"movie","id":39,"src":"movie"}]},{"name":"movie23","lines":[{"tid":"movie","id":23,"src":"movie"}]},{"name":"movie68","lines":[{"tid":"movie","id":68,"src":"movie"}]},{"name":"movie216","lines":[{"tid":"movie","id":216,"src":"movie"}]},{"name":"movie110","lines":[{"tid":"movie","id":110,"src":"movie"}]},{"name":"movie496","lines":[{"tid":"movie","id":496,"src":"movie"}]},{"name":"movie183","lines":[{"tid":"movie","id":183,"src":"movie"}]},{"name":"movie176","lines":[{"tid":"movie","id":176,"src":"movie"}]},{"name":"itv308","lines":[{"tid":"itv","id":308,"src":"itv"}]},{"name":"movie481","lines":[{"tid":"movie","id":481,"src":"movie"}]},{"name":"movie464","lines":[{"tid":"movie","id":464,"src":"movie"}]},{"name":"movie465","lines":[{"tid":"movie","id":465,"src":"movie"}]},{"name":"movie466","lines":[{"tid":"movie","id":466,"src":"movie"},{"tid":"movie","id":467,"src":"movie"}]},{"name":"movie82","lines":[{"tid":"movie","id":82,"src":"movie"}]},{"name":"movie333","lines":[{"tid":"movie","id":333,"src":"movie"}]},{"name":"movie365","lines":[{"tid":"movie","id":365,"src":"movie"}]},{"name":"movie364","lines":[{"tid":"movie","id":364,"src":"movie"}]},{"name":"movie366","lines":[{"tid":"movie","id":366,"src":"movie"}]},{"name":"movie363","lines":[{"tid":"movie","id":363,"src":"movie"}]},{"name":"movie311","lines":[{"tid":"movie","id":311,"src":"movie"}]},{"name":"movie486","lines":[{"tid":"movie","id":486,"src":"movie"}]},{"name":"movie541","lines":[{"tid":"movie","id":541,"src":"movie"}]},{"name":"movie455","lines":[{"tid":"movie","id":455,"src":"movie"},{"tid":"movie","id":456,"src":"movie"}]},{"name":"movie459","lines":[{"tid":"movie","id":459,"src":"movie"},{"tid":"movie","id":546,"src":"movie"}]},{"name":"movie460","lines":[{"tid":"movie","id":460,"src":"movie"}]},{"name":"movie457","lines":[{"tid":"movie","id":457,"src":"movie"}]},{"name":"movie497","lines":[{"tid":"movie","id":497,"src":"movie"}]},{"name":"movie368","lines":[{"tid":"movie","id":368,"src":"movie"}]},{"name":"movie358","lines":[{"tid":"movie","id":358,"src":"movie"}]},{"name":"movie525","lines":[{"tid":"movie","id":525,"src":"movie"}]},{"name":"movie542","lines":[{"tid":"movie","id":542,"src":"movie"}]},{"name":"movie414","lines":[{"tid":"movie","id":414,"src":"movie"}]},{"name":"movie550","lines":[{"tid":"movie","id":550,"src":"movie"}]},{"name":"movie43","lines":[{"tid":"movie","id":43,"src":"movie"}]},{"name":"movie520","lines":[{"tid":"movie","id":520,"src":"movie"}]},{"name":"movie134","lines":[{"tid":"movie","id":134,"src":"movie"}]},{"name":"movie212","lines":[{"tid":"movie","id":212,"src":"movie"}]},{"name":"movie338","lines":[{"tid":"movie","id":338,"src":"movie"}]},{"name":"movie235","lines":[{"tid":"movie","id":235,"src":"movie"}]},{"name":"movie50","lines":[{"tid":"movie","id":50,"src":"movie"}]},{"name":"movie200","lines":[{"tid":"movie","id":200,"src":"movie"}]},{"name":"movie205","lines":[{"tid":"movie","id":205,"src":"movie"}]},{"name":"movie537","lines":[{"tid":"movie","id":537,"src":"movie"}]},{"name":"movie122","lines":[{"tid":"movie","id":122,"src":"movie"}]},{"name":"movie188","lines":[{"tid":"movie","id":188,"src":"movie"}]},{"name":"movie301","lines":[{"tid":"movie","id":301,"src":"movie"}]},{"name":"movie463","lines":[{"tid":"movie","id":463,"src":"movie"}]},{"name":"movie133","lines":[{"tid":"movie","id":133,"src":"movie"}]},{"name":"movie539","lines":[{"tid":"movie","id":539,"src":"movie"}]},{"name":"movie247","lines":[{"tid":"movie","id":247,"src":"movie"}]},{"name":"movie248","lines":[{"tid":"movie","id":248,"src":"movie"}]},{"name":"movie106","lines":[{"tid":"movie","id":106,"src":"movie"}]},{"name":"movie73","lines":[{"tid":"movie","id":73,"src":"movie"}]},{"name":"movie484","lines":[{"tid":"movie","id":484,"src":"movie"}]},{"name":"movie59","lines":[{"tid":"movie","id":59,"src":"movie"}]},{"name":"movie549","lines":[{"tid":"movie","id":549,"src":"movie"}]},{"name":"movie97","lines":[{"tid":"movie","id":97,"src":"movie"}]},{"name":"movie170","lines":[{"tid":"movie","id":170,"src":"movie"}]},{"name":"movie420","lines":[{"tid":"movie","id":420,"src":"movie"}]},{"name":"movie288","lines":[{"tid":"movie","id":288,"src":"movie"}]},{"name":"movie79","lines":[{"tid":"movie","id":79,"src":"movie"}]},{"name":"movie45","lines":[{"tid":"movie","id":45,"src":"movie"}]},{"name":"movie258","lines":[{"tid":"movie","id":258,"src":"movie"},{"tid":"movie","id":270,"src":"movie"}]},{"name":"movie34","lines":[{"tid":"movie","id":34,"src":"movie"}]},{"name":"movie300","lines":[{"tid":"movie","id":300,"src":"movie"}]},{"name":"movie271","lines":[{"tid":"movie","id":271,"src":"movie"}]},{"name":"movie309","lines":[{"tid":"movie","id":309,"src":"movie"}]},{"name":"movie226","lines":[{"tid":"movie","id":226,"src":"movie"}]},{"name":"movie290","lines":[{"tid":"movie","id":290,"src":"movie"}]},{"name":"movie3","lines":[{"tid":"movie","id":3,"src":"movie"}]},{"name":"movie409","lines":[{"tid":"movie","id":409,"src":"movie"}]},{"name":"movie469","lines":[{"tid":"movie","id":469,"src":"movie"}]},{"name":"movie42","lines":[{"tid":"movie","id":42,"src":"movie"}]},{"name":"movie322","lines":[{"tid":"movie","id":322,"src":"movie"}]},{"name":"movie234","lines":[{"tid":"movie","id":234,"src":"movie"}]},{"name":"movie236","lines":[{"tid":"movie","id":236,"src":"movie"}]},{"name":"movie27","lines":[{"tid":"movie","id":27,"src":"movie"}]},{"name":"movie217","lines":[{"tid":"movie","id":217,"src":"movie"}]},{"name":"movie75","lines":[{"tid":"movie","id":75,"src":"movie"}]},{"name":"itv272","lines":[{"tid":"itv","id":272,"src":"itv"}]},{"name":"movie534","lines":[{"tid":"movie","id":534,"src":"movie"}]},{"name":"movie369","lines":[{"tid":"movie","id":369,"src":"movie"}]},{"name":"movie401","lines":[{"tid":"movie","id":401,"src":"movie"}]},{"name":"movie480","lines":[{"tid":"movie","id":480,"src":"movie"}]},{"name":"movie346","lines":[{"tid":"movie","id":346,"src":"movie"}]},{"name":"movie227","lines":[{"tid":"movie","id":227,"src":"movie"}]},{"name":"movie22","lines":[{"tid":"movie","id":22,"src":"movie"}]},{"name":"movie289","lines":[{"tid":"movie","id":289,"src":"movie"}]},{"name":"movie404","lines":[{"tid":"movie","id":404,"src":"movie"}]},{"name":"movie376","lines":[{"tid":"movie","id":376,"src":"movie"}]},{"name":"movie123","lines":[{"tid":"movie","id":123,"src":"movie"}]},{"name":"movie138","lines":[{"tid":"movie","id":138,"src":"movie"}]},{"name":"movie328","lines":[{"tid":"movie","id":328,"src":"movie"}]},{"name":"movie163","lines":[{"tid":"movie","id":163,"src":"movie"}]},{"name":"movie178","lines":[{"tid":"movie","id":178,"src":"movie"}]},{"name":"movie422","lines":[{"tid":"movie","id":422,"src":"movie"}]},{"name":"movie423","lines":[{"tid":"movie","id":423,"src":"movie"}]},{"name":"movie215","lines":[{"tid":"movie","id":215,"src":"movie"}]},{"name":"movie352","lines":[{"tid":"movie","id":352,"src":"movie"}]},{"name":"movie354","lines":[{"tid":"movie","id":354,"src":"movie"}]},{"name":"movie314","lines":[{"tid":"movie","id":314,"src":"movie"}]},{"name":"movie345","lines":[{"tid":"movie","id":345,"src":"movie"}]},{"name":"itv206","lines":[{"tid":"itv","id":206,"src":"itv"}]},{"name":"movie204","lines":[{"tid":"movie","id":204,"src":"movie"}]},{"name":"movie57","lines":[{"tid":"movie","id":57,"src":"movie"}]},{"name":"movie362","lines":[{"tid":"movie","id":362,"src":"movie"}]},{"name":"movie361","lines":[{"tid":"movie","id":361,"src":"movie"}]},{"name":"movie360","lines":[{"tid":"movie","id":360,"src":"movie"}]},{"name":"movie136","lines":[{"tid":"movie","id":136,"src":"movie"}]},{"name":"movie357","lines":[{"tid":"movie","id":357,"src":"movie"}]},{"name":"movie19","lines":[{"tid":"movie","id":19,"src":"movie"}]},{"name":"movie125","lines":[{"tid":"movie","id":125,"src":"movie"}]},{"name":"movie524","lines":[{"tid":"movie","id":524,"src":"movie"}]},{"name":"movie416","lines":[{"tid":"movie","id":416,"src":"movie"}]},{"name":"movie31","lines":[{"tid":"movie","id":31,"src":"movie"}]},{"name":"movie100","lines":[{"tid":"movie","id":100,"src":"movie"}]},{"name":"movie249","lines":[{"tid":"movie","id":249,"src":"movie"}]},{"name":"movie278","lines":[{"tid":"movie","id":278,"src":"movie"}]},{"name":"movie111","lines":[{"tid":"movie","id":111,"src":"movie"}]},{"name":"movie295","lines":[{"tid":"movie","id":295,"src":"movie"}]},{"name":"movie308","lines":[{"tid":"movie","id":308,"src":"movie"}]},{"name":"movie324","lines":[{"tid":"movie","id":324,"src":"movie"}]},{"name":"movie1","lines":[{"tid":"movie","id":1,"src":"movie"},{"tid":"movie","id":30,"src":"movie"}]},{"name":"movie521","lines":[{"tid":"movie","id":521,"src":"movie"}]},{"name":"movie117","lines":[{"tid":"movie","id":117,"src":"movie"}]},{"name":"movie321","lines":[{"tid":"movie","id":321,"src":"movie"}]},{"name":"movie233","lines":[{"tid":"movie","id":233,"src":"movie"}]},{"name":"movie168","lines":[{"tid":"movie","id":168,"src":"movie"}]},{"name":"movie190","lines":[{"tid":"movie","id":190,"src":"movie"}]},{"name":"movie483","lines":[{"tid":"movie","id":483,"src":"movie"}]},{"name":"movie396","lines":[{"tid":"movie","id":396,"src":"movie"}]},{"name":"movie318","lines":[{"tid":"movie","id":318,"src":"movie"}]},{"name":"movie94","lines":[{"tid":"movie","id":94,"src":"movie"}]},{"name":"movie56","lines":[{"tid":"movie","id":56,"src":"movie"}]},{"name":"movie26","lines":[{"tid":"movie","id":26,"src":"movie"}]},{"name":"movie257","lines":[{"tid":"movie","id":257,"src":"movie"}]},{"name":"movie76","lines":[{"tid":"movie","id":76,"src":"movie"}]},{"name":"movie540","lines":[{"tid":"movie","id":540,"src":"movie"}]},{"name":"movie298","lines":[{"tid":"movie","id":298,"src":"movie"}]},{"name":"movie266","lines":[{"tid":"movie","id":266,"src":"movie"}]},{"name":"movie49","lines":[{"tid":"movie","id":49,"src":"movie"}]},{"name":"movie335","lines":[{"tid":"movie","id":335,"src":"movie"}]},{"name":"movie482","lines":[{"tid":"movie","id":482,"src":"movie"}]},{"name":"fjitv109","lines":[{"tid":"fjitv","id":109,"src":"fjitv"},{"tid":"fjitv","id":182,"src":"fjitv"},{"tid":"hlitv","id":93,"src":"hlitv"}]},{"name":"movie498","lines":[{"tid":"movie","id":498,"src":"movie"}]},{"name":"movie128","lines":[{"tid":"movie","id":128,"src":"movie"}]},{"name":"movie319","lines":[{"tid":"movie","id":319,"src":"movie"}]},{"name":"movie230","lines":[{"tid":"movie","id":230,"src":"movie"}]},{"name":"movie505","lines":[{"tid":"movie","id":505,"src":"movie"}]},{"name":"movie177","lines":[{"tid":"movie","id":177,"src":"movie"}]},{"name":"migu94","lines":[{"tid":"migu","id":94,"src":"migu"},{"tid":"ty","id":22,"src":"ty"}]},{"name":"movie415","lines":[{"tid":"movie","id":415,"src":"movie"}]},{"name":"movie37","lines":[{"tid":"movie","id":37,"src":"movie"}]},{"name":"movie182","lines":[{"tid":"movie","id":182,"src":"movie"}]},{"name":"movie44","lines":[{"tid":"movie","id":44,"src":"movie"}]},{"name":"movie185","lines":[{"tid":"movie","id":185,"src":"movie"}]},{"name":"movie132","lines":[{"tid":"movie","id":132,"src":"movie"}]},{"name":"movie351","lines":[{"tid":"movie","id":351,"src":"movie"}]},{"name":"movie12","lines":[{"tid":"movie","id":12,"src":"movie"}]},{"name":"movie297","lines":[{"tid":"movie","id":297,"src":"movie"}]},{"name":"movie331","lines":[{"tid":"movie","id":331,"src":"movie"}]},{"name":"movie21","lines":[{"tid":"movie","id":21,"src":"movie"}]},{"name":"movie502","lines":[{"tid":"movie","id":502,"src":"movie"}]},{"name":"movie326","lines":[{"tid":"movie","id":326,"src":"movie"}]}]}}');
+
+// =================== BAD_LINES ===================
+// Source lines (tid:id) that cannot be played on the source site itself.
+// Determined by automated testing: for each line, we computed the play.php URL,
+// followed redirects, and checked if the final m3u8 URL is fetchable.
+// Lines redirecting to http://<bare-IP> or http://<domain> are NOT fetchable,
+// so they're marked bad. The frontend uses this list to optionally hide them.
+const BAD_LINES = new Set(JSON.parse('["fjitv:1","fjitv:10","fjitv:100","fjitv:101","fjitv:102","fjitv:103","fjitv:104","fjitv:105","fjitv:106","fjitv:107","fjitv:108","fjitv:109","fjitv:11","fjitv:110","fjitv:111","fjitv:112","fjitv:113","fjitv:114","fjitv:115","fjitv:116","fjitv:117","fjitv:118","fjitv:119","fjitv:12","fjitv:120","fjitv:121","fjitv:122","fjitv:124","fjitv:125","fjitv:126","fjitv:127","fjitv:128","fjitv:129","fjitv:13","fjitv:130","fjitv:131","fjitv:132","fjitv:133","fjitv:134","fjitv:135","fjitv:136","fjitv:137","fjitv:138","fjitv:139","fjitv:14","fjitv:140","fjitv:141","fjitv:142","fjitv:143","fjitv:144","fjitv:145","fjitv:146","fjitv:147","fjitv:148","fjitv:149","fjitv:15","fjitv:150","fjitv:151","fjitv:152","fjitv:153","fjitv:154","fjitv:155","fjitv:156","fjitv:157","fjitv:158","fjitv:159","fjitv:16","fjitv:160","fjitv:161","fjitv:162","fjitv:163","fjitv:164","fjitv:165","fjitv:166","fjitv:167","fjitv:168","fjitv:169","fjitv:17","fjitv:170","fjitv:171","fjitv:172","fjitv:173","fjitv:174","fjitv:175","fjitv:176","fjitv:177","fjitv:178","fjitv:179","fjitv:18","fjitv:180","fjitv:181","fjitv:182","fjitv:183","fjitv:184","fjitv:185","fjitv:186","fjitv:187","fjitv:188","fjitv:189","fjitv:19","fjitv:190","fjitv:191","fjitv:192","fjitv:193","fjitv:194","fjitv:195","fjitv:196","fjitv:197","fjitv:198","fjitv:199","fjitv:2","fjitv:20","fjitv:200","fjitv:201","fjitv:202","fjitv:203","fjitv:204","fjitv:205","fjitv:206","fjitv:207","fjitv:208","fjitv:209","fjitv:21","fjitv:210","fjitv:211","fjitv:212","fjitv:213","fjitv:214","fjitv:215","fjitv:216","fjitv:217","fjitv:218","fjitv:219","fjitv:22","fjitv:220","fjitv:221","fjitv:222","fjitv:223","fjitv:224","fjitv:225","fjitv:226","fjitv:227","fjitv:228","fjitv:229","fjitv:23","fjitv:230","fjitv:231","fjitv:232","fjitv:233","fjitv:234","fjitv:235","fjitv:236","fjitv:237","fjitv:238","fjitv:239","fjitv:24","fjitv:240","fjitv:241","fjitv:242","fjitv:243","fjitv:244","fjitv:245","fjitv:246","fjitv:247","fjitv:248","fjitv:249","fjitv:25","fjitv:250","fjitv:251","fjitv:252","fjitv:253","fjitv:254","fjitv:255","fjitv:256","fjitv:257","fjitv:258","fjitv:259","fjitv:26","fjitv:260","fjitv:261","fjitv:262","fjitv:263","fjitv:264","fjitv:265","fjitv:266","fjitv:267","fjitv:268","fjitv:269","fjitv:27","fjitv:270","fjitv:271","fjitv:272","fjitv:273","fjitv:274","fjitv:275","fjitv:276","fjitv:277","fjitv:278","fjitv:279","fjitv:28","fjitv:280","fjitv:281","fjitv:282","fjitv:283","fjitv:284","fjitv:285","fjitv:286","fjitv:287","fjitv:288","fjitv:289","fjitv:29","fjitv:291","fjitv:292","fjitv:293","fjitv:294","fjitv:295","fjitv:296","fjitv:297","fjitv:298","fjitv:299","fjitv:3","fjitv:30","fjitv:300","fjitv:301","fjitv:302","fjitv:303","fjitv:304","fjitv:305","fjitv:306","fjitv:307","fjitv:308","fjitv:309","fjitv:31","fjitv:310","fjitv:311","fjitv:312","fjitv:313","fjitv:314","fjitv:315","fjitv:316","fjitv:32","fjitv:33","fjitv:34","fjitv:35","fjitv:36","fjitv:37","fjitv:38","fjitv:39","fjitv:4","fjitv:40","fjitv:41","fjitv:42","fjitv:43","fjitv:44","fjitv:45","fjitv:46","fjitv:47","fjitv:48","fjitv:49","fjitv:5","fjitv:50","fjitv:51","fjitv:52","fjitv:53","fjitv:54","fjitv:55","fjitv:56","fjitv:57","fjitv:58","fjitv:59","fjitv:6","fjitv:60","fjitv:61","fjitv:62","fjitv:63","fjitv:64","fjitv:65","fjitv:66","fjitv:67","fjitv:68","fjitv:69","fjitv:7","fjitv:70","fjitv:71","fjitv:72","fjitv:73","fjitv:74","fjitv:75","fjitv:76","fjitv:77","fjitv:78","fjitv:79","fjitv:8","fjitv:80","fjitv:81","fjitv:82","fjitv:83","fjitv:84","fjitv:85","fjitv:86","fjitv:87","fjitv:88","fjitv:89","fjitv:9","fjitv:90","fjitv:91","fjitv:92","fjitv:93","fjitv:94","fjitv:95","fjitv:96","fjitv:97","fjitv:98","fjitv:99","gt:30","gt:36","gt:37","gt:38","gt:39","gt:40","gt:56","hlitv:1","hlitv:10","hlitv:100","hlitv:103","hlitv:104","hlitv:11","hlitv:111","hlitv:112","hlitv:113","hlitv:114","hlitv:115","hlitv:116","hlitv:117","hlitv:118","hlitv:119","hlitv:12","hlitv:120","hlitv:123","hlitv:124","hlitv:125","hlitv:126","hlitv:127","hlitv:128","hlitv:129","hlitv:13","hlitv:130","hlitv:131","hlitv:133","hlitv:135","hlitv:136","hlitv:137","hlitv:138","hlitv:139","hlitv:14","hlitv:140","hlitv:141","hlitv:142","hlitv:143","hlitv:144","hlitv:145","hlitv:146","hlitv:147","hlitv:149","hlitv:15","hlitv:150","hlitv:151","hlitv:152","hlitv:153","hlitv:154","hlitv:155","hlitv:156","hlitv:157","hlitv:16","hlitv:17","hlitv:18","hlitv:19","hlitv:2","hlitv:20","hlitv:21","hlitv:22","hlitv:23","hlitv:24","hlitv:25","hlitv:26","hlitv:27","hlitv:28","hlitv:29","hlitv:3","hlitv:30","hlitv:31","hlitv:32","hlitv:33","hlitv:34","hlitv:35","hlitv:36","hlitv:37","hlitv:38","hlitv:39","hlitv:4","hlitv:40","hlitv:41","hlitv:42","hlitv:44","hlitv:45","hlitv:46","hlitv:47","hlitv:48","hlitv:49","hlitv:5","hlitv:50","hlitv:51","hlitv:52","hlitv:53","hlitv:54","hlitv:55","hlitv:56","hlitv:57","hlitv:58","hlitv:59","hlitv:6","hlitv:60","hlitv:61","hlitv:62","hlitv:63","hlitv:64","hlitv:65","hlitv:66","hlitv:67","hlitv:68","hlitv:69","hlitv:7","hlitv:70","hlitv:71","hlitv:72","hlitv:73","hlitv:74","hlitv:75","hlitv:76","hlitv:77","hlitv:78","hlitv:79","hlitv:8","hlitv:80","hlitv:81","hlitv:82","hlitv:83","hlitv:84","hlitv:85","hlitv:86","hlitv:87","hlitv:88","hlitv:89","hlitv:9","hlitv:90","hlitv:91","hlitv:93","hlitv:94","hlitv:95","hlitv:96","hlitv:97","hlitv:98","hlitv:99","ipv6:1","ipv6:10","ipv6:101","ipv6:102","ipv6:103","ipv6:104","ipv6:11","ipv6:12","ipv6:13","ipv6:14","ipv6:15","ipv6:16","ipv6:17","ipv6:18","ipv6:19","ipv6:2","ipv6:21","ipv6:22","ipv6:23","ipv6:24","ipv6:26","ipv6:27","ipv6:28","ipv6:29","ipv6:3","ipv6:30","ipv6:32","ipv6:33","ipv6:34","ipv6:35","ipv6:36","ipv6:37","ipv6:38","ipv6:39","ipv6:4","ipv6:40","ipv6:41","ipv6:42","ipv6:43","ipv6:44","ipv6:45","ipv6:46","ipv6:47","ipv6:48","ipv6:49","ipv6:50","ipv6:51","ipv6:52","ipv6:53","ipv6:55","ipv6:56","ipv6:57","ipv6:58","ipv6:59","ipv6:6","ipv6:60","ipv6:61","ipv6:63","ipv6:68","ipv6:69","ipv6:7","ipv6:70","ipv6:71","ipv6:72","ipv6:73","ipv6:74","ipv6:75","ipv6:76","ipv6:77","ipv6:78","ipv6:79","ipv6:8","ipv6:80","ipv6:81","ipv6:82","ipv6:83","ipv6:84","ipv6:85","ipv6:86","ipv6:87","ipv6:88","ipv6:89","ipv6:9","ipv6:90","ipv6:91","ipv6:92","ipv6:93","ipv6:94","ipv6:95","ipv6:96","ipv6:97","ipv6:98","ipv6:99","itv:101","itv:105","itv:106","itv:107","itv:108","itv:109","itv:110","itv:111","itv:112","itv:113","itv:115","itv:116","itv:117","itv:118","itv:119","itv:121","itv:122","itv:123","itv:124","itv:125","itv:126","itv:127","itv:128","itv:129","itv:130","itv:131","itv:132","itv:133","itv:134","itv:135","itv:136","itv:137","itv:138","itv:140","itv:141","itv:142","itv:143","itv:144","itv:147","itv:148","itv:149","itv:150","itv:162","itv:180","itv:181","itv:182","itv:183","itv:185","itv:187","itv:188","itv:189","itv:190","itv:192","itv:194","itv:197","itv:198","itv:199","itv:200","itv:201","itv:202","itv:203","itv:204","itv:205","itv:206","itv:207","itv:208","itv:209","itv:210","itv:211","itv:212","itv:213","itv:214","itv:215","itv:216","itv:217","itv:218","itv:219","itv:220","itv:221","itv:222","itv:223","itv:224","itv:225","itv:226","itv:227","itv:228","itv:229","itv:230","itv:231","itv:232","itv:233","itv:234","itv:235","itv:236","itv:237","itv:238","itv:239","itv:240","itv:241","itv:242","itv:243","itv:244","itv:265","itv:266","itv:267","itv:268","itv:269","itv:270","itv:271","itv:272","itv:273","itv:274","itv:275","itv:276","itv:279","itv:280","itv:281","itv:282","itv:283","itv:284","itv:285","itv:287","itv:288","itv:289","itv:290","itv:291","itv:292","itv:293","itv:294","itv:295","itv:296","itv:297","itv:298","itv:299","itv:303","itv:304","itv:305","itv:306","itv:307","itv:308","itv:309","itv:31","itv:310","itv:312","itv:313","itv:314","itv:315","itv:316","itv:317","itv:318","itv:319","itv:320","itv:321","itv:322","itv:323","itv:325","itv:326","itv:327","itv:328","itv:329","itv:33","itv:330","itv:331","itv:332","itv:333","itv:334","itv:335","itv:336","itv:337","itv:338","itv:339","itv:34","itv:340","itv:341","itv:342","itv:343","itv:344","itv:345","itv:346","itv:347","itv:348","itv:349","itv:350","itv:351","itv:352","itv:353","itv:356","itv:357","itv:358","itv:359","itv:360","itv:361","itv:362","itv:363","itv:364","itv:365","itv:366","itv:367","itv:368","itv:369","itv:370","itv:371","itv:372","itv:374","itv:375","itv:376","itv:377","itv:378","itv:379","itv:380","itv:381","itv:382","itv:383","itv:384","itv:385","itv:386","itv:387","itv:388","itv:68","itv:74","itv:75","itv:76","itv:77","itv:78","itv:79","itv:80","itv:81","itv:82","itv:85","itv:86","itv:87","itv:90","itv:91","itv:92","itv:93","itv:94","itv:95","itv:96","itv:97","itv:98","itv:99","movie:316","movie:351","movie:368","movie:520","movie:527","ws:19","ws:21","ys:25","ys:27","ys:28","ys:7"]'));
+
+// YSP CATALOG
+const YSP_CATALOG = JSON.parse('{"yspc01":{"name":"CCTV1","pid":"600001859","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/89714AFADC2D13C6A2E099EACAEC42AAB4A61C08DB14BD6EA1481CECF95DB8DDF91ABC1A215CCD51242099E11F8E3BAD9745E3E8B5B4DE728269B90306CA47B70723E0688C3C5A78A8AD0371B2DF5CE5CCAB51BB3A340E2624FF8E49754F2130F26481FC6FA91CF45CFED2D46F319569/2024078203_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/89714AFADC2D13C6A2E099EACAEC42AAB4A61C08DB14BD6EA1481CECF95DB8DDF91ABC1A215CCD51242099E11F8E3BAD9745E3E8B5B4DE728269B90306CA47B70723E0688C3C5A78A8AD0371B2DF5CE5CCAB51BB3A340E2624FF8E49754F2130F26481FC6FA91CF45CFED2D46F319569/2024078203_web.m3u8?from=player&svrtime=1782055825&pid=600001859&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=869e3d30f6925faf101c4adbce1ea77f&ytime=1782055825&ytype=1"},"yspc02":{"name":"CCTV2","pid":"600001800","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/A3936470E9702212AB1716F5DAD1E201B309CED31F288C932AAC55F6DEFC5B0A57F515333F62DE045A6E78AE90103827E9602760BF6CC5772D26F9B6FAD14EC29DDC76AFB19DDB2A9D0743B2CE958976E81D6E2B352A426E8E691B009744DD5DCC327AEF802926A9FA941593F291C1B1/2024075403_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/A3936470E9702212AB1716F5DAD1E201B309CED31F288C932AAC55F6DEFC5B0A57F515333F62DE045A6E78AE90103827E9602760BF6CC5772D26F9B6FAD14EC29DDC76AFB19DDB2A9D0743B2CE958976E81D6E2B352A426E8E691B009744DD5DCC327AEF802926A9FA941593F291C1B1/2024075403_web.m3u8?from=player&svrtime=1782055832&pid=600001800&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=fa2bf7d7cf778f76cb56dc11c99bbfe4&ytime=1782055832&ytype=1"},"yspc03":{"name":"CCTV3","pid":"600001801","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/E86EC1AE7D6FEC5EBD2656C20BB41C3701F6AD5C88FB1A6D44AA898617B67D486442A9769EADBD8B308D80E3A13A51CA7CCBB225F0CE291BDACA4F1CE5099E0B48DF824F3CE789148982D49EE3376AF45E8DBD9751BC811FECF47EE679E912E65EEF5E248FDB765D943CC988F675411D/2024068503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/E86EC1AE7D6FEC5EBD2656C20BB41C3701F6AD5C88FB1A6D44AA898617B67D486442A9769EADBD8B308D80E3A13A51CA7CCBB225F0CE291BDACA4F1CE5099E0B48DF824F3CE789148982D49EE3376AF45E8DBD9751BC811FECF47EE679E912E65EEF5E248FDB765D943CC988F675411D/2024068503_web.m3u8?from=player&svrtime=1782055839&pid=600001801&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=e141cccb9b9bef431568d603caf16bf2&ytime=1782055839&ytype=1"},"yspc04":{"name":"CCTV4","pid":"600001814","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/18C07A294C1EF3280E94CFF39F95A3EAAA4FB71D947D3F248A71EAAD77905B57B3A8D3E70B1B175CDD7124A8614DB25526FCB206D4CCBE9030A81C010082D711E396EA070C5288C2C580C1EF25CAEC91A7B45BCC77DCB7A4B2878C0536DE9C6E68A72C9062BBFDC88FE4AD86E615AE98/2029797103_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/18C07A294C1EF3280E94CFF39F95A3EAAA4FB71D947D3F248A71EAAD77905B57B3A8D3E70B1B175CDD7124A8614DB25526FCB206D4CCBE9030A81C010082D711E396EA070C5288C2C580C1EF25CAEC91A7B45BCC77DCB7A4B2878C0536DE9C6E68A72C9062BBFDC88FE4AD86E615AE98/2029797103_web.m3u8?from=player&svrtime=1782055845&pid=600001814&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=1284e9ea969afaff62e669461a55626b&ytime=1782055845&ytype=1"},"yspc07":{"name":"CCTV6","pid":"600108442","host":"mobilelive-play-1.ysp.cctv.cn","path":"/ysp/46E9BEA6109C0BC9D48517D39F2EC3F68F691920147FA0335035F13F5C640E345E6E472A639912E93C01AC9F78118DAD8EA48960B4BAA66B833453FA7C0ABECA738420D570072E21FCE5A654724E60500F3F8C4F870397646FA4180C2E9AE4DAD02443A6D1454B0F3C2AAE6137E9887B/2013693901_fhd.m3u8","fullUrl":"https://mobilelive-play-1.ysp.cctv.cn/ysp/46E9BEA6109C0BC9D48517D39F2EC3F68F691920147FA0335035F13F5C640E345E6E472A639912E93C01AC9F78118DAD8EA48960B4BAA66B833453FA7C0ABECA738420D570072E21FCE5A654724E60500F3F8C4F870397646FA4180C2E9AE4DAD02443A6D1454B0F3C2AAE6137E9887B/2013693901_fhd.m3u8?svrtime=1782055867&pid=600108442&m3u8_with_time_tag=2&cdn=5521&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=570b872dc91ec9358fd4b84db3e430bc&ytime=1782055867&ytype=1"},"yspc08":{"name":"CCTV7","pid":"600004092","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/BCEE47D961FEE4FCA6D046EEE3F751635212CBCC962CBAEB40287698BEA52935D58172C47170E9EDA4A10B1C7135B4AC50F6EF0E3F6C56C5E14BFB8CE478752133F26639086A06CDC52C8636E7BD560186C3E0F098E98F8763B176B6E46473450003D4A8809EB5B5CFFE17FCCAB1A656/2024072003_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/BCEE47D961FEE4FCA6D046EEE3F751635212CBCC962CBAEB40287698BEA52935D58172C47170E9EDA4A10B1C7135B4AC50F6EF0E3F6C56C5E14BFB8CE478752133F26639086A06CDC52C8636E7BD560186C3E0F098E98F8763B176B6E46473450003D4A8809EB5B5CFFE17FCCAB1A656/2024072003_web.m3u8?from=player&svrtime=1782055874&pid=600004092&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=308c4a8f89fd0f345223f1433c6764ff&ytime=1782055874&ytype=1"},"yspc09":{"name":"CCTV8","pid":"600001803","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/1C326BF9A2FE77278AA9466CB442DAD33BEF8D09349E8DEBE7B83ADD55EC72DC133A5C9CB418572E50250A863291418DD6DD83998382CB004E47B3C64A11B07B06D35F8996CB42ADF99A3CC4E69D5A3F02AD86B25570583239F7EF4C784ECFF8405179DE42F89358B854E583EDE5922F/2029793003_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/1C326BF9A2FE77278AA9466CB442DAD33BEF8D09349E8DEBE7B83ADD55EC72DC133A5C9CB418572E50250A863291418DD6DD83998382CB004E47B3C64A11B07B06D35F8996CB42ADF99A3CC4E69D5A3F02AD86B25570583239F7EF4C784ECFF8405179DE42F89358B854E583EDE5922F/2029793003_web.m3u8?from=player&svrtime=1782055882&pid=600001803&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=5035476c31d1ee382638c2ef5266d799&ytime=1782055882&ytype=1"},"yspc10":{"name":"CCTV9","pid":"600004078","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/37765C7088DADDF2ED02C3B1CC47C1EF9988974ACCFF8FA33B5E84F0BE5197C056777446F6F559CDD01EBC2DE46D3934ABACB392159AAC8A516D8DE84ED3B2424948C00CEF892159E1628BEFA32BE8CFF246930F8550B9B4CA9F68C70ACC8ED1A436A55B1EA712980905EF624989B72D/2024078603_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/37765C7088DADDF2ED02C3B1CC47C1EF9988974ACCFF8FA33B5E84F0BE5197C056777446F6F559CDD01EBC2DE46D3934ABACB392159AAC8A516D8DE84ED3B2424948C00CEF892159E1628BEFA32BE8CFF246930F8550B9B4CA9F68C70ACC8ED1A436A55B1EA712980905EF624989B72D/2024078603_web.m3u8?from=player&svrtime=1782055891&pid=600004078&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=c79c77587baf11ff795276657eee26c5&ytime=1782055891&ytype=1"},"yspc11":{"name":"CCTV10","pid":"600001805","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/8DC480BBDBCA56B9427DC094850B2DB905E7BBBA1E699A902AB0CD74BB5175ADF31ED986E0E01275C6EEC84D5F83C694D9797A0DC8996C28CEEB16478BF15B9ACA4FE13CD95FC4301FA8A518FC78FCAEAE0CEE07970E4AE65743422003F4F20A2BAB17139452052A7F166F6D843D0C7C/2024078703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/8DC480BBDBCA56B9427DC094850B2DB905E7BBBA1E699A902AB0CD74BB5175ADF31ED986E0E01275C6EEC84D5F83C694D9797A0DC8996C28CEEB16478BF15B9ACA4FE13CD95FC4301FA8A518FC78FCAEAE0CEE07970E4AE65743422003F4F20A2BAB17139452052A7F166F6D843D0C7C/2024078703_web.m3u8?from=player&svrtime=1782055897&pid=600001805&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=fb139ee5a40d6a3d79a09bfc5f1abbda&ytime=1782055897&ytype=1"},"yspc12":{"name":"CCTV11","pid":"600001806","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/CA9BE2C3DD8D9022DC403F5A076DB39D83F7A514DC382FFC677BE72445774CAE7AAD0F23BFF2410A708DCC62EEADA627B58591BD0B7A310A1D694AD79226CD80304C20C0C2FDE8956FD88624A52D2B1B258B9AF4B55D2186CD99A2DF34A0D5D1A5131DF17FDE9E344AF3AED2778BC3CF/2027248703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/CA9BE2C3DD8D9022DC403F5A076DB39D83F7A514DC382FFC677BE72445774CAE7AAD0F23BFF2410A708DCC62EEADA627B58591BD0B7A310A1D694AD79226CD80304C20C0C2FDE8956FD88624A52D2B1B258B9AF4B55D2186CD99A2DF34A0D5D1A5131DF17FDE9E344AF3AED2778BC3CF/2027248703_web.m3u8?from=player&svrtime=1782055904&pid=600001806&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6bd104cccc149cc91658bf9a32d2baf6&ytime=1782055904&ytype=1"},"yspc13":{"name":"CCTV12","pid":"600001807","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/D888377053AA59F3EF2BB291933509017518BB8680A0CE4CFDD30941F47BEF8A87D9A8A5882B0043A7602DF5059ABF36769FCB30E03CAC844AC34FB4911056EB0471BCB97D59CB0D0023765F1DDA9F280F139399938F47337CF851CAAE42F5C2BB470ED826EFEE68CD976F61D01447D9/2027248803_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/D888377053AA59F3EF2BB291933509017518BB8680A0CE4CFDD30941F47BEF8A87D9A8A5882B0043A7602DF5059ABF36769FCB30E03CAC844AC34FB4911056EB0471BCB97D59CB0D0023765F1DDA9F280F139399938F47337CF851CAAE42F5C2BB470ED826EFEE68CD976F61D01447D9/2027248803_web.m3u8?from=player&svrtime=1782055913&pid=600001807&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=c3862ceaf3a37a5999491b2e0f77a8fa&ytime=1782055913&ytype=1"},"yspc14":{"name":"CCTV13","pid":"600001811","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/409F5D3DB3DF521E23E2E95D77A4A81C02FC736825A128757BE4EA4E4C1B509EDF92407D3E8945CD1E7FA284C33620FF2D2E94806493E223FCB94F95185EDDDEEB668BB7287CF5BDA19430C6313D5961C7D7CFB563CDCC1ACF796DAA529211518124C0F1677A53192E3DB47BFA912D96/2029797203_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/409F5D3DB3DF521E23E2E95D77A4A81C02FC736825A128757BE4EA4E4C1B509EDF92407D3E8945CD1E7FA284C33620FF2D2E94806493E223FCB94F95185EDDDEEB668BB7287CF5BDA19430C6313D5961C7D7CFB563CDCC1ACF796DAA529211518124C0F1677A53192E3DB47BFA912D96/2029797203_web.m3u8?from=player&svrtime=1782055919&pid=600001811&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=3669fe385cbf5b7bb819f1d340944838&ytime=1782055919&ytype=1"},"yspc15":{"name":"CCTV14","pid":"600001809","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/C582F58952F110459891A7AE66C58019067B086BEC2C10053AF4E8654155C48A23682E386CD2E3C71684F57E443D85C5645B4F1B7E752B4AA8A535C1DCAE53158F7A53024CAD01EB99450DB85936402673B7C7EFB2AA38D2A5E400CBCBE3002D9B9EB3EAD1E56574AB8C1CD6C6492FA5/2027248903_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/C582F58952F110459891A7AE66C58019067B086BEC2C10053AF4E8654155C48A23682E386CD2E3C71684F57E443D85C5645B4F1B7E752B4AA8A535C1DCAE53158F7A53024CAD01EB99450DB85936402673B7C7EFB2AA38D2A5E400CBCBE3002D9B9EB3EAD1E56574AB8C1CD6C6492FA5/2027248903_web.m3u8?from=player&svrtime=1782055927&pid=600001809&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=45898aab1260301cf39e77d7f351afca&ytime=1782055927&ytype=1"},"yspc16":{"name":"CCTV15","pid":"600001815","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/A6079189F1AC33ABD6D0120CA283EEA5C6100261F03919F3462D2E2F7E2A40D4A6E8D52DCBDAA76B6AA87B45A0A4418269ACB681A9F4686EDE3E6D91E0CFF28FC3100714A4195550E70A4A8DF330AC5EA282903CD484F2ED51239D8D5732F3A9DD151A391E5B29757F0A031B39D6250F/2027249003_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/A6079189F1AC33ABD6D0120CA283EEA5C6100261F03919F3462D2E2F7E2A40D4A6E8D52DCBDAA76B6AA87B45A0A4418269ACB681A9F4686EDE3E6D91E0CFF28FC3100714A4195550E70A4A8DF330AC5EA282903CD484F2ED51239D8D5732F3A9DD151A391E5B29757F0A031B39D6250F/2027249003_web.m3u8?from=player&svrtime=1782055933&pid=600001815&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=2f2d86d66ef23c7264328fc7aaa32744&ytime=1782055933&ytype=1"},"yspc17":{"name":"CCTV17","pid":"600001810","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/AE03815887B0F0D33DBDBCD74CB018665A5CDD1C1A677A045514D9FFAF805D0A7529BF67B964F3DC396D36293902F683C83806BDFD36149DA14C26CFEA74D64CC24318885A4C2EB79F7C70787DA97FDDC88D3DD774715A467DCA0A1EB29529F99C1CF45992278FC6BD76C47A6B55F4ED/2027249403_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/AE03815887B0F0D33DBDBCD74CB018665A5CDD1C1A677A045514D9FFAF805D0A7529BF67B964F3DC396D36293902F683C83806BDFD36149DA14C26CFEA74D64CC24318885A4C2EB79F7C70787DA97FDDC88D3DD774715A467DCA0A1EB29529F99C1CF45992278FC6BD76C47A6B55F4ED/2027249403_web.m3u8?from=player&svrtime=1782055939&pid=600001810&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=01bdb3d189eb01b62ecffdc82b4be261&ytime=1782055939&ytype=1"},"yspw01":{"name":"北京卫视","pid":"600002309","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/50EB6C94E4A7D00279DFEA85F4C34F1755DFB032A7A0E4E16600CBBC77982E0BBECCC03D24328A5421BC5EF8EC8880D17960EC27C9DF9C06E05A6B8718F00A40E2F27360B56BBE81DBCD977FAF93A1814A931013C1A3B480AAE3D074618A6E44C418EEE85EB79836EB84293454D7063F/2024052703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/50EB6C94E4A7D00279DFEA85F4C34F1755DFB032A7A0E4E16600CBBC77982E0BBECCC03D24328A5421BC5EF8EC8880D17960EC27C9DF9C06E05A6B8718F00A40E2F27360B56BBE81DBCD977FAF93A1814A931013C1A3B480AAE3D074618A6E44C418EEE85EB79836EB84293454D7063F/2024052703_web.m3u8?from=player&svrtime=1782055947&pid=600002309&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=8469a11634ff83be769031323a10905c&ytime=1782055947&ytype=1"},"yspw02":{"name":"江苏卫视","pid":"600002521","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/B4C5E33E0B3F301B6FC4FC76964DB359EC4CFA838F6C0A4ED4BC1BCA37517EFFFE66DD40CA9A56D9897D6E57A65F2560FF36F51EFDC1270A959C2D4355BE292BC3ACBBE87D0C26A689D0652C708DCB7111CD3706214DB8E53F74B2A97BC5B4E71D261749C70EDB4A7009ADD8580479B3/2024171103_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/B4C5E33E0B3F301B6FC4FC76964DB359EC4CFA838F6C0A4ED4BC1BCA37517EFFFE66DD40CA9A56D9897D6E57A65F2560FF36F51EFDC1270A959C2D4355BE292BC3ACBBE87D0C26A689D0652C708DCB7111CD3706214DB8E53F74B2A97BC5B4E71D261749C70EDB4A7009ADD8580479B3/2024171103_web.m3u8?from=player&svrtime=1782055956&pid=600002521&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=ef5e86c2e1b4e74a9002870cbd86cab7&ytime=1782055956&ytype=1"},"yspw03":{"name":"东方卫视","pid":"600002483","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/61E7C719EEBAC032F1CEB4A1E5E01B51C5A68C3F89647696C9D0007C57CE49B1207E3A166E1CE8319C9B907C35A5D4BD905E40F7B82DB3C2EF3A434A0FAFFD39040E94616FD0889D162DE65A14C9BC6A51EABCB19C791ADE59568C684E4FE8CA94AE47ED738C6B117362BCA1D61F6A75/2024054503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/61E7C719EEBAC032F1CEB4A1E5E01B51C5A68C3F89647696C9D0007C57CE49B1207E3A166E1CE8319C9B907C35A5D4BD905E40F7B82DB3C2EF3A434A0FAFFD39040E94616FD0889D162DE65A14C9BC6A51EABCB19C791ADE59568C684E4FE8CA94AE47ED738C6B117362BCA1D61F6A75/2024054503_web.m3u8?from=player&svrtime=1782055964&pid=600002483&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=d6c1064d85fe659510feb4ebe8e458c6&ytime=1782055964&ytype=1"},"yspw04":{"name":"浙江卫视","pid":"600002520","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/AE8EE8A95C0699705685BEE15D8D882D3F762C1DD0A3FB23268F16D0726178A195A6791030965E9D4F178423F4BC1CD662536DE454A66BD4157C774FDA1823A7183FE2481FD2D46CD7AA05C22EEDC6007D5CDB1C7655AC8EA37073717AF1B0C315B55F25ECE3989C62429C723DECE67C/2024054703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/AE8EE8A95C0699705685BEE15D8D882D3F762C1DD0A3FB23268F16D0726178A195A6791030965E9D4F178423F4BC1CD662536DE454A66BD4157C774FDA1823A7183FE2481FD2D46CD7AA05C22EEDC6007D5CDB1C7655AC8EA37073717AF1B0C315B55F25ECE3989C62429C723DECE67C/2024054703_web.m3u8?from=player&svrtime=1782055972&pid=600002520&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6a40876051ca53ae1e1d097f51c255f7&ytime=1782055972&ytype=1"},"yspw05":{"name":"湖南卫视","pid":"600002475","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/94ECBDDF0CD4A3AEFA74F0C7FDD27FEC7070C314130F5525125F7149A64A64BB155DF10FB0D6CDDB49EEAF81A95FBA0C6B2C152E6114DF3CF18727183D6150F596E3BA3AA7E1CEC9D0A6446D567B7D83871B2F674880602AACA633E942F44A83461A3A7A07473EF17366572491582EC7/2024054803_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/94ECBDDF0CD4A3AEFA74F0C7FDD27FEC7070C314130F5525125F7149A64A64BB155DF10FB0D6CDDB49EEAF81A95FBA0C6B2C152E6114DF3CF18727183D6150F596E3BA3AA7E1CEC9D0A6446D567B7D83871B2F674880602AACA633E942F44A83461A3A7A07473EF17366572491582EC7/2024054803_web.m3u8?from=player&svrtime=1782055978&pid=600002475&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6f2f13ceee703baa0116c427263ffb9b&ytime=1782055978&ytype=1"},"yspw06":{"name":"湖北卫视","pid":"600002508","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/5468E82B2E032233E4B47D8A7B5310132112E54032291C03EA0526C95D28D9ED6C692B4FE765A67D2CC6BB4D2548A199D78591CA2CF2124AB8E199DC422E4B918D6BDED6A32E32F21ED07CFED551E6BD3A8446DE3606E42EB610D6F5D02C61F1E1172DFF2D85AF893457FC2F6BC480A1/2024171203_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/5468E82B2E032233E4B47D8A7B5310132112E54032291C03EA0526C95D28D9ED6C692B4FE765A67D2CC6BB4D2548A199D78591CA2CF2124AB8E199DC422E4B918D6BDED6A32E32F21ED07CFED551E6BD3A8446DE3606E42EB610D6F5D02C61F1E1172DFF2D85AF893457FC2F6BC480A1/2024171203_web.m3u8?from=player&svrtime=1782055985&pid=600002508&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=8206c68992ea840ef4cef6157de9dc21&ytime=1782055985&ytype=1"},"yspw07":{"name":"广东卫视","pid":"600002485","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/4CF626041C700AFCCAE3F1913B8DAA3CB3FA0F81DCCD97A3081FA69E488775259A344B1A5804B89AF392B23FCF65BB34256B9D578AE70982CC6DB4AB7964745B92A4112B79461150D84CB863F821F591D73E7A6D3E63258A6BA6FBD9EE62637F0793AE05AAA71A9545C1126E3C540EAF/2024060903_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/4CF626041C700AFCCAE3F1913B8DAA3CB3FA0F81DCCD97A3081FA69E488775259A344B1A5804B89AF392B23FCF65BB34256B9D578AE70982CC6DB4AB7964745B92A4112B79461150D84CB863F821F591D73E7A6D3E63258A6BA6FBD9EE62637F0793AE05AAA71A9545C1126E3C540EAF/2024060903_web.m3u8?from=player&svrtime=1782055992&pid=600002485&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=76c5dbe5f58a30cb18a3fd9c17bbfffb&ytime=1782055992&ytype=1"},"yspw08":{"name":"广西卫视","pid":"600002509","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/29D0DCD5B83F304F75E0ECFD5C7A77D69B1DB2EFF27AEDD366B6D318566C8CE4C83C76A3138E4593717114E4DF9E55A1DB38992067A13D66F172809E0EC8867FD482449F641580C89607FC131DB2745E1625D88E8654F0DE55164F855BA13B1450AB5DF66F2B6B1BA7A06A06BDED84BF/2024060703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/29D0DCD5B83F304F75E0ECFD5C7A77D69B1DB2EFF27AEDD366B6D318566C8CE4C83C76A3138E4593717114E4DF9E55A1DB38992067A13D66F172809E0EC8867FD482449F641580C89607FC131DB2745E1625D88E8654F0DE55164F855BA13B1450AB5DF66F2B6B1BA7A06A06BDED84BF/2024060703_web.m3u8?from=player&svrtime=1782055998&pid=600002509&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=9e17960f266551609d1deb3239872278&ytime=1782055998&ytype=1"},"yspw09":{"name":"黑龙江卫视","pid":"600002498","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/43338EC71BF5434CA1AF30B2ABEED7C056CD10B2F7A7EE80D96FAA8F995B81DCC10328AB8BB3634A2FEAEA7F617EFC13F5683F828D00013A22CD717FE13546B16AC204BB9891C4BB81D2FBE7B183EA07AF8D8616112CF0742F09FCEC76B2611D5B88E7477F1EF25487A7A7A8A23201ED/2029797003_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/43338EC71BF5434CA1AF30B2ABEED7C056CD10B2F7A7EE80D96FAA8F995B81DCC10328AB8BB3634A2FEAEA7F617EFC13F5683F828D00013A22CD717FE13546B16AC204BB9891C4BB81D2FBE7B183EA07AF8D8616112CF0742F09FCEC76B2611D5B88E7477F1EF25487A7A7A8A23201ED/2029797003_web.m3u8?from=player&svrtime=1782056005&pid=600002498&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=011b2384f8df2b5c5d49f2e96f852893&ytime=1782056005&ytype=1"},"yspw10":{"name":"海南卫视","pid":"600002506","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/71A42BBEF578B2D5DD47B25272D4E712682392FD947C955595838DEAB139B1D3ACD705C640225E7647E9729407F3E15596CFFD1B236D145BD67A29EBC73BB93054A49B8D6190687E60F520835A0C31850F88750C06F1157AB8F9C0F9F4E271DEC141E0C7AF69559F325FB7F9D5C11C6F/2024055603_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/71A42BBEF578B2D5DD47B25272D4E712682392FD947C955595838DEAB139B1D3ACD705C640225E7647E9729407F3E15596CFFD1B236D145BD67A29EBC73BB93054A49B8D6190687E60F520835A0C31850F88750C06F1157AB8F9C0F9F4E271DEC141E0C7AF69559F325FB7F9D5C11C6F/2024055603_web.m3u8?from=player&svrtime=1782056012&pid=600002506&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=77aff21166669d3dbc269090193e1555&ytime=1782056012&ytype=1"},"yspw11":{"name":"重庆卫视","pid":"600002531","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/E73E1FE364FFBD16D4FF8CE37A6DB78C8D397DDEE9CCF2715CDB4A6DB1484D9255BEAE729B50F7779F5A534948FC0786D1368374381CBFB0FC57B3C8DD983A7348781F54C9D69B9179C39ED893E5440CBBFE83EC97DB7B2CBC7B3413457EA2C772A9F60B5B6C27A1A258CD69284139BB/2024061103_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/E73E1FE364FFBD16D4FF8CE37A6DB78C8D397DDEE9CCF2715CDB4A6DB1484D9255BEAE729B50F7779F5A534948FC0786D1368374381CBFB0FC57B3C8DD983A7348781F54C9D69B9179C39ED893E5440CBBFE83EC97DB7B2CBC7B3413457EA2C772A9F60B5B6C27A1A258CD69284139BB/2024061103_web.m3u8?from=player&svrtime=1782056019&pid=600002531&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=d62973b70ba1e4750a4fa72cd00380a8&ytime=1782056020&ytype=1"},"yspw12":{"name":"深圳卫视","pid":"600002481","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/5A917D9D89ADE2A50EA6ACA9803179913CB0C1C7984D3478747172A9BA6AE3964E9668EB8A575B78EF7640DC593D40318690AF797B005A00BA24B54E0BA2E2F472DFBC0CF3C290C4A7716614F73BA9784252EC759C2703722ACFFEB7AE9011BC3A27D072E08DEF7B9730FADD01B849BA/2024061303_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/5A917D9D89ADE2A50EA6ACA9803179913CB0C1C7984D3478747172A9BA6AE3964E9668EB8A575B78EF7640DC593D40318690AF797B005A00BA24B54E0BA2E2F472DFBC0CF3C290C4A7716614F73BA9784252EC759C2703722ACFFEB7AE9011BC3A27D072E08DEF7B9730FADD01B849BA/2024061303_web.m3u8?from=player&svrtime=1782056026&pid=600002481&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=01aa417e9c80c83891d306f880f0bc60&ytime=1782056026&ytype=1"},"yspw13":{"name":"四川卫视","pid":"600002516","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/60CBC38C2FB465A6C7BCB80D3B0455FFB994ABFDCC01FE06B3266E4AB47E962A6A6CB8B554AF406489E7E8111F5FF3CF7B805EE86ABB9B24ECC42378FFB511B3A6D7B76E9DA7F3E916BFE1AE006252ABBC1D71955C7D41B2DBB66004FE02B745A74DFB75C0939CD2C44C45CBF2C38A2E/2024061403_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/60CBC38C2FB465A6C7BCB80D3B0455FFB994ABFDCC01FE06B3266E4AB47E962A6A6CB8B554AF406489E7E8111F5FF3CF7B805EE86ABB9B24ECC42378FFB511B3A6D7B76E9DA7F3E916BFE1AE006252ABBC1D71955C7D41B2DBB66004FE02B745A74DFB75C0939CD2C44C45CBF2C38A2E/2024061403_web.m3u8?from=player&svrtime=1782056034&pid=600002516&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6955a3b34d93868e5148f22b642e65cc&ytime=1782056034&ytype=1"},"yspw14":{"name":"河南卫视","pid":"600002525","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/D7F0E39F722C1AEB4818F9DB40162F6BA1F72F13ECD910D804F47E4D73054E9D1CCCDD78C6D97C774FC3411C41AEBF73138413878D248941E2038CF9AA67F1B7850DF56B7E7099B624394EEA23771DCDA39267CFB59BE4DC46DBC829041D51E42885612412DDF11DC27332D511289C58/2029797303_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/D7F0E39F722C1AEB4818F9DB40162F6BA1F72F13ECD910D804F47E4D73054E9D1CCCDD78C6D97C774FC3411C41AEBF73138413878D248941E2038CF9AA67F1B7850DF56B7E7099B624394EEA23771DCDA39267CFB59BE4DC46DBC829041D51E42885612412DDF11DC27332D511289C58/2029797303_web.m3u8?from=player&svrtime=1782056041&pid=600002525&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=263e4000ec43ed2dd68a9dfe539663d1&ytime=1782056041&ytype=1"},"yspw15":{"name":"福建东南卫视","pid":"600002484","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/1F3813F3DE7C6866F39CDB4412E0E6F6BCBC5033830E8B05617F6937A7AF800938E6A58173AB5FF78DEFA03F2608B76913F48E9BF6735F311C92969BA6DB52EB8DB532BED8FF2BC6E5F7F1707958A02327B87A6F66E2E48D5E69E4080961CF39D112FE27986781D43DC6E09664D7E38E/2024061503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/1F3813F3DE7C6866F39CDB4412E0E6F6BCBC5033830E8B05617F6937A7AF800938E6A58173AB5FF78DEFA03F2608B76913F48E9BF6735F311C92969BA6DB52EB8DB532BED8FF2BC6E5F7F1707958A02327B87A6F66E2E48D5E69E4080961CF39D112FE27986781D43DC6E09664D7E38E/2024061503_web.m3u8?from=player&svrtime=1782056047&pid=600002484&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=1ea9c8eb5f24f8cf6dde0268ccc3256c&ytime=1782056047&ytype=1"},"yspw16":{"name":"贵州卫视","pid":"600002490","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/60AB4D516258DC9B3ACAC329B0522E7362065B0E4271095E1A36FA6F27DBA4A10096FE8055727EDED413890052D28A4C08E898F2C495B481D2337CA2DB8D66F0E4C657DBC280A0257573CE34C0274D821510854AF1E1ED7A7B5C70043F1CDD1F86089C681F783AA1CDB09ADF571CEEFA/2024061603_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/60AB4D516258DC9B3ACAC329B0522E7362065B0E4271095E1A36FA6F27DBA4A10096FE8055727EDED413890052D28A4C08E898F2C495B481D2337CA2DB8D66F0E4C657DBC280A0257573CE34C0274D821510854AF1E1ED7A7B5C70043F1CDD1F86089C681F783AA1CDB09ADF571CEEFA/2024061603_web.m3u8?from=player&svrtime=1782056055&pid=600002490&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=25ed47c3861dbfd598195e23b4542427&ytime=1782056055&ytype=1"},"yspw17":{"name":"江西卫视","pid":"600002503","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/8F30EF4AE3826D53A5A79470A1CAD95848C02BC624CB2657F89BD549FC5BF17C83BEBD49409959593B2D5B03EF69E3D7D7F7122215DA6A5377FC677F16E647E0A05B9E28BDBDEB1F9D9EB6AA8F622DDFB919470DE947E15CE53B7D6E88A603BBBCE25B506E6BF52E3B7C6D2884A87702/2024061703_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/8F30EF4AE3826D53A5A79470A1CAD95848C02BC624CB2657F89BD549FC5BF17C83BEBD49409959593B2D5B03EF69E3D7D7F7122215DA6A5377FC677F16E647E0A05B9E28BDBDEB1F9D9EB6AA8F622DDFB919470DE947E15CE53B7D6E88A603BBBCE25B506E6BF52E3B7C6D2884A87702/2024061703_web.m3u8?from=player&svrtime=1782056062&pid=600002503&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6602a632f4c85e8865f559e698117027&ytime=1782056062&ytype=1"},"yspw18":{"name":"辽宁卫视","pid":"600002505","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/A45A2225466C908E39BE42DC8372035B2A915B5C91D23685D142218B95667420DD00B9C964C4D2A90FB868729A802DAB03C5B4D6A1A35BEE85D14FEAF2015306C06AB9F34AB7E47CCD252C05941BA2EA962838A39776ACAD8DE071872EFE6E943524A68571E4987B596185D870F49252/2024171303_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/A45A2225466C908E39BE42DC8372035B2A915B5C91D23685D142218B95667420DD00B9C964C4D2A90FB868729A802DAB03C5B4D6A1A35BEE85D14FEAF2015306C06AB9F34AB7E47CCD252C05941BA2EA962838A39776ACAD8DE071872EFE6E943524A68571E4987B596185D870F49252/2024171303_web.m3u8?from=player&svrtime=1782056070&pid=600002505&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=22666de3e849adbbfb27ee410e034b7a&ytime=1782056070&ytype=1"},"yspw19":{"name":"安徽卫视","pid":"600002532","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/86399F34C3FF0FCA87897ED5DA0F75C5CD16C6CD7C80DDFE50ED779E0DFC4B1F669B7141C28A05DF4190B13BAFCA28DA1FDF3C3ABE04E146B3244922886C9EA8CABE43BB9FDB37A86DA826853116B2441B10C97CB28D1526A3185ACB09B96F7C17BAF8D65C2EE7FEE48A90EDBE7BDE01/2024171403_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/86399F34C3FF0FCA87897ED5DA0F75C5CD16C6CD7C80DDFE50ED779E0DFC4B1F669B7141C28A05DF4190B13BAFCA28DA1FDF3C3ABE04E146B3244922886C9EA8CABE43BB9FDB37A86DA826853116B2441B10C97CB28D1526A3185ACB09B96F7C17BAF8D65C2EE7FEE48A90EDBE7BDE01/2024171403_web.m3u8?from=player&svrtime=1782056077&pid=600002532&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=7a7a12dffc93215e819191df935e6b54&ytime=1782056077&ytype=1"},"yspw20":{"name":"河北卫视","pid":"600002493","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/1217508F05119B641E9484423BA64C71E3A0D5FDD5C0F86682F775D21102A3CAD4B5FDF7F53EAFDF126B20F6AAEE54E3825349FFE1D35054752B8AC131AA72830D176357CA84975E1D35EF829ADC139239FEEE19AE00B4A97EE80111D7315CA02C74CE602DA41821E034D126062119F0/2024171503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/1217508F05119B641E9484423BA64C71E3A0D5FDD5C0F86682F775D21102A3CAD4B5FDF7F53EAFDF126B20F6AAEE54E3825349FFE1D35054752B8AC131AA72830D176357CA84975E1D35EF829ADC139239FEEE19AE00B4A97EE80111D7315CA02C74CE602DA41821E034D126062119F0/2024171503_web.m3u8?from=player&svrtime=1782056083&pid=600002493&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=ecea623fd53f6bc81eb245599e112abd&ytime=1782056083&ytype=1"},"yspw21":{"name":"山东卫视","pid":"600002513","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/D5DEA38939BE99188D1BF9DEA7A5B7696CD57EB275419919548CC203CB984262F88CAD7C6C28D7EA910BA0E093F6BBE9CB94A76161948F47DA965DA49F37C2A33BDB93C90CB75D64BCB6A697B62970FF1203004283CE24625777480C348C3FE7C24DAE129B716F404C25B6CC2F8B9414/2029787903_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/D5DEA38939BE99188D1BF9DEA7A5B7696CD57EB275419919548CC203CB984262F88CAD7C6C28D7EA910BA0E093F6BBE9CB94A76161948F47DA965DA49F37C2A33BDB93C90CB75D64BCB6A697B62970FF1203004283CE24625777480C348C3FE7C24DAE129B716F404C25B6CC2F8B9414/2029787903_web.m3u8?from=player&svrtime=1782056090&pid=600002513&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=44012a1bc232ebf0d53da0dd7842603e&ytime=1782056090&ytype=1"},"yspw22":{"name":"天津卫视","pid":"600152137","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/08B7FFADECBF81449558032B2C90D672EEC5A802E02501106DBD9D44CB802825CBA660E37EE1FA4AAE54B8CD2359561EEF554543513658FD720E72F313378A4927706BBAA07C8E9498924FB2C0A34F180FFBFD54B5F8A14BF04708D172A5E240B06CFA8985A99E77C1C22553143E7B6D/2019927003.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/08B7FFADECBF81449558032B2C90D672EEC5A802E02501106DBD9D44CB802825CBA660E37EE1FA4AAE54B8CD2359561EEF554543513658FD720E72F313378A4927706BBAA07C8E9498924FB2C0A34F180FFBFD54B5F8A14BF04708D172A5E240B06CFA8985A99E77C1C22553143E7B6D/2019927003.m3u8?from=player&svrtime=1782056098&pid=600152137&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=578a17133edcc658d18b03ab8355c84f&ytime=1782056098&ytype=1"},"yspw23":{"name":"吉林卫视","pid":"600190405","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/67E53EBB743E6AED9A45F1F58D97EE1AF8DD6BF5B3C62A3D63608503775E9B101B5A9E998BD5914E4A5678550003639CFC3EC1FAD2E031B4F7B6A0D86AD68018A8A2A44E34D9CF2F9CC9BC6206EB328674F2E689CF3019A332A8F2FFCF4C6ED7C3E5DD4F1CD612E981C08159CA178C26/2025561503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/67E53EBB743E6AED9A45F1F58D97EE1AF8DD6BF5B3C62A3D63608503775E9B101B5A9E998BD5914E4A5678550003639CFC3EC1FAD2E031B4F7B6A0D86AD68018A8A2A44E34D9CF2F9CC9BC6206EB328674F2E689CF3019A332A8F2FFCF4C6ED7C3E5DD4F1CD612E981C08159CA178C26/2025561503_web.m3u8?from=player&svrtime=1782056106&pid=600190405&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=52e07393375ddcb972b8381797fdcc60&ytime=1782056106&ytype=1"},"yspw24":{"name":"陕西卫视","pid":"600190400","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/A251CD43BCE9920294DA7ECC704E69CA19A7FFA7ACDDB66C3A137890BFFF9925A6A1F4E84F432B088579FBE75DD9A3C0DF265543DC8E96393ACB3B980265490216E54C0CA233BD71BD68F3AB36DC35479F26F78C8D48A20440AA9E959ADFECEC8C356088BFBABBE6C692054425A1FE5A/2029795103_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/A251CD43BCE9920294DA7ECC704E69CA19A7FFA7ACDDB66C3A137890BFFF9925A6A1F4E84F432B088579FBE75DD9A3C0DF265543DC8E96393ACB3B980265490216E54C0CA233BD71BD68F3AB36DC35479F26F78C8D48A20440AA9E959ADFECEC8C356088BFBABBE6C692054425A1FE5A/2029795103_web.m3u8?from=player&svrtime=1782056113&pid=600190400&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=ad17da6bdbc213e31087bed31063f555&ytime=1782056113&ytype=1"},"yspw25":{"name":"宁夏卫视","pid":"600190737","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/E105ACAC9450E3AB1DA9B8A951EF313F177B3AAB3C06CA5EFEE2E478F6E830799E66C446BC561B31C773B4D90697A23E438F03D6C7BDA2B6BB3849FE8CFAE3723221D345B55B9FBD2BDA948985F644B988F5F28B7731ABDC5F3EC79AD84886BD2C4AFEDE772A3E563D06398D8BED71D4/2025608503_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/E105ACAC9450E3AB1DA9B8A951EF313F177B3AAB3C06CA5EFEE2E478F6E830799E66C446BC561B31C773B4D90697A23E438F03D6C7BDA2B6BB3849FE8CFAE3723221D345B55B9FBD2BDA948985F644B988F5F28B7731ABDC5F3EC79AD84886BD2C4AFEDE772A3E563D06398D8BED71D4/2025608503_web.m3u8?from=player&svrtime=1782056122&pid=600190737&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=9db9f35f27f5f71983ddc4cfda7053c7&ytime=1782056122&ytype=1"},"yspw26":{"name":"内蒙古卫视","pid":"600190401","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/F703FC3D5C73BD4D36A0B69FEF8639642F616FB912B88D71CF341EFEBE723D9166F4671B714DBA5F8DB6E4408E81ABB4DCD147BBCDF33A5950606E3731EB2D691E7883E211C88BD5ACF86A7F4C938DE95A7684D960DCA7EBCEC4834A27B968054D535E9318B7F544240D16E3B2036EFB/2025561203_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/F703FC3D5C73BD4D36A0B69FEF8639642F616FB912B88D71CF341EFEBE723D9166F4671B714DBA5F8DB6E4408E81ABB4DCD147BBCDF33A5950606E3731EB2D691E7883E211C88BD5ACF86A7F4C938DE95A7684D960DCA7EBCEC4834A27B968054D535E9318B7F544240D16E3B2036EFB/2025561203_web.m3u8?from=player&svrtime=1782056129&pid=600190401&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=3174fa968b1bbc0692707ebe9b311ad8&ytime=1782056129&ytype=1"},"yspw27":{"name":"云南卫视","pid":"600190402","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/1AD19DB1059B531DE3A08A338BA21CF66EE2FE27AC2AA9C472E71D72FFCF1C0EFA9918B50A9D4CBC6C8C118312401E50FD7D08749B492260C7DB7F0E465931CDB2DCA624CDAC856306277FA6D2772CDEA8CED4845852EB6A25694DA9C807C06E0C9A098E11A1A5C288B2672F955FD2D8/2025561303_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/1AD19DB1059B531DE3A08A338BA21CF66EE2FE27AC2AA9C472E71D72FFCF1C0EFA9918B50A9D4CBC6C8C118312401E50FD7D08749B492260C7DB7F0E465931CDB2DCA624CDAC856306277FA6D2772CDEA8CED4845852EB6A25694DA9C807C06E0C9A098E11A1A5C288B2672F955FD2D8/2025561303_web.m3u8?from=player&svrtime=1782056136&pid=600190402&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=6356593e9b60fe87d4fae342669a39d7&ytime=1782056136&ytype=1"},"yspw28":{"name":"山西卫视","pid":"600190407","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/741F9617EF5AF9CDF795C45AF5C59929BA4F2765EC126432CF53330258A6F78A5D7B280B0D770BA88A8AFC27CA5A5876C7E727AB061036911A35ADF8E55D7268DF08FD71446A12A67F3A73FC1FDB4737357AF8923A03626D78DB19EE8666EE0BB66BDF7A229A4FE8AAB0854FB8A5D68C/2025560803_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/741F9617EF5AF9CDF795C45AF5C59929BA4F2765EC126432CF53330258A6F78A5D7B280B0D770BA88A8AFC27CA5A5876C7E727AB061036911A35ADF8E55D7268DF08FD71446A12A67F3A73FC1FDB4737357AF8923A03626D78DB19EE8666EE0BB66BDF7A229A4FE8AAB0854FB8A5D68C/2025560803_web.m3u8?from=player&svrtime=1782056144&pid=600190407&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=1d1b598f2facdcab3e03c7ce531d74cf&ytime=1782056144&ytype=1"},"yspw29":{"name":"青海卫视","pid":"600190406","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/6605AE6721B643AF5B74554298547B10A48F426F6F65A14D5DE3996A75DDC091748ED3E5E9E4799160FFA18A6D29A10E4E63FDD73A3E8FB8407CDA127E0E03E93FBA4E32325F7BE8EA5DEAF223B7EA121596B55B3C6B563AC210B91FC5FEA9C59AF60CCEB905C762378EEDEC25AD0F7E/2025559103_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/6605AE6721B643AF5B74554298547B10A48F426F6F65A14D5DE3996A75DDC091748ED3E5E9E4799160FFA18A6D29A10E4E63FDD73A3E8FB8407CDA127E0E03E93FBA4E32325F7BE8EA5DEAF223B7EA121596B55B3C6B563AC210B91FC5FEA9C59AF60CCEB905C762378EEDEC25AD0F7E/2025559103_web.m3u8?from=player&svrtime=1782056150&pid=600190406&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=50d6c96992fa2153c5f7173a6ffd3335&ytime=1782056150&ytype=1"},"yspw30":{"name":"西藏卫视","pid":"600190403","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/44BD4E01EC73A1AFF8E41875F0FEF6D5FA5414F8007384F10C5E6D736158BF708C4110D58269D096D90C9C8D78798225389E56B144EB5DFA134C289D401BB4E82F9EE5EC65BFD20B4448B63187CDFC4A3FE9E8C7836192A6721A09D7C884EA37C9D56221654220A2DD70BFDBBD4045FC/2025558003_web.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/44BD4E01EC73A1AFF8E41875F0FEF6D5FA5414F8007384F10C5E6D736158BF708C4110D58269D096D90C9C8D78798225389E56B144EB5DFA134C289D401BB4E82F9EE5EC65BFD20B4448B63187CDFC4A3FE9E8C7836192A6721A09D7C884EA37C9D56221654220A2DD70BFDBBD4045FC/2025558003_web.m3u8?from=player&svrtime=1782056157&pid=600190403&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=1821c9bd9d43e5aa0ad6bb4fcd0cad46&ytime=1782056157&ytype=1"},"yspw31":{"name":"新疆卫视","pid":"600152138","host":"outlivecloud-cdn.ysp.cctv.cn","path":"/BB05C156761420984AD24F274977044B9C5AD217E90A2D69BD72E342A83E4ACFB742DAD3E9E74696FB6AD7E40E1E247D2CB427416199746ECA1913FB3EC23B50DF181D44FA6515CC316FA245272D1657D82A59E5418CDFDF5E3BA91CD887B0675A261B81A5294B519565A6CB27588657/2019927403.m3u8","fullUrl":"https://outlivecloud-cdn.ysp.cctv.cn/BB05C156761420984AD24F274977044B9C5AD217E90A2D69BD72E342A83E4ACFB742DAD3E9E74696FB6AD7E40E1E247D2CB427416199746ECA1913FB3EC23B50DF181D44FA6515CC316FA245272D1657D82A59E5418CDFDF5E3BA91CD887B0675A261B81A5294B519565A6CB27588657/2019927403.m3u8?from=player&svrtime=1782056164&pid=600152138&cdn=5401&app_id=519748109&guid=mqny0y5h_sfzxpmb9iz&ysign=e86d8da990c7c9a4a844f2fb48a9ef3d&ytime=1782056164&ytype=1"}}');
+const YSP_CACHE = new Map();
+const YSP_CACHE_TTL = 3 * 60 * 60 * 1000;
+
+
+// =================== IN-MEMORY CACHE ===================
+// We cache TWO things per (tid, id):
+//   - playPhpUrl: the dynamic play.php URL (valid for ~10+ minutes)
+//   - sessionUrl: a fresh m3u8 session URL (valid for several minutes, reusable)
+// We prefer to reuse sessionUrl for BOTH m3u8 fetches and segment fetches,
+// because the source server's segment TTL is <1s — using a fresh redirect for
+// every request would land on a different t-host and the segments would 404.
+const playPhpUrlCache = new Map();   // key "tid:id" -> { url, ts }
+const sessionUrlCache = new Map();   // key "tid:id" -> { url, ts }
+
+// =================== CRYPTO HELPERS ===================
+// Custom base64 decoder matching the `decode()` function in pvjs.js.
+// IMPORTANT: standard atob() treats `=` as padding, but pvjs.js's decoder treats `=`
+// as a regular character (index 64 in the keyStr). So we must use this custom decoder
+// for any data produced by pvjs.js's encryption (i.e., the long encrypted blob in HTML
+// and the option values).
+function b64decode(s) {
+  if (!s) return s;
+  s = s + '';
+  const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  let i = 0, ac = 0;
+  const tmp = [];
+  do {
+    const h1 = keyStr.indexOf(s.charAt(i++));
+    const h2 = keyStr.indexOf(s.charAt(i++));
+    const h3 = keyStr.indexOf(s.charAt(i++));
+    const h4 = keyStr.indexOf(s.charAt(i++));
+    const bits = (h1 << 18) | (h2 << 12) | (h3 << 6) | h4;
+    const o1 = (bits >> 16) & 0xff;
+    const o2 = (bits >> 8) & 0xff;
+    const o3 = bits & 0xff;
+    if (h3 === 64) {
+      tmp[ac++] = String.fromCharCode(o1);
+    } else if (h4 === 64) {
+      tmp[ac++] = String.fromCharCode(o1, o2);
+    } else {
+      tmp[ac++] = String.fromCharCode(o1, o2, o3);
+    }
+  } while (i < s.length);
+  return tmp.join('');
+}
+// Standard base64 encoder (for our own use, e.g. encoding upstream URLs).
+function b64encode(s) { return btoa(s); }
+function b64url_encode(s) {
+  return b64encode(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64url_decode(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  return atob(s);  // safe to use atob here since we control the input
+}
+// XOR a binary string with a cycling key; returns binary string.
+function xorStr(s, key) {
+  const out = new Array(s.length);
+  for (let i = 0; i < s.length; i++) {
+    out[i] = String.fromCharCode(s.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+  }
+  return out.join('');
+}
+
+// =================== XAC DECRYPTION ===================
+// Reproduces pvjs.js: decode(string) -> XOR("iptv.com") -> decode -> unescape
+// Tries both with and without reversal, because the inline script structure varies
+// between page loads (some pages reverse the long var, some don't).
+function decryptXac(longVarVal) {
+  // Strategy A: reverse longVarVal, then decode
+  const candidates = [
+    longVarVal.split('').reverse().join(''),  // reversed
+    longVarVal,                                // as-is (no reverse)
+  ];
+  for (const stringVal of candidates) {
+    try {
+      const buf1 = b64decode(stringVal);
+      if (buf1.length < 100) continue;
+      const buf2 = xorStr(buf1, XOR_KEY);
+      const buf3 = b64decode(buf2);
+      if (buf3.length < 100) continue;
+      const xac = unescape(buf3);
+      // A valid xac starts with "<script>" and contains "var "
+      if (xac.startsWith('<script>') && xac.includes('var ') && xac.includes('function ')) {
+        return xac;
+      }
+    } catch (e) {}
+  }
+  // If neither strategy works, return the last attempt for debugging
+  const stringVal = candidates[0];
+  const buf1 = b64decode(stringVal);
+  const buf2 = xorStr(buf1, XOR_KEY);
+  const buf3 = b64decode(buf2);
+  return unescape(buf3);
+}
+
+// Evaluate a string-concatenation-with-optional-reversal expression.
+// Example: "abc"+"def".split("").reverse().join("")+"ghi" -> "abcfedghi"
+function evalConcat(expr) {
+  const re = /"([^"]*)"(\.split\(""\)\.reverse\(\)\.join\(""\))?/g;
+  let result = '';
+  let m;
+  while ((m = re.exec(expr)) !== null) {
+    let frag = m[1];
+    if (m[2]) frag = frag.split('').reverse().join('');
+    result += frag;
+  }
+  return result;
+}
+
+// Parse the xac script content. Returns { keyValue, staticToken, dynamicToken, xorSuffix }.
+function parseXac(xac) {
+  const vars = {};
+  // 1. Find "var NAME = <expr>;" declarations where expr starts with a string literal
+  const varRe = /var\s+(\w+)\s*=\s*([\s\S]*?)\s*;/g;
+  let m;
+  while ((m = varRe.exec(xac)) !== null) {
+    const name = m[1];
+    const expr = m[2];
+    if (expr.trim().startsWith('"')) {
+      vars[name] = evalConcat(expr);
+    }
+  }
+  // 2. Find literal assignments "NAME = "literal";"
+  const litRe = /(\w+)\s*=\s*"([^"]+)"\s*;/g;
+  while ((m = litRe.exec(xac)) !== null) {
+    if (vars[m[1]] === undefined) vars[m[1]] = m[2];
+  }
+  // 3. Iteratively resolve alias assignments "NAME = OTHERNAME;"
+  for (let iter = 0; iter < 10; iter++) {
+    let changed = false;
+    const aliasRe = /(\w+)\s*=\s*(\w+)\s*;/g;
+    while ((m = aliasRe.exec(xac)) !== null) {
+      const target = m[1], src = m[2];
+      if (target === src) continue;
+      const srcVal = vars[src];
+      const tgtVal = vars[target];
+      if (srcVal !== undefined && srcVal !== '' && (tgtVal === undefined || tgtVal === '')) {
+        vars[target] = srcVal;
+        changed = true;
+      }
+    }
+    if (!changed) break;
+  }
+  // 4. Find the XOR suffix constant (key = key + "16hexchars";)
+  const xorRe = /key\s*=\s*key\s*\+\s*"([0-9a-f]{16})"\s*;/;
+  const xorM = xac.match(xorRe);
+  const xorSuffix = xorM ? xorM[1] : null;
+  // 5. Find the onqhb-like function and identify which vars it uses
+  const fnRe = /function\s+\w+\s*\((\w+)\)\s*\{\s*\1\s*=\s*\1\.split\(""\)\.reverse\(\)\.join\(""\);\s*\1\s*=\s*\w+\(\s*\1\s*,\s*(\w+)\s*\);\s*\1\s*=\s*\1\.replace\(\s*"token="\s*\+\s*(\w+)\s*,\s*"token="\s*\+\s*(\w+)\s*\);\s*\1\s*=\s*\1\.replace\(\s*(\w+)\s*,\s*""\s*\);\s*return\s*\1;\s*\}/;
+  const fnM = xac.match(fnRe);
+  if (!fnM) throw new Error('onqhb-like function not found in xac');
+  const keyVar = fnM[2], staticVar = fnM[3], tokenVar = fnM[4];
+  return {
+    keyValue: vars[keyVar],
+    staticToken: vars[staticVar],
+    dynamicToken: vars[tokenVar],
+    xorSuffix: xorSuffix,
+  };
+}
+
+// Compute the play.php URL from an option value (線路1 etc.) and parsed xac data.
+function computePlayPhpUrl(optionValue, keyValue, staticToken, dynamicToken, xorSuffix) {
+  let pvu = optionValue.split('').reverse().join('');
+  const buf1 = b64decode(pvu);
+  const buf2 = xorStr(buf1, keyValue + xorSuffix);
+  let decoded = b64decode(buf2);
+  decoded = decoded.replace('token=' + staticToken, 'token=' + dynamicToken);
+  decoded = decoded.replace(keyValue, '');
+  return decoded;
+}
+
+// =================== FETCH HELPERS ===================
+// Fetch upstream with iPhone UA. Returns the Response (does not auto-follow redirects).
+async function fetchUpstream(url, referer) {
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'User-Agent': UA_IPHONE,
+      'Accept': '*/*',
+      'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+      'Referer': referer || (ORIGIN + '/'),
+    },
+    redirect: 'manual',
+  });
+}
+
+// Follow 3xx redirect chain manually with iPhone UA. Returns { finalUrl, resp }.
+async function followRedirects(initialUrl, referer, maxHops = 5) {
+  let current = initialUrl;
+  let resp = await fetchUpstream(current, referer);
+  for (let i = 0; i < maxHops; i++) {
+    const status = resp.status;
+    if (status === 301 || status === 302 || status === 307 || status === 308) {
+      const loc = resp.headers.get('location');
+      if (!loc) break;
+      const next = new URL(loc, current).toString();
+      current = next;
+      resp = await fetchUpstream(current, referer);
+    } else {
+      break;
+    }
+  }
+  return { finalUrl: current, resp };
+}
+
+// =================== CORE: RESOLVE PLAY.PHP URL ===================
+// Fetches the play page, decrypts xac, computes the play.php URL.
+// Caches the result per (tid, id) for PLAYPHP_URL_TTL.
+async function resolvePlayPhpUrl(tid, id) {
+  const cacheKey = `${tid}:${id}`;
+  const cached = playPhpUrlCache.get(cacheKey);
+  if (cached && Date.now() - cached.ts < PLAYPHP_URL_TTL) {
+    return cached.url;
+  }
+
+  // 1. Fetch play page HTML
+  const playUrl = `${ORIGIN}/?act=play&token=${DUMMY_TOKEN}&tid=${tid}&id=${id}`;
+  const r1 = await fetchUpstream(playUrl, ORIGIN + '/');
+  // v2.8: Detect 302 from play page (channel removed at source, redirects to category page)
+  if (r1.status === 301 || r1.status === 302 || r1.status === 307 || r1.status === 308) {
+    const loc = r1.headers.get('location') || '';
+    // Source redirects removed channels back to ?tid=<cat> — this means channel doesn't exist
+    if (loc.includes('tid=')) {
+      throw new Error(`channel not available at source (redirected to ${loc})`);
+    }
+    throw new Error(`play page redirected (${r1.status}) to ${loc}`);
+  }
+  if (!r1.ok) throw new Error(`play page fetch failed: ${r1.status}`);
+  const html = await r1.text();
+
+  // 2. Extract the inline script (the one starting with "var ")
+  let inline = null;
+  for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) {
+    if (m[1].trim().startsWith('var ')) { inline = m[1]; break; }
+  }
+  if (!inline) throw new Error('inline script not found in play page');
+
+  // 3. Extract the long encrypted blob (longest string-typed var)
+  const varRe = /var\s+(\w+)\s*=\s*"([^"]*)"\s*;/g;
+  let longVarVal = null;
+  let mm;
+  while ((mm = varRe.exec(inline)) !== null) {
+    if (mm[2].length > 100 && (!longVarVal || mm[2].length > longVarVal.length)) {
+      longVarVal = mm[2];
+    }
+  }
+  if (!longVarVal) throw new Error('long encrypted blob not found');
+
+  // 4. Decrypt xac (tries both with and without reversal internally)
+  const xac = decryptXac(longVarVal);
+  if (xac.length < 100 || !xac.startsWith('<script>')) {
+    throw new Error('xac decryption failed (len=' + xac.length + ')');
+  }
+
+  // 5. Parse xac
+  const parsed = parseXac(xac);
+  if (!parsed.keyValue || !parsed.staticToken || !parsed.dynamicToken || !parsed.xorSuffix) {
+    throw new Error('failed to extract all required values from xac: ' + JSON.stringify(parsed).slice(0, 300));
+  }
+
+  // 6. Extract option value (線路1 = first <option>)
+  const optM = html.match(/<option value="([^"]+)">[^<]*<\/option>/);
+  if (!optM) throw new Error('option value not found in HTML');
+  const optionValue = optM[1];
+
+  // 7. Compute play.php URL
+  const playPhpUrl = computePlayPhpUrl(
+    optionValue, parsed.keyValue, parsed.staticToken, parsed.dynamicToken, parsed.xorSuffix
+  );
+
+  // Sanity-check
+  if (!playPhpUrl.startsWith('https://')) {
+    throw new Error('computed play.php URL looks invalid: ' + playPhpUrl.slice(0, 200));
+  }
+
+  // 8. Cache & return
+  playPhpUrlCache.set(cacheKey, { url: playPhpUrl, ts: Date.now() });
+  return playPhpUrl;
+}
+
+// =================== CORE: RESOLVE SESSION URL ===================
+// Resolve a stable "session URL" for the channel.
+// The session URL is the final m3u8 URL after all redirects, e.g.
+//   https://t2.iptv200.com/live/tvbfc/index.m3u8?session=xxxxxxxx
+// We reuse this URL for both m3u8 fetches AND segment fetches, because:
+//   - The session URL is valid for several minutes (reusable for many m3u8 polls)
+//   - Segments fetched from the SAME host as the session stay valid (the host
+//     has the channel's full segment history for this session)
+//   - Different redirects land on different t-hosts (t1/t2/t3), and a segment
+//     fetched from a different host than the session's host returns 404
+// Caches sessionUrl per (tid, id) for SESSION_URL_TTL. Refreshes on 404.
+async function resolveSessionUrl(tid, id) {
+  const cacheKey = `${tid}:${id}`;
+  const cached = sessionUrlCache.get(cacheKey);
+  if (cached && Date.now() - cached.ts < SESSION_URL_TTL) {
+    return cached.url;
+  }
+
+  const playPhpUrl = await resolvePlayPhpUrl(tid, id);
+  // Call play.php -> follow 302s to the final m3u8 URL.
+  // IMPORTANT: the source server requires Referer = m.345iptv.com for all
+  // requests (m3u8 and segments). Without it, requests return 404.
+  const r = await followRedirects(playPhpUrl, ORIGIN + '/', 5);
+  // v2.8: Distinguish 302 (channel moved at source) from 404 (stream broken at source)
+  // After 5 redirects, if we're still getting 302, the source is misconfigured.
+  if (r.resp.status === 301 || r.resp.status === 302 || r.resp.status === 307 || r.resp.status === 308) {
+    // Mark as broken to avoid hammering source
+    brokenChannelCache.set(cacheKey, { ts: Date.now(), reason: `channel moved at source (still redirecting after 5 hops)` });
+    throw new Error(`channel moved at source (still redirecting after 5 hops, last loc=${r.resp.headers.get('location')})`);
+  }
+  if (!r.resp.ok && r.resp.status !== 200) {
+    // If play.php URL expired, clear both caches and retry once
+    playPhpUrlCache.delete(cacheKey);
+    try {
+      const playPhpUrl2 = await resolvePlayPhpUrl(tid, id);
+      const r2 = await followRedirects(playPhpUrl2, ORIGIN + '/', 5);
+      if (r2.resp.status === 301 || r2.resp.status === 302 || r2.resp.status === 307 || r2.resp.status === 308) {
+        brokenChannelCache.set(cacheKey, { ts: Date.now(), reason: `channel moved at source (retry still redirecting)` });
+        throw new Error(`channel moved at source (retry still redirecting)`);
+      }
+      if (!r2.resp.ok) {
+        // 404 = stream broken at source (e.g. gt16/gt18/gt20 — source CDN doesn't have these streams)
+        // 403 = token/session rejected
+        // 5xx = source server issue, may be transient
+        const reason = r2.resp.status === 404
+          ? `stream broken at source (404 at m3u8 server)`
+          : `session URL resolution failed: status=${r2.resp.status}`;
+        if (r2.resp.status === 404) {
+          brokenChannelCache.set(cacheKey, { ts: Date.now(), reason });
+        }
+        throw new Error(reason);
+      }
+      r.finalUrl = r2.finalUrl;
+      r.resp = r2.resp;
+    } catch (e) {
+      // If the retry itself threw (e.g. channel moved), propagate that error
+      throw e;
+    }
+  }
+  const sessionUrl = r.finalUrl;
+  sessionUrlCache.set(cacheKey, { url: sessionUrl, ts: Date.now() });
+  // Clear broken cache on success
+  brokenChannelCache.delete(cacheKey);
+  return sessionUrl;
+}
+
+// Invalidate the cached session URL (e.g., when segments start 404ing).
+function invalidateSessionUrl(tid, id) {
+  sessionUrlCache.delete(`${tid}:${id}`);
+}
+
+// v2.8: Invalidate all caches for a channel (for /refresh endpoint).
+function invalidateAllCaches(tid, id) {
+  const cacheKey = `${tid}:${id}`;
+  playPhpUrlCache.delete(cacheKey);
+  sessionUrlCache.delete(cacheKey);
+  brokenChannelCache.delete(cacheKey);
+}
+
+// v2.8: Check if a channel is in the broken cache (still valid).
+function getBrokenReason(tid, id) {
+  const cacheKey = `${tid}:${id}`;
+  const entry = brokenChannelCache.get(cacheKey);
+  if (!entry) return null;
+  if (Date.now() - entry.ts > BROKEN_CHANNEL_TTL) {
+    brokenChannelCache.delete(cacheKey);
+    return null;
+  }
+  return entry.reason;
+}
+
+// =================== HANDLERS ===================
+
+// GET /<tid><id>.m3u8
+async function handleM3u8(tid, id, request) {
+  // v2.8: If channel is known-broken, return cached error immediately (avoid hammering source)
+  const brokenReason = getBrokenReason(tid, id);
+  if (brokenReason) {
+    return textResponse(`Channel temporarily unavailable: ${brokenReason}`, 502);
+  }
+
+  let sessionUrl;
+  try {
+    sessionUrl = await resolveSessionUrl(tid, id);
+  } catch (e) {
+    return textResponse(`Failed to resolve session URL: ${e.message}`, 502);
+  }
+
+  // Fetch m3u8 from the session URL (reuses same host as segments will)
+  let resp;
+  try {
+    resp = await fetchUpstream(sessionUrl, ORIGIN + '/');
+  } catch (e) {
+    return textResponse(`m3u8 fetch error: ${e.message}`, 502);
+  }
+
+  // If session URL expired (404/403), refresh and retry once
+  if (resp.status === 404 || resp.status === 403) {
+    invalidateSessionUrl(tid, id);
+    try {
+      sessionUrl = await resolveSessionUrl(tid, id);
+      resp = await fetchUpstream(sessionUrl, ORIGIN + '/');
+    } catch (e2) {
+      return textResponse(`m3u8 retry failed: ${e2.message}`, 502);
+    }
+  }
+
+  if (!resp.ok) {
+    return textResponse(`Upstream m3u8 fetch failed: ${resp.status}`, 502);
+  }
+
+  const m3u8body = await resp.text();
+
+  // Build our segment proxy URL template.
+  // Encode (tid, id) in the segment URL so handleSeg can resolve the
+  // session URL itself and fetch segments from the SAME host as the m3u8.
+  // This is critical: segment URLs from a different host than the session
+  // return 404 within ~1 second.
+  const myOrigin = new URL(request.url).origin;
+  const segBase = `${myOrigin}/seg/${tid}/${id}/`;
+
+  // Rewrite segment URLs in m3u8 (lines that don't start with # and aren't empty)
+  let hasPdt = false; // EXT-X-PROGRAM-DATE-TIME already present?
+  const rewritten = m3u8body.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return line;
+    if (trimmed.startsWith('#EXT-X-PROGRAM-DATE-TIME')) hasPdt = true;
+    if (trimmed.startsWith('#')) return line;
+    // It's a segment URL line
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      // Absolute URL — extract just the filename
+      try {
+        const u = new URL(trimmed);
+        const file = u.pathname.substring(u.pathname.lastIndexOf('/') + 1);
+        return segBase + file + (u.search || '');
+      } catch (e) {
+        return line;
+      }
+    }
+    // Relative path (e.g. "index1234.js") — prepend our segBase
+    return segBase + trimmed;
+  }).join('\n');
+
+  // v2.8: Inject #EXT-X-PROGRAM-DATE-TIME right after #EXTM3U if not already present.
+  // This helps hls.js with live edge detection and reduces audio pitch drift caused
+  // by stale live edge (a known issue with long-running HLS streams where back buffer
+  // accumulates and A/V PTS gradually drift).
+  let finalBody = rewritten;
+  if (!hasPdt && rewritten.startsWith('#EXTM3U')) {
+    const nowIso = new Date().toISOString();
+    finalBody = '#EXTM3U\n#EXT-X-PROGRAM-DATE-TIME:' + nowIso + '\n' + rewritten.substring(8);
+  }
+
+  return new Response(finalBody, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/vnd.apple.mpegurl',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      // Critical: prevent CDN/browser caching of m3u8 (live playlist must always be fresh)
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'CDN-Cache-Control': 'no-store',
+      'Surrogate-Control': 'no-store',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
+  });
+}
+
+// GET /seg/<tid>/<id>/<filename>
+// Resolves the channel's session URL on-the-fly, then fetches the segment
+// from the SAME host as the session URL. This ensures the segment is on the
+// correct t-host (t1/t2/t3) and still within its short (~1s) TTL window.
+async function handleSeg(tid, id, filename, request) {
+  // Strip query from filename (we don't need it — session is in the session URL)
+  const qIdx = filename.indexOf('?');
+  const cleanFilename = qIdx >= 0 ? filename.substring(0, qIdx) : filename;
+
+  // Validate filename (only allow index<digits>.<ext> pattern)
+  if (!/^index\d+\.\w+$/.test(cleanFilename)) {
+    return textResponse('Invalid segment filename', 400);
+  }
+
+  // Try Cloudflare cache first (segments don't change once published)
+  const cacheUrl = new URL(`https://seg-cache.iptv345.local/${tid}/${id}/${cleanFilename}`);
+  const cacheKey = new Request(cacheUrl, { method: 'GET' });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    return new Response(cached.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'video/mp2t',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Cache-Control': `public, max-age=600`,
+        'X-Cache': 'HIT',
+      },
+    });
+  }
+
+  // Resolve session URL and build segment URL on the SAME host
+  let sessionUrl;
+  try {
+    sessionUrl = await resolveSessionUrl(tid, id);
+  } catch (e) {
+    return textResponse(`Session resolve failed: ${e.message}`, 502);
+  }
+  const sessionUrlObj = new URL(sessionUrl);
+  const segUrl = `${sessionUrlObj.protocol}//${sessionUrlObj.host}${sessionUrlObj.pathname.replace(/index\.m3u8.*$/, '')}${cleanFilename}`;
+
+  // Fetch from upstream with proper Referer
+  let upstream = await fetchUpstream(segUrl, ORIGIN + '/');
+
+  // If 404, the session may have expired or the segment may have rotated out.
+  // Refresh session URL and retry once.
+  if (upstream.status === 404 || upstream.status === 403) {
+    invalidateSessionUrl(tid, id);
+    try {
+      sessionUrl = await resolveSessionUrl(tid, id);
+      const newSegUrl = `${new URL(sessionUrl).protocol}//${new URL(sessionUrl).host}${new URL(sessionUrl).pathname.replace(/index\.m3u8.*$/, '')}${cleanFilename}`;
+      upstream = await fetchUpstream(newSegUrl, ORIGIN + '/');
+    } catch (e2) {
+      return textResponse(`Segment retry failed: ${e2.message}`, 502);
+    }
+  }
+
+  if (!upstream.ok) {
+    return textResponse(`Segment fetch failed: ${upstream.status}`, 502);
+  }
+
+  const body = await upstream.arrayBuffer();
+  const resp = new Response(body, {
+    status: 200,
+    headers: {
+      'Content-Type': 'video/mp2t',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Cache-Control': `public, max-age=600`,
+      'X-Cache': 'MISS',
+    },
+  });
+
+  // Cache it (segments are immutable once published)
+  try {
+    cache.put(cacheKey, resp.clone()).catch(() => {});
+  } catch (e) {}
+
+  return resp;
+}
+
+// GET /  - blind status page (dual health check: 345 + ysp)
+async function handleHome(request) {
+  const logs = [];
+  const t0 = Date.now();
+  let ok345 = true, okYsp = true;
+  function log(msg) { logs.push('[' + new Date().toISOString() + '] ' + msg); }
+  log('=== Health check start ===');
+  log('--- 345 check ---');
+  try {
+    const itemCount = Object.values(CATALOG).reduce((s, c) => s + c.channels.length, 0);
+    log('OK 345 catalog: ' + Object.keys(CATALOG).length + ' categories, ' + itemCount + ' items');
+    log('Testing 345 m3u8 for gt5...');
+    const sessionUrl = await resolveSessionUrl('gt', 5);
+    const resp = await fetchUpstream(sessionUrl, ORIGIN + '/');
+    if (resp.ok) { const body = await resp.text(); if (body.includes('#EXTM3U')) { log('OK 345 m3u8 fetched'); } else { ok345 = false; log('FAIL 345 m3u8: no #EXTM3U'); } }
+    else { ok345 = false; log('FAIL 345 m3u8: status=' + resp.status); }
+  } catch (e) { ok345 = false; log('FAIL 345: ' + e.message); }
+  log('--- ysp check ---');
+  try {
+    const keys = Object.keys(YSP_CATALOG);
+    log('OK ysp catalog: ' + keys.length + ' channels');
+    const firstKey = keys[0];
+    const ch = YSP_CATALOG[firstKey];
+    log('Testing ysp m3u8 for ' + firstKey + ' (' + ch.name + ')...');
+    const resp = await fetch(ch.fullUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' } });
+    if (resp.ok) { const body = await resp.text(); if (body.includes('#EXTM3U')) { log('OK ysp m3u8 fetched'); } else { okYsp = false; log('FAIL ysp m3u8: no #EXTM3U'); } }
+    else { okYsp = false; log('FAIL ysp m3u8: status=' + resp.status + ' (URL may have expired)'); }
+  } catch (e) { okYsp = false; log('FAIL ysp: ' + e.message); }
+  const elapsed = Date.now() - t0;
+  log('=== Health check done (' + elapsed + 'ms) ===');
+  // v2.8: Include version in status line
+  let statusLine = WORKER_VERSION + '\nstatus: ';
+  let allOk = true;
+  statusLine += ok345 ? '345 ok' : '345 error'; if (!ok345) allOk = false;
+  statusLine += '; ';
+  statusLine += okYsp ? 'ysp ok' : 'ysp error'; if (!okYsp) allOk = false;
+  // v2.9: wso health check
+  statusLine += '; ';
+  let okWso = true;
+  try {
+    const wsoKeys = Object.keys(WSO_CATALOG);
+    log('--- wso check ---');
+    log('OK wso catalog: ' + wsoKeys.length + ' channels');
+    const firstWsoKey = wsoKeys[0];
+    log('Testing wso m3u8 for ' + firstWsoKey + ' (' + WSO_CATALOG[firstWsoKey].name + ')...');
+    const wsoUrl = await resolveWsoM3u8(firstWsoKey);
+    if (wsoUrl) {
+      const wsoResp = await fetch(wsoUrl, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': WSO_CATALOG[firstWsoKey].referer } });
+      if (wsoResp.ok) { const wsoBody = await wsoResp.text(); if (wsoBody.includes('#EXTM3U')) { log('OK wso m3u8 fetched'); } else { okWso = false; log('FAIL wso m3u8: no #EXTM3U'); } }
+      else { okWso = false; log('FAIL wso m3u8: status=' + wsoResp.status); }
+    } else { okWso = false; log('FAIL wso: resolve failed'); }
+  } catch (e) { okWso = false; log('FAIL wso: ' + e.message); }
+  statusLine += okWso ? 'wso ok' : 'wso error'; if (!okWso) allOk = false;
+  if (allOk) { return new Response(statusLine + '\n', { status: 200, headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate', 'CDN-Cache-Control': 'no-store' } }); }
+  else { return new Response(statusLine + '\n\n' + logs.join('\n') + '\n', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate', 'CDN-Cache-Control': 'no-store' } }); }
+}
+
+// v2.8: GET /refresh/<tid><id> — force-refresh cached session URL for a channel.
+// Useful when a channel is returning stale errors or after source station recovers.
+// Returns the new m3u8 body (same as /<tid><id>.m3u8) on success, or error on failure.
+async function handleRefresh(tid, id, request) {
+  invalidateAllCaches(tid, id);
+  // Now try to fetch fresh
+  return handleM3u8(tid, id, request);
+}
+
+// v2.8: GET /health/<tid><id> — quick health check for a specific channel.
+// Returns 200 + "ok" if m3u8 fetches successfully, 502 + error message otherwise.
+async function handleHealth(tid, id, request) {
+  try {
+    const sessionUrl = await resolveSessionUrl(tid, id);
+    const resp = await fetchUpstream(sessionUrl, ORIGIN + '/');
+    if (resp.ok) {
+      const body = await resp.text();
+      if (body.includes('#EXTM3U')) {
+        return textResponse('ok', 200);
+      }
+      return textResponse('error: m3u8 has no #EXTM3U', 502);
+    }
+    return textResponse('error: upstream status ' + resp.status, 502);
+  } catch (e) {
+    return textResponse('error: ' + e.message, 502);
+  }
+}
+
+// GET /cat/<tid>  - plain-text list of items in a category
+async function handleCat(tid, request) {
+  const cat = CATALOG[tid];
+  if (!cat) return textResponse('Not found', 404);
+  const origin = new URL(request.url).origin;
+  let body = `${cat.name}\n\n`;
+  for (const ch of cat.channels) {
+    for (const line of ch.lines) {
+      body += `${origin}/${line.tid}${line.id}.m3u8\t${ch.name}\n`;
+    }
+  }
+  return new Response(body, {
+    status: 200,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Access-Control-Allow-Origin': '*' },
+  });
+}
+
+// Helper: plain text response
+function textResponse(msg, status = 200) {
+  return new Response(msg, {
+    status,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Access-Control-Allow-Origin': '*' },
+  });
+}
+
+// =================== YSP HANDLERS ===================
+
+async function getYspM3u8Url(yspKey) {
+  const cached = YSP_CACHE.get(yspKey);
+  if (cached && Date.now() - cached.ts < YSP_CACHE_TTL) {
+    return cached.url;
+  }
+  const ch = YSP_CATALOG[yspKey];
+  if (!ch) return null;
+  YSP_CACHE.set(yspKey, { url: ch.fullUrl, ts: Date.now() });
+  return ch.fullUrl;
+}
+
+async function handleYspM3u8(yspKey, request) {
+  const ch = YSP_CATALOG[yspKey];
+  if (!ch) return textResponse('Not found: ' + yspKey, 404);
+
+  const m3u8Url = await getYspM3u8Url(yspKey);
+  if (!m3u8Url) return textResponse('YSP URL not available', 502);
+
+  let resp;
+  try {
+    resp = await fetch(m3u8Url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' },
+    });
+  } catch (e) {
+    return textResponse('YSP m3u8 fetch error: ' + e.message, 502);
+  }
+
+  if (resp.status === 403) {
+    YSP_CACHE.delete(yspKey);
+    return textResponse('YSP m3u8 expired (403). Please refresh YSP URLs.', 502);
+  }
+
+  if (!resp.ok) {
+    return textResponse('YSP m3u8 failed: ' + resp.status, 502);
+  }
+
+  const m3u8body = await resp.text();
+  const myOrigin = new URL(request.url).origin;
+  const segBase = myOrigin + '/yseg/' + yspKey + '/';
+
+  // Rewrite segment URLs
+  const mediaPlaylist = m3u8body.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) return line;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      try { const u = new URL(trimmed); return segBase + u.pathname.substring(u.pathname.lastIndexOf('/') + 1); }
+      catch (e) { return line; }
+    }
+    return segBase + trimmed;
+  }).join('\n');
+
+  // Two-level playlist: master (with CODECS) -> media (segment list)
+  // This prevents hls.js from auto-detecting an incorrect codec string.
+  const url = new URL(request.url);
+  if (url.searchParams.get('media') === '1') {
+    // Media playlist request (from the master playlist)
+    return new Response(mediaPlaylist, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/vnd.apple.mpegurl',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'CDN-Cache-Control': 'no-store',
+      },
+    });
+  }
+
+  // Master playlist with explicit CODECS
+  const masterPlaylist = '#EXTM3U\n' +
+    '#EXT-X-VERSION:3\n' +
+    '#EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080,CODECS="avc1.640029,mp4a.40.2"\n' +
+    myOrigin + '/' + yspKey + '.m3u8?media=1\n';
+
+  return new Response(masterPlaylist, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/vnd.apple.mpegurl',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'CDN-Cache-Control': 'no-store',
+    },
+  });
+}
+
+async function handleYseg(yspKey, filename, request) {
+  const ch = YSP_CATALOG[yspKey];
+  if (!ch) return textResponse('Not found: ' + yspKey, 404);
+
+  const qIdx = filename.indexOf('?');
+  const cleanFilename = qIdx >= 0 ? filename.substring(0, qIdx) : filename;
+  const basePath = ch.path.substring(0, ch.path.lastIndexOf('/') + 1);
+  const segUrl = 'https://' + ch.host + basePath + cleanFilename;
+
+  const cacheUrl = new URL('https://yseg-cache.iptv345.local/' + yspKey + '/' + cleanFilename);
+  const cacheKey = new Request(cacheUrl, { method: 'GET' });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    return new Response(cached.body, {
+      status: 200,
+      headers: { 'Content-Type': 'video/mp2t', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600', 'X-Cache': 'HIT' },
+    });
+  }
+
+  let upstream;
+  try {
+    upstream = await fetch(segUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' },
+    });
+  } catch (e) { return textResponse('YSP segment error: ' + e.message, 502); }
+
+  if (!upstream.ok) return textResponse('YSP segment failed: ' + upstream.status, 502);
+
+  const body = await upstream.arrayBuffer();
+  const resp = new Response(body, {
+    status: 200,
+    headers: { 'Content-Type': 'video/mp2t', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600', 'X-Cache': 'MISS' },
+  });
+  try { cache.put(cacheKey, resp.clone()).catch(() => {}); } catch (e) {}
+  return resp;
+}
+
+// =================== WSO (卫视官网) HANDLERS ===================
+
+// Resolve a wso channel's m3u8 URL by calling its official API.
+// Caches the result for WSO_CACHE_TTL (5 min).
+async function resolveWsoM3u8(wsoKey) {
+  const ch = WSO_CATALOG[wsoKey];
+  if (!ch) return null;
+
+  // Check cache
+  const cached = wsoCache.get(wsoKey);
+  if (cached && Date.now() - cached.ts < WSO_CACHE_TTL) {
+    return cached.m3u8Url;
+  }
+
+  // v2.10: If api starts with "direct:", return the URL without fetching
+  if (ch.api.startsWith('direct:')) {
+    const url = ch.api.substring(7);
+    wsoCache.set(wsoKey, { m3u8Url: url, ts: Date.now() });
+    return url;
+  }
+
+  // Call API
+  let resp;
+  try {
+    resp = await fetch(ch.api, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Referer': ch.referer,
+      },
+    });
+  } catch (e) {
+    return null;
+  }
+  if (!resp.ok) return null;
+
+  const text = await resp.text();
+  const parsed = ch.parseM3u8(text);
+  if (!parsed || !parsed.m3u8Url) return null;
+
+  // Cache and return
+  wsoCache.set(wsoKey, { m3u8Url: parsed.m3u8Url, ts: Date.now() });
+  return parsed.m3u8Url;
+}
+
+// GET /wso-<name>.m3u8
+async function handleWsoM3u8(wsoKey, request) {
+  const ch = WSO_CATALOG[wsoKey];
+  if (!ch) return textResponse('Not found: ' + wsoKey, 404);
+
+  const m3u8Url = await resolveWsoM3u8(wsoKey);
+  if (!m3u8Url) {
+    // Clear cache and retry once
+    wsoCache.delete(wsoKey);
+    const retryUrl = await resolveWsoM3u8(wsoKey);
+    if (!retryUrl) return textResponse('WSO m3u8 resolve failed for ' + wsoKey, 502);
+    return fetchAndRewriteWsoM3u8(wsoKey, retryUrl, ch, request);
+  }
+  return fetchAndRewriteWsoM3u8(wsoKey, m3u8Url, ch, request);
+}
+
+async function fetchAndRewriteWsoM3u8(wsoKey, m3u8Url, ch, request) {
+  let resp;
+  // m3u8Url may be reassigned on 403 retry
+  try {
+    resp = await fetch(m3u8Url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Referer': ch.referer,
+      },
+    });
+  } catch (e) {
+    return textResponse('WSO m3u8 fetch error: ' + e.message, 502);
+  }
+
+  if (resp.status === 403) {
+    // v2.10: URL expired, clear cache and retry resolve+fetch in same request
+    wsoCache.delete(wsoKey);
+    const freshUrl = await resolveWsoM3u8(wsoKey);
+    if (freshUrl && freshUrl !== m3u8Url) {
+      try {
+        const retryResp = await fetch(freshUrl, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Referer': ch.referer },
+        });
+        if (retryResp.ok) {
+          m3u8Url = freshUrl;
+          resp = retryResp;
+          // Fall through to normal processing below
+        } else {
+          return textResponse('WSO m3u8 expired (403), retry also failed: ' + retryResp.status, 502);
+        }
+      } catch (e2) {
+        return textResponse('WSO m3u8 expired (403), retry error: ' + e2.message, 502);
+      }
+    } else {
+      return textResponse('WSO m3u8 expired (403). No fresh URL available.', 502);
+    }
+  }
+
+  if (!resp.ok) return textResponse('WSO m3u8 failed: ' + resp.status, 502);
+
+  const m3u8body = await resp.text();
+  const myOrigin = new URL(request.url).origin;
+  const segBase = `${myOrigin}/wseg/${wsoKey}/`;
+
+  // Parse the m3u8 URL to get the base path for segment resolution
+  const m3u8Parsed = new URL(m3u8Url);
+  const m3u8BasePath = m3u8Parsed.pathname.substring(0, m3u8Parsed.pathname.lastIndexOf('/') + 1);
+
+  // Rewrite segment URLs
+  let hasPdt = false;
+  const rewritten = m3u8body.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return line;
+    if (trimmed.startsWith('#EXT-X-PROGRAM-DATE-TIME')) hasPdt = true;
+    if (trimmed.startsWith('#')) return line;
+    // Segment URL — could be relative or absolute
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      // Absolute URL — keep as-is (wseg will proxy it)
+      return segBase + encodeURIComponent(trimmed);
+    }
+    // Relative path — resolve against m3u8 base
+    const fullUrl = m3u8Parsed.protocol + '//' + m3u8Parsed.host + m3u8BasePath + trimmed;
+    return segBase + encodeURIComponent(fullUrl);
+  }).join('\n');
+
+  // Inject PROGRAM-DATE-TIME
+  let finalBody = rewritten;
+  if (!hasPdt && rewritten.startsWith('#EXTM3U')) {
+    const nowIso = new Date().toISOString();
+    finalBody = '#EXTM3U\n#EXT-X-PROGRAM-DATE-TIME:' + nowIso + '\n' + rewritten.substring(8);
+  }
+
+  return new Response(finalBody, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/vnd.apple.mpegurl',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'CDN-Cache-Control': 'no-store',
+      'Surrogate-Control': 'no-store',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
+  });
+}
+
+// GET /wseg/<wsoKey>/<encodedUrl>
+// The segment URL is URL-encoded in the path (to handle absolute URLs with query params)
+async function handleWseg(wsoKey, encodedUrl, request) {
+  const ch = WSO_CATALOG[wsoKey];
+  if (!ch) return textResponse('Not found: ' + wsoKey, 404);
+
+  let segUrl;
+  try {
+    segUrl = decodeURIComponent(encodedUrl);
+  } catch (e) {
+    return textResponse('Invalid segment URL encoding', 400);
+  }
+
+  // Cloudflare cache
+  const cacheUrl = new URL('https://wseg-cache.iptv345.local/' + wsoKey + '/' + encodedUrl.slice(0, 100));
+  const cacheKey = new Request(cacheUrl, { method: 'GET' });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    return new Response(cached.body, {
+      status: 200,
+      headers: { 'Content-Type': 'video/mp2t', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600', 'X-Cache': 'HIT' },
+    });
+  }
+
+  let upstream;
+  try {
+    upstream = await fetch(segUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Referer': ch.referer,
+      },
+    });
+  } catch (e) {
+    return textResponse('WSO segment error: ' + e.message, 502);
+  }
+
+  if (!upstream.ok) return textResponse('WSO segment failed: ' + upstream.status, 502);
+
+  const body = await upstream.arrayBuffer();
+  const resp = new Response(body, {
+    status: 200,
+    headers: { 'Content-Type': 'video/mp2t', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600', 'X-Cache': 'MISS' },
+  });
+  try { cache.put(cacheKey, resp.clone()).catch(() => {}); } catch (e) {}
+  return resp;
+}
+
+// =================== MAIN ROUTER ===================
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Max-Age': '86400',
+        },
+      });
+    }
+
+    // /seg/<tid>/<id>/<filename>  (e.g. /seg/gt/5/index1234.js)
+    const segMatch = path.match(/^\/seg\/(\w+)\/(\d+)\/(.+)$/);
+    if (segMatch) {
+      return handleSeg(segMatch[1], parseInt(segMatch[2], 10), segMatch[3], request);
+    }
+
+    // /ysp<type><idx>.m3u8  (e.g. /yspc01.m3u8, /yspw03.m3u8)
+    const yspM3u8Match = path.match(/^\/(ysp[cw]\d+)\.m3u8$/);
+    if (yspM3u8Match) {
+      return handleYspM3u8(yspM3u8Match[1], request);
+    }
+
+    // /yseg/<yspKey>/<filename>  (YSP segment proxy)
+    const ysegMatch = path.match(/^\/yseg\/(ysp[cw]\d+)\/(.+)$/);
+    if (ysegMatch) {
+      return handleYseg(ysegMatch[1], ysegMatch[2], request);
+    }
+
+    // v2.9: /wso-<name>.m3u8  (卫视官网源 m3u8 proxy)
+    const wsoM3u8Match = path.match(/^\/(wso-[\w-]+)\.m3u8$/);
+    if (wsoM3u8Match) {
+      return handleWsoM3u8(wsoM3u8Match[1], request);
+    }
+
+    // v2.9: /wseg/<wsoKey>/<encodedUrl>  (卫视官网 segment proxy)
+    const wsegMatch = path.match(/^\/wseg\/(wso-[\w-]+)\/(.+)$/);
+    if (wsegMatch) {
+      return handleWseg(wsegMatch[1], wsegMatch[2], request);
+    }
+
+    // /<tid><id>.m3u8  (e.g. /gt5.m3u8)
+    const m3u8Match = path.match(/^\/(\w+?)(\d+)\.m3u8$/);
+    if (m3u8Match) {
+      return handleM3u8(m3u8Match[1], parseInt(m3u8Match[2], 10), request);
+    }
+
+
+    // /cat/<tid>
+    const catMatch = path.match(/^\/cat\/(\w+)$/);
+    if (catMatch) {
+      return handleCat(catMatch[1], request);
+    }
+
+    // v2.8: /refresh/<tid><id>  (e.g. /refresh/gt5 — force-refresh cached session URL)
+    const refreshMatch = path.match(/^\/refresh\/(\w+?)(\d+)$/);
+    if (refreshMatch) {
+      return handleRefresh(refreshMatch[1], parseInt(refreshMatch[2], 10), request);
+    }
+
+    // v2.8: /health/<tid><id>  (e.g. /health/gt5 — quick health check)
+    const healthMatch = path.match(/^\/health\/(\w+?)(\d+)$/);
+    if (healthMatch) {
+      return handleHealth(healthMatch[1], parseInt(healthMatch[2], 10), request);
+    }
+
+    // v2.8: /refresh-gha  (manually trigger GitHub Actions refresh for ysp/xuexi —
+    // requires GH_TOKEN env var to be set; otherwise returns 200 but does nothing)
+    if (path === '/refresh-gha') {
+      await triggerRefresh();
+      return textResponse('refresh triggered (if GH_TOKEN configured)', 200);
+    }
+
+    // /
+    if (path === '/' || path === '') {
+      return handleHome(request);
+    }
+
+    // /favicon.ico
+    if (path === '/favicon.ico') {
+      return new Response(null, { status: 204 });
+    }
+
+    return textResponse('Not Found', 404);
+  },
+};
