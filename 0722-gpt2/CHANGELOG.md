@@ -1,10 +1,23 @@
-# Changelog — GPT2 生图 Worker
+# Changelog — AI生图 Worker
 
 所有版本变更记录。v0.x-v1.2 为多通道架构，kd-v2.0 起合并为单一 keydraw 通道。
 
 ---
 
-## kd-v2.0 (2026-07-23) — 分支合并版本
+## kd-v2.2 (2026-07-23) — 修复设置面板 + 标题改名
+
+### Fixed
+- 修复 kd-v2.1 中 `loadSettingsUI`/`saveSettings`/`testCustomApiKey`/`onNotificationsToggle`/`updateNotificationsHint` 5 个函数被误删导致设置齿轮不可点的问题
+- 修复 `split('\n')`/`join('\n')` 在 HTML_CONTENT 模板字符串中被解释为实际换行符导致 JS 语法错误的问题，改用 `String.fromCharCode(10)`
+
+### Changed
+- 左上角标题从 "GPT2 生图" 改为 "AI生图"
+- 版本号小字从 nav-right 移到标题右侧（紧贴标题显示）
+- VERSION 更新为 `kd-v2.2`
+
+---
+
+## kd-v2.1 (2026-07-23) — 多 key 轮换 + 水印模块恢复
 
 ### Added
 - **日额度本地计数器**：`state.dailyUsage = {date, count, exhausted}`

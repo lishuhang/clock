@@ -1354,7 +1354,7 @@ function saveSettings(){
   // kd-v2.1: 保存多个自定义 97api key（textarea，每行一个）
   var ta=document.getElementById('customApiKeysTA');
   if(ta){
-    var keys=ta.value.split('\n').map(k=>k.trim()).filter(k=>k&&!k.startsWith('#'));
+    var keys=ta.value.split(String.fromCharCode(10)).map(k=>k.trim()).filter(k=>k&&!k.startsWith('#'));
     var oldKeys=JSON.stringify(state.settings.customApiKeys||[]);
     state.settings.customApiKeys=keys;
     if(JSON.stringify(keys)!==oldKeys){
@@ -1368,14 +1368,14 @@ function loadSettingsUI(){
   document.getElementById('rotationStrategy').value=state.settings.rotationStrategy||'round-robin';
   document.getElementById('notificationsEnabled').checked=state.settings.notificationsEnabled===true;
   var ta=document.getElementById('customApiKeysTA');
-  if(ta){ta.value=(state.settings.customApiKeys||[]).join('\n')}
+  if(ta){ta.value=(state.settings.customApiKeys||[]).join(String.fromCharCode(10))}
   applyTheme();updateNotificationsHint();
 }
 // kd-v2.1: 测试自定义 97api key —— 测试 textarea 中第一个 key
 async function testCustomApiKey(){
   var ta=document.getElementById('customApiKeysTA');
   if(!ta){toast('未找到 key 输入框','error');return}
-  var keys=ta.value.split('\n').map(k=>k.trim()).filter(k=>k&&!k.startsWith('#'));
+  var keys=ta.value.split(String.fromCharCode(10)).map(k=>k.trim()).filter(k=>k&&!k.startsWith('#'));
   if(!keys.length){toast('请先填入至少一个 API Key','error');return}
   var key=keys[0];
   toast('正在测试第一个 Key ('+key.substring(0,12)+'...)...','info');
