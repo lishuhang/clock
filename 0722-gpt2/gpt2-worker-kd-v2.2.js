@@ -1,4 +1,11 @@
-// Cloudflare Worker - GPT2 生图 (gpt2-worker-kd)
+// Cloudflare Worker - AI生图 (gpt2-worker-kd)
+// kd-v2.2: 修复 loadSettingsUI/saveSettings 缺失 + 标题改名 + 版本号移到标题旁
+//   (1) 修复 kd-v2.1 中 loadSettingsUI/saveSettings/testCustomApiKey/onNotificationsToggle/
+//       updateNotificationsHint 5个函数被误删导致设置齿轮不可点的问题
+//   (2) 左上角标题从 "GPT2 生图" 改为 "AI生图"
+//   (3) 版本号小字从 nav-right 移到标题右侧（紧贴标题显示）
+//   (4) 继承 kd-v2.1 全部功能：多 key 轮换 + 水印/去水印模块 + UI 精简
+//
 // kd-v2.1: 多 key 轮换 + 水印/去水印模块恢复 + UI 精简
 //   (1) 多 key 轮换：gift key（免费，优先）+ 多个自定义 97api key，共池使用
 //   (2) 每 key 独立日额度跟踪；任 key 当日耗尽则跳过，GMT+8 0点重置
@@ -327,7 +334,7 @@ a:hover{text-decoration:underline}
 <body>
 
 <nav id="topNav">
-  <div class="title">GPT2 生图</div>
+  <div class="title">AI生图<span id="versionBadge" style="font-size:11px;color:var(--text-muted);font-family:var(--mono);margin-left:8px;font-weight:400"></span></div>
   <div class="nav-left">
     <!-- kd-v2.1: 添加水印 / 去除水印 工具入口 -->
     <button class="btn btn-ghost btn-sm" onclick="openWatermarkModal()" title="在生成的图片上加水印">水印</button>
@@ -337,7 +344,6 @@ a:hover{text-decoration:underline}
     <span class="points" id="quotaBadge" title="点击刷新所有 key 额度" style="cursor:pointer" onclick="refreshAllQuota()">剩余 <span id="usableCreditsTop">0</span> 张</span>
     <span id="concurrencyInfo" style="font-size:12px;color:var(--text-secondary)">并发: 0/0</span>
     <span id="totalCreditsTop" style="display:none">0</span>
-    <span id="versionBadge" style="font-size:11px;color:var(--text-muted);font-family:var(--mono)" title="Worker 版本"></span>
     <button class="icon-btn" onclick="showSettingsModal()" title="设置">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
@@ -718,7 +724,7 @@ a:hover{text-decoration:underline}
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-const VERSION='kd-v2.1';
+const VERSION='kd-v2.2';
 const STATE_KEY='maliang_state',HISTORY_KEY='maliang_history',PROMPTLIB_KEY='maliang_promptlib';
 // kd-v2.0: 单一上游配置（前端副本） —— 顶层 worker 常量在前端不可见，需在 script 内重复定义
 const UPSTREAM={base:'https://keydraw.97api.com',origin:'https://keydraw.97api.com',giftKeyFallback:'Gift-Key-V2EX999'};
