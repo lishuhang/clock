@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ocr-v2.py  —  离线 OCR + 二维码识别 (修复版)
+ocr-v2.py  —  离线 OCR + 二维码识别 (修复版 v2)
 
-修复内容:
-1. 修复原 ocr.py 的致命 bug: 把原始路径字符串传给 EasyOCR.readtext(),
-   导致 EasyOCR 内部 cv2.imread() 在含空格/中文路径上返回 None,
-   进而触发 "'NoneType' object has no attribute 'shape'" 错误。
-   修复: 统一用 cv2.imdecode(np.fromfile(...)) 读图, 把 numpy 数组
-   直接传给 OCR 引擎, 绕开各引擎内部的 imread 调用。
+核心修复:
+1. 原 ocr.py 的致命 bug: 把含空格/中文的路径字符串直接传给
+   EasyOCR.readtext(), 导致内部 cv2.imread() 返回 None,
+   触发 "'NoneType' object has no attribute 'shape'" 错误。
+   → 修复: 用 cv2.imdecode(np.fromfile(...)) 读取, 传 numpy 数组给引擎。
 
-2. 多引擎自动回退 (均为离线, 不依赖任何大模型 API):
-     优先级 1: rapidocr_onnxruntime  (轻量, 中文优秀, ~3s/张)
+2. 多引擎自动回退 (全部离线, 不依赖大模型 API):
+     优先级 1: rapidocr_onnxruntime  (轻量 ~3s/张, 中文优秀)
      优先级 2: easyocr               (原引擎, 已修复路径 bug)
      优先级 3: pytesseract           (需 chi_sim 语言包)
-   启动时自动探测可用引擎, 任一可用即可工作。
 
-3. 二维码识别沿用原 sliding-window + zxing-cpp/OpenCV 方案 (此部分原本正常)。
+3. 二维码识别: sliding-window + zxing-cpp(强)/OpenCV(弱)
 
-4. 新增断点续扫: 批量模式下若输出文件已存在, 已成功处理 (且 OCR 非错误)
-   的图片会被跳过, 避免崩溃重跑。
+4. 断点续扫: 批量模式下已成功处理的图片会被跳过
+
+5. Tesseract tessdata 路径自动探测:
+   优先检查 /usr/share/tesseract-ocr/*/tessdata/
+   然后检查 ~/.tessdata/ (用户手动下载的语言包)
 
 用法:
     python ocr-v2.py              # 批量模式: 处理当前目录所有图片
     python ocr-v2.py <图片路径>    # 单文件模式
-    python ocr-v2.py --force      # 批量模式, 忽略已有结果, 全部重跑
+    python ocr-v2.py --force      # 批量模式, 忽略已有结果全部重跑
 """
 
 import sys
@@ -80,7 +81,6 @@ class EasyOCREngine:
 
     def __init__(self):
         import easyocr
-        # ch_sim + en; gpu=False 保证离线 & 通用
         self._reader = easyocr.Reader(['ch_sim', 'en'], gpu=False)
 
     def recognize(self, cv_img):
@@ -102,17 +102,48 @@ class TesseractEngine:
     def __init__(self):
         import pytesseract
         self._pytesseract = pytesseract
+
+        # 自动探测 tessdata 路径: 系统目录优先, 然后用户目录
+        self._setup_tessdata_prefix()
+
         # 探测可用语言
         langs = self._pytesseract.get_languages()
         candidates = []
-        for lang in ('chi_sim+eng', 'chi_sim', 'eng'):
-            # 拆开逐个验证, 因为 get_languages 可能不返回组合
-            if all(part in langs for part in lang.split('+')):
-                candidates.append(lang)
+        for lang_combo in ('chi_sim+eng', 'chi_sim', 'eng'):
+            if all(part in langs for part in lang_combo.split('+')):
+                candidates.append(lang_combo)
                 break
         if not candidates:
-            raise RuntimeError("Tesseract 未安装中文语言包 (chi_sim)")
+            raise RuntimeError(
+                "Tesseract 未安装中文语言包 (chi_sim)\n"
+                "请运行: sudo apt install tesseract-ocr-chi-sim\n"
+                "或手动下载: curl -Lo ~/.tessdata/chi_sim.traineddata "
+                "https://github.com/tesseract-ocr/tessdata/raw/main/chi_sim.traineddata"
+            )
         self._lang = candidates[0]
+
+    def _setup_tessdata_prefix(self):
+        """自动设置 TESSDATA_PREFIX 环境变量"""
+        # 如果已有且包含 chi_sim, 不需要修改
+        current = os.environ.get('TESSDATA_PREFIX', '')
+        if current and os.path.exists(os.path.join(current, 'chi_sim.traineddata')):
+            return
+
+        # 搜索系统 tessdata 目录
+        for candidate in [
+            '/usr/share/tesseract-ocr/5/tessdata/',
+            '/usr/share/tesseract-ocr/4.00/tessdata/',
+            '/usr/share/tessdata/',
+        ]:
+            if os.path.exists(os.path.join(candidate, 'chi_sim.traineddata')):
+                os.environ['TESSDATA_PREFIX'] = candidate
+                return
+
+        # 搜索用户目录
+        user_dir = os.path.expanduser('~/.tessdata/')
+        if os.path.exists(os.path.join(user_dir, 'chi_sim.traineddata')):
+            os.environ['TESSDATA_PREFIX'] = user_dir
+            return
 
     def recognize(self, cv_img):
         try:
@@ -140,7 +171,7 @@ def init_ocr_engine():
 
 
 # ===========================================================================
-# 二维码识别 (沿用原 sliding-window 方案)
+# 二维码识别 (sliding-window 方案)
 # ===========================================================================
 
 def scan_chunk_with_zxing(img_chunk):
@@ -173,13 +204,14 @@ def detect_qr_sliding_window(cv_img):
     h, w = cv_img.shape[:2]
     found = set()
 
+    # 策略 1: 全图直接扫
     if HAS_ZXING:
         found.update(scan_chunk_with_zxing(cv_img))
     else:
         det = cv2.QRCodeDetector()
         found.update(scan_chunk_with_opencv(cv_img, det))
 
-    # 窗口高度 = 宽度 × 1.2 (最小 600), 70% 重叠
+    # 策略 2: 滑动窗口 (窗口高度 = 宽度 × 1.2, 最小 600, 70% 重叠)
     window_h = max(600, int(w * 1.2))
     if window_h > h:
         window_h = h
@@ -264,17 +296,15 @@ def parse_existing_results(output_path):
     except Exception:
         return done
 
-    # 用文件名分隔块
     pattern = re.compile(r"^文件名:\s*(.+?)\s*$", re.MULTILINE)
     matches = list(pattern.finditer(content))
     for i, m in enumerate(matches):
         fname = m.group(1).strip()
-        # 取该文件名到下一个文件名之间的内容
         start = m.end()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
         block = content[start:end]
         # 必须包含 OCR 段且不含错误标记才算完成
-        if "OCR 文字识别内容" in block and "OCR 处理错误" not in block:
+        if "OCR 文字识别内容" in block and "OCR 处理错误" not in block and "错误: 无法读取" not in block:
             done.add(fname)
     return done
 
@@ -319,7 +349,7 @@ def main():
                 print(f"[断点续扫] 检测到 {resume_from}")
                 print(f"           已完成 {skipped}/{len(files)} 张, 将追加未完成项。")
             else:
-                resume_from = None  # 没有可续扫的, 走全新流程
+                resume_from = None
 
         if resume_from:
             output_path = resume_from
