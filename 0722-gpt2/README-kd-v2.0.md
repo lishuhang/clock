@@ -2,7 +2,7 @@
 
 > **版本**: kd-v2.0  ｜  **更新日期**: 2026-07-23  ｜  **上游**: [keydraw.97api.com](https://keydraw.97api.com)
 >
-> **部署**: `ai-image.lishuhang.workers.dev` + `gpt.lishuhang.com`（v1.x beta 站点将下线，分支合并）
+> **部署**: `ai-image.lishuhang.workers.dev` + `gpt2.lishuhang.com`（v1.x beta 站点将下线，分支合并）
 
 ---
 
