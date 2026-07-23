@@ -1,74 +1,48 @@
-// Cloudflare Worker - AI生图 Beta v1.2 (imagebeta-worker)
-// v1.2: 上游错误透传 + 自定义 API Key + 马良通道下线标记
-//   (1) 【核心修复】pollTask() 现将 status:"error" 视为终止状态，直接抛出 d.error
-//       v1.1 只识别 "success"/"failed"，对上游新返回的 "error" 状态会持续轮询 300s
-//       然后误报"图片生成超时(300秒)"，掩盖真实原因（如"api key 日限额已用完"）
-//   (2) 【错误透传】extractErrorMessage() 新增对 "日限额"/"Invalid API key"/"quota" 等
-//       上游错误的识别，原样返回给前端任务列表，方便用户 debug
-//   (3) 【自定义 API Key】新增 "custom-97api" 通道：用户可在设置面板填入自己的
-//       97api.com API Key（Bearer 鉴权），实现不限量使用。Base URL 与 keydraw 相同
-//       (https://www.97api.com/v1)，但用用户自己的 key 而非共享 Gift Key
-//   (4) 【马良通道下线】grok.17nas.com 已加 Cloudflare Challenge 墙，server-side
-//       proxy 无法直接访问 /local-api/*。channelSelect 中马良选项加 "(已下线)" 标记
-//       并 disabled；ensureChannelReady() 跳过马良的自动注册分支
-//   (5) 【额度耗尽自动重试】对 "日限额已用完" 错误，自动尝试切换到 custom-97api 通道
-//       （若用户已配置自定义 key），实现"不用注册就可以无限量使用"的目标
-// v1.1: 性能优化与代码精简（功能与 v1.0 完全一致）
-//   - gift-key 异步刷新：先用 fallback key 渲染首屏，gift-key 异步获取不阻塞
-//   - 移除 autoFallbackGpt2 整段（v0.7 起已禁用，gpt-image-2 是唯一模型，fallback 无意义）
-//   - 移除 refreshModelAvailability / updateModelAvailabilityUI / modelAvailHint（keydraw 单模型无需探测）
-//   - 移除 calcGptImage2Size（仅 fallback 路径使用）
-//   - 移除 video 模型相关函数（isVideoModel / VIDEO_CREDITS_PER_SEC / durationSelect 等）
-//   - 移除 grok-imagine-* 模型选项与 MODEL_CREDITS_PER_IMAGE 中的对应条目
-//   - 精简 btn 系列 CSS（合并 :hover:not(:disabled) 重复）
-//   - 移除 changelog <dl>（v0.1-v0.7 历史，~3KB，对用户无价值）
-// v0.7: 四项修复
-//   (1) addToPromptLib 缺失 renderPromptLib() 调用，导致提示词入库后 UI 面板不刷新
-//   (2) refreshModelAvailability 改为 no-op：keydraw 无 /account/quota 与 /proxy/videos 端点，每次页面加载都会产生两条 404 噪声
-//   (3) showInvitePanel 友好降级：keydraw 共享 Gift Key 模式无邀请系统，原调用 /account/invite 会失败
-//   (4) getChainInviteCode 短路返回 null：同上，避免 registerAccount 路径中的无效 API 调用
-// v0.5: 修复前端 JS 两个语法错误（HTML_CONTENT 模板字符串内的 // 行注释吞掉了后续代码），导致整段前端 JS 从未执行：
-//       A) setTimeout 箭头函数尾部 `// v0.1: 仅图片` 注释吞掉了 `},500);`
-//       B) batchVerifyAccounts 行内 `// v0.1: keydraw 无 quota 端点` 注释吞掉了整段 if/else 分支与函数收尾
-// v0.6: 修复 apiFetch 双 /api/ 前缀 bug — apiFetch 内部已自动 prepend '/api'，但调用方又传 '/api/...'，导致最终 URL 为 /api/api/image-tasks/...
-//       影响 /image-tasks/generations、/image-tasks/{id}/resume-poll、/image-tasks/edits（multipart 图生图）三个端点。
-//       上游 keydraw.97api.com 自荐站（V2EX 帖 https://www.v2ex.com/t/1222012）；免注册共享 Gift Key 模式；保留账号管理 / 历史记录 / 提示词库 / 参考图 / 通知。
-
-// v1.0: 多通道架构 — 两个上游供应商
-//   keydraw : https://keydraw.97api.com  (共享 Gift Key 模式，免注册)
-//   maliang : https://grok.17nas.com/local-api  (用户名+密码注册，Cookie 鉴权)
-// 前端通过 X-Channel 请求头告诉 Worker 当前用哪个上游；Worker 据此选择 UPSTREAM_BASE。
-const CHANNELS = {
-  keydraw: {
-    upstreamBase: 'https://keydraw.97api.com',
-    upstreamOrigin: 'https://keydraw.97api.com',
-    authMode: 'bearer',  // Authorization: Bearer <key>
-    sessionCookie: '',   // keydraw 不用 cookie
-    giftKeyFallback: 'Gift-Key-V2EX999'
-  },
-  'custom-97api': {
-    // v1.2: 用户自己的 97api.com API Key —— keydraw.97api.com 接受任意 97api Bearer key
-    //       路由与 keydraw 通道完全一致（同样走 /api/image-tasks/* 端点），
-    //       区别仅在于 Authorization 用用户自己的 key 而非共享 Gift Key
-    upstreamBase: 'https://keydraw.97api.com',
-    upstreamOrigin: 'https://keydraw.97api.com',
-    authMode: 'bearer',
-    sessionCookie: '',
-    giftKeyFallback: ''  // 必须用户自己填，无 fallback
-  },
-  maliang: {
-    // v1.2: 已下线 —— grok.17nas.com 加了 Cloudflare Challenge，server-side 无法访问
-    upstreamBase: 'https://grok.17nas.com/local-api',
-    upstreamOrigin: 'https://grok.17nas.com',
-    authMode: 'cookie',
-    sessionCookie: 'session',
-    giftKeyFallback: '',
-    deprecated: true  // v1.2: UI 标记已下线
-  }
+// Cloudflare Worker - GPT2 生图 (gpt2-worker-kd)
+// kd-v2.0: 分支合并 — 仅保留 keydraw 通道，下线马良，新增日额度本地计数器
+//   (1) 【分支合并】移除 v1.x 的多通道架构（keydraw / maliang / custom-97api），
+//       统一为单一 keydraw 通道。channelSelect 移除；accountsByMaliang /
+//       abandonedAccountsByMaliang / accountsByCustom97api 等通道池字段全部删除。
+//       旧 state 自动迁移：保留 accountsByKeydraw 中的账号作为唯一账号池。
+//   (2) 【马良下线】删除所有 maliang 相关代码：
+//       - registerMaliangAccount / loginAccount (maliang 分支) / getChainInviteCode
+//       - maliang auto-register / invite / checkin 调用
+//       - channelSelect 中的 maliang 选项
+//       - "邀请好友" 面板（keydraw 共享 Gift Key 模式无邀请系统）
+//       - 设置面板的"批量签到(已下线)"/"官网注册"按钮
+//       - corsHeaders 中 X-Channel 头声明
+//   (3) 【自定义 Key 合并到 keydraw】用户填写的 97api API Key 现作为 keydraw
+//       通道的"高级 key"使用：若 state.settings.customApiKey95 有值，则用它代替
+//       共享 Gift Key；否则用共享 Gift Key。设置面板"自定义 97api API Key" 字段保留。
+//   (4) 【日额度本地计数器】keydraw 共享 Gift Key 全 V2EX 共享 999 张/日（GMT+8 0点重置），
+//       无公开 quota API 可查。前端维护 state.dailyUsage = {date:'YYYY-MM-DD', count:N, exhausted:bool}，
+//       每次任务提交 +1；遇 "日限额已用完" 错误立即标记 exhausted=true 并显示 0/999；
+//       GMT+8 0点自动重置。topbar 显示 "今日 X / 999 张"。
+//   (5) 【错误透传】继承 v1.2 的修复：pollTask() 将 status:"error" 视为终止状态，
+//       直接抛出 d.error（如 "api key 日限额已用完"），不再误报"超时(300秒)"。
+//       extractErrorMessage() 原样透传上游错误。
+//
+// 历史版本（已归档）：
+//   v1.2: 上游错误透传 + 自定义 97api Key 通道 + 马良通道下线标记
+//   v1.1: 性能优化与代码精简
+//   v1.0: 多通道架构（keydraw + maliang）
+//   v0.x: 早期单通道版本
+//
+// 部署目标：ai-image.lishuhang.workers.dev + gpt.lishuhang.com（v1.x beta 站点将下线）
+//
+// 上游：keydraw.97api.com（V2EX 帖 https://www.v2ex.com/t/1222012）
+//   - 免注册共享 Gift Key 模式（全 V2EX 共享 999 张/日，GMT+8 0点重置）
+//   - 用户可在设置面板填入自己的 97api.com API Key 作为高级 key（不限量）
+//   - 仅支持 gpt-image-2 模型 1K 分辨率
+//   - 保留账号管理 / 历史记录 / 提示词库 / 参考图 / 通知
+//
+// kd-v2.0: 单一上游配置（不再有多通道）
+const UPSTREAM = {
+  base: 'https://keydraw.97api.com',
+  origin: 'https://keydraw.97api.com',
+  giftKeyFallback: 'Gift-Key-V2EX999'  // 共享 Gift Key，全 V2EX 共享 999 张/日
 };
-const DEFAULT_CHANNEL = 'keydraw';
 const SESSION_HEADER = 'X-Session-Token';  // 前端 → Worker 透传 token 的内部标记
-const CHANNEL_HEADER = 'X-Channel';        // 前端 → Worker 指定上游通道
 
 // ===================== HTML 前端 =====================
 const HTML_CONTENT = `<!DOCTYPE html>
@@ -307,14 +281,10 @@ a:hover{text-decoration:underline}
 <body>
 
 <nav id="topNav">
-  <div class="title">AI生图</div>
+  <div class="title">GPT2 生图</div>
   <div class="nav-left">
-    <select id="channelSelect" class="select-field" onchange="onChannelChange()" title="上游通道" style="font-size:12px;padding:4px 8px;max-width:160px">
-      <option value="auto">自动</option>
-      <option value="keydraw">KeyDraw(共享)</option>
-      <option value="custom-97api">自定义Key</option>
-      <option value="maliang" disabled>马良(已下线)</option>
-    </select>
+    <!-- kd-v2.0: 通道选择器已移除（单一 keydraw 通道）。日额度计数器显示在右上角 -->
+    <span id="dailyUsageBadge" style="font-size:12px;color:var(--text-secondary);padding:4px 10px;background:var(--bg-secondary);border-radius:6px;border:1px solid var(--border)" title="keydraw 共享 Gift Key 全 V2EX 共享 999 张/日，GMT+8 0点重置">今日 <span id="dailyUsageCount">0</span> / 999 张</span>
   </div>
   <div class="nav-right">
     <span class="points">剩余 <span id="usableCreditsTop">0</span> 张</span>
@@ -473,29 +443,17 @@ a:hover{text-decoration:underline}
         </div>
       </div>
       <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn btn-primary btn-sm" onclick="autoRegister()">注册新账号</button>
-        <button class="btn btn-sm" onclick="addManualAccount()">手动添加</button>
-        <button class="btn btn-sm" onclick="checkinAll()" title="上游已下线签到功能" style="opacity:.5;cursor:not-allowed">批量签到(已下线)</button>
+        <!-- kd-v2.0: 移除马良相关按钮（注册新账号/手动添加/批量签到/刷新额度/清理无余额/批量验证/邀请好友/官网注册） -->
+        <!-- keydraw 共享 Gift Key 模式下：注册=刷新 Gift Key；签到/邀请/官网均无对应概念 -->
+        <button class="btn btn-primary btn-sm" onclick="autoRegister()">刷新 Gift Key</button>
         <button class="btn btn-sm" onclick="refreshAllQuota()">刷新额度</button>
-        <button class="btn btn-sm btn-outline" onclick="cleanupInsufficientAccounts()" title="扫描所有账号，余额不足以生成 1 张图的自动移入废弃池">清理无余额账号</button>
         <button class="btn btn-sm" onclick="batchVerifyAccounts()">批量验证</button>
-        <button class="btn btn-sm" onclick="showInvitePanel()">邀请好友</button>
-        <a href="https://grok.17nas.com" target="_blank" rel="noopener" class="btn btn-sm" style="text-decoration:none">官网注册</a>
+        <a href="https://www.97api.com" target="_blank" rel="noopener" class="btn btn-sm" style="text-decoration:none" title="自行注册并充值可获取个人 API Key，填入下方'自定义 97api API Key'即可不限量使用">97api 官网</a>
       </div>
       <div id="accountsTableContainer" style="overflow-x:auto;margin-bottom:14px"></div>
       <div id="abandonedPoolContainer" style="overflow-x:auto;margin-bottom:14px"></div>
       <div id="storageInfoContainer" style="margin-bottom:14px"></div>
-      <div id="invitePanelContainer" style="display:none;margin-bottom:14px;padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-secondary)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:13px;font-weight:600;color:var(--text)">邀请好友</span>
-          <button class="btn btn-xs btn-ghost" onclick="closeInvitePanel()">关闭</button>
-        </div>
-        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">好友通过链接注册后，双方均可获得额度奖励</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <input type="text" id="inviteLinkInput" readonly class="input-field" style="flex:1;font-family:var(--mono);font-size:12px">
-          <button class="btn btn-sm btn-outline" onclick="copyInviteLink()">复制链接</button>
-        </div>
-      </div>
+      <!-- kd-v2.0: 邀请好友面板已移除（keydraw 共享 Gift Key 模式无邀请系统） -->
       <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
         <span style="font-size:11px;color:var(--text-muted);margin-right:4px">导出：</span>
         <button class="btn btn-sm btn-outline" onclick="exportAccounts('all')" title="导出可用账号 + 废弃池（导出前会自动检测废弃）">全部</button>
@@ -507,22 +465,19 @@ a:hover{text-decoration:underline}
       <input type="file" id="importHistoryInput" accept=".json" style="display:none" onchange="handleImportHistory(this)">
       <input type="file" id="importPromptLibInput" accept=".json" style="display:none" onchange="handleImportPromptLib(this)">
       <div style="border-top:1px solid var(--border);padding-top:14px">
-        <!-- v1.2: 自定义 97api API Key —— 用户自己的 key，切换到 custom-97api 通道即可不限量使用 -->
+        <!-- kd-v2.0: 自定义 97api API Key —— 填入后将替代共享 Gift Key 使用（不再需要切换通道） -->
         <div class="form-group">
-          <label>自定义 97api API Key <span style="color:var(--text-muted);font-size:11px">(填入后可切换到「自定义Key」通道，不限量使用)</span></label>
+          <label>自定义 97api API Key <span style="color:var(--text-muted);font-size:11px">(填入后将替代共享 Gift Key，¥0.015/张起，不限量)</span></label>
           <div style="display:flex;gap:6px;align-items:center">
             <input type="password" id="customApiKey95" class="input-field" placeholder="sk-..." style="flex:1;font-family:var(--mono);font-size:12px">
             <button class="btn btn-sm btn-outline" onclick="toggleCustomKeyVisibility()" title="显示/隐藏">显示</button>
             <button class="btn btn-sm" onclick="testCustomApiKey()" title="测试当前 key 是否可用">测试</button>
           </div>
           <div class="hint-text" style="margin-top:2px">
-            获取方式：<a href="https://www.97api.com" target="_blank" rel="noopener" style="color:var(--accent)">www.97api.com</a> 注册后充值 → 控制台获取 API Key（约 ¥0.2/张图，gpt-image-2 模型）
+            获取方式：<a href="https://www.97api.com" target="_blank" rel="noopener" style="color:var(--accent)">www.97api.com</a> 注册后充值 → 控制台获取 API Key（¥0.015/1K，¥0.1/2K-4K 分组）
           </div>
         </div>
-        <div class="form-group">
-          <label>默认密码（自动追加yymmdd日期后缀）</label>
-          <input type="text" id="defaultPassword" class="input-field" value="Ml@2026Proxy">
-        </div>
+        <!-- kd-v2.0: 移除"默认密码"字段（仅马良注册需要，已下线） -->
         <div class="form-group">
           <label>轮换策略</label>
           <select id="rotationStrategy" class="select-field">
@@ -531,9 +486,8 @@ a:hover{text-decoration:underline}
             <option value="newest">优先最新</option>
           </select>
         </div>
-        <div class="form-group"><label class="checkbox-wrap" title="上游已下线签到功能，此选项已无效"><input type="checkbox" id="autoCheckin" checked disabled style="opacity:.5"> 额度耗尽自动签到 <span style="color:var(--text-muted);font-size:11px">(上游已下线)</span></label></div>
-        <div class="form-group"><label class="checkbox-wrap"><input type="checkbox" id="autoRegisterChk" checked> 额度耗尽自动注册</label></div>
-        <div class="form-group"><label class="checkbox-wrap"><input type="checkbox" id="autoFallbackGpt2" checked disabled style="opacity:.5"> 其他模型失败时自动换用 GPT-Image-2 重试 <span style="color:var(--text-muted);font-size:11px">(v0.1 仅 gpt-image-2，已禁用)</span></label></div>
+        <!-- kd-v2.0: 移除"额度耗尽自动签到"(无签到概念)和"autoFallbackGpt2"(单模型无需fallback) -->
+        <div class="form-group"><label class="checkbox-wrap"><input type="checkbox" id="autoRegisterChk" checked> 共享 Gift Key 额度耗尽自动刷新</label></div>
         <div class="form-group">
           <label class="checkbox-wrap"><input type="checkbox" id="notificationsEnabled" onchange="onNotificationsToggle(this.checked)"> 生成完成浏览器通知提醒</label>
           <div class="hint-text" id="notificationsHint" style="margin-top:2px"></div>
@@ -556,15 +510,14 @@ a:hover{text-decoration:underline}
   </div>
   <div class="help-panel-body">
     <h4>产品简介</h4>
-    <p>AI生图 Beta 是基于 Cloudflare Worker 的免费 AI 图片生成服务，上游为 <a href="https://keydraw.97api.com" target="_blank">keydraw.97api.com</a>（V2EX 自荐站，免注册共享 Gift Key 模式），仅支持 <code>gpt-image-2</code> 模型 1K 分辨率出图。</p>
-    <p style="margin-top:8px;color:var(--text-secondary);font-size:12px"><strong>v1.2 更新</strong>：修复了"日限额已用完"被误报为"超时(300秒)"的问题；新增「自定义Key」通道（用户填入自己的 97api.com API Key 即可不限量使用）；标记马良通道已下线（grok.17nas.com 加了 Cloudflare 人机验证墙）。</p>
+    <p>GPT2 生图 (kd-v2.0) 是基于 Cloudflare Worker 的免费 AI 图片生成服务，上游为 <a href="https://keydraw.97api.com" target="_blank">keydraw.97api.com</a>（V2EX 自荐站，免注册共享 Gift Key 模式），仅支持 <code>gpt-image-2</code> 模型 1K 分辨率出图。</p>
+    <p style="margin-top:8px;color:var(--text-secondary);font-size:12px"><strong>kd-v2.0 更新</strong>：分支合并版本 —— 移除多通道架构（keydraw/custom-97api/maliang 三合一）；马良通道（grok.17nas.com）彻底下线；新增右上角"今日 X / 999 张"日额度本地计数器（GMT+8 0点重置）；用户自填 97api API Key 现自动替代共享 Gift Key。</p>
 
-    <h4>通道选择</h4>
+    <h4>额度说明</h4>
     <ul>
-      <li><strong>KeyDraw (共享)</strong>：使用 V2EX 自荐站 keydraw.97api.com 的共享 Gift Key，免注册，每日有额度上限（用完会返回"api key 日限额已用完"，次日自动重置）</li>
-      <li><strong>自定义 Key</strong>：用户自己的 97api.com API Key，按量付费（约 ¥0.2/张图），无每日上限。设置 → 填入 Key → 切换到本通道</li>
-      <li><strong>马良 (已下线)</strong>：grok.17nas.com 加了 Cloudflare Challenge，server-side 代理不可用。如需使用需浏览器自动化方案</li>
-      <li><strong>自动</strong>：先试上次用的通道，硬失败时自动切换到另一通道重试</li>
+      <li><strong>共享 Gift Key</strong>（默认）：全 V2EX 共享 999 张/日，<strong>GMT+8 0点重置</strong>。早上易出图，下午易耗尽。无公开 quota API，本地计数器为估算值，遇"日限额已用完"会立即归零</li>
+      <li><strong>自定义 97api API Key</strong>（设置面板填入）：用户自己的 key，按量付费 ¥0.015/1K 起或 ¥0.1/2K-4K 分组，无每日上限，填入后自动替代共享 Gift Key</li>
+      <li><strong>额度计数器</strong>：右上角"今日 X / 999 张"基于本地累计，仅供参考。使用自定义 key 时不显示 999 上限</li>
     </ul>
 
     <h4>主要功能</h4>
@@ -619,17 +572,13 @@ a:hover{text-decoration:underline}
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-const VERSION='v1.2';
+const VERSION='kd-v2.0';
 const STATE_KEY='maliang_state',HISTORY_KEY='maliang_history',PROMPTLIB_KEY='maliang_promptlib';
-// v1.2: 前端副本 —— 顶层 worker 常量在前端不可见，需在 script 内重复定义
-const CHANNELS={
-  keydraw:{upstreamBase:'https://keydraw.97api.com',upstreamOrigin:'https://keydraw.97api.com',authMode:'bearer',sessionCookie:'',giftKeyFallback:'Gift-Key-V2EX999',deprecated:false},
-  'custom-97api':{upstreamBase:'https://keydraw.97api.com',upstreamOrigin:'https://keydraw.97api.com',authMode:'bearer',sessionCookie:'',giftKeyFallback:'',deprecated:false},
-  maliang:{upstreamBase:'https://grok.17nas.com/local-api',upstreamOrigin:'https://grok.17nas.com',authMode:'cookie',sessionCookie:'session',giftKeyFallback:'',deprecated:true}
-};
-const DEFAULT_CHANNEL='keydraw';
+// kd-v2.0: 单一上游配置（前端副本） —— 顶层 worker 常量在前端不可见，需在 script 内重复定义
+const UPSTREAM={base:'https://keydraw.97api.com',origin:'https://keydraw.97api.com',giftKeyFallback:'Gift-Key-V2EX999'};
 const SESSION_HEADER='X-Session-Token';
-const CHANNEL_HEADER='X-Channel';
+// kd-v2.0: 日额度上限（共享 Gift Key 全 V2EX 共享 999 张/日）
+const DAILY_QUOTA=999;
 let state=loadState(),generationHistory=loadHistory(),promptLibrary=loadPromptLib();
 
 // 运行时完整图片存储（不存localStorage，避免爆容量）
@@ -831,16 +780,16 @@ function markInterruptedTasks(){
 }
 
 function defaultState(){return{
-  // v1.0: 多通道账号池 —— 每个通道独立维护账号列表
-  accountsByKeydraw:[],accountsByMaliang:[],accountsByCustom97api:[],
-  abandonedAccountsByKeydraw:[],abandonedAccountsByMaliang:[],abandonedAccountsByCustom97api:[],
-  // 兼容旧字段：state.accounts 现在指向当前通道的池子（运行时同步）
+  // kd-v2.0: 单一账号池（不再按通道分组）
   accounts:[],abandonedAccounts:[],
-  // v1.0: 通道选择 —— 'auto' | 'keydraw' | 'maliang' | 'custom-97api'
-  activeChannel:'auto',lastChannel:'keydraw',
-  // v1.2: customApiKey95 = 用户自己的 97api.com API key（Bearer）
-  //       填写后即可切换到 "custom-97api" 通道，实现不限量使用
-  settings:{defaultPassword:'Ml@2026Proxy',rotationStrategy:'most-credits',autoCheckin:true,autoRegister:true,autoFallbackGpt2:true,theme:'system',notificationsEnabled:false,customApiKey95:''},
+  // kd-v2.0: 日额度本地计数器（GMT+8 0点重置）
+  // {date:'YYYY-MM-DD', count:N, exhausted:bool}
+  // count = 今日累计已提交任务数；exhausted = 是否已收到"日限额已用完"错误
+  // 注：keydraw 共享 Gift Key 无公开 quota API，此为本地估算
+  dailyUsage:{date:'',count:0,exhausted:false},
+  // kd-v2.0: 简化 settings —— 移除 defaultPassword/autoCheckin/autoFallbackGpt2（马良专用，已下线）
+  // customApiKey95 = 用户自己的 97api.com API key（Bearer）；填入后替代共享 Gift Key
+  settings:{rotationStrategy:'most-credits',autoRegister:true,theme:'system',notificationsEnabled:false,customApiKey95:''},
   activeAccountIndex:-1,rotationIndex:0,lastAutoDay:''
 }}
 function loadState(){try{const r=localStorage.getItem(STATE_KEY);if(r){const s=JSON.parse(r);return{...defaultState(),...s,settings:{...defaultState().settings,...(s.settings||{})}}}}catch(e){}return defaultState()}
@@ -921,145 +870,125 @@ async function tryConvertUrlToB64(imgEl,rawUrl){
 }
 
 // ===== API =====
-// v1.0: 通道感知的 apiFetch —— 自动附加 X-Channel 头与对应的鉴权头
-function getActiveChannel(){
-  // v1.0: 实际生效的通道（'auto' 解析为 lastChannel），fallback 'keydraw'（向后兼容旧 state）
-  // 注意：函数可能在 state 初始化前被调用，需做 nullish 防护
-  if(state && state.activeChannel && state.activeChannel !== 'auto') return state.activeChannel;
-  if(state && state.lastChannel) return state.lastChannel;
-  return DEFAULT_CHANNEL;
+// kd-v2.0: 单一通道 apiFetch —— 不再需要 X-Channel 头，Authorization 由当前生效 key 决定
+// 当前生效 key 优先级：state.settings.customApiKey95（用户自填） > 共享 Gift Key（UPSTREAM.giftKeyFallback）
+function getEffectiveKey(){
+  if(state&&state.settings&&state.settings.customApiKey95)return state.settings.customApiKey95;
+  return UPSTREAM.giftKeyFallback;
 }
-function getChannelAuthHeaders(channel, token){
-  const ch = CHANNELS[channel];
-  if(!ch) return {};
-  if(ch.authMode === 'bearer' && token) return {'Authorization':'Bearer '+token};
-  if(ch.authMode === 'cookie' && token) return {'Cookie': ch.sessionCookie+'='+token};
-  return {};
-}
+function isUsingCustomKey(){return !!(state&&state.settings&&state.settings.customApiKey95)}
 async function apiFetch(path,options={}){
   const url='/api'+path;
-  const st=options._sessionToken||null;
-  const channel=options._channel||getActiveChannel();
+  const st=options._sessionToken||getEffectiveKey();
   const headers={'Content-Type':'application/json',...(options.headers||{})};
-  // v1.0: 通道头永远带上
-  headers[CHANNEL_HEADER]=channel;
-  // 鉴权头按通道类型决定（keydraw=Bearer, maliang=Cookie）
-  Object.assign(headers, getChannelAuthHeaders(channel, st));
+  if(st)headers['Authorization']='Bearer '+st;
   return fetch(url,{...options,headers,credentials:'omit'});
 }
-// v1.0: multipart 版本（图生图 /image-tasks/edits），同样需要带通道头
-async function apiFetchMultipart(path,formData,sessionToken,channel){
+// kd-v2.0: multipart 版本（图生图 /image-tasks/edits）
+async function apiFetchMultipart(path,formData,sessionToken){
   const url='/api'+path;
-  const ch=channel||getActiveChannel();
+  const st=sessionToken||getEffectiveKey();
   const headers={};
-  headers[CHANNEL_HEADER]=ch;
-  Object.assign(headers, getChannelAuthHeaders(ch, sessionToken));
+  if(st)headers['Authorization']='Bearer '+st;
   return fetch(url,{method:'POST',headers,body:formData,credentials:'omit'});
 }
 
-// v1.0: 通道切换 —— 用户改 channelSelect 时调用
-function onChannelChange(){
-  var sel=document.getElementById('channelSelect');
-  if(!sel)return;
-  state.activeChannel=sel.value;
-  // 'auto' 模式下不重置 lastChannel（保留上次选择），固定通道模式下立即切换
-  if(sel.value!=='auto'){
-    state.lastChannel=sel.value;
-  }
-  // 同步当前通道的账号池到 state.accounts（兼容旧代码）
-  syncAccountsToActiveChannel();
-  saveState();
-  // 重置账号选择索引
-  state.activeAccountIndex=state.accounts.length>0?0:-1;
-  state.rotationIndex=0;
-  saveState();
-  renderAll();
-  renderAccountsTable?.();
-  // 触发当前通道的自动注册/恢复
-  ensureChannelReady();
-}
-// v1.0: 把当前通道的账号池同步到 state.accounts（让旧代码无感知地继续工作）
-function syncAccountsToActiveChannel(){
-  var ch=effectiveChannel();
-  if(ch==='keydraw'){state.accounts=state.accountsByKeydraw||[];state.abandonedAccounts=state.abandonedAccountsByKeydraw||[]}
-  else if(ch==='maliang'){state.accounts=state.accountsByMaliang||[];state.abandonedAccounts=state.abandonedAccountsByMaliang||[]}
-  else if(ch==='custom-97api'){state.accounts=state.accountsByCustom97api||[];state.abandonedAccounts=state.abandonedAccountsByCustom97api||[]}
-}
-// v1.0: 实际生效的通道（'auto' 解析为 lastChannel）
-function effectiveChannel(){
-  if(state.activeChannel==='auto'||!state.activeChannel)return state.lastChannel||DEFAULT_CHANNEL;
-  return state.activeChannel;
-}
-// v1.0: 把当前 state.accounts 写回对应通道的池子
-function persistActiveChannelAccounts(){
-  var ch=effectiveChannel();
-  if(ch==='keydraw'){state.accountsByKeydraw=state.accounts;state.abandonedAccountsByKeydraw=state.abandonedAccounts}
-  else if(ch==='maliang'){state.accountsByMaliang=state.accounts;state.abandonedAccountsByMaliang=state.abandonedAccounts}
-  else if(ch==='custom-97api'){state.accountsByCustom97api=state.accounts;state.abandonedAccountsByCustom97api=state.abandonedAccounts}
-}
-// v1.0: 老代码 registerAccount/saveState 之前 hook 一下，确保账号写回正确通道池
-var _origSaveState=saveState;
-saveState=function(){persistActiveChannelAccounts();_origSaveState()};
-// v1.0: 迁移旧 state（只有 state.accounts、无 accountsByKeydraw）到 keydraw 通道
+// kd-v2.0: 旧版本兼容 stub —— migrateOldStateIfNeeded 现在只做字段裁剪
 function migrateOldStateIfNeeded(){
-  if(state.accountsByKeydraw===undefined){
-    state.accountsByKeydraw=state.accounts||[];
-    state.abandonedAccountsByKeydraw=state.abandonedAccounts||[];
-    state.accountsByMaliang=state.accountsByMaliang||[];
-    state.abandonedAccountsByMaliang=state.abandonedAccountsByMaliang||[];
-    // v1.2: 新增 custom-97api 池子初始化
-    state.accountsByCustom97api=state.accountsByCustom97api||[];
-    state.abandonedAccountsByCustom97api=state.abandonedAccountsByCustom97api||[];
-    if(!state.activeChannel)state.activeChannel='auto';
-    if(!state.lastChannel)state.lastChannel='keydraw';
+  // 把 v1.x 的 accountsByKeydraw 迁移到统一的 state.accounts
+  if(state.accountsByKeydraw!==undefined&&Array.isArray(state.accountsByKeydraw)){
+    if(!state.accounts||!state.accounts.length){state.accounts=state.accountsByKeydraw}
+    if(!state.abandonedAccounts||!state.abandonedAccounts.length){state.abandonedAccounts=state.abandonedAccountsByKeydraw||[]}
+    delete state.accountsByKeydraw;delete state.abandonedAccountsByKeydraw;
+    delete state.accountsByMaliang;delete state.abandonedAccountsByMaliang;
+    delete state.accountsByCustom97api;delete state.abandonedAccountsByCustom97api;
+    delete state.activeChannel;delete state.lastChannel;
   }
-  // v1.2: 旧 state 没有 customApiKey95 字段，补默认空串
-  if(state.settings&&state.settings.customApiKey95===undefined){state.settings.customApiKey95=''}
+  // 删除 v1.x 遗留的 settings 字段
+  if(state.settings){
+    delete state.settings.defaultPassword;
+    delete state.settings.autoCheckin;
+    delete state.settings.autoFallbackGpt2;
+    if(state.settings.customApiKey95===undefined)state.settings.customApiKey95='';
+  }
+  // 初始化 dailyUsage
+  if(!state.dailyUsage||typeof state.dailyUsage!=='object'){
+    state.dailyUsage={date:'',count:0,exhausted:false};
+  }
 }
-// v1.1: 启动时确保当前通道有可用账号 —— keydraw 用 fallback key 先就位，gift-key 异步刷新不阻塞首屏
-// v1.2: 新增 custom-97api 通道处理；maliang 标记 deprecated，不再自动注册
+
+// kd-v2.0: 启动时确保有可用账号 —— 优先用 customApiKey95，否则用共享 Gift Key
+// 同时检查 dailyUsage 是否需要跨日重置
 async function ensureChannelReady(){
   migrateOldStateIfNeeded();
-  syncAccountsToActiveChannel();
-  var ch=effectiveChannel();
-  if(ch==='keydraw'){
-    if(!state.accounts.length){
-      // v1.1: 先用 fallback key 立即就位，让 UI 可交互；真实 gift-key 异步刷新
-      var fk=CHANNELS.keydraw.giftKeyFallback;
-      var a={username:'gift-key-'+fk.substring(0,12),password:'',sessionToken:fk,credits:9999,lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,userId:'',loginFailCount:0,lastLoginFailTs:0};
-      state.accounts.push(a);if(state.activeAccountIndex<0)state.activeAccountIndex=0;
-      saveState();renderAll();
-      // 异步刷新真实 gift-key（不阻塞）
-      (async()=>{try{await registerAccount()}catch(e){console.warn('keydraw gift-key 异步刷新失败:',e.message)}})();
-    }
-  } else if(ch==='custom-97api'){
-    // v1.2: 用户自定义 97api key —— 从 settings 读取，构造一个"账号"
-    var userKey=state.settings.customApiKey95||'';
-    if(!userKey){
-      toast('请先在设置面板填入你的 97api.com API Key','info');
-      return;
-    }
-    if(!state.accounts.length||state.accounts[0].sessionToken!==userKey){
-      // 重置池子，只放一个账号代表当前 key
-      state.accountsByCustom97api=[{
-        username:'custom-97api-key',
-        password:'',
-        sessionToken:userKey,
-        credits:9999,  // 用户自己的 key，额度由 97api 后端记账
-        lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,
-        userId:'',loginFailCount:0,lastLoginFailTs:0
-      }];
-      syncAccountsToActiveChannel();
-      if(state.activeAccountIndex<0)state.activeAccountIndex=0;
-      saveState();renderAll();
-    }
-  } else if(ch==='maliang'){
-    // v1.2: 马良上游已加 Cloudflare Challenge，server-side 无法访问，不再自动注册
-    if(!state.accounts.length){
-      toast('马良通道（grok.17nas.com）已加 Cloudflare 人机验证墙，server-side 代理不可用。请改用 KeyDraw 或自定义 97api Key 通道。','error');
-    }
+  checkAndResetDailyUsage();
+  if(!state.accounts.length||state.accounts[0].sessionToken!==getEffectiveKey()){
+    // 重置账号池：只放一个账号代表当前生效 key
+    var k=getEffectiveKey();
+    var label=isUsingCustomKey()?'custom-97api-key':'gift-key-'+k.substring(0,12);
+    state.accounts=[{
+      username:label,password:'',sessionToken:k,
+      credits:9999,  // 共享 key 无 quota API；自定义 key 由 97api 后端记账
+      lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,
+      userId:'',loginFailCount:0,lastLoginFailTs:0
+    }];
+    state.activeAccountIndex=0;
+    saveState();renderAll();
   }
-  // v1.1: refreshModelAvailability 已是 no-op，不再调用
+  // 异步刷新 Gift Key（仅未用自定义 key 时）
+  if(!isUsingCustomKey()){
+    (async()=>{try{await registerAccount()}catch(e){console.warn('gift-key 异步刷新失败:',e.message)}})();
+  }
+}
+
+// kd-v2.0: 日额度本地计数器 —— GMT+8 0点重置
+// 返回 YYYY-MM-DD 字符串（GMT+8）
+function getTodayGMT8(){
+  var now=new Date();
+  // 转为 GMT+8 时间
+  var gmt8Ms=now.getTime()+(now.getTimezoneOffset()*60000)+(8*3600000);
+  var gmt8=new Date(gmt8Ms);
+  return gmt8.getUTCFullYear()+'-'+String(gmt8.getUTCMonth()+1).padStart(2,'0')+'-'+String(gmt8.getUTCDate()).padStart(2,'0');
+}
+function checkAndResetDailyUsage(){
+  var today=getTodayGMT8();
+  if(!state.dailyUsage||state.dailyUsage.date!==today){
+    state.dailyUsage={date:today,count:0,exhausted:false};
+    saveState();
+  }
+}
+function incrementDailyUsage(){
+  checkAndResetDailyUsage();
+  state.dailyUsage.count++;
+  saveState();
+  renderDailyUsageBadge();
+}
+function markDailyExhausted(){
+  checkAndResetDailyUsage();
+  state.dailyUsage.exhausted=true;
+  saveState();
+  renderDailyUsageBadge();
+}
+// kd-v2.0: 渲染右上角日额度计数器
+function renderDailyUsageBadge(){
+  var el=document.getElementById('dailyUsageCount');
+  var badge=document.getElementById('dailyUsageBadge');
+  if(!el||!badge)return;
+  checkAndResetDailyUsage();
+  if(isUsingCustomKey()){
+    // 自定义 key 模式：不显示 999 上限
+    el.textContent=state.dailyUsage.count;
+    badge.title='使用自定义 97api API Key，无每日上限。本地累计：'+state.dailyUsage.count+' 张';
+    badge.style.color='var(--accent)';
+  }else if(state.dailyUsage.exhausted){
+    el.textContent='0';
+    badge.title='共享 Gift Key 今日已耗尽（上游返回"日限额已用完"）。GMT+8 0点自动重置。或在设置中填入自定义 97api API Key 继续使用';
+    badge.style.color='var(--red)';
+  }else{
+    el.textContent=state.dailyUsage.count;
+    badge.title='共享 Gift Key 全 V2EX 共享 '+DAILY_QUOTA+' 张/日，GMT+8 0点重置。本地累计估算值';
+    badge.style.color='var(--text-secondary)';
+  }
 }
 
 // ===== 会话过期检测 (v24) =====
@@ -1159,245 +1088,99 @@ function notifyGenerationComplete(entry){
   }
 }
 
-function generateUsername(){
-  var firstNames=['emily','sarah','michael','david','jessica','james','ashley','chris','amanda','daniel','stephanie','joshua','nicole','andrew','samantha','ryan','lauren','justin','rachel','brandon','megan','tyler','katherine','kevin','elizabeth','brian','jennifer','jason','michelle','patrick','kimberly','travis','heather','nathan','courtney','maria','alex','lisa','robert','john'];
-  var lastNames=['chen','wang','li','zhang','smith','johnson','lee','brown','garcia','martinez','wilson','taylor','thomas','moore','jackson','white','harris','clark','lewis','robinson','walker','young','allen','king','wright','scott','hill','green','adams','baker'];
-  var adjectives=['happy','lucky','cool','sunny','swift','calm','bold','bright','dreamy','fresh','kind','wild','pure','warm','zen','chill','neon','cosmic','pixel','sage'];
-  var nouns=['cat','fox','moon','star','sky','bear','wolf','deer','fish','hawk','tree','lake','rain','wave','wind','seed','leaf','snow','dawn','ray'];
-  var fn=firstNames[Math.floor(Math.random()*firstNames.length)];
-  var ln=lastNames[Math.floor(Math.random()*lastNames.length)];
-  var adj=adjectives[Math.floor(Math.random()*adjectives.length)];
-  var noun=nouns[Math.floor(Math.random()*nouns.length)];
-  var pattern=Math.floor(Math.random()*5);
-  var r2=Math.floor(10+Math.random()*90);
-  var r3=Math.floor(100+Math.random()*900);
-  var capitalize=function(s){return s.charAt(0).toUpperCase()+s.slice(1)};
-  var sometimesCap=function(s){return Math.random()>0.5?capitalize(s):s};
-  switch(pattern){
-    case 0:return sometimesCap(fn)+'_'+sometimesCap(ln);
-    case 1:return sometimesCap(fn)+sometimesCap(ln)+r2;
-    case 2:return sometimesCap(fn)+r3;
-    case 3:return adj+'_'+noun+r2;
-    case 4:return sometimesCap(fn)+'.'+sometimesCap(ln)+r2;
-    default:return fn+'_'+ln;
-  }
-}
-function generatePassword(){var base=state.settings.defaultPassword||'Ml@2026Proxy';var d=new Date();var yy=String(d.getFullYear()).slice(-2);var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');return base+yy+mm+dd}
+// kd-v2.0: generateUsername/generatePassword/getChainInviteCode 已移除（仅马良注册需要）
+// registerMaliangAccount/loginAccount(maliang分支) 已移除
 
-// ===== 链式邀请：获取上一个账号的邀请码 =====
-async function getChainInviteCode(){
-  // v0.7: keydraw.97api.com 共享 Gift Key 模式无邀请系统，链式邀请码不可用。
-  return null;
-}
-
-// ===== 注册 (v0.1: 获取 Gift Key) =====
+// ===== 注册 (kd-v2.0: 仅刷新 Gift Key) =====
+// keydraw.97api.com 共享 Gift Key 模式，无需用户名/密码注册
+// "注册新账号" 在 kd-v2.0 中等价于 "刷新 Gift Key"
 async function registerAccount(){
-  // v1.0: 按当前通道分发
-  var ch=effectiveChannel();
-  if(ch==='maliang')return registerMaliangAccount();
-  return registerKeydrawAccount();
-}
-// v1.0: keydraw 通道 —— 获取共享 Gift Key
-async function registerKeydrawAccount(){
-  // v0.1: keydraw.97api.com 不需要注册，直接 GET /api/gift-key 拿共享 key
-  // 把它当作"账号"存进账号池：username = 'gift-key', password = '', sessionToken = <key>
+  // kd-v2.0: 若用户配置了 customApiKey95，则不需要 Gift Key，直接返回当前账号
+  if(isUsingCustomKey()){
+    toast('使用自定义 97api API Key，无需刷新 Gift Key','info');
+    return state.accounts[0];
+  }
+  // 否则获取共享 Gift Key
   try{
     const r=await apiFetch('/gift-key',{});
     const d=await r.json();
     const key=d.key||'';
     if(!key)throw new Error('Gift Key 接口未返回 key');
-    // 检查是否已存在
-    if(state.accounts.some(a=>a.sessionToken===key)){
-      toast('Gift Key 已在账号池中','info');
-      return state.accounts.find(a=>a.sessionToken===key);
-    }
-    const a={
-      username:'gift-key-'+key.substring(0,12),
-      password:'',
-      sessionToken:key,
-      credits:9999,  // v0.1: keydraw 不暴露 credits，给个大数
-      lastCheckinDay:'',
-      lastCheckinTs:0,
-      createdAt:Date.now(),
-      disabled:false,
-      userId:'',
-      loginFailCount:0,
-      lastLoginFailTs:0
-    };
-    state.accounts.push(a);
-    if(state.activeAccountIndex<0)state.activeAccountIndex=0;
-    saveState();renderAll();
-    toast('已获取 Gift Key: '+key.substring(0,16)+'...','success');
-    return a;
-  }catch(e){
-    // 后端代理未实现 /gift-key 时，使用 fallback key
-    const key=CHANNELS.keydraw.giftKeyFallback;
-    if(!state.accounts.some(a=>a.sessionToken===key)){
-      const a={
-        username:'gift-key-fallback',
+    // 若新 key 与当前账号的 sessionToken 不同，更新账号池
+    if(!state.accounts.length||state.accounts[0].sessionToken!==key){
+      state.accounts=[{
+        username:'gift-key-'+key.substring(0,12),
         password:'',
         sessionToken:key,
-        credits:9999,
-        lastCheckinDay:'',
-        lastCheckinTs:0,
-        createdAt:Date.now(),
-        disabled:false,
-        userId:'',
-        loginFailCount:0,
-        lastLoginFailTs:0
-      };
-      state.accounts.push(a);
-      if(state.activeAccountIndex<0)state.activeAccountIndex=0;
+        credits:9999,  // 共享 key 无 quota API，给个大数
+        lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,
+        userId:'',loginFailCount:0,lastLoginFailTs:0
+      }];
+      state.activeAccountIndex=0;
       saveState();renderAll();
-      toast('使用内置 Gift Key (后端代理未实现 /gift-key)','info');
-      return a;
     }
-    return state.accounts.find(a=>a.sessionToken===key);
+    toast('已获取 Gift Key: '+key.substring(0,16)+'...','success');
+    return state.accounts[0];
+  }catch(e){
+    // 后端代理未实现 /gift-key 时，使用 fallback key
+    const key=UPSTREAM.giftKeyFallback;
+    if(!state.accounts.length||state.accounts[0].sessionToken!==key){
+      state.accounts=[{
+        username:'gift-key-fallback',password:'',sessionToken:key,
+        credits:9999,lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),
+        disabled:false,userId:'',loginFailCount:0,lastLoginFailTs:0
+      }];
+      state.activeAccountIndex=0;
+      saveState();renderAll();
+    }
+    toast('使用内置 Gift Key (后端 /gift-key 调用失败: '+e.message+')','info');
+    return state.accounts[0];
   }
-}
-// v1.0: maliang 通道 —— 用户名+密码注册（从 v27.2 移植）
-async function registerMaliangAccount(){
-  const u=generateUsername(),pw=generatePassword();
-  var inviteCode=null;
-  try{inviteCode=await getChainInviteCode()}catch(e){}
-  if(inviteCode){toast('链式邀请: 使用 '+state.accounts[state.accounts.length-1].username+' 的邀请码注册','info')}
-  const maxRetries=6;let lastErr='';
-  for(let attempt=0;attempt<maxRetries;attempt++){
-    try{
-      if(attempt>0){const delay=500+Math.floor(Math.random()*1500);toast('第'+(attempt+1)+'次重试(换IP)...','info');await sleep(delay)}
-      const r=await apiFetch('/auth/register',{method:'POST',body:JSON.stringify(Object.assign({username:u,password:pw},inviteCode?{inviteCode:inviteCode}:{}))});
-      const d=await r.json();if(!r.ok)throw new Error(d.error||'注册失败: HTTP '+r.status);
-      const st=r.headers.get('X-Session-Token')||'';
-      const a={username:u,password:pw,sessionToken:st,credits:d.user?.imageCredits||3,lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,userId:d.user?.id||'',loginFailCount:0,lastLoginFailTs:0};
-      state.accounts.push(a);if(state.activeAccountIndex<0)state.activeAccountIndex=0;
-      saveState();renderAll();toast('马良注册成功: '+u+' ('+a.credits+'额度)','success');return a;
-    }catch(e){lastErr=e.message;if(e.message.includes('已注册')&&attempt<maxRetries-1)continue;if(!e.message.includes('已注册'))break}
-  }
-  toast('马良自动注册失败: '+lastErr,'error');
-  if(lastErr.includes('已注册')){toast('IP限制：当前网络今日已注册过账号，请稍后再试或手动添加账号','error')}
-  throw new Error(lastErr);
 }
 
-// ===== 登录/签到/额度 =====
-// v1.0: 按通道分发 —— keydraw gift-key 模式无需登录；maliang 走真实的 /auth/login
+// ===== 登录 (kd-v2.0: gift-key 模式无需登录，直接返回当前账号) =====
 async function loginAccount(i){
   const a=state.accounts[i];if(!a)return;
-  // v1.0: maliang 通道有真实登录
-  if(effectiveChannel()==='maliang'){
-    if(Date.now()<(a.cooldownUntil||0)){toast(a.username+' 登录冷却中，请等待'+Math.ceil(((a.cooldownUntil||0)-Date.now())/60000)+'分钟','info');throw new Error('登录冷却中')}
-    try{
-      const r=await apiFetch('/auth/login',{method:'POST',body:JSON.stringify({username:a.username,password:a.password})});
-      const d=await r.json();
-      if(!r.ok){const errMsg=d.error||'登录失败';if(errMsg.includes('用户名或密码错误')||errMsg.includes('Invalid credentials')){a.loginFailCount=(a.loginFailCount||0)+1;a.lastLoginFailTs=Date.now();a.cooldownUntil=Date.now()+300000;if(a.loginFailCount>=2){autoAbandonAccount(i,'连续登录失败');throw new Error(errMsg)}saveState();throw new Error(errMsg)}saveState();throw new Error(errMsg)}
-      a.sessionToken=r.headers.get('X-Session-Token')||'';
-      a.credits=d.user?.imageCredits||a.credits;
-      a.lastCheckinDay=d.user?.lastCheckInDay||a.lastCheckinDay;
-      a.userId=d.user?.id||a.userId;
-      a.loginFailCount=0;a.lastLoginFailTs=0;a.cooldownUntil=0;
-      saveState();renderAll();return d;
-    }catch(e){console.warn('登录'+a.username+'失败:',e.message);throw e}
-  }
-  // v0.1: keydraw gift-key 模式无需登录
   if(!a.sessionToken)throw new Error('账号无 sessionToken');
-  a.loginFailCount=0;a.lastLoginFailTs=0;a.cooldownUntil=0;saveState();renderAll();return {user:{imageCredits:a.credits||9999}}
+  a.loginFailCount=0;a.lastLoginFailTs=0;a.cooldownUntil=0;
+  saveState();renderAll();
+  return {user:{imageCredits:a.credits||9999}};
 }
-// v24: 上游 grok.17nas.com 已下线签到功能，/account/checkin 接口返回 "接口不存在"
-// 保留函数签名以维持兼容性，但立即返回友好错误信息，不再调用已失效的上游接口
-async function checkinAccount(i){const a=state.accounts[i];if(!a){return}const friendlyMsg='v0.1: keydraw 上游无签到概念（共享 Gift Key 模式），请使用刷新额度或重新获取 Gift Key';toast(a.username+' '+friendlyMsg,'info');throw new Error(friendlyMsg)}
+// kd-v2.0: checkinAccount 已移除（keydraw 共享 Gift Key 模式无签到概念）
 
 // v25: 自动废弃账号 - 将余额不足的账号从活跃池移入废弃池
-// 签到下线后，余额不足（< 当前模型单张成本）的账号无法恢复，一次性即抛
+// kd-v2.0: 单一 key 模式下，"废弃"通常意味着该 key 已耗尽（共享 Gift Key 日限额）
 function autoAbandonAccount(accountIndex,reason){
   if(accountIndex<0||accountIndex>=state.accounts.length)return false;
   var acc=state.accounts[accountIndex];
   if(!acc)return false;
   if(!state.abandonedAccounts)state.abandonedAccounts=[];
-  // 已在废弃池则跳过
   if(state.abandonedAccounts.some(a=>a.username===acc.username))return false;
   var abandoned={
-    username:acc.username,
-    password:acc.password,
-    abandonedAt:Date.now(),
-    reason:reason||'余额不足',
-    credits:acc.credits||0,
-    sessionToken:acc.sessionToken||'',
-    userId:acc.userId||'',
-    loginFailCount:acc.loginFailCount||0,
-    lastLoginFailTs:acc.lastLoginFailTs||0
+    username:acc.username,password:acc.password,abandonedAt:Date.now(),
+    reason:reason||'余额不足',credits:acc.credits||0,sessionToken:acc.sessionToken||'',
+    userId:acc.userId||'',loginFailCount:acc.loginFailCount||0,lastLoginFailTs:acc.lastLoginFailTs||0
   };
   state.abandonedAccounts.push(abandoned);
   state.accounts.splice(accountIndex,1);
   if(state.activeAccountIndex>=state.accounts.length){
     state.activeAccountIndex=Math.max(0,state.accounts.length-1);
   }
-  // 从已耗尽集合中也标记（防止后续 selectAccount 误选）
   exhaustedAccounts.add(acc.username);
   return true;
 }
 
-// v25: 刷新额度 - 检测余额不足时自动移入废弃池
+// kd-v2.0: 刷新额度 - keydraw 无 /account/quota 端点，直接维持 9999
+// 用户自填 key 时，额度由 97api 后端记账，前端无法查询
 async function refreshQuota(i){
   const a=state.accounts[i];if(!a)return;
   if(!a.sessionToken)try{await loginAccount(i)}catch(e){return}
   const acc=state.accounts[i];
-  try{
-    // v0.1: keydraw 无 /account/quota 端点，直接返回 9999
-    const d={user:{imageCredits:9999}};
-    const r={ok:true,json:()=>Promise.resolve(d)};
-    if(false){
-      if(isAuthError(d.error)||(d.error&&(d.error.includes('token')||d.error.includes('session')||d.error.includes('登录')||d.error.includes('expired')))){
-        acc.sessionToken='';saveState();renderAll()
-      }
-      throw new Error(d.error||'查询额度失败');
-    }
-    acc.credits=d.user?.imageCredits??acc.credits;
-    acc.lastCheckinDay=d.checkIn?.today||acc.lastCheckinDay;
-    if(d.storage){storageCache.set(acc.username,d.storage)}
-    // v25: 余额不足以生成 1 张图（按当前模型/档位）→ 自动移入废弃池
-    var model=getCurrentModel(),tier=getCurrentTier();
-    if(!canGenerateAtLeastOne(acc.credits,model,tier)&&acc.credits<getCreditsPerImage(model,tier)){
-      // 注意：这里用当前模型判断，如果用户切换模型可能复苏，但通常余额不足就是不足
-      // 仅当 credits 严格小于单张成本时才废弃（避免误判）
-      if(acc.credits<getCreditsPerImage('gpt-image-2','standard')){
-        // 即使最便宜的 gpt-image-2 standard(3 credits) 都不够 → 确认废弃
-        autoAbandonAccount(i,'余额不足（'+acc.credits+' credits，无法生成）');
-        toast(acc.username+' 余额仅 '+acc.credits+'，已移入废弃池','info');
-        saveState();renderAll();renderAccountsTable();
-        return d;
-      }
-    }
-    saveState();renderAll();renderStorageInfo();return d;
-  }catch(e){toast('查询'+acc.username+'额度失败','error')}
+  acc.credits=9999;  // 共享 key / 自定义 key 都无法前端查询真实额度
+  saveState();renderAll();renderStorageInfo();
 }
 
-// v25: 批量清理无余额账号 - 手动触发，扫描所有账号并将余额不足的移入废弃池
-async function cleanupInsufficientAccounts(){
-  if(!state.accounts.length){toast('暂无账号','info');return}
-  toast('正在扫描账号余额...','info');
-  var abandonedN=0,checkedN=0;
-  // 先刷新所有账号的额度
-  for(let i=0;i<state.accounts.length;i++){
-    if(!state.accounts[i].disabled&&state.accounts[i].sessionToken){
-      try{await refreshQuota(i);checkedN++}catch(e){}
-      await sleep(300);
-    }
-  }
-  // 再扫描移入废弃池（refreshQuota 内部可能已经移了一部分）
-  // 注意：refreshQuota 后 index 会变化，需要倒序遍历
-  for(let i=state.accounts.length-1;i>=0;i--){
-    var acc=state.accounts[i];
-    if(!acc||acc.disabled)continue;
-    var model=getCurrentModel(),tier=getCurrentTier();
-    if(acc.credits<getCreditsPerImage('gpt-image-2','standard')){
-      // 连最便宜的 gpt-image-2 standard 都不够 → 废弃
-      if(autoAbandonAccount(i,'清理：余额仅 '+acc.credits+' credits')){
-        abandonedN++;
-      }
-    }
-  }
-  saveState();renderAll();renderAccountsTable();
-  toast('扫描完成：检查 '+checkedN+' 个账号，移入废弃池 '+abandonedN+' 个','success');
-}
+// kd-v2.0: cleanupInsufficientAccounts 已移除（keydraw 共享 Gift Key 模式下"废弃"由日限额耗尽自动触发，无需手动清理）
 
 
 // ===== 媒体存储配额 =====
@@ -1442,24 +1225,11 @@ async function cleanupStorage(username){
   }catch(e){toast('清理失败: '+e.message,'error')}
 }
 
-// ===== 邀请中心 =====
-async function showInvitePanel(){
-  // v0.7: keydraw.97api.com 无 /account/invite 端点（共享 Gift Key 模式，无邀请系统）。
-  //       保留 UI 入口但提示用户此功能在上游不可用，避免点击后产生 404 噪声。
-  toast('当前上游 keydraw.97api.com 为共享 Gift Key 模式，无邀请系统。如需更多额度请刷新 Gift Key 或注册新 key。','info');
-  return;
-}
-function closeInvitePanel(){document.getElementById('invitePanelContainer').style.display='none'}
-function copyInviteLink(){
-  var el=document.getElementById('inviteLinkInput');
-  if(!el.value){toast('暂无邀请链接','info');return}
-  navigator.clipboard.writeText(el.value).then(function(){toast('邀请链接已复制','success')}).catch(function(){toast('复制失败','error')});
-}
+// kd-v2.0: 邀请中心已移除（keydraw 共享 Gift Key 模式无邀请系统）
 
 async function autoRegister(){await registerAccount()}
-async function addManualAccount(){const u=prompt('请输入用户名:');if(!u||!u.trim())return;const pw=prompt('请输入密码:');if(!pw||!pw.trim())return;const username=u.trim(),password=pw.trim();if(state.accounts.some(a=>a.username===username)){toast('该用户名已存在','error');return}state.accounts.push({username,password,sessionToken:'',credits:0,lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,userId:'',loginFailCount:0,lastLoginFailTs:0});if(state.activeAccountIndex<0)state.activeAccountIndex=0;saveState();renderAll();toast('账号已添加，正在登录...','success');try{await loginAccount(state.accounts.length-1);await refreshQuota(state.accounts.length-1)}catch(e){toast('登录失败，请检查账号密码','error')}}
-// v24: 上游已下线签到功能，批量签到按钮提示用户使用替代方案
-async function checkinAll(){toast('上游已下线签到功能，无法批量签到。建议改用「刷新额度」或「注册新账号」获取额度','info');return}
+// kd-v2.0: addManualAccount 已移除（keydraw 共享 Gift Key 模式无需手动添加账号）
+// kd-v2.0: checkinAll 已移除（无签到概念）
 async function refreshAllQuota(){if(!state.accounts.length){toast('暂无账号','info');return}toast('正在刷新额度...','info');for(let i=0;i<state.accounts.length;i++){if(!state.accounts[i].disabled){await refreshQuota(i);await sleep(400)}}toast('额度刷新完成','success')}
 async function batchVerifyAccounts(){if(!state.accounts.length){toast('暂无账号','info');return}toast('开始批量验证(只读额度查询)...','info');var okN=0,deadN=0,coolN=0;for(var i=0;i<state.accounts.length;i++){var a=state.accounts[i];if(a.disabled)continue;if(Date.now()<(a.cooldownUntil||0)){coolN++;continue}if(!a.sessionToken){try{await loginAccount(i);okN++}catch(e){deadN++}await sleep(300);continue}try{var r={ok:true,json:()=>Promise.resolve({user:{imageCredits:a.credits||9999}})};if(r.ok){okN++;var d=await r.json();a.credits=d.user?.imageCredits??a.credits;saveState();renderAll()}else{a.sessionToken='';saveState();try{await loginAccount(i);okN++}catch(e){deadN++}}}catch(e){a.sessionToken='';saveState();try{await loginAccount(i);okN++}catch(e2){deadN++}}await sleep(500)}renderAccountsTable();toast('验证完成: '+okN+'个可用'+(deadN?'，'+deadN+'个失效':'')+(coolN?'，'+coolN+'个冷却中':''),okN>0?'success':'error')}
 
@@ -1751,52 +1521,27 @@ async function executeTaskOnChannel(entry,model,prompt,size,hasRef,currentRefIma
   }
 }
 
-// v1.0: executeTask 包装层 —— 处理 'auto' 模式下的通道故障切换
-// 原始执行逻辑见 executeTaskOnChannel（单通道）
-// v1.2: 当 keydraw 通道返回"日限额已用完"时，若用户配置了 customApiKey95，
-//       自动切换到 custom-97api 通道重试（实现"不用注册就可以无限量使用"的目标）
+// kd-v2.0: executeTask 包装层 —— 单一通道，无切换逻辑
+// 直接委托给 executeTaskOnChannel，并在 submit 成功后调用 incrementDailyUsage()
+// 在收到"日限额已用完"错误时调用 markDailyExhausted() 更新右上角计数器
 async function executeTask(entry,model,prompt,size,hasRef,currentRefImages,isVideo,duration,qualityTier,resolutionName){
-  if(state.activeChannel!=='auto'){
-    // 固定通道模式：直接调用单通道版本
-    return executeTaskOnChannel(entry,model,prompt,size,hasRef,currentRefImages,isVideo,duration,qualityTier,resolutionName);
-  }
-  // 'auto' 模式：先试 lastChannel，硬失败则切换到另一通道重试一次
-  // 硬失败判定：executeTaskOnChannel 抛出不可恢复错误（网络错误、5xx、submit 失败）
-  // 注意：余额不足/会话过期不算硬失败（这些会在 executeTaskOnChannel 内部自动换号/重登）
-  var firstChannel=state.lastChannel||'keydraw';
-  // v1.2: 候选通道池 —— 优先 keydraw，若有 customApiKey95 则把 custom-97api 加入候选
-  var candidates=['keydraw'];
-  if(state.settings&&state.settings.customApiKey95){candidates.push('custom-97api')}
-  var firstIdx=candidates.indexOf(firstChannel);
-  if(firstIdx<0)firstIdx=0;
-  // 按候选顺序尝试，第一个失败就切到下一个
-  for(var ci=0;ci<candidates.length;ci++){
-    var ch=candidates[(firstIdx+ci)%candidates.length];
-    state.lastChannel=ch;syncAccountsToActiveChannel();
-    try{
-      await ensureChannelReady();
-      return await executeTaskOnChannel(entry,model,prompt,size,hasRef,currentRefImages,isVideo,duration,qualityTier,resolutionName);
-    }catch(e){
-      var errMsg=e.message||String(e);
-      // 内容违规不切换（换通道也一样会被拒）
-      if(errMsg.includes('内容违反政策')||errMsg.includes('content_policy')||errMsg.includes('safety')){
-        throw e;
+  try{
+    await ensureChannelReady();
+    var result=await executeTaskOnChannel(entry,model,prompt,size,hasRef,currentRefImages,isVideo,duration,qualityTier,resolutionName);
+    // 任务成功 → 日计数器 +1
+    incrementDailyUsage();
+    return result;
+  }catch(e){
+    var errMsg=e.message||String(e);
+    // kd-v2.0: 检测"日限额已用完"错误，立即标记当日已耗尽（更新右上角显示 0/999）
+    if(errMsg.includes('日限额')||errMsg.includes('quota')||errMsg.includes('额度')){
+      markDailyExhausted();
+      // kd-v2.0: 若用户未配置自定义 key 且开启了 autoRegister，提示用户可填入 97api key 继续
+      if(!isUsingCustomKey()){
+        toast('共享 Gift Key 今日已耗尽。可在设置中填入自定义 97api API Key 继续使用，或等待 GMT+8 0点自动重置','info');
       }
-      // v1.2: "日限额已用完" 是 keydraw 共享 key 的典型错误 —— 切到 custom-97api 重试
-      //       "Invalid API key" 则相反 —— custom key 失效，切回 keydraw
-      var isQuotaError=errMsg.includes('日限额')||errMsg.includes('quota')||errMsg.includes('额度');
-      var isInvalidKeyError=errMsg.includes('Invalid API key')||errMsg.includes('无效');
-      if(ci<candidates.length-1){
-        var nextCh=candidates[(firstIdx+ci+1)%candidates.length];
-        toast(ch+' 通道失败 ('+errMsg.substring(0,60)+')，自动切换到 '+nextCh+' 重试','info');
-        entry.progressText='切换到 '+nextCh+' 通道重试中...';entry.progress=0;
-        updateHistory(entry.id,{status:'queued',progressText:entry.progressText,progress:entry.progress});
-        continue;
-      }
-      // 所有候选都失败 —— 还原 lastChannel 到第一通道
-      state.lastChannel=firstChannel;syncAccountsToActiveChannel();saveState();
-      throw e;
     }
+    throw e;
   }
 }
 
@@ -2102,32 +1847,50 @@ async function reverifyAllAbandoned(){var ab=state.abandonedAccounts||[];if(!ab.
 function clearAbandoned(){if(!confirm('确定清空所有废弃账号？此操作不可恢复！'))return;state.abandonedAccounts=[];saveState();renderAccountsTable();toast('废弃池已清空','success')}
 function deleteAbandoned(i){var ab=state.abandonedAccounts||[];if(!ab[i])return;if(!confirm('确定删除废弃账号 '+ab[i].username+'？'))return;ab.splice(i,1);state.abandonedAccounts=ab;saveState();renderAccountsTable();toast('已删除','success')}
 function restoreAbandoned(i){var ab=state.abandonedAccounts||[];if(!ab[i])return;var a=ab[i];state.accounts.push({username:a.username,password:a.password,sessionToken:'',credits:0,lastCheckinDay:'',lastCheckinTs:0,createdAt:Date.now(),disabled:false,userId:'',loginFailCount:0,lastLoginFailTs:0});ab.splice(i,1);state.abandonedAccounts=ab;if(state.activeAccountIndex<0)state.activeAccountIndex=0;saveState();renderAll();renderAccountsTable();toast(a.username+' 已还原到活跃池（需手动登录验证）','success')}
-function saveSettings(){state.settings.defaultPassword=document.getElementById('defaultPassword').value.trim()||'Ml@2026Proxy';state.settings.rotationStrategy=document.getElementById('rotationStrategy').value;state.settings.autoCheckin=document.getElementById('autoCheckin').checked;state.settings.autoRegister=document.getElementById('autoRegisterChk').checked;state.settings.autoFallbackGpt2=document.getElementById('autoFallbackGpt2').checked;state.settings.notificationsEnabled=document.getElementById('notificationsEnabled').checked;
-  // v1.2: 保存自定义 97api key
+function saveSettings(){
+  // kd-v2.0: 移除 defaultPassword/autoCheckin/autoFallbackGpt2 保存逻辑（已从 UI 删除）
+  state.settings.rotationStrategy=document.getElementById('rotationStrategy').value;
+  state.settings.autoRegister=document.getElementById('autoRegisterChk').checked;
+  state.settings.notificationsEnabled=document.getElementById('notificationsEnabled').checked;
+  // kd-v2.0: 保存自定义 97api key —— 填入后将替代共享 Gift Key
   var customKeyEl=document.getElementById('customApiKey95');
-  if(customKeyEl){state.settings.customApiKey95=customKeyEl.value.trim()}
-  saveState();updateNotificationsHint();toast('设置已保存','success')}
-function loadSettingsUI(){document.getElementById('defaultPassword').value=state.settings.defaultPassword||'Ml@2026Proxy';document.getElementById('rotationStrategy').value=state.settings.rotationStrategy||'most-credits';document.getElementById('autoCheckin').checked=state.settings.autoCheckin!==false;document.getElementById('autoRegisterChk').checked=state.settings.autoRegister!==false;document.getElementById('autoFallbackGpt2').checked=state.settings.autoFallbackGpt2!==false;document.getElementById('notificationsEnabled').checked=state.settings.notificationsEnabled===true;
-  // v1.2: 加载自定义 key 到表单
+  if(customKeyEl){
+    var newKey=customKeyEl.value.trim();
+    var oldKey=state.settings.customApiKey95||'';
+    state.settings.customApiKey95=newKey;
+    // 若 key 变化，重新初始化账号池（让下次 ensureChannelReady 用新 key）
+    if(newKey!==oldKey){
+      state.accounts=[];state.activeAccountIndex=-1;
+      toast(newKey?'已切换到自定义 97api API Key':'已切换回共享 Gift Key，正在重新获取...','info');
+      // 异步重新初始化
+      setTimeout(function(){ensureChannelReady()},100);
+    }
+  }
+  saveState();updateNotificationsHint();renderDailyUsageBadge();toast('设置已保存','success')}
+function loadSettingsUI(){
+  // kd-v2.0: 移除 defaultPassword/autoCheckin/autoFallbackGpt2 加载逻辑
+  document.getElementById('rotationStrategy').value=state.settings.rotationStrategy||'most-credits';
+  document.getElementById('autoRegisterChk').checked=state.settings.autoRegister!==false;
+  document.getElementById('notificationsEnabled').checked=state.settings.notificationsEnabled===true;
   var customKeyEl=document.getElementById('customApiKey95');
   if(customKeyEl){customKeyEl.value=state.settings.customApiKey95||''}
   applyTheme();updateNotificationsHint()}
-// v1.2: 切换自定义 key 输入框的可见性
+// kd-v2.0: 切换自定义 key 输入框的可见性
 function toggleCustomKeyVisibility(){
   var el=document.getElementById('customApiKey95');
   if(!el)return;
   el.type=(el.type==='password')?'text':'password';
 }
-// v1.2: 测试自定义 97api key —— 发起一个最小生成请求，看上游返回什么
+// kd-v2.0: 测试自定义 97api key —— 发起一个最小生成请求，看上游返回什么
 async function testCustomApiKey(){
   var key=(document.getElementById('customApiKey95')?.value||'').trim();
   if(!key){toast('请先填入 API Key','error');return}
   toast('正在测试 Key...','info');
   try{
-    // 直接调 keydraw.97api.com 的 generations 端点，用用户填的 key
+    // kd-v2.0: 不再需要 X-Channel 头，直接 Authorization
     var r=await fetch('/api/image-tasks/generations',{
       method:'POST',
-      headers:{'Content-Type':'application/json','X-Channel':'custom-97api','Authorization':'Bearer '+key},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
       body:JSON.stringify({client_task_id:Date.now()+'-keytest',prompt:'a tiny red dot',model:'gpt-image-2',size:'1024x1024',quality:'auto'})
     });
     var d=await r.json();
@@ -2136,12 +1899,11 @@ async function testCustomApiKey(){
       toast('Key 测试失败: '+err,'error');
       return;
     }
-    // 提交成功，再长轮询一次看是否真出图（或返回错误）
     var tid=d.id;
     if(!tid){toast('Key 提交成功但未返回任务ID（可能 key 有效）','info');return}
     var pr=await fetch('/api/image-tasks/'+encodeURIComponent(tid)+'/resume-poll',{
       method:'POST',
-      headers:{'Content-Type':'application/json','X-Channel':'custom-97api','Authorization':'Bearer '+key},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
       body:JSON.stringify({extra_timeout_secs:30})
     });
     var pd=await pr.json();
@@ -2200,22 +1962,11 @@ function updateNotificationsHint(){
     el.style.color='var(--text-muted)';
   }
 }
-// v26.1: 导出账号 - 支持三种模式 (all/active/abandoned)，导出前自动检测废弃
+// kd-v2.0: 导出账号 - 支持三种模式 (all/active/abandoned)
 // mode: 'all' = 可用+废弃 | 'active' = 仅可用 | 'abandoned' = 仅废弃池
-// 导出 'all' 和 'active' 前会先调用 cleanupInsufficientAccounts 检测余额不足的账号并移入废弃池
+// kd-v2.0: 移除 cleanupInsufficientAccounts 预检（函数已删除，单一 key 模式下废弃由日限额耗尽自动触发）
 async function exportAccounts(mode){
   mode = mode || 'all';
-  // v26.1: 导出前检测废弃（仅对 all/active 模式，abandoned 模式直接导出废弃池无需检测）
-  if(mode === 'all' || mode === 'active'){
-    if(state.accounts.length > 0){
-      toast('导出前正在检测账号余额...','info');
-      try{
-        await cleanupInsufficientAccounts();
-      }catch(e){
-        console.warn('导出前检测失败:', e);
-      }
-    }
-  }
 
   var activeAccounts = state.accounts.map(a=>({
     username:a.username,
@@ -2293,48 +2044,14 @@ function checkNewDay(){const today=new Date().toISOString().split('T')[0];if(sta
 setInterval(checkNewDay,60000);
 
 // ===== 初始化 =====
-loadSettingsUI();markInterruptedTasks();restoreLiveImages();renderAll();checkNewDay();renderFullHistory();onModelChange();renderRefGrid();
-// v26: 首次访问自动注册账号 + 检测余额 + 刷新额度
-// 如果没有任何账号（首次访问/清除数据后），自动注册一个新账号并刷新额度，无需用户手动操作
+// kd-v2.0: 加载设置 + 恢复历史 + 渲染日额度计数器 + 初始化单一 keydraw 通道
+loadSettingsUI();markInterruptedTasks();restoreLiveImages();renderAll();checkNewDay();renderFullHistory();onModelChange();renderRefGrid();renderDailyUsageBadge();
+// kd-v2.0: 单一 keydraw 通道 —— ensureChannelReady 内部会自动判断用 customApiKey95 还是共享 Gift Key
+ensureChannelReady();
+// kd-v2.0: 若已有账号（从 v1.x 迁移），尝试刷新额度（实际无 quota API，只是保持账号池 active）
 if(state.accounts.length>0){
-  toast('正在恢复'+state.accounts.length+'个账号...','info');
   (async()=>{
-    let okCount=0,failCount=0;
-    for(let i=0;i<state.accounts.length;i++){
-      if(!state.accounts[i].disabled){
-        try{await loginAccount(i);okCount++;await sleep(300)}catch(e){failCount++}
-      }
-    }
-    if(okCount>0)toast('已恢复'+okCount+'个账号'+(failCount?'，'+failCount+'个失败':''),okCount>0?'success':'error');
-    else if(failCount>0)toast(failCount+'个账号恢复失败','error');
-    // v26: 恢复完成后，自动刷新所有账号额度（检测余额不足的自动移入废弃池）
-    await refreshAllQuota();
-    // v26: 如果恢复后没有可用账号（全部余额不足），自动注册新账号
-    var model=getCurrentModel(),tier=getCurrentTier();
-    var hasUsable=state.accounts.some(a=>!a.disabled&&a.sessionToken&&canGenerateAtLeastOne(a.credits,model,tier));
-    if(!hasUsable&&state.settings.autoRegister!==false){
-      toast('无可用账号，自动注册新账号中...','info');
-      try{await registerAccount();await refreshAllQuota()}catch(e){}
-    }
-    ensureChannelReady();
-  })();
-}
-else{
-  // v26: 首次访问，自动注册新账号
-  toast('首次访问，正在自动注册账号...','info');
-  (async()=>{
-    try{
-      var acc=await registerAccount();
-      if(acc){
-        // 注册成功后刷新额度（registerAccount 内部已 login，这里再 refreshQuota 确认余额）
-        var idx=state.accounts.findIndex(a=>a.username===acc.username);
-        if(idx>=0){try{await refreshQuota(idx)}catch(e){}}
-        toast('账号注册完成，可以开始生成图片了','success');
-      }
-    }catch(e){
-      toast('自动注册失败：'+e.message+'，请点击设置按钮手动注册','error');
-    }
-    ensureChannelReady();
+    try{await refreshAllQuota()}catch(e){}
   })();
 }
 
@@ -2347,33 +2064,16 @@ else{
 
 
 // ===================== Worker 后端 =====================
-// v1.0: 多通道代理 —— 从 X-Channel 头（或 ?channel=）决定上游
-function pickChannel(request, url){
-  let ch = request.headers.get(CHANNEL_HEADER) || url.searchParams.get('channel') || DEFAULT_CHANNEL;
-  if(!CHANNELS[ch]) ch = DEFAULT_CHANNEL;
-  return ch;
-}
+// kd-v2.0: 单一上游代理 —— 直接使用 UPSTREAM 常量，不再有 channel 选择
 async function handleProxy(request, url) {
-  const channel = pickChannel(request, url);
-  const chCfg = CHANNELS[channel];
-  // v0.3+v1.0: keydraw/maliang 上游都用 /api/* 前缀（maliang 走 /local-api/* 已经在 upstreamBase 里）
-  // 这里直接透传完整 pathname（keydraw 上游同 /api/*；maliang 上游 base 已含 /local-api，但前端调用 /api/auth/* 等
-  // 会被映射成 /local-api/api/auth/* —— 实际是 maliang 期望的 /local-api/auth/*，所以需要剥掉 /api/ 前缀）
-  let upstreamPath;
-  if(channel === 'maliang'){
-    // maliang upstreamBase 已是 https://grok.17nas.com/local-api，前端调 /api/auth/register
-    // 应映射到 https://grok.17nas.com/local-api/auth/register，故剥掉 /api/
-    upstreamPath = url.pathname.replace(/^\/api\/?/, '') || '/';
-  } else {
-    // keydraw 上游同 /api/* 前缀，直接透传
-    upstreamPath = url.pathname;
-  }
-  const upstreamUrl = chCfg.upstreamBase + (upstreamPath.startsWith('/') ? '' : '/') + upstreamPath;
+  // kd-v2.0: keydraw 上游同 /api/* 前缀，直接透传 pathname
+  const upstreamPath = url.pathname;
+  const upstreamUrl = UPSTREAM.base + (upstreamPath.startsWith('/') ? '' : '/') + upstreamPath;
   if (request.method === 'OPTIONS') { return new Response(null, { status: 204, headers: corsHeaders() }); }
   const headers = new Headers();
   headers.set('Content-Type', request.headers.get('Content-Type') || 'application/json');
-  headers.set('Origin', chCfg.upstreamOrigin);
-  headers.set('Referer', chCfg.upstreamOrigin + '/');
+  headers.set('Origin', UPSTREAM.origin);
+  headers.set('Referer', UPSTREAM.origin + '/');
   headers.set('Accept', 'application/json, text/plain, */*');
   headers.set('Accept-Language', 'zh-CN,zh;q=0.9,en;q=0.8');
   const userAgents = ['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'];
@@ -2381,60 +2081,47 @@ async function handleProxy(request, url) {
   headers.set('User-Agent', ua);
   const clientIP = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Real-IP') || '';
   if (clientIP) { headers.set('X-Forwarded-For', clientIP); headers.set('X-Real-IP', clientIP); }
-  // v1.0: 按通道类型设置鉴权头
-  // keydraw=Bearer（前端通过 Authorization 发来，直接透传）
-  // maliang=Cookie（前端通过 X-Session-Token 发来 token，转成 Cookie: session=<token>）
-  if(chCfg.authMode === 'bearer'){
-    const authHdr = request.headers.get('Authorization') || request.headers.get(SESSION_HEADER);
-    if(authHdr) headers.set('Authorization', authHdr.startsWith('Bearer ') ? authHdr : ('Bearer ' + authHdr));
-  } else if(chCfg.authMode === 'cookie'){
-    const st = request.headers.get(SESSION_HEADER) || request.headers.get('Authorization')?.replace(/^Bearer\s+/, '') || '';
-    if(st) headers.set('Cookie', chCfg.sessionCookie + '=' + st);
-  }
+  // kd-v2.0: 单一 Bearer 鉴权 —— 前端通过 Authorization 发来，直接透传
+  const authHdr = request.headers.get('Authorization') || request.headers.get(SESSION_HEADER);
+  if(authHdr) headers.set('Authorization', authHdr.startsWith('Bearer ') ? authHdr : ('Bearer ' + authHdr));
   const opts = { method: request.method, headers, redirect: 'follow' };
   if (['POST', 'PUT', 'PATCH'].includes(request.method)) { try { const buf = await request.arrayBuffer(); if (buf.byteLength > 0) opts.body = buf; } catch (e) {} }
   try {
     const upResp = await fetch(upstreamUrl, opts);
-    let token = ''; try { const rawCookie = upResp.headers.get('set-cookie') || ''; const m = rawCookie.match(new RegExp(chCfg.sessionCookie + '=([^;\\s]+)')); if (m) token = m[1]; } catch (e) {}
-    const respHeaders = new Headers(corsHeaders()); const ct = upResp.headers.get('Content-Type'); if (ct) respHeaders.set('Content-Type', ct); if (token) respHeaders.set(SESSION_HEADER, token);
+    const respHeaders = new Headers(corsHeaders()); const ct = upResp.headers.get('Content-Type'); if (ct) respHeaders.set('Content-Type', ct);
     const body = await upResp.arrayBuffer();
     return new Response(body, { status: upResp.status, statusText: upResp.statusText, headers: respHeaders });
   } catch (err) { return new Response(JSON.stringify({ error: '代理请求失败: ' + err.message }), { status: 502, headers: { 'Content-Type': 'application/json', ...corsHeaders() } }); }
 }
-// v26.1: 移除 generateRandomIP() —— 伪造 IP 已确认无效（CF cross-zone 限制）
-function corsHeaders() { return { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Session-Token, X-Channel', 'Access-Control-Expose-Headers': 'X-Session-Token', 'Access-Control-Max-Age': '86400' }; }
+// kd-v2.0: corsHeaders 移除 X-Channel 头声明（不再需要）
+function corsHeaders() { return { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Session-Token, Authorization', 'Access-Control-Expose-Headers': 'X-Session-Token', 'Access-Control-Max-Age': '86400' }; }
 
 export default {
   async fetch(request) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/image-proxy') || url.pathname.startsWith('/api/media-proxy')) {
-      const channel = pickChannel(request, url);
-      const chCfg = CHANNELS[channel];
       const imageUrl = url.searchParams.get('url'); if (!imageUrl) { return new Response('Missing url parameter', { status: 400, headers: corsHeaders() }); }
       try {
-        const mediaHeaders = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'image/*,video/*,*/*;q=0.8', 'Referer': chCfg.upstreamOrigin + '/', 'Origin': chCfg.upstreamOrigin };
+        const mediaHeaders = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'image/*,video/*,*/*;q=0.8', 'Referer': UPSTREAM.origin + '/', 'Origin': UPSTREAM.origin };
         const st = request.headers.get(SESSION_HEADER) || url.searchParams.get('token') || '';
-        if (st && chCfg.authMode === 'cookie') mediaHeaders['Cookie'] = chCfg.sessionCookie + '=' + st;
-        if (st && chCfg.authMode === 'bearer') mediaHeaders['Authorization'] = 'Bearer ' + st;
+        if (st) mediaHeaders['Authorization'] = 'Bearer ' + st;
         const imgResp = await fetch(imageUrl, { headers: mediaHeaders, cf: { cacheEverything: true, cacheTtl: 86400, cacheTtlByStatus: { '200-299': 86400, '400-499': 60, '500-599': 0 } } });
         const contentType = imgResp.headers.get('Content-Type') || 'application/octet-stream'; const body = await imgResp.arrayBuffer();
         return new Response(body, { status: imgResp.status, headers: { 'Content-Type': contentType, 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Length' } });
       } catch (err) { return new Response('Image proxy failed: ' + err.message, { status: 502, headers: corsHeaders() }); }
     }
-    // v0.1+v1.0: gift-key route — 仅 keydraw 通道支持；从 X-Channel 决定上游
+    // kd-v2.0: gift-key route —— 仅一个上游
     if (url.pathname === '/api/gift-key') {
-      const channel = pickChannel(request, url);
-      const chCfg = CHANNELS[channel];
       try {
-        const r = await fetch(chCfg.upstreamBase + '/api/gift-key', {
-          headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0', 'Referer': chCfg.upstreamOrigin + '/' },
+        const r = await fetch(UPSTREAM.base + '/api/gift-key', {
+          headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0', 'Referer': UPSTREAM.origin + '/' },
           cf: { cacheTtl: 60, cacheEverything: false }
         });
         const ct = r.headers.get('Content-Type') || 'application/json';
         const body = await r.arrayBuffer();
         return new Response(body, { status: r.status, headers: { 'Content-Type': ct, 'Cache-Control': 'no-store', ...corsHeaders() } });
       } catch (err) {
-        return new Response(JSON.stringify({ key: chCfg.giftKeyFallback }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
+        return new Response(JSON.stringify({ key: UPSTREAM.giftKeyFallback }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
       }
     }
     if (url.pathname.startsWith('/api/')) { return handleProxy(request, url); }
