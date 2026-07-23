@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>娱资信息图排版规范 v1 · YZ Info Style Guide</title>
+<style>
+/* ════════════════════════════════════════════════════════════════
+   0. RESET
+   ════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+img { max-width: 100%; height: auto; display: block; }
+ul, ol { list-style: none; }
+button, input, select, textarea { font-family: inherit; }
+
+/* ════════════════════════════════════════════════════════════════
+   1. DESIGN TOKENS
+   ────────────────────────────────────────────────────────────────
+   AI Agent 注意：以下变量是本信息图系统的核心令牌。
+   修改这些变量即可全局换肤。
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── 品牌色 ── */
+  --yz-accent:        #f38d49;   /* 主品牌橙 */
+  --yz-accent-deep:   #e55b46;   /* 深橙（折线/强调） */
+  --yz-accent-light:  rgba(243,141,73,0.12);
+
+  /* ── 平台色（剧组图表专用） ── */
+  --yz-iqiyi:    #50c885;   /* 爱奇艺 绿 */
+  --yz-tencent:  #fac063;   /* 腾讯视频 黄 */
+  --yz-youku:    #6cb0f9;   /* 优酷 蓝 */
+  --yz-mango:    #fa8c5a;   /* 芒果 橙 */
+
+  /* ── 状态色 ── */
+  --yz-live:     #e60012;   /* 在拍红圆点 */
+  --yz-decline:  #e60012;   /* 下降红 */
+
+  /* ── 背景 ── */
+  --yz-bg:           #ffffff;
+  --yz-bg-canvas:    #ffffff;   /* 整画布底色 */
+  --yz-bg-chart:     #FAFAFA;   /* 图表区底色 */
+  --yz-bg-card:      #ffffff;
+  --yz-bg-secondary: #efefef;
+
+  /* ── 文字 ── */
+  --yz-text:           #111111;
+  --yz-text-secondary: #555555;
+  --yz-text-muted:     #999999;
+  --yz-text-on-accent: #000000;   /* 柱状图数字色（深色背景下用黑） */
+
+  /* ── 边框 ── */
+  --yz-border:        #dcdcdc;
+  --yz-border-soft:   #e5e5e5;
+
+  /* ── 阴影 ── */
+  --yz-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --yz-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --yz-shadow-logo: 0 8px 24px rgba(229,91,70,0.18);
+
+  /* ── 圆角 ── */
+  --yz-radius:    12px;
+  --yz-radius-sm: 8px;
+  --yz-radius-xs: 4px;
+  --yz-radius-bar: 0 6px 6px 0;   /* 横向柱状图右端圆角 */
+
+  /* ── 间距 ── */
+  --yz-space-xs: 4px;
+  --yz-space-sm: 8px;
+  --yz-space-md: 16px;
+  --yz-space-lg: 24px;
+  --yz-space-xl: 32px;
+
+  /* ── 字体 ── */
+  --yz-font: "AliPuHui", "阿里巴巴普惠体", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  --yz-font-mono: "SF Mono", Consolas, "Liberation Mono", monospace;
+
+  /* ── 字号规范（静态信息图） ── */
+  --yz-fs-static-h1:      32px;   /* 标题 */
+  --yz-fs-static-body:    14px;   /* 正文最小字号（不再更小） */
+  --yz-fs-static-label:   14px;   /* 标签 */
+  --yz-fs-static-bar-num: 14px;   /* 柱状图数字 */
+  --yz-fs-static-caption: 14px;   /* 图注 */
+
+  /* ── 字号规范（3:4 视频画布 1080×1440） ── */
+  --yz-fs-video-h1:       56px;
+  --yz-fs-video-h1-multi: 56px;   /* 多行标题单行字号 */
+  --yz-fs-video-body:     28px;   /* 视频最小字号 ≈ 静态 ×2 */
+  --yz-fs-video-bar-num:  32px;
+  --yz-fs-video-caption:  28px;
+
+  /* ── 字重 ── */
+  --yz-fw-regular: 400;
+  --yz-fw-bold:    700;
+  --yz-fw-heavy:   900;   /* 标题专用 heavy */
+
+  /* ── 动画 ── */
+  --yz-ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --yz-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --yz-dur-fast:    0.3s;
+  --yz-dur-normal:  0.6s;
+  --yz-dur-slow:    1s;
+
+  /* ── 画布尺寸 ── */
+  --yz-static-width:  480px;        /* 静态信息图竖屏容器宽度 */
+  --yz-video-w:       1080px;
+  --yz-video-h:       1440px;
+  --yz-video-ratio:   3 / 4;
+  --yz-video-title-h: 240px;        /* 视频标题区高度（3行不截断） */
+  --yz-video-chart-h: 1020px;       /* 视频图表区高度 */
+  --yz-video-caption-h: 180px;      /* 视频图注区高度 */
+
+  /* ── 静态信息图布局 ── */
+  --yz-static-padding: 16px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   2. BASE
+   ════════════════════════════════════════════════════════════════ */
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  line-height: 1.6;
+  font-size: 15px;
+  min-height: 100vh;
+}
+
+/* 阿里普惠体 @font-face（仅 webfont 通过 CDN） */
+@font-face {
+  font-family: 'AliPuHui';
+  src: url('https://cdn.jsdelivr.net/gh/IlysvlVEizbr/via-font@0.3/AliPuHui.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AliPuHui';
+  src: url('https://cdn.jsdelivr.net/gh/IlysvlVEizbr/via-font@0.3/AliPuHui.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AliPuHui';
+  src: url('https://cdn.jsdelivr.net/gh/IlysvlVEizbr/via-font@0.3/AliPuHui.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   3. GUIDE PAGE LAYOUT（规范页本身）
+   ════════════════════════════════════════════════════════════════ */
+.guide-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--yz-border);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+}
+.guide-header h1 {
+  font-size: 18px; font-weight: 900; color: var(--yz-text);
+  display: flex; align-items: center; gap: 10px;
+}
+.guide-header h1 .accent-dot {
+  width: 12px; height: 12px; background: var(--yz-accent);
+  border-radius: 50%;
+}
+.guide-header .version {
+  font-size: 12px; color: var(--yz-text-muted);
+  background: var(--yz-bg-secondary); padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.guide-layout {
+  max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: 220px 1fr;
+  gap: 32px; padding: 32px;
+  align-items: flex-start;
+}
+
+.guide-nav {
+  position: sticky; top: 92px;
+  max-height: calc(100vh - 124px);
+  overflow-y: auto;
+  background: #fff; border: 1px solid var(--yz-border);
+  border-radius: var(--yz-radius); padding: 16px;
+}
+.guide-nav::-webkit-scrollbar { width: 4px; }
+.guide-nav::-webkit-scrollbar-thumb { background: var(--yz-border); border-radius: 2px; }
+.nav-group { margin-bottom: 16px; }
+.nav-group-title {
+  font-size: 11px; font-weight: 900; color: var(--yz-text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--yz-border-soft);
+  margin-bottom: 6px;
+}
+.nav-link {
+  display: block; padding: 6px 10px; font-size: 13px;
+  color: var(--yz-text-secondary); text-decoration: none;
+  border-radius: var(--yz-radius-xs);
+  transition: all .15s;
+}
+.nav-link:hover { color: var(--yz-accent); background: var(--yz-accent-light); }
+
+.guide-main { min-width: 0; }
+
+/* ── Section ── */
+.section {
+  margin-bottom: 48px;
+  scroll-margin-top: 80px;
+}
+.section-title {
+  font-size: 22px; font-weight: 900; color: var(--yz-text);
+  padding-bottom: 8px; margin-bottom: 8px;
+  border-bottom: 2px solid var(--yz-accent);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .badge {
+  font-size: 11px; font-weight: 700;
+  background: var(--yz-accent); color: #fff;
+  padding: 2px 8px; border-radius: 100px;
+}
+.section-desc {
+  font-size: 14px; color: var(--yz-text-secondary);
+  margin-bottom: 20px; line-height: 1.7;
+}
+
+/* ── Demo card ── */
+.demo-card {
+  background: #fff; border: 1px solid var(--yz-border);
+  border-radius: var(--yz-radius); overflow: hidden;
+  margin-bottom: 16px;
+}
+.demo-card-header {
+  padding: 14px 20px; border-bottom: 1px solid var(--yz-border-soft);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.demo-card-title { font-size: 15px; font-weight: 900; color: var(--yz-text); }
+.demo-card-tag {
+  font-size: 11px; color: var(--yz-text-muted);
+  background: var(--yz-bg-secondary); padding: 3px 8px;
+  border-radius: 100px;
+}
+.demo-card-body { padding: 24px; }
+.demo-card-footer {
+  padding: 10px 20px; border-top: 1px solid var(--yz-border-soft);
+  background: #fafafa; font-size: 12px; color: var(--yz-text-muted);
+  font-family: var(--yz-font-mono);
+}
+
+.code-block {
+  background: #1e1e1e; color: #d4d4d4;
+  border-radius: var(--yz-radius-sm); padding: 14px 18px;
+  font-family: var(--yz-font-mono); font-size: 12px;
+  overflow-x: auto; line-height: 1.6;
+  white-space: pre; margin-top: 12px;
+}
+.code-block .k { color: #569cd6; }
+.code-block .s { color: #ce9178; }
+.code-block .c { color: #6a9955; font-style: italic; }
+.code-block .v { color: #9cdcfe; }
+
+/* ── Token 展示网格 ── */
+.token-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.token-item {
+  border: 1px solid var(--yz-border-soft); border-radius: var(--yz-radius-sm);
+  padding: 12px; background: #fff;
+}
+.token-swatch {
+  height: 48px; border-radius: var(--yz-radius-xs);
+  margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.06);
+}
+.token-name { font-size: 12px; font-weight: 700; color: var(--yz-text); }
+.token-value { font-size: 11px; color: var(--yz-text-muted); font-family: var(--yz-font-mono); }
+
+/* ════════════════════════════════════════════════════════════════
+   4. 共用组件样式（信息图本体）
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 4.1 静态信息图容器（竖屏 480px） ── */
+.yz-static-canvas {
+  width: var(--yz-static-width);
+  background: var(--yz-bg-canvas);
+  margin: 0 auto;
+  overflow: hidden;
+  font-family: var(--yz-font);
+  box-shadow: var(--yz-shadow-md);
+  border-radius: var(--yz-radius);
+}
+.yz-static-header {
+  padding: 32px var(--yz-static-padding) 20px;
+}
+.yz-static-header h1 {
+  font-size: var(--yz-fs-static-h1);
+  font-weight: var(--yz-fw-heavy);
+  color: var(--yz-text);
+  line-height: 1.3;
+  text-align: left;
+  letter-spacing: 1px;
+}
+.yz-static-table {
+  background: var(--yz-bg-secondary);
+  margin: 0 var(--yz-static-padding);
+  padding: 10px var(--yz-static-padding);
+  border-radius: var(--yz-radius-sm);
+}
+.yz-row {
+  display: grid;
+  grid-template-columns: 80px 180px 1fr;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--yz-border);
+  column-gap: 16px; row-gap: 8px;
+  font-size: var(--yz-fs-static-body);
+  color: var(--yz-text);
+}
+.yz-row.head {
+  font-weight: var(--yz-fw-bold); color: var(--yz-text-secondary);
+  font-size: var(--yz-fs-static-body);
+  border-bottom: 1px solid var(--yz-border);
+}
+.yz-row:last-child { border-bottom: none; }
+.yz-rank { font-weight: var(--yz-fw-heavy); color: var(--yz-accent); font-size: 16px; }
+.yz-name { font-weight: var(--yz-fw-heavy); font-size: 16px; }
+.yz-bar-wrap {
+  grid-column: 1 / -1;
+  display: flex; align-items: center;
+}
+.yz-bar {
+  height: 32px; background: var(--yz-accent);
+  border-radius: var(--yz-radius-bar);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 12px;
+  color: var(--yz-text-on-accent); font-weight: var(--yz-fw-heavy);
+  font-size: var(--yz-fs-static-bar-num);
+  width: 0;
+  transition: width var(--yz-dur-normal) var(--yz-ease);
+}
+.yz-crews {
+  grid-column: 1 / -1; font-size: var(--yz-fs-static-body);
+  color: var(--yz-text-secondary); padding-left: 96px;
+}
+
+/* ── 4.2 视频画布（1080×1440 等比缩放 demo） ── */
+/*
+  在规范页中我们用 transform: scale() 把 1080×1440 等比缩小展示。
+  实际生产中应直接渲染 1080×1440。
+*/
+.video-demo-wrap {
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;
+}
+.video-canvas-scaled {
+  width: 360px;   /* = 1080 × 0.333 */
+  height: 480px;  /* = 1440 × 0.333 */
+  position: relative;
+  background: var(--yz-bg-canvas);
+  border-radius: var(--yz-radius-sm);
+  box-shadow: var(--yz-shadow-md);
+  overflow: hidden;
+  font-family: var(--yz-font);
+}
+.video-canvas-scaled .vc-inner {
+  width: 1080px; height: 1440px;
+  transform: scale(0.3333);
+  transform-origin: top left;
+  position: absolute; top: 0; left: 0;
+}
+/* 视频画布内部布局 */
+.vc-title-area {
+  position: absolute; top: 0; left: 0;
+  width: 1080px; height: var(--yz-video-title-h);
+  background: var(--yz-bg-canvas);
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 0 60px;
+}
+.vc-title-area h1 {
+  font-size: var(--yz-fs-video-h1);
+  font-weight: var(--yz-fw-heavy);
+  color: var(--yz-text);
+  text-align: left;
+  line-height: 1.3;
+  letter-spacing: 2px;
+}
+.vc-chart-area {
+  position: absolute; top: var(--yz-video-title-h); left: 0;
+  width: 1080px; height: var(--yz-video-chart-h);
+  background: var(--yz-bg-canvas);
+  padding: 40px;
+}
+.vc-chart-inner {
+  width: 100%; height: 100%;
+  background: var(--yz-bg-chart);
+  border-radius: var(--yz-radius);
+  position: relative; overflow: hidden;
+}
+.vc-caption-area {
+  position: absolute; bottom: 0; left: 0;
+  width: 1080px; height: var(--yz-video-caption-h);
+  background: var(--yz-bg-canvas);
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 0 60px;
+  font-size: var(--yz-fs-video-caption);
+  color: var(--yz-text-secondary);
+  text-align: left;
+}
+
+/* ── 4.3 红圆点（在拍标记） ── */
+/*
+  <data-spec>
+  name: LiveDot
+  category: INDICATOR
+  variants: static (8px), video (16-18px)
+  notes: 表示剧组仍在拍摄。必须为正圆（width === height），不是椭圆。
+         静态信息图用 8px，视频画布用 16-18px。颜色 #e60012。
+  </data-spec>
+*/
+.yz-live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--yz-live);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.yz-live-dot.video { width: 16px; height: 16px; }
+
+/* ── 4.4 横向柱状图条（视频用大尺寸） ── */
+.vc-bar-row {
+  display: grid; grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  padding: 24px 30px;
+  border-bottom: 1px dashed var(--yz-border-soft);
+  row-gap: 10px;
+}
+.vc-bar-name {
+  font-size: 42px; font-weight: var(--yz-fw-heavy); color: var(--yz-text);
+  line-height: 1.2;
+}
+.vc-bar-track {
+  display: flex; align-items: center; position: relative;
+  height: 48px; padding-left: 18px;
+}
+.vc-bar {
+  height: 44px;
+  border-radius: 0 8px 8px 0;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 18px;
+  color: var(--yz-text-on-accent);
+  font-weight: var(--yz-fw-heavy);
+  font-size: var(--yz-fs-video-bar-num);
+  width: 0;
+  transition: width var(--yz-dur-normal) var(--yz-ease);
+}
+.vc-bar-actors {
+  font-size: 30px; color: var(--yz-text-secondary); padding-left: 18px;
+}
+
+/* ── 4.5 组合 logo（横板，自包含 SVG） ── */
+/*
+  <data-spec>
+  name: CombinedLogo
+  category: BRANDING
+  layout: 横板 — 左侧彩色方形icon（100%高度）+ 右侧横条文字（80%高度）+ 10%间距
+  notes: 单一自包含 SVG，嵌套 <svg> 实现。底部居中。
+         静态信息图高度 50px，视频画布按比例放大。
+  </data-spec>
+*/
+.yz-logo-group {
+  display: block; line-height: 0;
+}
+.yz-logo-group .combined-logo {
+  height: 50px; width: auto; display: block; margin: 0 auto;
+}
+
+/* ── 4.6 图注（含在拍提示） ── */
+.yz-caption-with-dot {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-left: 20px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   5. DEMO专区
+   ════════════════════════════════════════════════════════════════ */
+.demo-label {
+  font-size: 12px; font-weight: 900; color: var(--yz-text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.demo-static-frame {
+  width: var(--yz-static-width);
+  background: #fff; border: 1px solid var(--yz-border);
+  border-radius: var(--yz-radius); overflow: hidden;
+  box-shadow: var(--yz-shadow-sm);
+}
+
+/* 静态信息图样例：TOP20 表格片段 */
+.demo-static-table .yz-row { grid-template-columns: 50px 120px 1fr; }
+.demo-static-table .yz-crews { padding-left: 66px; }
+
+/* 视频画布缩略 demo：mini 柱状图 */
+.mini-row-demo {
+  display: grid; grid-template-columns: 40px 180px 1fr;
+  align-items: center; padding: 5px 0; column-gap: 10px;
+  height: 48px;
+}
+.mini-rank { font-size: 24px; color: var(--yz-text-muted); font-weight: var(--yz-fw-heavy); text-align: right; }
+.mini-name { font-size: 24px; color: var(--yz-text); font-weight: 700; }
+.mini-bar-wrap { display: flex; align-items: center; position: relative; height: 32px; }
+.mini-bar {
+  height: 28px; border-radius: 0 4px 4px 0;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px; color: #000; font-weight: var(--yz-fw-heavy); font-size: 22px;
+}
+
+/* 静态柱状图样例（motion01 风格的等比缩小） */
+.static-bar-chart-demo {
+  position: relative;
+  height: 240px;
+  background: var(--yz-bg-chart);
+  border-radius: var(--yz-radius-sm);
+  padding: 30px 40px 50px 60px;
+}
+.sbc-axes {
+  position: absolute; inset: 30px 40px 50px 60px;
+}
+.sbc-axis-y { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #333; }
+.sbc-axis-x { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #333; }
+.sbc-y-label {
+  position: absolute; left: -36px; width: 30px; text-align: right;
+  font-size: 11px; color: var(--yz-text-muted); transform: translateY(-50%);
+}
+.sbc-grid { position: absolute; left: 0; right: 0; height: 1px; background: var(--yz-border-soft); }
+.sbc-bars {
+  position: absolute; left: 0; right: 0; bottom: 2px; top: 0;
+  display: flex; align-items: flex-end; justify-content: space-around; padding: 0 40px;
+}
+.sbc-bar-col { display: flex; flex-direction: column; align-items: center; width: 80px; position: relative; }
+.sbc-bar {
+  width: 100%; background: var(--yz-accent);
+  border-radius: 4px 4px 0 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 4px; color: #fff; font-size: 16px; font-weight: var(--yz-fw-heavy);
+}
+.sbc-bar-label {
+  position: absolute; bottom: -32px; font-size: 11px;
+  color: var(--yz-text-secondary); text-align: center; width: 100px;
+}
+
+/* 圆形气泡样例 */
+.bubble-grid-demo {
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);
+  gap: 10px; padding: 20px;
+  background: var(--yz-bg-chart); border-radius: var(--yz-radius-sm);
+  width: 360px; height: 240px;
+}
+.bubble-wrap-demo { display: flex; align-items: center; justify-content: center; }
+.bubble-demo {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--yz-accent) 0%, var(--yz-accent-deep) 100%);
+  color: #fff; font-size: 14px; font-weight: var(--yz-fw-heavy);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; line-height: 1.2; padding: 6px;
+  box-shadow: var(--yz-shadow-logo);
+}
+
+/* 折线图样例 */
+.line-chart-demo {
+  width: 360px; height: 240px;
+  background: var(--yz-bg-chart); border-radius: var(--yz-radius-sm);
+  padding: 20px;
+}
+.line-chart-demo svg { width: 100%; height: 100%; }
+
+/* 组合 logo demo（简化版 SVG） */
+.combined-logo-demo svg { height: 50px; width: auto; display: block; margin: 0 auto; }
+
+/* 平台色样例 */
+.platform-color-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+}
+.platform-color-item {
+  border-radius: var(--yz-radius-xs); padding: 12px; color: #000;
+  font-weight: var(--yz-fw-bold); font-size: 13px; text-align: center;
+}
+
+/* 字号阶梯 */
+.type-scale-demo > div {
+  padding: 8px 0; border-bottom: 1px solid var(--yz-border-soft);
+  display: flex; align-items: baseline; gap: 16px;
+}
+.type-scale-demo > div:last-child { border: none; }
+.type-scale-demo .ts-label {
+  font-size: 11px; color: var(--yz-text-muted); font-family: var(--yz-font-mono);
+  width: 200px; flex-shrink: 0;
+}
+.type-scale-demo .ts-sample-heavy { font-weight: var(--yz-fw-heavy); }
+.type-scale-demo .ts-sample-bold { font-weight: var(--yz-fw-bold); }
+.type-scale-demo .ts-sample-regular { font-weight: var(--yz-fw-regular); }
+
+/* 响应式 */
+@media (max-width: 900px) {
+  .guide-layout { grid-template-columns: 1fr; }
+  .guide-nav { position: static; max-height: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="guide-header">
+  <h1><span class="accent-dot"></span>娱资信息图排版规范</h1>
+  <span class="version">v1 · 2026.07</span>
+</header>
+
+<!-- ═══ LAYOUT ═══ -->
+<div class="guide-layout">
+
+  <!-- ── NAV ── -->
+  <aside class="guide-nav">
+    <div class="nav-group">
+      <div class="nav-group-title">总则</div>
+      <a class="nav-link" href="#overview">概览</a>
+      <a class="nav-link" href="#tokens">设计令牌</a>
+      <a class="nav-link" href="#typography">排版阶梯</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">两种画布</div>
+      <a class="nav-link" href="#canvas-static">静态信息图</a>
+      <a class="nav-link" href="#canvas-video">3:4 视频画布</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">共用组件</div>
+      <a class="nav-link" href="#comp-title">标题区</a>
+      <a class="nav-link" href="#comp-caption">图注区</a>
+      <a class="nav-link" href="#comp-table">数据表</a>
+      <a class="nav-link" href="#comp-bar">柱状图</a>
+      <a class="nav-link" href="#comp-line">折线图</a>
+      <a class="nav-link" href="#comp-bubble">圆形气泡</a>
+      <a class="nav-link" href="#comp-dot">在拍红圆</a>
+      <a class="nav-link" href="#comp-logo">组合 Logo</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Demo</div>
+      <a class="nav-link" href="#demo-static">静态图样图</a>
+      <a class="nav-link" href="#demo-video">视频样例</a>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="guide-main">
+
+    <!-- ═══ 1. OVERVIEW ═══ -->
+    <section id="overview" class="section">
+      <h2 class="section-title">概览 <span class="badge">Overview</span></h2>
+      <p class="section-desc">
+        本规范适用于「娱资」系列信息图的两种产出形态：<b>静态信息图</b>（网页竖屏，可下载分享）
+        与 <b>3:4 视频画布</b>（1080×1440，用于动效录屏剪辑）。两者共用同一套色彩、字体、
+        间距与组件结构，仅字号与画布尺寸按比例缩放。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">两种形态对照</span>
+          <span class="demo-card-tag">comparison</span>
+        </div>
+        <div class="demo-card-body">
+          <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="background: var(--yz-bg-secondary); text-align: left;">
+                <th style="padding: 10px 14px; font-weight: 900;">维度</th>
+                <th style="padding: 10px 14px; font-weight: 900;">静态信息图</th>
+                <th style="padding: 10px 14px; font-weight: 900;">3:4 视频画布</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">画布尺寸</td>
+                <td style="padding: 10px 14px;">宽 480px，高度自适应</td>
+                <td style="padding: 10px 14px;">1080 × 1440 (3:4)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">用途</td>
+                <td style="padding: 10px 14px;">网页浏览、公众号配图</td>
+                <td style="padding: 10px 14px;">视频剪辑素材（每段 5-12s）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">最小字号</td>
+                <td style="padding: 10px 14px;">14px</td>
+                <td style="padding: 10px 14px;">28px（约静态 ×2）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">标题字重</td>
+                <td style="padding: 10px 14px;" colspan="2">900 (heavy)，左对齐</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">标题区高度</td>
+                <td style="padding: 10px 14px;">自适应（padding 32px+20px）</td>
+                <td style="padding: 10px 14px;">240px（3 行不截断）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">图表区底色</td>
+                <td style="padding: 10px 14px;" colspan="2">#FAFAFA，40px 边距，12px 圆角</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                <td style="padding: 10px 14px; font-weight: 700;">图注区高度</td>
+                <td style="padding: 10px 14px;">自适应</td>
+                <td style="padding: 10px 14px;">180px，左对齐</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 14px; font-weight: 700;">底部 Logo</td>
+                <td style="padding: 10px 14px;" colspan="2">横板组合 SVG，居中，高度 50px（静态）/ 按比例放大（视频）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 2. TOKENS ═══ -->
+    <section id="tokens" class="section">
+      <h2 class="section-title">设计令牌 <span class="badge">Tokens</span></h2>
+      <p class="section-desc">
+        所有颜色、字体、间距、圆角均通过 CSS 变量定义在 <code>:root</code> 中。
+        修改这些变量即可全局换肤。
+      </p>
+
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">品牌色 & 平台色</span>
+          <span class="demo-card-tag">colors</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="token-grid">
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-accent);"></div>
+              <div class="token-name">主品牌橙</div>
+              <div class="token-value">--yz-accent: #f38d49</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-accent-deep);"></div>
+              <div class="token-name">深橙（折线）</div>
+              <div class="token-value">--yz-accent-deep: #e55b46</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-live);"></div>
+              <div class="token-name">在拍红</div>
+              <div class="token-value">--yz-live: #e60012</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-iqiyi);"></div>
+              <div class="token-name">爱奇艺</div>
+              <div class="token-value">--yz-iqiyi: #50c885</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-tencent);"></div>
+              <div class="token-name">腾讯视频</div>
+              <div class="token-value">--yz-tencent: #fac063</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-youku);"></div>
+              <div class="token-name">优酷</div>
+              <div class="token-value">--yz-youku: #6cb0f9</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-mango);"></div>
+              <div class="token-name">芒果</div>
+              <div class="token-value">--yz-mango: #fa8c5a</div>
+            </div>
+            <div class="token-item">
+              <div class="token-swatch" style="background: var(--yz-bg-chart); border: 1px solid #ddd;"></div>
+              <div class="token-name">图表区底色</div>
+              <div class="token-value">--yz-bg-chart: #FAFAFA</div>
+            </div>
+          </div>
+          <div class="code-block">
+<span class="c">/* 平台拼盘渐变（如爱奇艺+腾讯） */</span>
+<span class="k">background</span>: <span class="v">linear-gradient</span>(<span class="s">to right</span>, <span class="v">var</span>(--yz-iqiyi) <span class="s">50%</span>, <span class="v">var</span>(--yz-tencent) <span class="s">50%</span>);
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">间距 & 圆角</span>
+          <span class="demo-card-tag">spacing</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="token-grid">
+            <div class="token-item"><div class="token-name">xs</div><div class="token-value">4px</div></div>
+            <div class="token-item"><div class="token-name">sm</div><div class="token-value">8px</div></div>
+            <div class="token-item"><div class="token-name">md</div><div class="token-value">16px</div></div>
+            <div class="token-item"><div class="token-name">lg</div><div class="token-value">24px</div></div>
+            <div class="token-item"><div class="token-name">xl</div><div class="token-value">32px</div></div>
+            <div class="token-item"><div class="token-name">radius</div><div class="token-value">12px</div></div>
+            <div class="token-item"><div class="token-name">radius-sm</div><div class="token-value">8px</div></div>
+            <div class="token-item"><div class="token-name">柱状图右圆角</div><div class="token-value">0 6px 6px 0</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 3. TYPOGRAPHY ═══ -->
+    <section id="typography" class="section">
+      <h2 class="section-title">排版阶梯 <span class="badge">Typography</span></h2>
+      <p class="section-desc">
+        字体：<b>阿里巴巴普惠体</b>（AliPuHui，CDN 加载）。字重三档：400 regular / 700 bold / 900 heavy。
+        标题统一用 heavy（900），正文最小字号 14px（静态）/ 28px（视频）。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">字重三档</span>
+          <span class="demo-card-tag">weights</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="type-scale-demo">
+            <div>
+              <span class="ts-label">900 heavy (标题专用)</span>
+              <span class="ts-sample-heavy" style="font-size: 28px;">娱资信息图 · 横店 TOP20</span>
+            </div>
+            <div>
+              <span class="ts-label">700 bold (强调)</span>
+              <span class="ts-sample-bold" style="font-size: 20px;">孟子义 · 在组周数 58</span>
+            </div>
+            <div>
+              <span class="ts-label">400 regular (正文)</span>
+              <span class="ts-sample-regular" style="font-size: 16px;">数据来源：横店影视城片场公众号、猫眼专业版</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">字号阶梯（静态 / 视频）</span>
+          <span class="demo-card-tag">scale</span>
+        </div>
+        <div class="demo-card-body">
+          <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="background: var(--yz-bg-secondary); text-align: left;">
+                <th style="padding: 8px 12px;">用途</th>
+                <th style="padding: 8px 12px;">静态字号</th>
+                <th style="padding: 8px 12px;">视频字号</th>
+                <th style="padding: 8px 12px;">字重</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);"><td style="padding: 8px 12px;">主标题 H1</td><td style="padding: 8px 12px;">32px</td><td style="padding: 8px 12px;">56px</td><td style="padding: 8px 12px;">900</td></tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);"><td style="padding: 8px 12px;">柱状图数字</td><td style="padding: 8px 12px;">14px</td><td style="padding: 8px 12px;">32px</td><td style="padding: 8px 12px;">900</td></tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);"><td style="padding: 8px 12px;">行名称</td><td style="padding: 8px 12px;">16px</td><td style="padding: 8px 12px;">42px</td><td style="padding: 8px 12px;">900</td></tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);"><td style="padding: 8px 12px;">附注（剧组/演员）</td><td style="padding: 8px 12px;">14px</td><td style="padding: 8px 12px;">30px</td><td style="padding: 8px 12px;">400</td></tr>
+              <tr style="border-bottom: 1px solid var(--yz-border-soft);"><td style="padding: 8px 12px;">图注</td><td style="padding: 8px 12px;">14px</td><td style="padding: 8px 12px;">28px</td><td style="padding: 8px 12px;">400</td></tr>
+              <tr><td style="padding: 8px 12px;">Y轴刻度</td><td style="padding: 8px 12px;">12px*</td><td style="padding: 8px 12px;">28px</td><td style="padding: 8px 12px;">400</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size: 11px; color: var(--yz-text-muted); margin-top: 8px;">* 静态 Y轴刻度为例外，因空间紧凑可降至 12px</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 4. CANVAS STATIC ═══ -->
+    <section id="canvas-static" class="section">
+      <h2 class="section-title">画布 A · 静态信息图 <span class="badge">Static</span></h2>
+      <p class="section-desc">
+        竖屏 480px 宽，高度随内容自适应。容器圆角 12px，外阴影。
+        内部表格区用 #EFEFEF 底色块包裹，padding 16px。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">画布结构</span>
+          <span class="demo-card-tag">layout</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="code-block">
+<span class="k">.yz-static-canvas</span> {
+  <span class="k">width</span>: <span class="v">var</span>(--yz-static-width);  <span class="c">/* 480px */</span>
+  <span class="k">background</span>: <span class="v">var</span>(--yz-bg-canvas);
+  <span class="k">border-radius</span>: <span class="v">var</span>(--yz-radius);
+  <span class="k">box-shadow</span>: <span class="v">var</span>(--yz-shadow-md);
+}
+<span class="k">.yz-static-header</span> { <span class="k">padding</span>: <span class="s">32px 16px 20px</span>; }
+<span class="k">.yz-static-header h1</span> {
+  <span class="k">font-size</span>: <span class="s">32px</span>; <span class="k">font-weight</span>: <span class="s">900</span>;
+  <span class="k">text-align</span>: <span class="s">left</span>; <span class="k">line-height</span>: <span class="s">1.3</span>;
+}
+<span class="k">.yz-static-table</span> {
+  <span class="k">background</span>: <span class="v">var</span>(--yz-bg-secondary);
+  <span class="k">margin</span>: <span class="s">0 16px</span>; <span class="k">padding</span>: <span class="s">10px 16px</span>;
+  <span class="k">border-radius</span>: <span class="s">8px</span>;
+}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 5. CANVAS VIDEO ═══ -->
+    <section id="canvas-video" class="section">
+      <h2 class="section-title">画布 B · 3:4 视频画布 <span class="badge">Video 1080×1440</span></h2>
+      <p class="section-desc">
+        固定 1080×1440 (3:4)。三段式：标题区 240px（3 行不截断）+ 图表区 1020px（#FAFAFA 底色，40px 边距）
+        + 图注区 180px。标题与图注均左对齐。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">画布三段式布局</span>
+          <span class="demo-card-tag">layout</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="video-demo-wrap">
+            <!-- 等比缩小 demo (0.333x) -->
+            <div class="video-canvas-scaled">
+              <div class="vc-inner">
+                <div class="vc-title-area">
+                  <h1>2025.1-2026.6<br>横店在组时间最久<br>演员TOP20</h1>
+                </div>
+                <div class="vc-chart-area">
+                  <div class="vc-chart-inner" style="padding: 30px;">
+                    <div class="vc-bar-row" style="padding: 14px 20px;">
+                      <div class="vc-bar-name">孟子义</div>
+                      <div class="vc-bar-track">
+                        <div class="vc-bar" style="width: 90%; background: var(--yz-accent);">58</div>
+                      </div>
+                      <div class="vc-bar-actors">将门独后  百花杀  尚公主</div>
+                    </div>
+                    <div class="vc-bar-row" style="padding: 14px 20px;">
+                      <div class="vc-bar-name">王楚然</div>
+                      <div class="vc-bar-track">
+                        <div class="vc-bar" style="width: 80%; background: var(--yz-accent);">51</div>
+                      </div>
+                      <div class="vc-bar-actors">成何体统  浮生  明月录</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="vc-caption-area">
+                  数据来源：横店影视城片场公众号
+                </div>
+              </div>
+            </div>
+            <!-- 标注 -->
+            <div style="flex: 1; min-width: 280px;">
+              <div class="demo-label">分区说明</div>
+              <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+                <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                  <td style="padding: 8px 0; font-weight: 700;">标题区</td>
+                  <td style="padding: 8px 0;">240px · 白底 · 左对齐 · heavy</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--yz-border-soft);">
+                  <td style="padding: 8px 0; font-weight: 700;">图表区</td>
+                  <td style="padding: 8px 0;">1020px · #FAFAFA · 40px 边距</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 700;">图注区</td>
+                  <td style="padding: 8px 0;">180px · 白底 · 左对齐</td>
+                </tr>
+              </table>
+              <div class="code-block" style="margin-top: 16px;">
+<span class="c">/* 三段式绝对定位 */</span>
+<span class="k">.vc-title-area</span>   { <span class="k">top</span>: <span class="s">0</span>;    <span class="k">height</span>: <span class="s">240px</span>; }
+<span class="k">.vc-chart-area</span>   { <span class="k">top</span>: <span class="s">240px</span>;<span class="k">height</span>: <span class="s">1020px</span>; }
+<span class="k">.vc-caption-area</span> { <span class="k">bottom</span>:<span class="s">0</span>;   <span class="k">height</span>: <span class="s">180px</span>; }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 6. COMPONENTS ═══ -->
+    <section id="comp-title" class="section">
+      <h2 class="section-title">组件 · 标题区 <span class="badge">Title</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">三行折行标题</span><span class="demo-card-tag">pattern</span></div>
+        <div class="demo-card-body">
+          <div style="background: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--yz-border-soft);">
+            <div style="font-size: 32px; font-weight: 900; line-height: 1.3; color: var(--yz-text); text-align: left;">
+              2025.1-2026.6<br>横店在组时间最久<br>演员TOP20
+            </div>
+          </div>
+          <div class="code-block">
+&lt;<span class="k">h1</span> style=<span class="s">"font-size: 32px; font-weight: 900; text-align: left; line-height: 1.3;"</span>&gt;
+  2025.1-2026.6&lt;<span class="k">br</span>&gt;横店在组时间最久&lt;<span class="k">br</span>&gt;演员TOP20
+&lt;/<span class="k">h1</span>&gt;
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            ⚠️ 标题必须 <b>左对齐</b>（非居中），字重 <b>900 heavy</b>（非 bold/medium）。
+            多行标题用 <code>&lt;br&gt;</code> 折行。视频画布标题区 240px 高度可容纳 3 行 56px 字号。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-caption" class="section">
+      <h2 class="section-title">组件 · 图注区 <span class="badge">Caption</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">含在拍提示的图注</span><span class="demo-card-tag">pattern</span></div>
+        <div class="demo-card-body">
+          <div style="background: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--yz-border-soft); font-size: 14px; color: var(--yz-text-secondary); text-align: left;">
+            数据来源：横店影视城片场公众号、猫眼专业版
+            <span class="yz-caption-with-dot">
+              <span class="yz-live-dot"></span>表示还在拍
+            </span>
+          </div>
+          <div class="code-block">
+&lt;<span class="k">div</span> class=<span class="s">"yz-caption-with-dot"</span>&gt;
+  &lt;<span class="k">span</span> class=<span class="s">"yz-live-dot"</span>&gt;&lt;/<span class="k">span</span>&gt;表示还在拍
+&lt;/<span class="k">div</span>&gt;
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            ⚠️ 图注必须包含「在拍提示」：红圆点 + "表示还在拍"文字。视频画布中图注位于底部 180px 区域，左对齐。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-table" class="section">
+      <h2 class="section-title">组件 · 数据表 <span class="badge">Table</span></h2>
+      <p class="section-desc">
+        TOP20 表格采用 3 列网格：序号 / 名称 / 柱状图。柱状图下方一行附注（剧组或演员），
+        左对齐，空格分隔（不换行）。虚线分隔每行。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">静态表格行结构</span><span class="demo-card-tag">static</span></div>
+        <div class="demo-card-body">
+          <div class="demo-static-frame demo-static-table" style="margin: 0 auto;">
+            <div class="yz-static-header" style="padding: 20px 16px 12px;">
+              <h1 style="font-size: 22px;">横店在组时间最久演员TOP20</h1>
+            </div>
+            <div class="yz-static-table">
+              <div class="yz-row head">
+                <div>演员</div>
+                <div style="text-align: center;">在组周数</div>
+                <div></div>
+              </div>
+              <div class="yz-row">
+                <div class="yz-rank">1</div>
+                <div class="yz-name">孟子义</div>
+                <div></div>
+                <div class="yz-bar-wrap"><div class="yz-bar" style="width: 100%; height: 24px;">58</div></div>
+                <div class="yz-crews">将门独后  百花杀  尚公主</div>
+              </div>
+              <div class="yz-row">
+                <div class="yz-rank">2</div>
+                <div class="yz-name">王楚然</div>
+                <div></div>
+                <div class="yz-bar-wrap"><div class="yz-bar" style="width: 88%; height: 24px;">51</div></div>
+                <div class="yz-crews">成何体统  浮生  明月录  这一秒过火</div>
+              </div>
+              <div class="yz-row">
+                <div class="yz-rank">3</div>
+                <div class="yz-name">杨志刚</div>
+                <div></div>
+                <div class="yz-bar-wrap"><div class="yz-bar" style="width: 86%; height: 24px;">50</div></div>
+                <div class="yz-crews">唐朝诡事录之长安  烟雨神游记</div>
+              </div>
+            </div>
+            <div style="padding: 16px; text-align: center;">
+              <div class="yz-logo-group combined-logo-demo">
+                <!-- 简化组合 logo -->
+                <svg viewBox="0 0 388 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="0" width="86" height="100" rx="8" fill="url(#g1)"/>
+                  <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f38d49"/><stop offset="100%" stop-color="#e55b46"/>
+                  </linearGradient></defs>
+                  <text x="100" y="55" font-size="42" font-weight="900" fill="#111">娱资</text>
+                  <text x="100" y="85" font-size="16" fill="#999">ENTERTAINMENT</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 12px; text-align: center;">
+            ↑ 静态信息图等比样图（480px 宽）。注意：附注用空格单行排列，不换行；不使用 2 列网格。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-bar" class="section">
+      <h2 class="section-title">组件 · 柱状图 <span class="badge">Bar</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">静态柱状图（motion01 风格）</span><span class="demo-card-tag">static</span></div>
+        <div class="demo-card-body">
+          <div class="static-bar-chart-demo">
+            <div class="sbc-axes">
+              <div class="sbc-axis-y"></div>
+              <div class="sbc-axis-x"></div>
+              <div class="sbc-y-label" style="top: 0%;">40</div>
+              <div class="sbc-grid" style="top: 0%;"></div>
+              <div class="sbc-y-label" style="top: 25%;">30</div>
+              <div class="sbc-grid" style="top: 25%;"></div>
+              <div class="sbc-y-label" style="top: 50%;">20</div>
+              <div class="sbc-grid" style="top: 50%;"></div>
+              <div class="sbc-y-label" style="top: 75%;">10</div>
+              <div class="sbc-grid" style="top: 75%;"></div>
+              <div class="sbc-bars">
+                <div class="sbc-bar-col">
+                  <div class="sbc-bar" style="height: 75%;">30.27</div>
+                  <div class="sbc-bar-label">2025 H1</div>
+                </div>
+                <div class="sbc-bar-col">
+                  <div class="sbc-bar" style="height: 57%;">22.75</div>
+                  <div class="sbc-bar-label">2026 H1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            ⚠️ 柱子高度必须与 Y 轴刻度精确对齐。30.27 → 顶部对齐 y=30 刻度；
+            22.75 → 顶部对齐 y≈23 位置。<b>避免用百分比高度相对 bar-col</b>（会失效），应相对 chart 容器计算像素高度。
+          </p>
+        </div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">横向柱状图（TOP20 表格内）</span><span class="demo-card-tag">horizontal</span></div>
+        <div class="demo-card-body">
+          <div style="background: var(--yz-bg-chart); padding: 16px; border-radius: 8px;">
+            <div class="mini-row-demo">
+              <div class="mini-rank">1</div>
+              <div class="mini-name">孟子义</div>
+              <div class="mini-bar-wrap">
+                <div class="mini-bar" style="width: 100%; background: var(--yz-accent);">58</div>
+              </div>
+            </div>
+            <div class="mini-row-demo">
+              <div class="mini-rank">2</div>
+              <div class="mini-name">王楚然</div>
+              <div class="mini-bar-wrap">
+                <div class="mini-bar" style="width: 88%; background: var(--yz-accent);">51</div>
+              </div>
+            </div>
+            <div class="mini-row-demo">
+              <div class="mini-rank">3</div>
+              <div class="mini-name">杨志刚</div>
+              <div class="mini-bar-wrap">
+                <div class="mini-bar" style="width: 86%; background: var(--yz-accent);">50</div>
+              </div>
+            </div>
+            <div class="mini-row-demo">
+              <div class="mini-rank">8</div>
+              <div class="mini-name">烟雨神游记</div>
+              <div class="mini-bar-wrap">
+                <div class="yz-live-dot video" style="margin-right: 4px;"></div>
+                <div class="mini-bar" style="width: 100%; background: var(--yz-iqiyi);">33</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            平台色按数据来源上色（爱奇艺绿/腾讯黄/优酷蓝/芒果橙）。拼盘用 50/50 渐变。
+            在拍剧组左侧加红圆点（直径 = 柱高 ×0.5）。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-line" class="section">
+      <h2 class="section-title">组件 · 折线图 <span class="badge">Line</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">73 周折线图样例</span><span class="demo-card-tag">chart</span></div>
+        <div class="demo-card-body">
+          <div class="line-chart-demo">
+            <svg viewBox="0 0 320 200" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lcg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e55b46" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#e55b46" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- grid -->
+              <line x1="0" y1="40" x2="320" y2="40" stroke="#e5e5e5" stroke-width="0.5" stroke-dasharray="3,3"/>
+              <line x1="0" y1="100" x2="320" y2="100" stroke="#e5e5e5" stroke-width="0.5" stroke-dasharray="3,3"/>
+              <line x1="0" y1="160" x2="320" y2="160" stroke="#e5e5e5" stroke-width="0.5" stroke-dasharray="3,3"/>
+              <!-- avg lines -->
+              <line x1="0" y1="60" x2="320" y2="60" stroke="#e55b46" stroke-width="1" stroke-dasharray="4,3"/>
+              <line x1="0" y1="110" x2="320" y2="110" stroke="#e55b46" stroke-width="1" stroke-dasharray="4,3"/>
+              <text x="316" y="56" font-size="8" fill="#e55b46" text-anchor="end" font-weight="900">30.27</text>
+              <text x="316" y="106" font-size="8" fill="#e55b46" text-anchor="end" font-weight="900">22.75</text>
+              <!-- area -->
+              <polygon points="0,80 20,100 40,130 60,90 80,110 100,70 120,60 140,80 160,120 180,140 200,100 220,150 240,130 260,110 280,140 300,120 320,100 320,200 0,200" fill="url(#lcg)"/>
+              <!-- line -->
+              <polyline points="0,80 20,100 40,130 60,90 80,110 100,70 120,60 140,80 160,120 180,140 200,100 220,150 240,130 260,110 280,140 300,120 320,100" fill="none" stroke="#e55b46" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            Y 轴范围 <b>15-40</b>（去除 15 以下空白，让波动区间充分展开）。
+            两条均值虚线：30.27（2025 H1）与 22.75（2026 H1）。
+            折线色 <code>--yz-accent-deep</code>，区域填充用同色 20% → 0% 渐变。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-bubble" class="section">
+      <h2 class="section-title">组件 · 圆形气泡 <span class="badge">Bubble</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">2×3 圆形气泡网格</span><span class="demo-card-tag">grid</span></div>
+        <div class="demo-card-body">
+          <div class="bubble-grid-demo">
+            <div class="bubble-wrap-demo"><div class="bubble-demo">孟子义</div></div>
+            <div class="bubble-wrap-demo"><div class="bubble-demo">王楚然</div></div>
+            <div class="bubble-wrap-demo"><div class="bubble-demo">杨志刚</div></div>
+            <div class="bubble-wrap-demo"><div class="bubble-demo" style="font-size: 11px;">烟雨神游记</div></div>
+            <div class="bubble-wrap-demo"><div class="bubble-demo">兰香如故</div></div>
+            <div class="bubble-wrap-demo"><div class="bubble-demo" style="font-size: 11px;">何不同舟渡</div></div>
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            ⚠️ 必须 <b>正圆</b>（width === height），不是椭圆。
+            圆内可放图片（object-fit: cover）或文字。视频画布直径 280px，行间距 10px（紧凑），整体居中。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-dot" class="section">
+      <h2 class="section-title">组件 · 在拍红圆 <span class="badge">LiveDot</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">正圆规格</span><span class="demo-card-tag">indicator</span></div>
+        <div class="demo-card-body">
+          <div style="display: flex; gap: 32px; align-items: center; padding: 16px;">
+            <div style="text-align: center;">
+              <span class="yz-live-dot" style="width: 8px; height: 8px;"></span>
+              <div style="font-size: 11px; color: var(--yz-text-muted); margin-top: 6px;">静态 8×8px</div>
+            </div>
+            <div style="text-align: center;">
+              <span class="yz-live-dot video"></span>
+              <div style="font-size: 11px; color: var(--yz-text-muted); margin-top: 6px;">视频 16×16px</div>
+            </div>
+            <div style="text-align: center;">
+              <span class="yz-live-dot" style="width: 18px; height: 18px;"></span>
+              <div style="font-size: 11px; color: var(--yz-text-muted); margin-top: 6px;">视频大 18×18px</div>
+            </div>
+          </div>
+          <div class="code-block">
+<span class="k">.yz-live-dot</span> {
+  <span class="k">display</span>: <span class="s">inline-block</span>;
+  <span class="k">width</span>: <span class="s">8px</span>; <span class="k">height</span>: <span class="s">8px</span>;  <span class="c">/* 必须 width === height */</span>
+  <span class="k">background</span>: <span class="v">var</span>(--yz-live);  <span class="c">/* #e60012 */</span>
+  <span class="k">border-radius</span>: <span class="s">50%</span>;
+  <span class="k">flex-shrink</span>: <span class="s">0</span>;
+}
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            ⚠️ 红圆必须 <b>width === height</b>，否则变椭圆。颜色固定 <code>#e60012</code>。
+            不要用 <code>·</code> 字符或小尺寸椭圆代替。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comp-logo" class="section">
+      <h2 class="section-title">组件 · 组合 Logo <span class="badge">Logo</span></h2>
+      <p class="section-desc">
+        横板组合 SVG：左侧彩色方形 icon（100% 高度）+ 10% 间距 + 右侧横条文字（80% 高度）。
+        单一自包含 SVG，嵌套 <code>&lt;svg&gt;</code> 实现。底部居中。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">组合 Logo 结构</span><span class="demo-card-tag">branding</span></div>
+        <div class="demo-card-body">
+          <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--yz-border-soft);">
+            <div class="yz-logo-group combined-logo-demo">
+              <svg viewBox="0 0 388 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f38d49"/>
+                    <stop offset="100%" stop-color="#e55b46"/>
+                  </linearGradient>
+                </defs>
+                <!-- 左侧方形 icon：x=0, y=0, w=86.15, h=100 (100%高度) -->
+                <svg x="0" y="0" width="86.15" height="100" viewBox="0 0 199 231" preserveAspectRatio="xMidYMid meet">
+                  <rect x="0" y="0" width="199" height="231" rx="20" fill="url(#logoG)"/>
+                  <circle cx="100" cy="100" r="50" fill="#fff" opacity="0.9"/>
+                  <text x="100" y="115" font-size="60" font-weight="900" fill="#e55b46" text-anchor="middle">娱</text>
+                </svg>
+                <!-- 右侧文字：x=96.15 (86.15+10间距), y=10, w=291.85, h=80 (80%高度) -->
+                <svg x="96.15" y="10" width="291.85" height="80" viewBox="0 0 394 108" preserveAspectRatio="xMidYMid meet">
+                  <text x="0" y="50" font-size="64" font-weight="900" fill="#111">娱资</text>
+                  <text x="0" y="95" font-size="20" fill="#999" letter-spacing="2">ENTERTAINMENT</text>
+                </svg>
+              </svg>
+            </div>
+          </div>
+          <div class="code-block">
+<span class="c">&lt;!-- 单一自包含 SVG，嵌套 &lt;svg&gt; 实现 --&gt;</span>
+&lt;<span class="k">svg</span> viewBox=<span class="s">"0 0 388 100"</span>&gt;
+  &lt;<span class="k">svg</span> x=<span class="s">"0"</span> y=<span class="s">"0"</span> width=<span class="s">"86.15"</span> height=<span class="s">"100"</span> viewBox=<span class="s">"0 0 199 231"</span>&gt;
+    <span class="c">&lt;!-- icon paths --&gt;</span>
+  &lt;/<span class="k">svg</span>&gt;
+  &lt;<span class="k">svg</span> x=<span class="s">"96.15"</span> y=<span class="s">"10"</span> width=<span class="s">"291.85"</span> height=<span class="s">"80"</span> viewBox=<span class="s">"0 0 394 108"</span>&gt;
+    <span class="c">&lt;!-- text paths --&gt;</span>
+  &lt;/<span class="k">svg</span>&gt;
+&lt;/<span class="k">svg</span>&gt;
+          </div>
+          <p style="font-size: 12px; color: var(--yz-text-muted); margin-top: 8px;">
+            尺寸：icon 高度 = 容器高度（100%），文字高度 = 80%，间距 = 10%。
+            静态信息图 logo 高度 50px，视频画布按比例放大。底部居中（<code>margin: 0 auto</code>）。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 7. DEMO STATIC ═══ -->
+    <section id="demo-static" class="section">
+      <h2 class="section-title">样图 · 静态信息图 <span class="badge">Demo</span></h2>
+      <p class="section-desc">
+        等比缩小的静态信息图样图，展示标题、表格、柱状图、附注、底部 logo 的完整组合。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">网页3 风格 · 剧组 TOP20</span><span class="demo-card-tag">480px</span></div>
+        <div class="demo-card-body" style="display: flex; justify-content: center;">
+          <div class="demo-static-frame demo-static-table" style="width: 360px;">
+            <div class="yz-static-header" style="padding: 20px 16px 12px;">
+              <h1 style="font-size: 20px; font-weight: 900; line-height: 1.3; text-align: left;">
+                2025.1-2026.6<br>在横店拍摄时长最久<br>剧组TOP20
+              </h1>
+            </div>
+            <div class="yz-static-table" style="margin: 0 12px; padding: 8px 12px;">
+              <div class="yz-row head" style="grid-template-columns: 30px 100px 1fr; padding: 8px 0; font-size: 12px;">
+                <div>#</div>
+                <div>剧组</div>
+                <div style="text-align: center;">周数</div>
+              </div>
+              <div class="yz-row" style="grid-template-columns: 30px 100px 1fr; padding: 10px 0; font-size: 12px;">
+                <div class="yz-rank" style="font-size: 13px;">1</div>
+                <div class="yz-name" style="font-size: 13px;">烟雨神游记</div>
+                <div></div>
+                <div class="yz-bar-wrap" style="grid-column: 1/-1;"><div class="yz-bar" style="width: 100%; height: 20px; font-size: 11px;">33</div></div>
+                <div class="yz-crews" style="font-size: 11px; padding-left: 42px;">周益如  杨志刚  林沐然</div>
+              </div>
+              <div class="yz-row" style="grid-template-columns: 30px 100px 1fr; padding: 10px 0; font-size: 12px;">
+                <div class="yz-rank" style="font-size: 13px;">2</div>
+                <div class="yz-name" style="font-size: 13px;">兰香如故</div>
+                <div></div>
+                <div class="yz-bar-wrap" style="grid-column: 1/-1;"><div class="yz-bar" style="width: 67%; height: 20px; background: var(--yz-tencent); font-size: 11px;">22</div></div>
+                <div class="yz-crews" style="font-size: 11px; padding-left: 42px;">谭松韵  刘学义  李梦</div>
+              </div>
+              <div class="yz-row" style="grid-template-columns: 30px 100px 1fr; padding: 10px 0; font-size: 12px;">
+                <div class="yz-rank" style="font-size: 13px;">3</div>
+                <div class="yz-name" style="font-size: 13px;">将门独后</div>
+                <div></div>
+                <div class="yz-bar-wrap" style="grid-column: 1/-1;">
+                  <span class="yz-live-dot" style="margin-right: 4px;"></span>
+                  <div class="yz-bar" style="width: 58%; height: 20px; background: var(--yz-tencent); font-size: 11px;">19</div>
+                </div>
+                <div class="yz-crews" style="font-size: 11px; padding-left: 42px;">王鹤棣  孟子义</div>
+              </div>
+            </div>
+            <div style="padding: 12px; font-size: 10px; color: var(--yz-text-muted); text-align: left; padding-left: 16px;">
+              数据来源：横店影视城片场公众号
+              <span class="yz-caption-with-dot"><span class="yz-live-dot"></span>表示还在拍</span>
+            </div>
+            <div style="padding: 8px 0 16px; text-align: center;">
+              <div class="combined-logo-demo">
+                <svg viewBox="0 0 388 100" style="height: 36px;">
+                  <rect x="0" y="0" width="86" height="100" rx="8" fill="url(#dg1)"/>
+                  <defs><linearGradient id="dg1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f38d49"/><stop offset="100%" stop-color="#e55b46"/>
+                  </linearGradient></defs>
+                  <text x="100" y="55" font-size="42" font-weight="900" fill="#111">娱资</text>
+                  <text x="100" y="85" font-size="16" fill="#999">ENTERTAINMENT</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 8. DEMO VIDEO ═══ -->
+    <section id="demo-video" class="section">
+      <h2 class="section-title">样例 · 3:4 视频画布 <span class="badge">Demo</span></h2>
+      <p class="section-desc">
+        等比缩小（0.333x）的视频画布样例，展示三种典型 motion 的尾帧样式。
+      </p>
+      <div class="demo-card">
+        <div class="demo-card-header"><span class="demo-card-title">motion05 风格 · 微缩全图</span><span class="demo-card-tag">360×480</span></div>
+        <div class="demo-card-body" style="display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;">
+          <!-- Demo 1: 微缩全图 -->
+          <div class="video-canvas-scaled">
+            <div class="vc-inner">
+              <div class="vc-title-area">
+                <h1>2025.1-2026.6<br>在横店拍摄时长最久<br>剧组TOP20</h1>
+              </div>
+              <div class="vc-chart-area">
+                <div class="vc-chart-inner" style="padding: 20px;">
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">1</div>
+                    <div class="mini-name" style="font-size: 14px;">烟雨神游记</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 100%; height: 18px; background: var(--yz-iqiyi); font-size: 12px;">33</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">2</div>
+                    <div class="mini-name" style="font-size: 14px;">伟大的长征</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 67%; height: 18px; background: var(--yz-iqiyi); font-size: 12px;">22</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">3</div>
+                    <div class="mini-name" style="font-size: 14px;">兰香如故</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 67%; height: 18px; background: var(--yz-tencent); font-size: 12px;">22</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">4</div>
+                    <div class="mini-name" style="font-size: 14px;">来战</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 67%; height: 18px; background: linear-gradient(to right, var(--yz-iqiyi) 50%, var(--yz-tencent) 50%); font-size: 12px;">22</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">5</div>
+                    <div class="mini-name" style="font-size: 14px;">尚公主</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 64%; height: 18px; background: var(--yz-tencent); font-size: 12px;">21</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">6</div>
+                    <div class="mini-name" style="font-size: 14px;">聊斋</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <div class="mini-bar" style="width: 61%; height: 18px; background: var(--yz-tencent); font-size: 12px;">20</div>
+                    </div>
+                  </div>
+                  <div class="mini-row-demo" style="grid-template-columns: 30px 140px 1fr; height: 32px; padding: 2px 0;">
+                    <div class="mini-rank" style="font-size: 14px;">8</div>
+                    <div class="mini-name" style="font-size: 14px;">将门独后</div>
+                    <div class="mini-bar-wrap" style="height: 22px;">
+                      <span class="yz-live-dot" style="width: 8px; height: 8px; margin-right: 2px;"></span>
+                      <div class="mini-bar" style="width: 58%; height: 18px; background: var(--yz-tencent); font-size: 12px;">19</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="vc-caption-area">
+                数据来源：横店影视城片场公众号<span class="yz-caption-with-dot"><span class="yz-live-dot"></span>表示还在拍</span>
+              </div>
+            </div>
+          </div>
+          <!-- Demo 2: 柱状图 motion01 -->
+          <div class="video-canvas-scaled">
+            <div class="vc-inner">
+              <div class="vc-title-area">
+                <h1>2025.1-2026.6<br>横店每周在拍剧组</h1>
+              </div>
+              <div class="vc-chart-area">
+                <div class="vc-chart-inner" style="padding: 60px 80px;">
+                  <div style="position: relative; height: 100%; padding: 20px 0 60px 60px;">
+                    <!-- Y轴 -->
+                    <div style="position: absolute; left: 60px; top: 20px; bottom: 60px; width: 2px; background: #333;"></div>
+                    <div style="position: absolute; left: 60px; bottom: 60px; right: 20px; height: 2px; background: #333;"></div>
+                    <!-- Y刻度 -->
+                    <div style="position: absolute; left: 20px; top: 20px; font-size: 16px; color: #777;">40</div>
+                    <div style="position: absolute; left: 20px; top: 25%; font-size: 16px; color: #777;">30</div>
+                    <div style="position: absolute; left: 20px; top: 50%; font-size: 16px; color: #777;">20</div>
+                    <div style="position: absolute; left: 20px; top: 75%; font-size: 16px; color: #777;">10</div>
+                    <!-- 柱子 -->
+                    <div style="position: absolute; left: 100px; right: 40px; bottom: 62px; top: 22px; display: flex; align-items: flex-end; justify-content: space-around;">
+                      <div style="width: 100px; height: 75%; background: var(--yz-accent); border-radius: 6px 6px 0 0; display: flex; justify-content: center; padding-top: 8px; color: #fff; font-size: 24px; font-weight: 900;">30.27</div>
+                      <div style="width: 100px; height: 57%; background: var(--yz-accent); border-radius: 6px 6px 0 0; display: flex; justify-content: center; padding-top: 8px; color: #fff; font-size: 24px; font-weight: 900;">22.75</div>
+                    </div>
+                    <!-- 标签 -->
+                    <div style="position: absolute; left: 100px; right: 40px; bottom: 30px; display: flex; justify-content: space-around; font-size: 16px; color: #555; font-weight: 700;">
+                      <div>2025 H1</div>
+                      <div>2026 H1</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="vc-caption-area">
+                数据来源：横店影视城片场公众号
+              </div>
+            </div>
+          </div>
+          <!-- Demo 3: 圆形气泡 motion03 -->
+          <div class="video-canvas-scaled">
+            <div class="vc-inner">
+              <div class="vc-title-area" style="height: 0;"></div>
+              <div class="vc-chart-area" style="top: 0; height: 1260px;">
+                <div class="vc-chart-inner" style="padding: 0;">
+                  <div style="display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); gap: 10px; padding: 60px; height: 100%;">
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">孟子义</div></div>
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">王楚然</div></div>
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">杨志刚</div></div>
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">烟雨神游记</div></div>
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 28px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">兰香如故</div></div>
+                    <div style="display: flex; align-items: center; justify-content: center;"><div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, var(--yz-accent), var(--yz-accent-deep)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 900; box-shadow: var(--yz-shadow-logo);">何不同舟渡</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-card-footer">
+          ↑ 左：motion05 微缩全图（标题3行 + 20柱 + 图注含红圆）｜中：motion01 柱状图（两柱+对齐刻度）｜右：motion03 圆形气泡（6正圆2×3）
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 9. CHECKLIST ═══ -->
+    <section id="checklist" class="section">
+      <h2 class="section-title">交付检查清单 <span class="badge">Checklist</span></h2>
+      <div class="demo-card">
+        <div class="demo-card-body">
+          <ul style="font-size: 14px; line-height: 2.2;">
+            <li>☐ 标题左对齐 + font-weight: 900 (heavy)</li>
+            <li>☐ 标题三行折行用 &lt;br&gt;，视频画布标题区 ≥ 240px</li>
+            <li>☐ 最小字号：静态 14px / 视频 28px（不再更小）</li>
+            <li>☐ 阿里巴巴普惠体已加载，录屏前等 document.fonts.ready</li>
+            <li>☐ 图表区底色 #FAFAFA，40px 边距，12px 圆角</li>
+            <li>☐ 图注左对齐，含「红圆 + 表示还在拍」提示</li>
+            <li>☐ 红圆 width === height（正圆，非椭圆）</li>
+            <li>☐ 柱状图高度相对 chart 容器计算像素，不相对 bar-col</li>
+            <li>☐ 折线图 Y 轴范围 15-40（去除 15 以下空白）</li>
+            <li>☐ 圆形气泡 width === height（正圆），行间距紧凑，整体居中</li>
+            <li>☐ 组合 logo 自包含 SVG（嵌套 &lt;svg&gt;），底部居中</li>
+            <li>☐ 视频画布 1080×1440 (3:4)，H.264 编码</li>
+            <li>☐ HTML 自包含（除 webfonts CDN 外无外部依赖）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// 平滑滚动导航
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+<!--
+  ═══════════════════════════════════════════════════════════════
+  AI AGENT METADATA
+  ═══════════════════════════════════════════════════════════════
+
+  ## 设计系统概述
+  - 名称: 娱资信息图排版规范
+  - 版本: v1
+  - 适用: 横店影视剧组数据信息图系列
+  - 两种形态: 静态信息图 (480px 竖屏) / 3:4 视频画布 (1080×1440)
+  - 主题色: #f38d49 (主橙) / #e55b46 (深橙)
+  - 字体: 阿里巴巴普惠体 (AliPuHui) — 400/700/900 三档
+  - 圆角: 12px (默认) / 8px (小) / 4px (极小)
+  - 间距基数: 4px
+
+  ## 平台色
+  - 爱奇艺: #50c885 (绿)
+  - 腾讯视频: #fac063 (黄)
+  - 优酷: #6cb0f9 (蓝)
+  - 芒果: #fa8c5a (橙)
+  - 拼盘: linear-gradient(to right, A 50%, B 50%)
+
+  ## 关键规范
+  1. 标题: 左对齐 + font-weight:900 (heavy) + 三行折行用 <br>
+  2. 最小字号: 静态 14px / 视频 28px
+  3. 红圆点: width === height (正圆), #e60012
+  4. 柱状图高度: 相对 chart 容器计算像素 (非 bar-col)
+  5. 折线图 Y 轴: 15-40 (去除 15 以下空白)
+  6. 圆形气泡: width === height, 行间距 10px, 居中
+  7. 组合 logo: 自包含 SVG (嵌套 <svg>), 底部居中, 高度 50px
+  8. 视频画布: 1080×1440, 标题240px + 图表1020px + 图注180px
+
+  ## CSS 类名约定
+  - .yz-static-canvas: 静态信息图容器
+  - .yz-static-header / .yz-static-table: 静态信息图子区
+  - .yz-row (.head): 表格行
+  - .yz-rank / .yz-name / .yz-bar / .yz-crews: 行内单元格
+  - .vc-title-area / .vc-chart-area / .vc-caption-area: 视频画布三段
+  - .vc-bar-row / .vc-bar-name / .vc-bar-track / .vc-bar: 视频柱状图
+  - .yz-live-dot (.video): 在拍红圆
+  - .yz-logo-group .combined-logo: 组合 logo
+  - .yz-caption-with-dot: 含红圆的图注
+-->
+</body>
+</html>
