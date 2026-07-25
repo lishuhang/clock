@@ -1,0 +1,439 @@
+[
+  {
+    "name": "oimi.ai",
+    "base": "https://oimi.ai",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP"
+    ],
+    "auth_links": [
+      "/zh/login?redirect=%2Fzh",
+      "/zh/register"
+    ],
+    "signup_page_signals": {
+      "/zh/login?redirect=%2Fzh": [
+        "Password field",
+        "Phone OTP/SMS"
+      ],
+      "/zh/register": [
+        "Email OTP",
+        "Phone OTP/SMS"
+      ]
+    },
+    "signup_form_inputs": {
+      "/zh/login?redirect=%2Fzh": [
+        "phone",
+        "password"
+      ],
+      "/zh/register": [
+        "name",
+        "phone",
+        "code",
+        "password",
+        "inviteCode"
+      ]
+    },
+    "free_tier_pricing_page": [
+      {
+        "kw": "免费",
+        "ctx": "nce2.0 支持Happyhorse-1.1 抢先支持Gemini Omni Flash 小红书图文批量创作 无限画布 随心使用 云端同步协同 素材收藏 自助免费工具 无水印 自动开启伙伴计划 立即开通 端午特惠 轻享季卡 ¥ 297 ¥ 199 2,100 算力 生成～2000张 gpt-image-2 生成～700张 NanaBanana 创作～210首SUNO 音乐 创作～400条Grok3 创作～300条Veo3.1 创作～200条Sora2 支持满血版Seedance2.0 支持Happyhorse-1.1 抢先支持Gemini Omni F"
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "免费",
+        "ctx": "乐和可视化工作流 进入画布创作 查看工作流模板 1800 人正在使用 · gpt-image-2 实时画布预览 Prompt 图像 视频 30+ 顶级模型 · 免费体验 · 4K 输出 · 画布工作流模板 选一个模板，直接进入画布创作 精选全网爆款 AI 图像与视频模板，内置完整工作流、模型和提示词，一键复刻热门创作。 Omni Flash Seedance 2.0 AI 环游世界自拍视频 上传一张人物照片，AI 自动生成穿越 20 个世界地标的自拍延时旅行视频。 Grok Video Grok 电影级跳伞冒险视频 上传人物照片，用 Grok Imagi"
+      }
+    ]
+  },
+  {
+    "name": "yuntoken.app",
+    "base": "https://yuntoken.app",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "Phone OTP/SMS"
+    ],
+    "auth_links": []
+  },
+  {
+    "name": "gptimage2.top",
+    "base": "https://gptimage2.top",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "GitHub OAuth",
+      "Phone OTP/SMS",
+      "Supabase"
+    ],
+    "auth_links": [],
+    "free_tier_pricing_page": [
+      {
+        "kw": "free",
+        "ctx": "GPT Image 2 Free Trial, Credits and Pricing GPT Image 2 AI Video Generator Create Showcases Pricing Choose a GPT Image 2 plan Compare credits and recurring plans for GPT Image 2 image generation, editing, and ong"
+      },
+      {
+        "kw": "credits",
+        "ctx": "GPT Image 2 Free Trial, Credits and Pricing GPT Image 2 AI Video Generator Create Showcases Pricing Choose a GPT Image 2 plan Compare credits and recurring plans for GPT Image 2 image generation, editing, and ongoing creativ"
+      },
+      {
+        "kw": "trial",
+        "ctx": "GPT Image 2 Free Trial, Credits and Pricing GPT Image 2 AI Video Generator Create Showcases Pricing Choose a GPT Image 2 plan Compare credits and recurring plans for GPT Image 2 image generation, editing, and ongoing "
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "Free GPT Image 2 for Text, Edits, and Structured Visuals GPT Image 2 AI Video Generator Create Showcases Pricing GPT Image 2 GPT Image 2 is designed for text rendering, realistic scenes, structured co"
+      }
+    ]
+  },
+  {
+    "name": "gptimages2.ai",
+    "base": "https://gptimages2.ai",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "BetterAuth",
+      "Email OTP",
+      "Firebase",
+      "GitHub OAuth",
+      "Google OAuth"
+    ],
+    "auth_links": [],
+    "free_tier_pricing_page": [
+      {
+        "kw": "credits",
+        "ctx": "nd casual creators exploring AI imagery. Cancel anytime. Get Basic Includes 300 credits per month All aspect ratios Standard and high quality modes Email support Most Popular Pro $30 $20 / month For creators and marketers shipping visuals every week. Best value for most creators."
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "rn a text prompt into a polished, production-ready image. 1 1. Sign in Create a free account or sign in with Google to start generating images immediately. 2 2. Set parameters Choose aspect ratio, quality, and write your prompt. Mention subjects, style, mood, composition, and any"
+      }
+    ]
+  },
+  {
+    "name": "gptimager.com",
+    "base": "https://gptimager.com",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "GitHub OAuth",
+      "Google OAuth",
+      "Magic link",
+      "Phone OTP/SMS"
+    ],
+    "auth_links": [
+      "/gallery/ui-design-system-generation",
+      "/sign-in",
+      "/sign-up"
+    ],
+    "signup_page_signals": {
+      "/gallery/ui-design-system-generation": [
+        "Email OTP",
+        "GitHub OAuth",
+        "Magic link",
+        "Phone OTP/SMS"
+      ],
+      "/sign-in": [
+        "Email OTP",
+        "Magic link",
+        "Phone OTP/SMS"
+      ],
+      "/sign-up": [
+        "Email OTP",
+        "Magic link",
+        "Phone OTP/SMS"
+      ]
+    },
+    "free_tier_pricing_page": [
+      {
+        "kw": "free",
+        "ctx": "based paid plans. Plans include GPT Image 1.5 and GPT Image 2 access, watermark-free exports, commercial use on paid plans, and cancellation at any time. Monthly Annually save 50% Starter $19.90 / month Perfect for regular creators and small projects. Billed monthly. Cancel any t"
+      },
+      {
+        "kw": "credits",
+        "ctx": "GPT Image 2 Pricing &amp; Credits | GPTImager GPTImager Home Features Gallery Guide Styles Pricing About FAQ English Sign In GPT Image 2 Pricing Clear plans and credit pricing GPTImager is an independent GPT Image 2 workflow w"
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "No No No Self-host Price (starter) $9.95/mo* $20/mo (Plus) $10/mo $20/mo (Plus) Free (self-host) Version compare Side-by-side No No No No GPTImager Model GPT Image 2 + 1.5 Text rendering Very strong Multilingual text 7+ languages 4K upscaling Built-in No watermark Always Commerci"
+      }
+    ]
+  },
+  {
+    "name": "gpt-image-prompt.com",
+    "base": "https://gpt-image-prompt.com",
+    "homepage_status": 451,
+    "reachable": false
+  },
+  {
+    "name": "perchance.org",
+    "base": "https://perchance.org",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "Magic link",
+      "Password field",
+      "Turnstile"
+    ],
+    "auth_links": [],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": ", but it's \"unusual\" code and so might have been an accident on your part. Feel free to ignore these warnings if you know what you're doing! ꒰•ᴗ•꒱ close An account lets you create your own generators on Perchance. It doesn't save or store any data related to your interactions as "
+      }
+    ]
+  },
+  {
+    "name": "glif.app",
+    "base": "https://glif.app",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP"
+    ],
+    "auth_links": [
+      "/chat/new?prompt=I+have+a+finished+ad+and+I+need+it+resized+into+multiple+social+media+formats+without+cropping+or+losing+the+design.&amp;source=fXcejJXL",
+      "/signin?callbackUrl=%2F",
+      "/use-cases/interior-design-and-home-renovation",
+      "/use-cases/print-on-demand-designs"
+    ],
+    "free_tier_pricing_page": [
+      {
+        "kw": "free",
+        "ctx": "lif Glif Product Explore Pricing MCP New Search Toggle theme Log in Get Started Free Get Started Toggle menu Free to start. Built to scale. All plans include: 100+ AI models · Full commercial rights · Images, video, audio &amp; more. Frequently Asked Questions Still need help? Re"
+      },
+      {
+        "kw": "credits",
+        "ctx": "Pricing - Credits &amp; Plans | Glif Glif Product Explore Pricing MCP New Search Toggle theme Log in Get Started Free Get Started Toggle menu Free to start. Built to scale. All plans include: 100+ AI models · F"
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "orm Glif Product Explore Pricing MCP New Search Toggle theme Log in Get Started Free Get Started Toggle menu Your AI video team. In one chat. Glif orchestrates hundreds of AI tools to create entire short-form videos, product shoots, and full ad campaigns in minutes. Describe what"
+      }
+    ]
+  },
+  {
+    "name": "atlascloud.ai",
+    "base": "https://atlascloud.ai",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "CF-Challenge",
+      "Email OTP",
+      "Google OAuth",
+      "Turnstile"
+    ],
+    "auth_links": [
+      "/login",
+      "/login?redirect_url=%2F"
+    ],
+    "signup_page_signals": {
+      "/login": [
+        "CF-Challenge",
+        "Email OTP",
+        "Turnstile"
+      ],
+      "/login?redirect_url=%2F": [
+        "CF-Challenge",
+        "Email OTP",
+        "Turnstile"
+      ]
+    },
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "On Atlas Cloud you reach it through one unified API alongside 300+ models, with free credits, 99.99% uptime, and no OpenAI organization verification required. Explore Model Classification Openai GPT Image 2 Text-to-Image $0.009/PIC Openai GPT Image 2 Edit $0.01/PIC GPT Image 2 De"
+      }
+    ]
+  },
+  {
+    "name": "pixae.app",
+    "base": "https://pixae.app",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "Magic link"
+    ],
+    "auth_links": [],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": " one workspace. Edit, upscale and refine visuals with built-in AI tools . Start Free Powered by GPT Image, Nano Banana, Seedream, Seedance, Kling &amp; Veo Image &amp; Video Creation AI Models Available on Pixae Pixae AI brings leading image and video models into one workspace, s"
+      }
+    ]
+  },
+  {
+    "name": "ainb.plus",
+    "base": "https://ainb.plus",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "Google OAuth"
+    ],
+    "auth_links": []
+  },
+  {
+    "name": "liuliuqiu.net",
+    "base": "https://liuliuqiu.net",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [],
+    "auth_links": [
+      "/assets/account-L79y0ZQc.js",
+      "/assets/auth-Di6WjvXF.js"
+    ],
+    "signup_page_signals": {
+      "/assets/auth-Di6WjvXF.js": [
+        "Email OTP"
+      ]
+    }
+  },
+  {
+    "name": "leonardo.ai",
+    "base": "https://leonardo.ai",
+    "homepage_status": 403,
+    "reachable": false
+  },
+  {
+    "name": "ideogram.ai",
+    "base": "https://ideogram.ai",
+    "homepage_status": 403,
+    "reachable": false
+  },
+  {
+    "name": "playground.com",
+    "base": "https://playground.com",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP"
+    ],
+    "auth_links": [
+      "/design",
+      "/design/c/art",
+      "/design/c/art?notour",
+      "/design/c/cards-invites",
+      "/design/c/cards-invites?notour",
+      "/design/c/ebook-cover?notour",
+      "/design/c/logo",
+      "/design/c/logo?notour",
+      "/design/c/memes?notour",
+      "/design/c/mobile-wallpaper"
+    ],
+    "signup_form_inputs": {
+      "/design": [
+        "query"
+      ],
+      "/design/c/art": [
+        "query"
+      ],
+      "/design/c/art?notour": [
+        "query"
+      ],
+      "/design/c/cards-invites": [
+        "query"
+      ],
+      "/design/c/cards-invites?notour": [
+        "query"
+      ]
+    },
+    "free_tier_pricing_page": [
+      {
+        "kw": "free",
+        "ctx": "ver 13,000,000 creators using Playground AI Annual Billing -20% Monthly Billing Free ACTIVE For exploring and casual creation Limited image generation Create up to 10 images every 3 hours Limited model access 3 monthly generations across Nano Banana, GPT Image 2, and Seedream Non"
+      },
+      {
+        "kw": "credits",
+        "ctx": " image generation Create up to 75 images every 3 hours Model access 150 monthly credits across Nano Banana, GPT Image 2, and Seedream. Each generation uses 1 credit Premium templates Unlimited access to the full premium template library Enhanced image editing Upscaling and backgr"
+      }
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "Free AI Design Tool: Logos, T-Shirts, Social Media - Playground Tools iOS App Pricing Log in Get started for free The AI design studio for everyone. Turn any idea into stickers, merch, posters, and an"
+      }
+    ]
+  },
+  {
+    "name": "seaart.ai",
+    "base": "https://seaart.ai",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "Magic link",
+      "Phone OTP/SMS"
+    ],
+    "auth_links": [
+      "https://static.cdn.seaart.me/web/prod/_nuxt/login_bg_2x.Co0kPjFQo72wHGI3.webp"
+    ],
+    "free_tier_homepage": [
+      {
+        "kw": "free",
+        "ctx": "First-Person POV Glide &amp; Track Zoom Burst Low-Angle Chase Aerial Orbit Time Freeze Seedance 2.0 4K is Here Generate movie-quality videos with the most advanced model. Try It Now GPT Image 2 Motion Control AI Girlfriend Video Generator Featured by Leading Platforms SeaArt AI h"
+      }
+    ]
+  },
+  {
+    "name": "tensor.art",
+    "base": "https://tensor.art",
+    "homepage_status": 403,
+    "reachable": false
+  },
+  {
+    "name": "civitai.com",
+    "base": "https://civitai.com",
+    "homepage_status": 200,
+    "reachable": true,
+    "auth_signals": [
+      "Email OTP",
+      "GitHub OAuth",
+      "Google OAuth"
+    ],
+    "auth_links": [
+      "/login?returnUrl=/"
+    ],
+    "signup_page_signals": {
+      "/login?returnUrl=/": [
+        "GitHub OAuth",
+        "Google OAuth",
+        "Turnstile",
+        "hCaptcha"
+      ]
+    },
+    "signup_form_inputs": {
+      "/login?returnUrl=/": [
+        "email",
+        "returnUrl",
+        "captchaMode",
+        "managed-turnstile-response",
+        "captchaFailReason"
+      ]
+    },
+    "free_tier_pricing_page": [
+      {
+        "kw": "free",
+        "ctx": "onus Blue Buzz on daily rewards 3 Private Models 8 Images per job 8 Queued jobs Free High priority generation Priority Support Unique monthly badge Ad free browsing Civitai Link : sync resources to your machine Exclusive Discord channels Early access to new features Creator Progr"
+      },
+      {
+        "kw": "daily",
+        "ctx": " 10,000 Green Buzz per month 5% Bonus Buzz on purchases 1.5x Bonus Blue Buzz on daily rewards 3 Private Models 8 Images per job 8 Queued jobs Free High priority generation Priority Support Unique monthly badge Ad free browsing Civitai Link : sync resources to your machine Exclusi"
+      }
+    ]
+  }
+]
