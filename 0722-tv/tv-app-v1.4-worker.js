@@ -1,5 +1,5 @@
 // TV Monitor Wall · v1.4 — Worker wrapper
-// Serves tv-app-v1.4.html as the response body for GET /
+// Serves tv-app-v1.3.html as the response body for GET /
 // HTML is embedded as a string literal.
 
 const HTML_BODY = `<!DOCTYPE html>
@@ -112,8 +112,9 @@ v1.3 changes (vs v1.2):
         /* 默认收起：label / caret 隐藏，只留小圆点 */
         .source-pill .pill-dot { display: none; }
         .source-pill .pill-label,
-        .source-pill .pill-caret { display: none; }
-        /* v1.4: pill hidden by default, visible on video hover/focus */
+        .source-pill .pill-caret,
+        .source-pill .pill-dot { display: none; }
+        /* v1.4: pill hidden by default */
         .source-pill { opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
         .video-container:hover .source-pill,
         .video-container:focus-within .source-pill,
@@ -313,7 +314,7 @@ v1.3 changes (vs v1.2):
         <div class="flex items-center gap-2 font-bold text-base tracking-tight cursor-default">
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             <span>Monitor<span class="text-blue-600 dark:text-blue-400">Hub</span></span>
-            <span class="ml-1 text-[10px] font-mono text-gray-400">v1.4</span>
+            <span class="ml-1 text-[10px] font-mono text-gray-400">v1.3</span>
         </div>
 
         <div class="flex items-center gap-1">
@@ -351,7 +352,7 @@ v1.3 changes (vs v1.2):
         <div id="settings-content" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-2xl flex flex-col h-[80vh] max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-800 transition-transform">
 
             <div id="modal-header" class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-850 cursor-move select-none">
-                <h2 class="text-lg font-bold">控制台设置 <span class="text-xs font-mono text-gray-400 ml-1">v1.4</span></h2>
+                <h2 class="text-lg font-bold">控制台设置 <span class="text-xs font-mono text-gray-400 ml-1">v1.3</span></h2>
                 <button onclick="toggleSettings()" class="text-gray-500 hover:text-red-500" onmousedown="event.stopPropagation()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -395,14 +396,6 @@ v1.3 changes (vs v1.2):
                                 <option value="balanced">均衡模式 (限制720p)</option>
                                 <option value="saver">手机网络 (限制480p)</option>
                                 <option value="low">极速省流 (最低画质)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">无信号时处理方式</label>
-                            <select id="autorotate-mode" onchange="updateAutoRotateMode()" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500">
-                                <option value="auto-switch">自动换台 (当前频道无信号时切到下一个频道)</option>
-                                <option value="retry">反复重试 (当前频道无信号时持续重试同源)</option>
                             </select>
                         </div>
                     </div>
@@ -623,7 +616,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         theme: 'dark',
         bandwidth: 'unlimited',
         navbarPinned: false,
-        autoRotateMode: 'auto-switch'  // v1.4: 'auto-switch' (default, same as v1.3) or 'retry'
+        autoRotateMode: 'auto-switch'
     };
 
     // 屏幕配置面板里"类别筛选"的当前值（UI 态，不持久化）
@@ -647,7 +640,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
 
         renderAbout();
         renderGrid();
-        // v1.4: Init user-pause tracking after grid is rendered (videos exist now)
+        // v1.3: Init user-pause tracking after grid is rendered (videos exist now)
         setTimeout(() => initUserPauseTracking(), 100);
         window.addEventListener('resize', () => {
             // 仅更新尺寸，不重建 DOM 以避免打断播放
@@ -937,22 +930,18 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
             if (!parsed.theme) parsed.theme = 'dark';
             if (!parsed.screenSource) parsed.screenSource = {};
             if (!parsed.screenMuted)  parsed.screenMuted = {};
-        if (!parsed.screenMutedTouched) parsed.screenMutedTouched = {};
+            if (!parsed.screenMutedTouched) parsed.screenMutedTouched = {};
         if (!parsed.autoRotateMode) parsed.autoRotateMode = 'auto-switch';
             appState = { ...appState, ...parsed };
         }
         document.getElementById('theme-select').value = appState.theme;
         document.getElementById('bandwidth-mode').value = appState.bandwidth;
-        const armSel = document.getElementById('autorotate-mode'); if (armSel) armSel.value = appState.autoRotateMode || 'auto-switch';
+        var armSel = document.getElementById('autorotate-mode'); if (armSel) armSel.value = appState.autoRotateMode || 'auto-switch';
         const savedSources = localStorage.getItem('tv_monitor_sources');
         document.getElementById('source-editor').value = savedSources || DEFAULT_SOURCES_TEXT;
     }
 
-    // v1.4: Update auto-rotate mode
-    function updateAutoRotateMode() {
-        appState.autoRotateMode = document.getElementById('autorotate-mode').value;
-        saveConfig();
-    }
+    function updateAutoRotateMode() { appState.autoRotateMode = document.getElementById("autorotate-mode").value; saveConfig(); }
     function saveConfig() {
         appState.bandwidth = document.getElementById('bandwidth-mode').value;
         localStorage.setItem('tv_monitor_config', JSON.stringify(appState));
@@ -1317,7 +1306,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
             failoverState[id] = { mode: 'fixed', url: sel, trySecure: true, retryCount: 0 };
             loadUrl(id, sel, true, src, -1);
         }
-        // v1.4: Start buffer/stall detection
+        // v1.3: Start buffer/stall detection
         startBufferDetection(id);
     }
 
@@ -1396,18 +1385,20 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
             if (next === 0) {
                 // v1.3: Completed a full cycle. Increment cycleCount.
                 st.cycleCount = (st.cycleCount || 0) + 1;
-                if (appState.autoRotateMode === 'auto-switch') {
-                    // v1.3/1.4: 3 cycles failed — rotate to next channel
-                    showStatus(id, `3轮失败,换台…`);
+                if (st.cycleCount >= 3) {
+                    if (appState.autoRotateMode === 'auto-switch') {
+                        showStatus(id, '3 rounds failed, switching...');
+                        rotateToNextChannel(id);
+                        return;
+                    } else {
+                        st.cycleCount = 0;
+                        st.lineIndex = 0;
+                        showStatus(id, 'All lines failed, retrying...');
+                        retryTimers[id] = setTimeout(() => loadUrl(id, srcGroup.urls[0], true, srcGroup, 0), 2000);
+                        return;
+                    }
+                }
                     rotateToNextChannel(id);
-                    return;
-                } else {
-                    // v1.4: retry mode — reset cycle count and retry from first line
-                    st.cycleCount = 0;
-                    st.lineIndex = 0;
-                    showStatus(id, `全部线路失败,重新开始重试…`);
-                    failoverState[id].lineIndex = 0;
-                    retryTimers[id] = setTimeout(() => loadUrl(id, srcGroup.urls[0], true, srcGroup, 0), 2000);
                     return;
                 }
                 showStatus(id, \`全部线路失败,重试第\${st.cycleCount + 1}轮…\`);
@@ -1426,7 +1417,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         const bandwidthConfig = getHlsConfig();
 
         if (Hls.isSupported()) {
-            // v1.4: backBufferLength/liveSyncDurationCount/lowLatencyMode to fix audio pitch drift
+            // v1.3: backBufferLength/liveSyncDurationCount/lowLatencyMode to fix audio pitch drift
             const hls = new Hls({ ...bandwidthConfig, debug: false, enableWorker: true, lowLatencyMode: false, backBufferLength: 10, liveSyncDurationCount: 3, liveMaxLatencyDurationCount: 8, maxBufferLength: 20, fragLoadingMaxRetry: 6 });
             hlsInstances[id] = hls;
             hls.loadSource(actualUrl);
@@ -1502,7 +1493,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
     function destroyPlayer(id) {
         if (retryTimers[id]) { clearTimeout(retryTimers[id]); delete retryTimers[id]; }
         if (hlsInstances[id]) { hlsInstances[id].destroy(); delete hlsInstances[id]; }
-        // v1.4: Clear buffer detection timer
+        // v1.3: Clear buffer detection timer
         if (bufferTimers[id]) { clearInterval(bufferTimers[id]); delete bufferTimers[id]; }
         if (bufferRefreshedFlag[id]) { delete bufferRefreshedFlag[id]; }
         const v = document.getElementById(\`video-\${id}\`);
@@ -1510,7 +1501,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         delete failoverState[id];
     }
 
-    // v1.4: Buffer/stall detection — checks every 5s.
+    // v1.3: Buffer/stall detection — checks every 5s.
     // If video is buffering or stalled (not playing, not user-paused) for >60s,
     // refresh the same source. If still failing after refresh, rotate to next channel.
     const bufferTimers = {};           // per-screen interval timer
@@ -1563,11 +1554,10 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         }, 5000);
     }
 
-    // v1.4: Rotate to next channel in source list.
+    // v1.3: Rotate to next channel in source list.
     // Paused if settings modal is open (waits for user to close).
     let pendingRotation = {};  // screenId -> true (waiting for settings close)
     function rotateToNextChannel(screenId) {
-        // v1.4: Only auto-rotate if mode is 'auto-switch'
         if (appState.autoRotateMode !== 'auto-switch') return;
         // If settings modal is open, defer rotation
         const modal = document.getElementById('settings-modal');
@@ -1593,7 +1583,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         changeSource(screenId, nextIdx);
     }
 
-    // v1.4: Process pending rotations after settings modal closes
+    // v1.3: Process pending rotations after settings modal closes
     function processPendingRotations() {
         Object.keys(pendingRotation).forEach(idStr => {
             const id = parseInt(idStr);
@@ -1607,7 +1597,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         });
     }
 
-    // v1.4: Track user pause events to distinguish from auto-stall
+    // v1.3: Track user pause events to distinguish from auto-stall
     function initUserPauseTracking() {
         SCREEN_IDS.forEach(id => {
             const v = document.getElementById(\`video-\${id}\`);
@@ -1688,13 +1678,13 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         const isOpen = !modal.classList.contains('hidden');
         if (isOpen) {
             modal.classList.add('hidden');
-            // v1.4: Settings closed — process any pending channel rotations
+            // v1.3: Settings closed — process any pending channel rotations
             setTimeout(() => processPendingRotations(), 200);
         } else {
             renderSettingsControls();
             // v1.4: Always reset to center when opening
-            const mc = document.getElementById('settings-content');
-            if (mc) { mc.style.left = ''; mc.style.top = ''; mc.style.transform = ''; mc.style.margin = ''; }
+            const mc = document.getElementById("settings-content");
+            if (mc) { mc.style.left = ""; mc.style.top = ""; mc.style.transform = ""; mc.style.margin = ""; }
             modal.classList.remove('hidden');
             switchTab('tab-general');
         }
@@ -1810,7 +1800,7 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
         const blob = new Blob([content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        // v1.4: Filename includes date-time: tv_list-YYYYMMDD-HHMMSS.txt
+        // v1.3: Filename includes date-time: tv_list-YYYYMMDD-HHMMSS.txt
         const now = new Date();
         const pad = (n) => String(n).padStart(2, '0');
         const ts = \`\${now.getFullYear()}\${pad(now.getMonth()+1)}\${pad(now.getDate())}-\${pad(now.getHours())}\${pad(now.getMinutes())}\${pad(now.getSeconds())}\`;
@@ -1863,8 +1853,9 @@ apple,https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u
 </html>
 `;
 
-export default {
-  async fetch(request) {
+addEventListener("fetch", (event) => {
+  event.respondWith((async () => {
+    const request = event.request;
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -1894,6 +1885,6 @@ export default {
       return new Response(null, { status: 204 });
     }
 
-    return new Response('Not Found', { status: 404 });
-  },
-};
+      return new Response("Not Found", { status: 404 });
+  })());
+});
