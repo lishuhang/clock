@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "保安制服倒地男子，旁人围观拍摄，画面带水印。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254807,
+  "id": "20260729000646c46874e50a5b47a0",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260729000646c46874e50a5b47a0",
+  "usage": {
+    "completion_tokens": 16,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2309,
+    "prompt_tokens_details": {
+      "cached_tokens": 3
+    },
+    "total_tokens": 2325
+  }
+}

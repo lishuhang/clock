@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Freen Sarocha舞台演出，带泰文、英文及抖音水印。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254817,
+  "id": "2026072900065543eeb30c1ae84383",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "2026072900065543eeb30c1ae84383",
+  "usage": {
+    "completion_tokens": 17,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1077,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1094
+  }
+}

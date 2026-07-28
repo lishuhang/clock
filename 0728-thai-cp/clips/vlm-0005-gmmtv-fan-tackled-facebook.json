@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "女子戴帽穿黄衣，手提白色袋子，画面模糊。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254813,
+  "id": "2026072900065241527cc477a14bcc",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "2026072900065241527cc477a14bcc",
+  "usage": {
+    "completion_tokens": 16,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2741,
+    "prompt_tokens_details": {
+      "cached_tokens": 3
+    },
+    "total_tokens": 2757
+  }
+}

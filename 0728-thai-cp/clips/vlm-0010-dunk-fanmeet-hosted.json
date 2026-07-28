@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Dunk Natachai新加坡粉丝会现场互动",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254822,
+  "id": "20260729000700068e065e429b41fe",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260729000700068e065e429b41fe",
+  "usage": {
+    "completion_tokens": 11,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2741,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2752
+  }
+}

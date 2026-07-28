@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "泰国曼谷GMM书展，工作人员拖拽中国粉丝，画面模糊有英文字幕。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254798,
+  "id": "202607290006357c1d24ad2ed24249",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "202607290006357c1d24ad2ed24249",
+  "usage": {
+    "completion_tokens": 22,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2749,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2771
+  }
+}

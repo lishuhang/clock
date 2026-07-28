@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "画面显示安保人员控制倒地者，有绿色水印，无字幕，清晰度一般。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254776,
+  "id": "20260729000615c032370682a94079",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260729000615c032370682a94079",
+  "usage": {
+    "completion_tokens": 21,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2317,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2338
+  }
+}

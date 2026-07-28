@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "男子抵达台北机场，字幕调侃其文案相似。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254823,
+  "id": "20260729000702cf103098e8c24b86",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260729000702cf103098e8c24b86",
+  "usage": {
+    "completion_tokens": 12,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2741,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2753
+  }
+}

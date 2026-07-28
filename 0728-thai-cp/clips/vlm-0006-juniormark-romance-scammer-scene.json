@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Tim吃醋看两人，湖边高楼背景，带字幕水印",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254815,
+  "id": "202607290006532ddbe4c46c924149",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "202607290006532ddbe4c46c924149",
+  "usage": {
+    "completion_tokens": 15,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2741,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2756
+  }
+}

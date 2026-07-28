@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "人群簇拥下，女子被搀扶着走出玻璃门。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1785254812,
+  "id": "20260729000651abc8020be469481e",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260729000651abc8020be469481e",
+  "usage": {
+    "completion_tokens": 16,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1077,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1093
+  }
+}
