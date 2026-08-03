@@ -1,0 +1,8 @@
+secrets/
+*.env
+.env
+__pycache__/
+node_modules/
+cookies/
+*.mp4
+*.mp3
