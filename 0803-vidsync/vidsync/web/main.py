@@ -103,8 +103,9 @@ async def list_platforms():
     ]:
         cookies = mapped.get(pid, [])
         valid = filter_expired(cookies)
-        # v0.3 支持 bilibili + douyin + xiaohongshu + kuaishou + baijiahao + weibo
-        supported = pid in ("bilibili", "douyin", "xiaohongshu", "kuaishou", "baijiahao", "weibo")
+        # v0.4 支持 8 个平台
+        supported = pid in ("bilibili", "douyin", "xiaohongshu", "kuaishou",
+                           "baijiahao", "weibo", "qq_shizi", "kr36")
         platforms.append({
             "id": pid,
             "name": name,
@@ -199,6 +200,8 @@ def _run_publish_task(task_id: str):
     from vidsync.adapters.kuaishou import KuaishouAdapter
     from vidsync.adapters.baijiahao import BaijiahaoAdapter
     from vidsync.adapters.weibo import WeiboAdapter
+    from vidsync.adapters.qq_shizi import QQShiziAdapter
+    from vidsync.adapters.kr36 import Kr36Adapter
 
     with _tasks_lock:
         task = _tasks[task_id]
@@ -239,7 +242,7 @@ def _run_publish_task(task_id: str):
         description=task["description"],
     )
 
-    # v0.3 支持的平台
+    # v0.4 支持的平台
     adapter_map = {
         "bilibili": BilibiliAdapter,
         "douyin": DouyinAdapter,
@@ -247,6 +250,8 @@ def _run_publish_task(task_id: str):
         "kuaishou": KuaishouAdapter,
         "baijiahao": BaijiahaoAdapter,
         "weibo": WeiboAdapter,
+        "qq_shizi": QQShiziAdapter,
+        "kr36": Kr36Adapter,
     }
 
     platform_list = list(task["platforms"].keys())

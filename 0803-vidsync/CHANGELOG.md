@@ -5,6 +5,46 @@ All notable changes to vidsync will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-08-03
+
+### Added
+- **企鹅号 adapter**：完整实现，草稿保存成功
+  - 视频上传 ✓ / 存草稿 ✓（text=存草稿）
+  - 实测：status=success，URL 保持 creation/video
+- **36氪 adapter**：部分实现
+  - "新建视频"按钮点击 ✓
+  - 已知问题：视频上传失败（36氪用 `kr-upload-file` 自定义组件，无 input[type=file]）
+  - v0.5 需用 file chooser 或点击组件触发上传
+- Web UI 注册 8 个平台 adapter
+
+### Platform Support Status (v0.4)
+| 平台 | 状态 | 草稿保存 |
+|------|------|---------|
+| 哔哩哔哩 | ✅ 完整 | ✓ |
+| 抖音 | ✅ 完整 | ✓ |
+| 小红书 | ✅ 完整 | ✓ |
+| 快手 | ⚠️ 部分 | 视频已上传，存草稿未找到 |
+| 百家号 | ✅ 草稿按钮成功 | ✓ |
+| 微博 | ⚠️ 无草稿功能 | 视频上传后自动发布 |
+| 企鹅号 | ✅ 完整 | ✓ |
+| 36氪 | ⚠️ 部分 | 视频上传失败（自定义组件） |
+| 视频号 | 🚧 v0.5 | - |
+| 腾讯视频 | ❌ cookie 失效 | - |
+| 虎嗅 | ❌ 滑块验证 | - |
+| 支付宝 | 🚧 v0.5 | - |
+
+### Key Findings
+- **企鹅号**：表单动态加载，但 selector 通用模式可工作，存草稿按钮 text=存草稿
+- **36氪**：用 `kr-upload-file` 自定义上传组件，无标准 input[type=file]，需特殊处理
+- **8 个平台已注册 Web UI**，其中 5 个完整跑通（B站/抖音/小红书/百家号/企鹅号）
+
+### Known Issues
+- 36氪视频上传需用 file chooser 或点击 kr-upload-file 组件
+- 快手存草稿机制待调研
+- 微博无草稿功能（平台设计）
+- 腾讯视频 cookie 失效
+- 虎嗅滑块验证
+
 ## [0.3.0] - 2026-08-03
 
 ### Added
