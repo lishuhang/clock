@@ -224,6 +224,8 @@ class BilibiliAdapter(BaseAdapter):
     def _wait_video_processed(self, timeout_ms: int = 180000):
         """等待视频处理完成。B站会显示进度条然后变成"上传完成"。"""
         logger.info("[%s] waiting for video processing...", self.platform_id)
+        # 先等至少看到上传进度或处理中提示
+        self.human_pause(3)
         try:
             # 等待进度条消失或"上传完成"出现
             self.wait_for(
@@ -231,49 +233,67 @@ class BilibiliAdapter(BaseAdapter):
                 lambda: self.page.query_selector("text=上传完成")
                        or self.page.query_selector("text=转码完成")
                        or self.page.query_selector("text=处理完成")
-                       or self.page.query_selector(".success-icon"),
+                       or self.page.query_selector(".success-icon")
+                       or self.page.query_selector(".video-title input"),  # 标题输入框出现也算
                 timeout_ms=timeout_ms,
                 interval_ms=2000,
             )
             logger.info("[%s] video processed", self.platform_id)
         except TimeoutError:
             logger.warning("[%s] video processing timeout, continuing anyway", self.platform_id)
+        # 额外等待确保 UI 稳定
+        self.human_pause(2)
 
     def _upload_cover(self, cover_path: str):
-        """上传横屏封面。"""
-        # B站封面上传：.cover-upload, .video-cover-upload input[type=file]
+        """上传横屏封面。B站按钮文字是"添加主封面"，点击后弹出 file chooser。"""
+        # 方案 1: 用 expect_file_chooser 处理文件选择对话框
+        try:
+            # 先尝试找到"添加主封面"按钮
+            cover_btn = None
+            for sel in ["text=添加主封面", "text=上传封面", ".cover-upload", ".video-cover-upload"]:
+                try:
+                    el = self.page.query_selector(sel)
+                    if el and el.is_visible():
+                        cover_btn = el
+                        logger.info("[%s] found cover button: %s", self.platform_id, sel)
+                        break
+                except Exception:
+                    continue
+
+            if cover_btn:
+                # 用 filechooser 事件处理
+                with self.page.expect_file_chooser(timeout=10000) as fc_info:
+                    cover_btn.click()
+                fc = fc_info.value
+                fc.set_files(cover_path)
+                logger.info("[%s] cover uploaded via file chooser", self.platform_id)
+                self.human_pause(2)
+                return
+        except Exception as e:
+            logger.warning("[%s] cover upload via file chooser failed: %s", self.platform_id, e)
+
+        # 方案 2: 直接找 input[type=file][accept*='image']
         selectors = [
             ".cover-upload input[type=file]",
             ".video-cover-upload input[type=file]",
             ".upload-cover input[type=file]",
             "input[type=file][accept*='image']",
         ]
-        last_err = None
         for sel in selectors:
             try:
-                self.page.wait_for_selector(sel, state="attached", timeout=10000)
+                self.page.wait_for_selector(sel, state="attached", timeout=5000)
                 self.page.set_input_files(sel, cover_path)
                 logger.info("[%s] cover uploaded via %s", self.platform_id, sel)
                 self.human_pause(1.5)
                 return
-            except Exception as e:
-                last_err = e
+            except Exception:
                 continue
-        # 如果找不到封面上传 input，可能需要先点击"更改封面"按钮
-        try:
-            self.page.click("text=更改封面", timeout=3000)
-            self.human_pause(0.5)
-            for sel in selectors:
-                try:
-                    self.page.wait_for_selector(sel, state="attached", timeout=5000)
-                    self.page.set_input_files(sel, cover_path)
-                    logger.info("[%s] cover uploaded via %s (after click)", self.platform_id, sel)
-                    return
-                except Exception:
-                    continue
-        except Exception:
-            pass
-        logger.warning("[%s] cover upload skipped (no input found)", self.platform_id)
+
+        # 方案 3: 保存 HTML 快照供 debug
+        self.save_html_snapshot("cover_upload_failed")
+        self.save_dom_state("cover_upload_state")
+        logger.warning("[%s] cover upload skipped (no input found, HTML snapshot saved)",
+                       self.platform_id)
 
     def _fill_title(self, title: str):
         """填写标题。"""
@@ -295,23 +315,49 @@ class BilibiliAdapter(BaseAdapter):
         logger.warning("[%s] title fill skipped", self.platform_id)
 
     def _fill_description(self, desc: str):
-        """填写简介。"""
+        """填写简介。B站简介区域标签是"简介"，用 textarea。"""
+        # 方案 1: 用多种 selector 找 textarea
         selectors = [
             ".input-desc textarea",
             ".video-desc textarea",
             "textarea[placeholder*='简介']",
             "#inputDesc",
+            ".desc-textarea textarea",
+            ".video-desc-box textarea",
+            "textarea[placeholder*='描述']",
+            ".ql-editor[contenteditable=true]",  # 富文本编辑器
         ]
         for sel in selectors:
             try:
-                self.page.wait_for_selector(sel, state="visible", timeout=5000)
+                self.page.wait_for_selector(sel, state="visible", timeout=3000)
                 self.page.fill(sel, "")
                 self.page.type(sel, desc, delay=30)
-                logger.info("[%s] description filled", self.platform_id)
+                logger.info("[%s] description filled via %s", self.platform_id, sel)
                 return
             except Exception:
                 continue
-        logger.warning("[%s] description fill skipped", self.platform_id)
+
+        # 方案 2: 找"简介"标签附近的 textarea
+        try:
+            # 找包含"简介"文字的元素，然后找其父容器内的 textarea
+            label = self.page.query_selector("text=简介")
+            if label:
+                # 向上找容器，再向下找 textarea
+                parent = label.evaluate("el => el.closest('.video-desc, .desc-box, .form-item, [class*=desc]')")
+                if parent:
+                    textarea = self.page.query_selector(f"{parent} textarea, {parent} [contenteditable=true]")
+                    if textarea:
+                        textarea.click()
+                        self.page.keyboard.type(desc, delay=30)
+                        logger.info("[%s] description filled via label-lookup", self.platform_id)
+                        return
+        except Exception as e:
+            logger.debug("[%s] label-lookup description failed: %s", self.platform_id, e)
+
+        # 方案 3: 保存 HTML 快照
+        self.save_html_snapshot("desc_fill_failed")
+        self.save_dom_state("desc_fill_state")
+        logger.warning("[%s] description fill skipped (HTML snapshot saved)", self.platform_id)
 
     def _fill_tags(self, tags: list[str]):
         """填写标签。B站标签不需要 #，每个输入后回车。"""
@@ -320,6 +366,8 @@ class BilibiliAdapter(BaseAdapter):
             ".input-tag input",
             "input[placeholder*='标签']",
             ".tag-input input",
+            ".video-tag input",
+            "input[placeholder*='按回车']",
         ]
         for sel in selectors:
             try:
@@ -337,32 +385,99 @@ class BilibiliAdapter(BaseAdapter):
         logger.warning("[%s] tag fill skipped", self.platform_id)
 
     def _select_category(self):
-        """选择分区。默认"生活 - 日常"。"""
+        """选择分区。
+        从 HTML 分析：B站默认会根据视频内容预选分区（.select-item-cont-inserted）。
+        策略：如果已有预选分区，直接用；否则点击 .select-controller 选第一个。
+        """
         try:
-            # B站分区选择器通常是下拉或弹窗
-            self.page.click(".dropdown-selection, .select-item, [class*='分区']", timeout=5000)
-            self.human_pause(0.5)
-            self.page.click("text=生活", timeout=3000)
-            self.human_pause(0.3)
-            self.page.click("text=日常", timeout=3000)
-            logger.info("[%s] category selected: 生活-日常", self.platform_id)
-        except Exception:
-            logger.warning("[%s] category selection skipped", self.platform_id)
+            # 方案 1: 检查是否已有选中分区
+            selected = self.page.query_selector(".select-item-cont-inserted")
+            if selected:
+                txt = selected.inner_text().strip()
+                logger.info("[%s] category already selected: %s (using default)", self.platform_id, txt)
+                return
+
+            # 方案 2: 点击 .select-controller 打开下拉，选第一个
+            controller = self.page.query_selector(".select-controller, .select-item-cont")
+            if controller:
+                controller.click()
+                self.human_pause(0.5)
+                # 选第一个选项
+                first = self.page.query_selector(".select-item-cont:not(.select-item-cont-inserted)")
+                if first:
+                    first.click()
+                    txt = first.inner_text().strip()
+                    logger.info("[%s] category selected: %s (first option)", self.platform_id, txt)
+                    return
+        except Exception as e:
+            logger.debug("[%s] category selection error: %s", self.platform_id, e)
+
+        # 方案 3: 保存快照供 debug
+        self.save_html_snapshot("category_select_failed")
+        logger.warning("[%s] category selection skipped (HTML snapshot saved)", self.platform_id)
 
     def _save_draft(self) -> str | None:
-        """点击"保存草稿"按钮，返回草稿 URL。"""
+        """点击"保存草稿"按钮，返回草稿 URL。
+        HTML 分析：B站存草稿按钮是 <span class="submit-draft">存草稿</span>
+        """
         try:
-            # 优先找"保存草稿"按钮
-            for sel in ["text=保存草稿", "text=存草稿", ".btn-draft", "button:has-text('草稿')"]:
+            # 多种 selector 尝试
+            selectors = [
+                ".submit-draft",
+                "span.submit-draft",
+                "[data-reporter-id='105']",
+                "text=存草稿",
+                "text=保存草稿",
+                ".submit-container .submit-draft",
+            ]
+            for sel in selectors:
                 try:
-                    self.page.click(sel, timeout=5000)
-                    self.human_pause(2)
-                    logger.info("[%s] draft saved (via %s)", self.platform_id, sel)
-                    return self.page.url
-                except Exception:
+                    el = self.page.query_selector(sel)
+                    if el:
+                        # 不检查 is_visible，直接尝试点击
+                        try:
+                            el.click(timeout=3000)
+                        except Exception:
+                            # fallback: 用 JavaScript 点击
+                            el.evaluate("el => el.click()")
+                        self.human_pause(3)
+                        logger.info("[%s] draft saved (via %s)", self.platform_id, sel)
+                        self._handle_confirm_dialog()
+                        return self.page.url
+                except Exception as e:
+                    logger.debug("[%s] click %s failed: %s", self.platform_id, sel, e)
                     continue
-            logger.warning("[%s] no save draft button found", self.platform_id)
-            return None
+
+            # 最后兜底：用 page.click 直接点 text
+            try:
+                self.page.click("text=存草稿", timeout=5000)
+                self.human_pause(3)
+                logger.info("[%s] draft saved (via text=存草稿 fallback)", self.platform_id)
+                self._handle_confirm_dialog()
+                return self.page.url
+            except Exception:
+                pass
+
+            # 保存 HTML 快照供 debug
+            self.save_html_snapshot("save_draft_button_not_found")
+            self.save_dom_state("save_draft_state")
+            logger.warning("[%s] no save draft button found (HTML snapshot saved)", self.platform_id)
+            return self.page.url
         except Exception as e:
             logger.error("[%s] save draft failed: %s", self.platform_id, e)
             return None
+
+    def _handle_confirm_dialog(self):
+        """处理保存草稿后可能出现的确认弹窗。"""
+        self.human_pause(0.5)
+        for sel in ["text=确认", "text=确定", "text=继续保存", "text=仍然保存",
+                    ".bcc-modal button:has-text('确')", ".modal button:has-text('确')"]:
+            try:
+                el = self.page.query_selector(sel)
+                if el and el.is_visible():
+                    el.click()
+                    self.human_pause(1)
+                    logger.info("[%s] confirmed dialog: %s", self.platform_id, sel)
+                    return
+            except Exception:
+                continue

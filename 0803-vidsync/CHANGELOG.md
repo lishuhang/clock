@@ -5,6 +5,22 @@ All notable changes to vidsync will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-08-03
+
+### Fixed
+- **B站封面上传**：file chooser 方式超时，但 fallback 到 `.cover-upload input[type=file]` 成功上传。VLM 确认封面缩略图可见。
+- **B站简介填写**：找到正确 selector `.ql-editor[contenteditable=true]`（B站用 Quill 富文本编辑器，不是普通 textarea）。
+- **B站分区选择**：从 HTML 快照分析发现 B站默认会根据视频内容预选分区（`.select-item-cont-inserted`），策略改为"如有预选就用默认，否则选第一个"。实测确认分区"科技数码"被正确识别。
+- **B站存草稿按钮**：从 HTML 快照分析找到正确 selector `.submit-draft`（是 `<span>` 不是 `<button>`）。改进点击逻辑：不检查 is_visible，先试 click() 再 fallback 到 JavaScript el.click()。实测确认页面跳转到草稿箱 `?group=draft`。
+
+### Verified
+- **VLM（glm-5v-turbo）分析截图 11 确认**：草稿箱列表显示 2 条草稿（v0.1.0 + v0.1.1 各 1 条）。
+- **完整流程**：登录态识别 → 视频上传 → 封面上传 → 标题 → 简介 → 5标签 → 分区 → 存草稿 → 跳转草稿箱。全部成功。
+
+### Added
+- `_handle_confirm_dialog()` 方法：处理保存草稿后可能出现的确认弹窗。
+- B站 adapter 的 HTML 快照保存机制：失败时自动保存 page.html + dom_state.json，供 debug 分析。
+
 ## [0.1.0] - 2026-08-03
 
 ### Added
