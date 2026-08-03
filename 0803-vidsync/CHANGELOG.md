@@ -5,6 +5,50 @@ All notable changes to vidsync will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-08-03
+
+### Added
+- **百家号 adapter**：完整实现，草稿保存按钮点击成功
+  - 视频上传 ✓ / 封面 ✓ / 简介 ✓（contenteditable）/ 存草稿 ✓（`button:has(span:has-text('存草稿'))`）
+  - 关键发现：百家号 edit?type=video 会重定向到 content，需先访问主页让 cookie 生效
+  - 关键发现：登录态检测不能用 selector，用 URL 判断更可靠
+  - 已知问题：标题和标签 selector 不对（表单动态加载，需视频上传后才出现）
+- **微博 adapter**：部分实现
+  - 视频上传 ✓ / 封面 ✓
+  - **重要发现：微博没有"存草稿"功能！** 视频上传完毕后会"自动发布微博"
+  - 已知问题：标题/简介/话题 selector 不对（视频上传后表单未及时出现）
+  - v0.3 策略：微博标记为"无草稿功能"，编辑需在视频上传前就填好所有信息
+- Web UI 注册 6 个平台 adapter
+
+### Platform Support Status (v0.3)
+| 平台 | 状态 | 草稿保存 |
+|------|------|---------|
+| 哔哩哔哩 | ✅ 完整跑通 | ✓ |
+| 抖音 | ✅ 完整跑通 | ✓ |
+| 小红书 | ✅ 完整跑通 | ✓ |
+| 快手 | ⚠️ 部分 | 视频已上传，存草稿未找到 |
+| 百家号 | ✅ 草稿按钮点击成功 | ✓（标题/标签待修） |
+| 微博 | ⚠️ 无草稿功能 | 视频上传后自动发布 |
+| 企鹅号 | 🚧 v0.4 | - |
+| 腾讯视频 | ❌ cookie 失效 | - |
+| 虎嗅 | ❌ 需滑块验证 | - |
+| 36氪 | 🚧 v0.4 | - |
+| 支付宝 | 🚧 v0.4 | - |
+
+### Key Findings
+- **微博无草稿功能**：视频上传后自动发布，无法保存草稿。这是平台设计，非 bug
+- **百家号 cookie warmup**：需先访问主页让 cookie 生效，再导航到发布页
+- **登录态检测**：用 URL 判断（不含 login/passport）比 selector 更可靠
+- **腾讯视频 cookie 失效**：需用户重新导出
+- **虎嗅需滑块验证**：headless 模式无法通过
+
+### Known Issues
+- 百家号标题/标签 selector 待修复（表单动态加载）
+- 微博标题/简介/话题 selector 待修复
+- 快手存草稿机制待调研
+- 腾讯视频 cookie 失效
+- 虎嗅滑块验证
+
 ## [0.2.0] - 2026-08-03
 
 ### Added
