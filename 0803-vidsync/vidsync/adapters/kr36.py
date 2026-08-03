@@ -129,14 +129,33 @@ class Kr36Adapter(BaseAdapter):
         logger.warning("[%s] new video button not found", self.platform_id)
 
     def _upload_video(self, video_path: str):
+        """上传视频。36氪用 kr-upload-file Vue 组件（.add-file 子元素）。
+        点击 .add-file 触发原生 file chooser。
+        """
+        # 方案 1: 点击 .add-file 触发 file chooser
+        try:
+            add_file_el = self.page.query_selector(".kr-upload-file .add-file, .kr-upload-file")
+            if add_file_el:
+                with self.page.expect_file_chooser(timeout=10000) as fc_info:
+                    add_file_el.click()
+                fc = fc_info.value
+                fc.set_files(video_path)
+                logger.info("[%s] video uploaded via .add-file click + file chooser",
+                           self.platform_id)
+                return
+        except Exception as e:
+            logger.debug("[%s] .add-file click failed: %s", self.platform_id, e)
+
+        # 方案 2: 直接找 input[type=file]（可能在点击后才出现）
         for sel in ["input[type=file][accept*='video']", "input[type=file]"]:
             try:
-                self.page.wait_for_selector(sel, state="attached", timeout=10000)
+                self.page.wait_for_selector(sel, state="attached", timeout=5000)
                 self.page.set_input_files(sel, video_path)
                 logger.info("[%s] video uploaded via %s", self.platform_id, sel)
                 return
             except Exception:
                 continue
+
         self.save_html_snapshot("video_upload_failed")
         raise RuntimeError("video upload failed")
 

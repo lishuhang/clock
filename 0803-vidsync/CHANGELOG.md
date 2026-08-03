@@ -5,6 +5,15 @@ All notable changes to vidsync will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.1] - 2026-08-03
+
+### Fixed
+- 36氪视频上传尝试用 `.add-file` 点击触发 file chooser（仍失败，需 v0.5 深入调试）
+
+### Known Issues
+- 36氪 kr-upload-file 组件用非标准上传方式（可能拖拽或 XHR），file chooser 不触发
+- 需 v0.5 用 CDP 协议或拦截 XHR 上传
+
 ## [0.4.0] - 2026-08-03
 
 ### Added
