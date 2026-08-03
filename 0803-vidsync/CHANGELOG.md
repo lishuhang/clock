@@ -5,6 +5,62 @@ All notable changes to vidsync will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-08-03
+
+### Added
+- **抖音 adapter**：完整实现，端到端实测成功
+  - 视频上传 ✓ / 封面上传 ✓（含裁剪弹窗关闭）/ 标题 ✓ / 简介 ✓（Slate 富文本）/ 话题 ✓ / 暂存离开 ✓
+  - 关键发现：抖音存草稿按钮文字是"暂存离开"（不是"存草稿"）
+  - 关键发现：抖音简介用 Slate 富文本编辑器，wait_for_selector 超时，改用 JS evaluate focus
+- **小红书 adapter**：完整实现，端到端实测成功
+  - 视频上传 ✓ / 封面 ✓ / 标题 ✓ / 简介+话题 ✓（contenteditable）/ 暂存离开 ✓
+  - 关键发现：小红书用 Web Component `<xhs-publish-btn>`（closed shadow DOM），普通 selector 找不到按钮
+  - 解决方案：用 Playwright piercing selector `>>>` 或基于 bounding box 坐标点击
+- **快手 adapter**：部分实现
+  - 视频上传 ✓ / 封面 ✓ / 简介+话题 ✓（#work-description-edit contenteditable）
+  - 关键发现：快手没有独立标题框，标题+简介都填到"作品描述"
+  - 关键发现：快手有引导教程 tooltip（含"下一步"），需先 Skip
+  - 已知问题：未找到"存草稿"按钮（快手可能无此功能或需其他方式）
+- Web UI 注册 4 个平台 adapter
+- 探查脚本：probe_douyin.py / probe_xhs.py / probe_ks.py
+- 测试脚本：test_douyin_adapter.py / test_xhs_adapter.py / test_ks_adapter.py
+
+### Fixed
+- B站简介 selector 改进（增加 .ql-editor）
+- 抖音封面裁剪弹窗自动关闭
+- 小红书 shadow DOM 按钮点击
+- 快手引导教程 tooltip 自动跳过
+
+### Platform Support Status (v0.2)
+| 平台 | 状态 | 草稿保存 |
+|------|------|---------|
+| 哔哩哔哩 | ✅ 完整跑通 | ✓ |
+| 抖音 | ✅ 完整跑通 | ✓ |
+| 小红书 | ✅ 完整跑通 | ✓（话题含特殊符号会被拒） |
+| 快手 | ⚠️ 部分 | 视频已上传但未找到存草稿按钮 |
+| 视频号 | 🚧 v0.3 | - |
+| 百家号 | 🚧 v0.3 | - |
+| 企鹅号 | 🚧 v0.3 | - |
+| 腾讯视频 | 🚧 v0.3 | - |
+| 微博 | 🚧 v0.3 | - |
+| 虎嗅 | 🚧 v0.4 | - |
+| 36氪 | 🚧 v0.4 | - |
+| 支付宝 | 🚧 v0.4 | - |
+
+### Known Issues
+- 抖音话题添加可能不成功（需等推荐弹窗），但草稿能保存
+- 小红书话题含特殊符号（如 v0.2 的点）会被拒绝
+- 快手未找到存草稿按钮（可能快手无此功能，或需刷新页面）
+- 视频号 cookie 易失效
+- 36kr misopen 是 JS SPA
+- 虎嗅视频投稿必须填微信公众号文章链接
+
+### Notes
+- 3 个平台（B站/抖音/小红书）端到端实测成功，草稿保存确认
+- VLM（glm-5v-turbo）用于分析每步截图，验证页面实际状态
+- HTML 快照分析是找 selector 的关键方法
+- Shadow DOM 用 piercing selector 或坐标点击解决
+
 ## [0.1.1] - 2026-08-03
 
 ### Fixed

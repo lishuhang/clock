@@ -103,13 +103,15 @@ async def list_platforms():
     ]:
         cookies = mapped.get(pid, [])
         valid = filter_expired(cookies)
+        # v0.2 支持 bilibili + douyin + xiaohongshu + kuaishou
+        supported = pid in ("bilibili", "douyin", "xiaohongshu", "kuaishou")
         platforms.append({
             "id": pid,
             "name": name,
             "cookie_total": len(cookies),
             "cookie_valid": len(valid),
             "ready": len(valid) > 0,
-            "supported_in_v01": pid == "bilibili",
+            "supported_in_v01": supported,
         })
     return {"platforms": platforms, "cookies_dir": str(cookies_dir)}
 
@@ -192,6 +194,9 @@ def _run_publish_task(task_id: str):
     from vidsync.browser.launcher import BrowserLauncher
     from vidsync.adapters.base import Material
     from vidsync.adapters.bilibili import BilibiliAdapter
+    from vidsync.adapters.douyin import DouyinAdapter
+    from vidsync.adapters.xiaohongshu import XiaohongshuAdapter
+    from vidsync.adapters.kuaishou import KuaishouAdapter
 
     with _tasks_lock:
         task = _tasks[task_id]
@@ -232,6 +237,14 @@ def _run_publish_task(task_id: str):
         description=task["description"],
     )
 
+    # v0.2 支持的平台
+    adapter_map = {
+        "bilibili": BilibiliAdapter,
+        "douyin": DouyinAdapter,
+        "xiaohongshu": XiaohongshuAdapter,
+        "kuaishou": KuaishouAdapter,
+    }
+
     platform_list = list(task["platforms"].keys())
     for pid in platform_list:
         with _tasks_lock:
@@ -239,21 +252,20 @@ def _run_publish_task(task_id: str):
             task["progress_log"].append(f"[{pid}] 开始处理...")
 
         try:
-            if pid == "bilibili":
-                adapter = BilibiliAdapter(
+            if pid in adapter_map:
+                adapter = adapter_map[pid](
                     cookies=mapped.get(pid, []),
                     run_logger=run_logger,
                     browser_context=ctx,
                     config=cfg,
                 )
             else:
-                # v0.1 只支持 bilibili，其他平台标记为 not_implemented
                 with _tasks_lock:
                     task["platforms"][pid] = {
                         "status": "skipped",
-                        "error": "v0.1 暂未实现，等待后续版本",
+                        "error": "v0.2 暂未实现，等待后续版本",
                     }
-                    task["progress_log"].append(f"[{pid}] ⏸ v0.1 暂未实现")
+                    task["progress_log"].append(f"[{pid}] ⏸ v0.2 暂未实现")
                 continue
 
             result = adapter.save_draft(material)
