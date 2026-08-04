@@ -1,0 +1,46 @@
+# vidsync 用户配置文件
+# 编辑此文件后重启 vidsync 生效
+
+browser:
+  # 浏览器选择：优先 chrome，没有则试 msedge
+  channel: "chrome"   # 可选: "chrome" / "msedge" / "chromium"
+  # 如果 Chrome 是 portable 版本，取消注释并填实际路径
+  # Windows 示例: "D:/PortableApps/Chrome/chrome.exe"
+  # macOS 示例: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  # executable_path: ""
+
+  # 是否无头模式（v0.1 建议 false，方便观察和 debug）
+  headless: false
+
+  # 用户数据目录（留空则使用临时 profile）
+  # 如需复用本机 Chrome 的登录态，可指定本机 profile 路径，但需先关闭 Chrome
+  # user_data_dir: ""
+
+  # 视窗大小
+  viewport:
+    width: 1280
+    height: 800
+
+  # 操作间停顿（毫秒），模拟真人节奏
+  slow_mo: 100
+
+server:
+  # Web UI 端口
+  port: 8765
+  host: "127.0.0.1"
+
+paths:
+  # cookies 目录（相对 vidsync/ 或绝对路径）
+  cookies_dir: "cookies"
+  # 日志目录
+  logs_dir: "logs"
+  # 上传临时目录
+  upload_dir: "uploads"
+
+publish:
+  # 默认保存草稿而不发布（强烈建议 true）
+  draft_only: true
+  # 失败时是否继续后续平台
+  continue_on_failure: true
+  # 单平台超时（秒）
+  per_platform_timeout: 300
