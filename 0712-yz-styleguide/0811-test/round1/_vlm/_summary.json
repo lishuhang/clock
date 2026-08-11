@@ -1,0 +1,38 @@
+[
+  {
+    "image": "“战狼”阶段最像在评价吴京本人.jpg",
+    "rc": 1,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/“战狼”阶段最像在评价吴京本人.json",
+    "stderr_tail": "iled with status 429: {\"error\":\"Too many requests, please try again later\"}\n      at createChatCompletionVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/index.js:148:27)\n      at async handleVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:579:52)\n      at async main (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:1068:23)\n\n❌ Error: API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}\n"
+  },
+  {
+    "image": "对比上映初期与当下，网友对吴京作品评价的维度在变化.jpg",
+    "rc": 1,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/对比上映初期与当下，网友对吴京作品评价的维度在变化.json",
+    "stderr_tail": "iled with status 429: {\"error\":\"Too many requests, please try again later\"}\n      at createChatCompletionVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/index.js:148:27)\n      at async handleVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:579:52)\n      at async main (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:1068:23)\n\n❌ Error: API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}\n"
+  },
+  {
+    "image": "性别批评相关的评论通常打分更低.jpg",
+    "rc": 1,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/性别批评相关的评论通常打分更低.json",
+    "stderr_tail": "iled with status 429: {\"error\":\"Too many requests, please try again later\"}\n      at createChatCompletionVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/index.js:148:27)\n      at async handleVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:579:52)\n      at async main (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:1068:23)\n\n❌ Error: API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}\n"
+  },
+  {
+    "image": "观众评价吴京的维度发生了四个阶段的变化.jpg",
+    "rc": 1,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/观众评价吴京的维度发生了四个阶段的变化.json",
+    "stderr_tail": "iled with status 429: {\"error\":\"Too many requests, please try again later\"}\n      at createChatCompletionVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/index.js:148:27)\n      at async handleVision (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:579:52)\n      at async main (/home/z/.bun/install/global/node_modules/z-ai-web-dev-sdk/dist/cli.js:1068:23)\n\n❌ Error: API request failed with status 429: {\"error\":\"Too many requests, please try again later\"}\n"
+  },
+  {
+    "image": "吴京作品在四个不同阶段的代表性评论.jpg",
+    "rc": 0,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/吴京作品在四个不同阶段的代表性评论.json",
+    "stderr_tail": ""
+  },
+  {
+    "image": "2012-2026的十部作品如何改写吴京形象.jpg",
+    "rc": 0,
+    "out": "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round1/_vlm/2012-2026的十部作品如何改写吴京形象.json",
+    "stderr_tail": ""
+  }
+]
