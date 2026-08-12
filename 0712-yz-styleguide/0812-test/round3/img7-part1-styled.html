@@ -20,50 +20,38 @@ body{font-family:var(--yz-font);background:#fff;padding:0;margin:0;}
 .chart-footer-1x1{flex-shrink:0;margin-top:20px;padding-top:14px;border-top:1px solid var(--yz-border-soft);display:flex;justify-content:space-between;align-items:baseline;}
 .chart-source-1x1{font-size:var(--yz-fs-footer);color:var(--yz-text-muted);text-align:left;line-height:1.5;flex:1;}
 .chart-part-num{font-size:24px;color:var(--yz-text-muted);font-weight:700;white-space:nowrap;margin-left:20px;}
-.chart-legend{display:flex;flex-wrap:wrap;gap:14px 28px;margin-top:18px;font-size:28px;color:#6b6666;}
-.chart-legend .legend-item{display:flex;align-items:center;gap:10px;}
-.chart-legend .legend-swatch{width:24px;height:24px;border-radius:4px;}
-.chart-legend .legend-swatch.line{width:32px;height:8px;border-radius:2px;}
-.axis-text{font-size:24px;fill:#6b6666;font-family:'AliPuHui',sans-serif;}
-.axis-line{stroke:#9a9595;stroke-width:2;}
-.grid-line{stroke:#eee;stroke-width:1.5;}
-.data-label{font-size:22px;font-weight:700;font-family:'AliPuHui',sans-serif;}
-.data-table-1x1{width:100%;border-collapse:collapse;font-size:32px;margin-top:20px;}
-.data-table-1x1 th{background:#fafafa;padding:16px 10px;text-align:center;font-weight:900;color:#312e2e;border-bottom:2px solid #dcdcdc;font-size:26px;}
-.data-table-1x1 td{padding:14px 10px;text-align:center;border-bottom:1px solid #f0f0f0;color:#312e2e;font-size:28px;}
+.data-table-1x1{width:100%;border-collapse:collapse;font-size:28px;margin-top:10px;}
+.data-table-1x1 th{background:#fafafa;padding:12px 8px;text-align:center;font-weight:900;color:#312e2e;border-bottom:2px solid #dcdcdc;font-size:24px;}
+.data-table-1x1 td{padding:10px 8px;text-align:center;border-bottom:1px solid #f0f0f0;color:#312e2e;font-size:26px;}
 .data-table-1x1 td:first-child{text-align:left;font-weight:700;color:#fc8166;}
+.data-table-1x1 tr.section-header td{background:#fff5f0;font-weight:900;color:#fc8166;font-size:24px;}
+.data-table-1x1 tr.total-row td{font-weight:900;background:#fafafa;}
 #yz-selfcheck-banner{position:absolute;top:8px;right:8px;padding:8px 16px;border-radius:6px;font-size:14px;font-weight:700;z-index:99999;display:none;}
 #yz-selfcheck-banner.pass{background:#50c885;color:#fff;display:block;}
 #yz-selfcheck-banner.fail{background:#e60012;color:#fff;display:block;}
 </style>
 
 <style data-purpose="round3-animations">
-@property --pie-reveal { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 .chart-logo-1x1, .chart-title-1x1, .chart-source-1x1, .chart-part-num,
-.chart-body-1x1 .chart-legend,
-.chart-body-1x1 .data-table-1x1,
-.chart-body-1x1 svg { opacity:0; }
+.chart-body-1x1 .data-table-1x1 { opacity:0; }
 .chart-body-1x1 .data-table-1x1 tbody tr { opacity:0; }
 .chart-logo-1x1{ animation: fadeIn 1.2s ease-out 0s forwards; }
 .chart-title-1x1{ animation: fadeIn 1.2s ease-out 1.5s forwards; }
 .chart-source-1x1{ animation: fadeIn 1.2s ease-out 3s forwards; }
 .chart-part-num{ animation: fadeIn 1.2s ease-out 3s forwards; }
-.chart-body-1x1 .chart-legend{ animation: fadeIn 1.2s ease-out 3s forwards; }
-.chart-body-1x1 svg{ animation: fadeIn 1.5s ease-out 4.5s forwards; }
 .chart-body-1x1 .data-table-1x1{ animation: fadeIn 1.5s ease-out 4.5s forwards; }
 .chart-body-1x1 .data-table-1x1 thead{ animation: fadeIn 0.6s ease-out 4.5s forwards; opacity:0; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(1){ animation: rowFade 0.5s ease-out 4.5s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(2){ animation: rowFade 0.5s ease-out 4.8s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(3){ animation: rowFade 0.5s ease-out 5.1s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(4){ animation: rowFade 0.5s ease-out 5.4s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(5){ animation: rowFade 0.5s ease-out 5.7s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(6){ animation: rowFade 0.5s ease-out 6.0s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(7){ animation: rowFade 0.5s ease-out 6.3s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(8){ animation: rowFade 0.5s ease-out 6.6s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(9){ animation: rowFade 0.5s ease-out 6.9s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(10){ animation: rowFade 0.5s ease-out 7.2s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(11){ animation: rowFade 0.5s ease-out 7.5s forwards; }
-.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(12){ animation: rowFade 0.5s ease-out 7.8s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(1){ animation: rowFade 0.4s ease-out 4.5s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(2){ animation: rowFade 0.4s ease-out 4.7s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(3){ animation: rowFade 0.4s ease-out 4.9s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(4){ animation: rowFade 0.4s ease-out 5.1s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(5){ animation: rowFade 0.4s ease-out 5.3s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(6){ animation: rowFade 0.4s ease-out 5.5s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(7){ animation: rowFade 0.4s ease-out 5.7s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(8){ animation: rowFade 0.4s ease-out 5.9s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(9){ animation: rowFade 0.4s ease-out 6.1s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(10){ animation: rowFade 0.4s ease-out 6.3s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(11){ animation: rowFade 0.4s ease-out 6.5s forwards; }
 @keyframes fadeIn{ to{ opacity:1; } }
 @keyframes rowFade{ to{ opacity:1; } }
 #yz-selfcheck-banner{ display:none !important; }
@@ -21807,7 +21795,7 @@ Q 328 604.8 326.7 605.35 324.65 606.05 323.3 607.7 322.55 608.75 321.35 611.4 Z"
 <th>2025Q3</th>
 <th>2025Q4</th>
 </tr></thead><tbody>
-<tr>
+<tr class="section-header">
 <td>收入</td>
 <td></td>
 <td></td>
@@ -21839,11 +21827,67 @@ Q 328 604.8 326.7 605.35 324.65 606.05 323.3 607.7 322.55 608.75 321.35 611.4 Z"
 <td>-2</td>
 <td>-6</td>
 </tr>
+<tr class="total-row">
+<td>总收入</td>
+<td>4,816</td>
+<td>4,862</td>
+<td>4,972</td>
+<td>5,081</td>
+<td>5,346</td>
+</tr>
+<tr class="section-header">
+<td>成本</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>制作成本</td>
+<td>-2,473</td>
+<td>-2,378</td>
+<td>-2,481</td>
+<td>-2,392</td>
+<td>-2,636</td>
+</tr>
+<tr>
+<td>其他成本</td>
+<td>-2,082</td>
+<td>-2,174</td>
+<td>-2,162</td>
+<td>-2,287</td>
+<td>-2,260</td>
+</tr>
+<tr class="total-row">
+<td>总成本</td>
+<td>-4,555</td>
+<td>-4,552</td>
+<td>-4,643</td>
+<td>-4,679</td>
+<td>-4,896</td>
+</tr>
+<tr class="total-row">
+<td>营业利润</td>
+<td>261</td>
+<td>310</td>
+<td>329</td>
+<td>402</td>
+<td>450</td>
+</tr>
+<tr class="total-row">
+<td>营业利润率（OPM）</td>
+<td>5.4%</td>
+<td>6.4%</td>
+<td>6.6%</td>
+<td>7.9%</td>
+<td>8.4%</td>
+</tr>
 </tbody></table>
   </div>
   <div class="chart-footer-1x1">
     <div class="chart-source-1x1">数据来源：公司公告，使用日历年</div>
-    <div class="chart-part-num">1/3</div>
+    <div class="chart-part-num">1/1</div>
   </div>
 </div>
 <script>
