@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "{\n  \"image_summary\": \"该图表以时间轴形式展示了2018年至2026年海外媒体行业发生的重大并购案，重点突出了流媒体平台整合与巨头竞争格局的演变。\",\n  \"chart_type\": \"数据表格\",\n  \"title_text\": \"海外媒体行业重要收并购案\",\n  \"footer_text\": \"资料来源：公开信息整理\",\n  \"axes\": {\n    \"x_label\": \"\",\n    \"y_label\": \"\",\n    \"x_categories\": [],\n    \"y_range_or_categories\": []\n  },\n  \"series\": [],\n  \"table_data\": {\n    \"headers\": [\"时间\", \"收购方/合并方\", \"目标公司/资产\", \"交易金额\", \"交易类型与战略意义\"],\n    \"rows\": [\n      [\"2018年\", \"AT&T\", \"时代华纳 (Time Warner)\", \"850亿美元\", \"横向整合。AT&T拿下华纳兄弟影业、HBO等王牌内容资产，为推出流媒体平台HBO Max奠定基础。\"],\n      [\"2019年\", \"Viacom\", \"CBS\", \"117亿美元\", \"强强合并。Viacom与CBS合并为ViacomCBS（后更名Paramount Global），整合双方资源以应对流媒体竞争。\"],\n      [\"2020年\", \"福克斯 (Fox Corp.)\", \"Tubi\", \"4.4亿美元\", \"布局免费流媒体（FAST）。收购免费广告支持的流媒体平台Tubi，切入快速增长的市场。\"],\n      [\"2022年\", \"华纳传媒 (WarnerMedia)\", \"探索频道 (Discovery)\", \"430亿美元\", \"对等合并。合并成立华纳兄弟探索（WBD），整合HBO Max与Discovery+，形成综合流媒体平台Max。\"],\n      [\"2024年\", \"天空之舞 (Skydance)\", \"派拉蒙全球 (Paramount Global)\", \"80亿美元\", \"控股收购。天空之舞完成对派拉蒙的控股，整合Paramount+平台及《碟中谍》等头部IP。\"],\n      [\"2025-2026年\", \"派拉蒙天舞 (Paramount Skydance)\", \"华纳兄弟探索 (WBD)\", \"约1110亿美元\", \"世纪并购。好莱坞史上最大收购案之一。派拉蒙击败Netflix等对手，成功收购WBD，将整合Paramount+与HBO Max，缔造流媒体巨头。\"],\n      [\"2026年\", \"迪士尼 (Disney)\", \"Hulu (剩余股份)\", \"近4.4亿美元\", \"完全控股。从康卡斯特手中收购Hulu剩余股份，实现对流媒体平台Hulu的完全控制，以便深度整合进Disney+生态。\"]\n    ]\n  },\n  \"color_encoding\": [\n    {\"color\": \"#fc8166\", \"meaning\": \"表头背景色及标题强调色（娱乐资本论主色）\"},\n    {\"color\": \"#ffffff\", \"meaning\": \"表格单元格背景色\"},\n    {\"color\": \"#000000\", \"meaning\": \"正文文字颜色\"}\n  ],\n  \"visualization_spec\": \"该可视化采用标准的数据表格布局，整体画布比例约为16:9，适合移动端阅读。顶部标题栏采用黑色背景，标题文字“海外媒体行业重要收并购案”使用粗体白色字体，其中“重要收并购案”五个字采用娱乐资本论标志性的橙红色（#fc8166）进行视觉强化。表格部分由5列组成：时间、收购方/合并方、目标公司/资产、交易金额、交易类型与战略意义。表头行背景色为#fc8166，文字为白色加粗；数据行采用斑马纹设计（奇数行浅灰#f5f5f5，偶数行纯白），增强阅读引导性。表格内部嵌有半透明的卡通鱼头形象作为装饰水印，并带有“娱乐资本论”及“ENTERTAINMENT CAPITAL”的淡灰色背景字样。底部包含资料来源说明及品牌Logo。字号层级分明：标题最大（约24px），表头次之（约14px），表格内容约为12px。交易金额列的数据采用了右对齐或居中对齐方式以便于数值比较。\",\n  \"key_data_highlights\": [\n    \"2025-2026年的派拉蒙天舞收购WBD案金额高达约1110亿美元，为表中最高\",\n    \"2018年AT&T收购时代华纳金额达850亿美元\",\n    \"2026年迪士尼完成对Hulu的完全控股\",\n    \"并购趋势从内容横向整合转向流媒体平台的超级聚合\"\n  ],\n  \"data_source_text\": \"资料来源：公开信息整理\"\n}",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1786513344,
+  "id": "202608121342125b3bf2d0eb4f4b53",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "202608121342125b3bf2d0eb4f4b53",
+  "usage": {
+    "completion_tokens": 982,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1723,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 2705
+  }
+}

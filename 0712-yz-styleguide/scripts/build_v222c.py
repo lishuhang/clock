@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Generate v2.22c-yz-styleguide.html — animation skill (1:1 HTML → dynamic MP4)."""
+import os, pathlib
+
+OUT = "/home/z/my-project/workspace-clock/0712-yz-styleguide/0812-test/v2.22c-yz-styleguide.html"
+
+HTML = '''<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════
+  v2.22c-yz-styleguide.html
+  娱乐资本论信息图排版 skill v2.22c — 1:1 动态效果版
+═══════════════════════════════════════════════════════════════
+
+  用途：将 v2.22b 输出的 1:1 静态 HTML 转为带入场动画的动态 HTML，
+        并录屏为 MP4（入场-静止-出场）。
+
+  ── 动画规格 ──
+  总时长：16s = 6s 入场 + 4s 静止 + 6s 出场
+  录屏：30fps，截 .chart-container-1x1 元素（无灰边）
+  出场：HTML 不做出场，ffmpeg 倒放入场帧实现
+
+  ── 4 阶入场层次（6s 内完成）──
+  阶1: logo（右上角）淡入      0s 开始，1.2s 持续
+  阶2: title（左上角）淡入     1.5s 开始，1.2s 持续
+  阶3: 图注/图例/坐标轴淡入    3s 开始，1.2s 持续
+  阶4: 图表主体动画            4.5s 开始，1.2-1.5s 持续
+
+  ── 图表特定动画（复用，不重复造轮子）──
+  · 饼图：conic-gradient mask 顺时针扫描（@property --pie-reveal）
+  · 柱状图：scaleY 从底生长
+  · 哑铃图：line scaleX + dots fadeIn
+  · 热力图：行逐行 fade
+  · 文字卡：translateY + fadeIn
+  · 散点：行逐行 fade
+  · 折线图：整体 fadeIn（或 polyline stroke-dasharray 绘制）
+  · 数据表格：行逐行 fade（每行 0.3s 间隔）
+
+  ── 动画 CSS 模板 ──
+  所有动画用 CSS animation（非 JS），页面加载自动播放。
+  初始状态 opacity:0，animation forwards 到 opacity:1。
+  不用 body.play 触发——浏览器打开即自动播放。
+
+  ── 录屏流程 ──
+  1. Playwright 打开 HTML，等字体加载
+  2. 截 .chart-container-1x1 元素，30fps × 180帧 = 6s
+  3. ffmpeg 3 步：
+     · entrance: 180帧 → MP4 (6s)
+     · static: 末帧循环 4s → MP4
+     · exit: entrance reverse → MP4 (6s)
+  4. concat: entrance + static + exit = 16s MP4
+
+  ── Agent 使用步骤 ──
+  1. 复制 v2.22b 输出的 1:1 HTML
+  2. 在 </head> 前注入下方 ANIMATION_CSS
+  3. 保存为 round3/{name}-styled.html
+  4. 用 Playwright 录屏 + ffmpeg 拼合 → round3/{name}.mp4
+
+═══════════════════════════════════════════════════════════════
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>v2.22c 娱资信息图动态效果 skill</title>
+<style>
+body{font-family:'AliPuHui',sans-serif;padding:40px;background:#f0f0f0;}
+.template-block{background:#fff;padding:32px;border-radius:8px;margin:20px 0;font-family:monospace;font-size:13px;white-space:pre-wrap;overflow-x:auto;border:1px solid #e5e5e5;}
+h2{color:#fc8166;}
+h3{color:#312e2e;margin-top:24px;}
+code{background:#f5f5f5;padding:2px 6px;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<h1>v2.22c 动态效果 skill</h1>
+
+<h2>动画 CSS 模板（注入到 1:1 HTML 的 &lt;/head&gt; 前）</h2>
+<div class="template-block">&lt;style data-purpose="round3-animations"&gt;
+@property --pie-reveal { syntax: '&lt;angle&gt;'; initial-value: 0deg; inherits: false; }
+
+/* 初始状态：所有元素 opacity:0 */
+.chart-logo-1x1, .chart-title-1x1, .chart-source-1x1, .chart-part-num,
+.chart-body-1x1 .chart-legend,
+.chart-body-1x1 .data-table-1x1,
+.chart-body-1x1 svg { opacity:0; }
+.chart-body-1x1 .data-table-1x1 tbody tr { opacity:0; }
+
+/* 4 阶入场（自动播放，无需 body.play）*/
+.chart-logo-1x1{ animation: fadeIn 1.2s ease-out 0s forwards; }
+.chart-title-1x1{ animation: fadeIn 1.2s ease-out 1.5s forwards; }
+.chart-source-1x1{ animation: fadeIn 1.2s ease-out 3s forwards; }
+.chart-part-num{ animation: fadeIn 1.2s ease-out 3s forwards; }
+.chart-body-1x1 .chart-legend{ animation: fadeIn 1.2s ease-out 3s forwards; }
+.chart-body-1x1 svg{ animation: fadeIn 1.5s ease-out 4.5s forwards; }
+.chart-body-1x1 .data-table-1x1{ animation: fadeIn 1.5s ease-out 4.5s forwards; }
+
+/* 数据表格行逐行 fade（每行 0.3s 间隔）*/
+.chart-body-1x1 .data-table-1x1 thead{ animation: fadeIn 0.6s ease-out 4.5s forwards; opacity:0; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(1){ animation: rowFade 0.5s ease-out 4.5s forwards; }
+.chart-body-1x1 .data-table-1x1 tbody tr:nth-child(2){ animation: rowFade 0.5s ease-out 4.8s forwards; }
+/* ... nth-child(3) 到 (12) 同理，delay +0.3s 递增 */
+
+@keyframes fadeIn{ to{ opacity:1; } }
+@keyframes rowFade{ to{ opacity:1; } }
+@keyframes pieSweep{ to{ --pie-reveal: 360deg; } }
+
+#yz-selfcheck-banner{ display:none !important; }
+body{ background:#fff !important; padding:0 !important; margin:0 !important; }
+&lt;/style&gt;</div>
+
+<h2>录屏脚本（Playwright + ffmpeg）</h2>
+<div class="template-block">import asyncio, os, subprocess
+from playwright.async_api import async_playwright
+
+async def record(html_path, mp4_path):
+    frames_dir = "/tmp/frames"
+    FPS = 30; DUR = 6.0
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page(viewport={"width":1100,"height":1100})
+        await page.goto("file://"+html_path, wait_until="domcontentloaded")
+        await page.evaluate("() => document.fonts.ready")
+        await page.wait_for_timeout(50)
+        container = await page.query_selector(".chart-container-1x1")
+        total = int(FPS * DUR)
+        for i in range(total):
+            await container.screenshot(path=f"{frames_dir}/frame_{i:04d}.png")
+            await asyncio.sleep(1.0/FPS)
+        await browser.close()
+    # 3-step ffmpeg
+    subprocess.run(["ffmpeg","-y","-framerate","30","-i",f"{frames_dir}/frame_%04d.png",
+                    "-c:v","libx264","-pix_fmt","yuv420p","-preset","ultrafast",
+                    f"{frames_dir}/entrance.mp4"])
+    subprocess.run(["ffmpeg","-y","-loop","1","-i",f"{frames_dir}/frame_{total-1:04d}.png",
+                    "-t","4","-r","30","-c:v","libx264","-pix_fmt","yuv420p","-preset","ultrafast",
+                    f"{frames_dir}/static.mp4"])
+    subprocess.run(["ffmpeg","-y","-i",f"{frames_dir}/entrance.mp4","-vf","reverse",
+                    "-c:v","libx264","-pix_fmt","yuv420p","-preset","ultrafast",
+                    f"{frames_dir}/exit.mp4"])
+    # concat: 6s + 4s + 6s = 16s
+    with open(f"{frames_dir}/concat.txt","w") as f:
+        f.write(f"file '{frames_dir}/entrance.mp4'\\n")
+        f.write(f"file '{frames_dir}/static.mp4'\\n")
+        f.write(f"file '{frames_dir}/exit.mp4'\\n")
+    subprocess.run(["ffmpeg","-y","-f","concat","-safe","0","-i",f"{frames_dir}/concat.txt",
+                    "-c:v","libx264","-pix_fmt","yuv420p","-preset","ultrafast",mp4_path])</div>
+
+<h2>核心规则速查</h2>
+<ol>
+<li><b>自动播放</b>：CSS animation 不用 body.play 触发，页面加载即播放</li>
+<li><b>4 阶层次</b>：logo(0s) → title(1.5s) → 图注(3s) → 主体(4.5s)</li>
+<li><b>16s 总时长</b>：6s 入场 + 4s 静止 + 6s 出场</li>
+<li><b>截元素不截 viewport</b>：用 container.screenshot() 避免灰边</li>
+<li><b>ffmpeg 3 步</b>：entrance → static → exit(reverse) → concat</li>
+<li><b>不用 body.play</b>：浏览器打开 HTML 即自动播放动画</li>
+<li><b>图表动画复用</b>：饼图扫描/柱状生长/折线绘制/表格行fade</li>
+</ol>
+
+</body>
+</html>
+'''
+
+pathlib.Path(OUT).write_text(HTML, encoding="utf-8")
+print(f"Wrote {OUT} ({os.path.getsize(OUT)} bytes)")
