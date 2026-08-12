@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""
+Generate round3.3 — fixes:
+  1. img6: title overlaps with first row's label → increase header margin-bottom
+     + slightly reduce row gap to fit all 5 rows
+  2. Animation timing: 1s entrance → 2s, 8s static → 4s, 1s exit → 2s
+     Total: 10s → 8s (2+4+2)
+"""
+import os, re, pathlib, glob
+
+ROUND22 = "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round2.2"
+OUT_DIR = "/home/z/my-project/workspace-clock/0712-yz-styleguide/0811-test/round3.3"
+os.makedirs(OUT_DIR, exist_ok=True)
+
+LAYOUT_FIXES = """
+<style data-purpose="round3.3-layout-fixes">
+/* img5 fix */
+.db5-film-name{ font-size:16px !important; line-height:1.15 !important; }
+.db5-film-col{ width:180px !important; max-width:180px !important; overflow:hidden; }
+.db5-sub-title{ display:flex !important; align-items:center !important; gap:14px !important; flex-wrap:wrap !important; }
+.db5-sub-title .inline-legend{ display:flex !important; gap:16px !important; margin-left:auto !important; font-size:18px !important; color:#6b6666 !important; }
+.db5-sub-title .inline-legend .legend-item{ display:flex !important; align-items:center !important; gap:6px !important; }
+.db5-sub-title .inline-legend .legend-swatch{ width:18px !important; height:18px !important; border-radius:50% !important; }
+.db5-wrap > .chart-legend{ display:none !important; }
+.db5-rows{ gap:6px !important; }
+.db5-row{ grid-template-columns:180px 1fr 90px !important; gap:12px !important; }
+
+/* img6 fix: title overlaps first row label → increase header margin + compact rows */
+.chart-header-1x1{ margin-bottom:48px !important; }
+.sc6-wrap{ gap:28px !important; padding-bottom:100px !important; }
+.sc6-row{ gap:8px !important; }
+.sc6-row .dumbbell-tag.above{ top:auto !important; bottom:-52px !important; }
+.sc6-row .dumbbell-tag.below{ bottom:-96px !important; }
+.chart-footer-1x1{ margin-top:80px !important; padding-top:20px !important; }
+.sc6-row .dumbbell-track{ height:48px !important; }
+.sc6-row .dumbbell-dot{ width:26px !important; height:26px !important; }
+
+/* Remove gray border */
+body{ background:#fff !important; padding:0 !important; margin:0 !important; }
+.chart-container-1x1{ margin:0 !important; }
+</style>
+"""
+
+# Animation CSS — timing: 2s entrance (was 3.5s), but CSS animations stay same duration
+# The 2s entrance is achieved by recording fewer frames (2s × 30fps = 60 frames)
+# CSS animation durations remain as before (they finish within ~2.7s)
+# We'll capture 2s = 60 frames instead of 3.5s = 105 frames
+ANIMATION_CSS = """
+<style data-purpose="round3.3-animations">
+@property --pie-reveal {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.chart-logo-1x1,
+.chart-title-1x1,
+.chart-source-1x1,
+.chart-part-num,
+.chart-body-1x1 .phase-label,
+.chart-body-1x1 .axis-scale,
+.chart-body-1x1 .chart-legend,
+.chart-body-1x1 .hm-legend,
+.chart-body-1x1 .pie-legend-h,
+.chart-body-1x1 .pie-phase-label,
+.chart-body-1x1 .sb-data-table,
+.chart-body-1x1 .tc-meta-block,
+.chart-body-1x1 .tc-quote-center,
+.chart-body-1x1 .db5-sub-title,
+.chart-body-1x1 .sc6-label,
+.chart-body-1x1 .hm-table,
+.chart-body-1x1 .hm-table tbody tr,
+.chart-body-1x1 .hm-table thead,
+.chart-body-1x1 .sb-bar,
+.chart-body-1x1 .dumbbell-dot,
+.chart-body-1x1 .dumbbell-tag,
+.chart-body-1x1 .tc-bg,
+.chart-body-1x1 .sc6-row,
+.chart-body-1x1 .db5-row{ opacity:0; }
+.chart-body-1x1 .pie-svg{
+  opacity:1;
+  -webkit-mask: conic-gradient(from -90deg, white 0deg, white 0deg, transparent 0deg);
+  mask: conic-gradient(from -90deg, white 0deg, white 0deg, transparent 0deg);
+}
+.chart-body-1x1 .sb-bar{ transform: scaleY(0); transform-origin: bottom; }
+.chart-body-1x1 .dumbbell-line,
+.chart-body-1x1 .sc6-line-dashed{ transform: scaleX(0); transform-origin: left; opacity:1; }
+.chart-body-1x1 .tc-bg{ transform: translateY(20px); }
+
+/* Animation timings compressed to fit 2s entrance:
+   logo 0s, title 0.15s, non-chart 0.3s, chart 0.5s
+   All animations finish by ~1.8s */
+body.play .chart-logo-1x1{ animation: fadeIn 0.3s ease-out 0s forwards !important; }
+body.play .chart-title-1x1{ animation: fadeIn 0.3s ease-out 0.15s forwards !important; }
+body.play .chart-source-1x1{ animation: fadeIn 0.3s ease-out 0.3s forwards !important; }
+body.play .chart-part-num{ animation: fadeIn 0.3s ease-out 0.3s forwards !important; }
+body.play .chart-body-1x1 .phase-label,
+body.play .chart-body-1x1 .axis-scale,
+body.play .chart-body-1x1 .chart-legend,
+body.play .chart-body-1x1 .hm-legend,
+body.play .chart-body-1x1 .pie-legend-h,
+body.play .chart-body-1x1 .pie-phase-label,
+body.play .chart-body-1x1 .sb-data-table,
+body.play .chart-body-1x1 .tc-meta-block,
+body.play .chart-body-1x1 .tc-quote-center,
+body.play .chart-body-1x1 .db5-sub-title,
+body.play .chart-body-1x1 .sc6-label{ animation: fadeIn 0.3s ease-out 0.3s forwards !important; }
+body.play .chart-body-1x1 .hm-table{ animation: fadeIn 0.4s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(1){ animation: rowFade 0.2s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(2){ animation: rowFade 0.2s ease-out 0.65s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(3){ animation: rowFade 0.2s ease-out 0.8s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(4){ animation: rowFade 0.2s ease-out 0.95s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(5){ animation: rowFade 0.2s ease-out 1.1s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(6){ animation: rowFade 0.2s ease-out 1.25s forwards !important; }
+body.play .chart-body-1x1 .hm-table tbody tr:nth-child(7){ animation: rowFade 0.2s ease-out 1.4s forwards !important; }
+body.play .chart-body-1x1 .hm-table thead{ animation: fadeIn 0.2s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .pie-svg{
+  animation: pieSweep 0.6s ease-out 0.5s forwards !important;
+  -webkit-mask: conic-gradient(from -90deg, white 0deg, white var(--pie-reveal, 0deg), transparent var(--pie-reveal, 0deg));
+  mask: conic-gradient(from -90deg, white 0deg, white var(--pie-reveal, 0deg), transparent var(--pie-reveal, 0deg));
+}
+body.play .chart-body-1x1 .sb-bar{ animation: growUp 0.4s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .dumbbell-line{ animation: growRight 0.3s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .dumbbell-dot{ animation: fadeIn 0.2s ease-out 0.8s forwards !important; }
+body.play .chart-body-1x1 .dumbbell-tag{ animation: fadeIn 0.2s ease-out 0.9s forwards !important; }
+body.play .chart-body-1x1 .tc-bg{ animation: riseFade 0.4s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .sc6-row{ animation: fadeIn 0.25s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .sc6-row:nth-child(2){ animation-delay: 0.6s !important; }
+body.play .chart-body-1x1 .sc6-row:nth-child(3){ animation-delay: 0.7s !important; }
+body.play .chart-body-1x1 .sc6-row:nth-child(4){ animation-delay: 0.8s !important; }
+body.play .chart-body-1x1 .sc6-row:nth-child(5){ animation-delay: 0.9s !important; }
+body.play .chart-body-1x1 .sc6-line-dashed{ animation: growRight 0.3s ease-out 1.0s forwards !important; }
+body.play .chart-body-1x1 .sc6-row .dumbbell-dot{ animation-delay: 1.1s !important; }
+body.play .chart-body-1x1 .sc6-row .dumbbell-tag{ animation-delay: 1.2s !important; }
+body.play .chart-body-1x1 .db5-row{ animation: fadeIn 0.2s ease-out 0.5s forwards !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(2){ animation-delay: 0.55s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(3){ animation-delay: 0.6s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(4){ animation-delay: 0.65s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(5){ animation-delay: 0.7s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(6){ animation-delay: 0.75s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(7){ animation-delay: 0.8s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(8){ animation-delay: 0.85s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(9){ animation-delay: 0.9s !important; }
+body.play .chart-body-1x1 .db5-row:nth-child(10){ animation-delay: 0.95s !important; }
+body.play .chart-body-1x1 .db5-row .dumbbell-line{ animation-delay: 1.05s !important; }
+body.play .chart-body-1x1 .db5-row .dumbbell-dot{ animation-delay: 1.15s !important; }
+body.play .chart-body-1x1 .db5-row .dumbbell-tag{ animation-delay: 1.25s !important; }
+
+@keyframes fadeIn{ to{ opacity:1; } }
+@keyframes rowFade{ to{ opacity:1; } }
+@keyframes pieSweep{ to{ --pie-reveal: 360deg; } }
+@keyframes growUp{ to{ transform: scaleY(1); opacity:1; } }
+@keyframes growRight{ to{ transform: scaleX(1); opacity:1; } }
+@keyframes riseFade{ to{ opacity:1; transform: translateY(0); } }
+#yz-selfcheck-banner{ display:none !important; }
+</style>
+"""
+
+def add_inline_legend_to_img5(html):
+    inline_legend = '<div class="inline-legend"><div class="legend-item"><span class="legend-swatch" style="background:#fff;border:2px solid #fc8166;"></span>上映初期</div><div class="legend-item"><span class="legend-swatch" style="background:#fc8166"></span>近一年</div></div>'
+    html = re.sub(
+        r'(<div class="db5-sub-title">)(.*?)(</div>)',
+        r'\1\2' + inline_legend + r'\3',
+        html, flags=re.DOTALL
+    )
+    return html
+
+def process_html(html_path):
+    with open(html_path, encoding="utf-8") as f:
+        html = f.read()
+    name = os.path.basename(html_path).replace('-styled.html', '')
+    if name.startswith('img5'):
+        html = add_inline_legend_to_img5(html)
+    html = html.replace("</head>", LAYOUT_FIXES + "\n</head>", 1)
+    html = html.replace("</head>", ANIMATION_CSS + "\n</head>", 1)
+    return html
+
+def main():
+    htmls = sorted(glob.glob(os.path.join(ROUND22, "*-styled.html")))
+    for html_path in htmls:
+        name = os.path.basename(html_path)
+        processed = process_html(html_path)
+        out_path = os.path.join(OUT_DIR, name)
+        pathlib.Path(out_path).write_text(processed, encoding="utf-8")
+    print(f"Generated {len(htmls)} HTML files to {OUT_DIR}")
+
+if __name__ == "__main__":
+    main()
