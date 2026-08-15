@@ -1,0 +1,6 @@
+#EXTM3U
+# 用户提供的 NHK World 官方直连 HLS 地址；不经 345 中转。
+
+## 国际
+
+NHK World Japan,https://media-osa.hls.nhkworld.jp/hls/wp/live/master.m3u8

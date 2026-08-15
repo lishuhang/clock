@@ -1,0 +1,70 @@
+#EXTM3U
+# 生成：2026-08-15 22:30 GMT+8。
+# 仅包含上传的原有地址中，本轮及后续复测均未取得有效 HLS 媒体资源的条目；新发现但未通过的 345 候选路由不会写入本文件。
+# 不可用判定包括上游 HTTP 错误、连接/读取异常、非 HLS 响应及媒体资源失败；受网络、地区或上游瞬态影响，后续可复测。
+# 分类同步采用本次规则：Bloomberg TV+ 归“国际”；ABC、CGTN 等 feed 与误列大陆的纯直播源归“其他”。
+
+## 国际
+
+CNBC,https://stream.livenewsplay.com:9443/hls/cnbc/cnbcsd.m3u8
+Fox News,https://stream.livenewsplay.com:9443/hls/foxnews/foxsd.m3u8
+GB News,https://amg01076-lightningintern-gbnewsau-samsungau-et7fz.amagi.tv/playlist/amg01076-lightningintern-gbnewsau-samsungau/playlist.m3u8
+PressTV,https://live.presstv.ir/hls/presstv.m3u8
+
+## 香港
+
+NOW直播台,https://345.lishuhang.com/gt16.m3u8
+NOW财经台,https://345.lishuhang.com/gt18.m3u8
+TVB明珠台,https://o11.163189.xyz/stream/tvb/mzt/
+TVB翡翠台,https://o11.163189.xyz/stream/tvb/fct/
+凤凰卫视中文台,https://345.lishuhang.com/gt1.m3u8
+凤凰卫视资讯台,https://345.lishuhang.com/gt2.m3u8
+
+## 台湾
+
+中视新闻台,https://345.lishuhang.com/gt46.m3u8
+
+## 大陆
+
+CCTV1,http://play.kankanlive.com/live/1698234869325962.m3u8
+CCTV1,https://345.lishuhang.com/yspc01.m3u8
+CCTV1,https://345.lishuhang.com/itv7.m3u8
+CCTV10,https://play.kankanlive.com/live/1698423445959919.m3u8
+CCTV10,https://345.lishuhang.com/itv17.m3u8
+CCTV11,http://123.130.84.106:8154/tsfile/live/0011_1.m3u8
+CCTV13,https://play.kankanlive.com/live/1698423543275916.m3u8
+CCTV13,https://345.lishuhang.com/itv20.m3u8
+CCTV13,https://345.lishuhang.com/yspc14.m3u8
+CCTV17,https://345.lishuhang.com/yspc17.m3u8
+CCTV2,https://play.kankanlive.com/live/1698234898628961.m3u8
+CCTV2,https://345.lishuhang.com/itv8.m3u8
+CCTV2,https://345.lishuhang.com/yspc02.m3u8
+CCTV3,https://345.lishuhang.com/yspc03.m3u8
+CCTV4,https://play.kankanlive.com/live/1698234936258960.m3u8
+CCTV4,https://345.lishuhang.com/itv10.m3u8
+CCTV4,https://345.lishuhang.com/yspc04.m3u8
+CCTV4,https://dash2.antik.sk/live/test_cctv_tizen/playlist.m3u8
+CCTV6,https://345.lishuhang.com/yspc07.m3u8
+CCTV7,https://345.lishuhang.com/yspc08.m3u8
+CCTV7,http://183.11.239.36:808/hls/25/index.m3u8
+CCTV8,https://345.lishuhang.com/yspc09.m3u8
+CCTV9,https://play.kankanlive.com/live/1698423397390920.m3u8
+CCTV9,https://345.lishuhang.com/itv16.m3u8
+CCTV9,https://345.lishuhang.com/yspc10.m3u8
+CETV1教育综合,https://345.lishuhang.com/xuexi_416c4a41.m3u8
+上海新闻综合,https://345.lishuhang.com/migu83.m3u8
+东南卫视,https://345.lishuhang.com/xuexi_74cd6a04.m3u8
+东南卫视,http://123.130.84.106:8154/tsfile/live/0137_1.m3u8
+东南卫视,https://345.lishuhang.com/wso-dongnan.m3u8
+东方卫视,https://345.lishuhang.com/ws4.m3u8
+东方卫视,https://345.lishuhang.com/itv40.m3u8
+东方卫视,https://345.lishuhang.com/migu41.m3u8
+东方卫视,https://345.lishuhang.com/xuexi_b03d633a.m3u8
+
+## 其他
+
+ABC News 5,https://abcnews-streams.akamaized.net/hls/live/2023564/abcnewshudson5/master_4000.m3u8
+ABC News 6,https://abcnews-streams.akamaized.net/hls/live/2023565/abcnewshudson6/master_4000.m3u8
+ABC News 7,https://abcnews-streams.akamaized.net/hls/live/2023566/abcnewshudson7/master_4000.m3u8
+ABC News 8,https://abcnews-streams.akamaized.net/hls/live/2023567/abcnewshudson8/master_4000.m3u8
+ABC News 9,https://abcnews-streams.akamaized.net/hls/live/2023568/abcnewshudson9/master_4000.m3u8
