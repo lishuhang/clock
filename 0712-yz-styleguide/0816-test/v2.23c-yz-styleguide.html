@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════════
+  v2.23c-yz-styleguide.html
+  娱乐资本论 动态效果 Skill (step-c)
+  Cross-Agent Compatible Edition
+═══════════════════════════════════════════════════════════════════════
+
+  PURPOSE
+   Add entrance animation to a step-b 1:1 HTML, then record to MP4.
+
+  QUICK START
+   1. Take a step-b HTML file (1080×1080)
+  2. Insert the ANIMATION_CSS block below into <head> (before </head>)
+  3. Save as {name}-styled.html (same file, or new copy)
+  4. Open in browser — animation plays automatically
+  5. To record MP4: use Playwright + ffmpeg (see script below)
+
+  ANIMATION SPEC
+  - Total MP4: 16s = 6s entrance + 4s static + 6s exit (reverse)
+  - HTML only does entrance (no exit needed)
+  - Auto-plays on page load (no trigger needed)
+
+  4-STAGE ENTRANCE
+  Stage 1: Logo fades in           — delay 0s,   duration 1.2s
+  Stage 2: Title fades in           — delay 1.5s, duration 1.2s
+  Stage 3: Legend/source/footer     — delay 3.0s, duration 1.2s
+  Stage 4: Chart body fades in      — delay 4.5s, duration 1.5s
+
+  HOW TO INJECT
+   Copy the <style> block below and paste it into the target HTML
+   just before </head>. The selectors target standard v2.23b class names.
+
+  CHART-SPECIFIC ANIMATIONS (optional enhancements)
+  - Pie chart: conic-gradient mask sweep (use @property --pie-reveal)
+  - Bar chart: scaleY(0→1) with transform-origin: bottom
+  - Table rows: staggered fade (nth-child delay +0.3s)
+  - Text cards: translateY(20px→0) + opacity
+  - Default (fallback): entire .chart-body-1x1 fades in together
+
+  MP4 RECORDING (Playwright + ffmpeg)
+  See the recording script at the bottom of this file.
+  Requires: playwright, ffmpeg (or ffmpeg-static), chromium.
+
+═══════════════════════════════════════════════════════════════════════
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>v2.23c 动态效果 Skill</title>
+<style>
+body{font-family:'AliPuHui',sans-serif;padding:40px;background:#f0f0f0;}
+.block{background:#fff;padding:24px;border-radius:8px;margin:16px 0;font-family:monospace;font-size:13px;white-space:pre-wrap;overflow-x:auto;border:1px solid #e5e5e5;line-height:1.6;}
+h2{color:#fc8166;margin-top:32px;}
+h3{color:#312e2e;margin-top:20px;}
+</style>
+</head>
+<body>
+<h1>v2.23c 动态效果 Skill</h1>
+
+<h2>ANIMATION_CSS — 注入到 step-b HTML 的 &lt;/head&gt; 前</h2>
+<div class="block">&lt;style data-purpose="v223c-animations"&gt;
+/* v2.23c entrance animation — auto-play on load */
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+/* Initial state: everything invisible */
+.chart-logo-1x1,
+.chart-title-1x1,
+.chart-source-1x1,
+.chart-part-num,
+.chart-body-1x1,
+.chart-body-1x1 .chart-legend,
+.chart-body-1x1 svg { opacity: 0; }
+.chart-body-1x1 .hm-table tbody tr { opacity: 0; }
+
+/* Stage 1: Logo */
+.chart-logo-1x1 { animation: fadeIn 1.2s ease-out 0s forwards; }
+
+/* Stage 2: Title */
+.chart-title-1x1 { animation: fadeIn 1.2s ease-out 1.5s forwards; }
+
+/* Stage 3: Legend, source, part number */
+.chart-source-1x1,
+.chart-part-num,
+.chart-body-1x1 .chart-legend { animation: fadeIn 1.2s ease-out 3s forwards; }
+
+/* Stage 4: Chart body (default: fade) */
+.chart-body-1x1 svg,
+.chart-body-1x1 .hm-table,
+.chart-body-1x1 .sb-wrap,
+.chart-body-1x1 .dumbbell-track,
+.chart-body-1x1 .tc-grid,
+.chart-body-1x1 .quote-card { animation: fadeIn 1.5s ease-out 4.5s forwards; }
+
+/* Table row stagger */
+.chart-body-1x1 .hm-table thead { animation: fadeIn 0.6s ease-out 4.5s forwards; opacity: 0; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(1) { animation: fadeIn 0.5s ease-out 4.5s forwards; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(2) { animation: fadeIn 0.5s ease-out 4.8s forwards; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(3) { animation: fadeIn 0.5s ease-out 5.1s forwards; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(4) { animation: fadeIn 0.5s ease-out 5.4s forwards; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(5) { animation: fadeIn 0.5s ease-out 5.7s forwards; }
+.chart-body-1x1 .hm-table tbody tr:nth-child(6) { animation: fadeIn 0.5s ease-out 6.0s forwards; }
+
+/* Text card slide up */
+.chart-body-1x1 .quote-card { transform: translateY(20px); animation: slideUp 1.5s ease-out 4.5s forwards; }
+
+/* Hide self-check banner in recording */
+#yz-selfcheck-banner { display: none !important; }
+/* White background for clean recording */
+body { background: #fff !important; padding: 0 !important; margin: 0 !important; }
+&lt;/style&gt;</div>
+
+<h2>RECORDING SCRIPT (Python + Playwright + ffmpeg)</h2>
+<div class="block">import asyncio, subprocess, os
+from playwright.async_api import async_playwright
+
+async def record_mp4(html_path: str, mp4_path: str):
+    """Record a 1:1 animated HTML to 16s MP4."""
+    FRAMES_DIR = "/tmp/yz_frames"
+    FPS, ENTRANCE_DUR, STATIC_DUR = 30, 6.0, 4.0
+    os.makedirs(FRAMES_DIR, exist_ok=True)
+    for f in os.listdir(FRAMES_DIR):
+        os.remove(os.path.join(FRAMES_DIR, f))
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page(
+            viewport={"width": 1100, "height": 1100},
+            device_scaleFactor=1
+        )
+        await page.goto(f"file://{html_path}",
+                         wait_until="domcontentloaded")
+        await page.evaluate("() =&gt; document.fonts.ready")
+        await page.wait_for_timeout(500)  # let animation start
+
+        container = await page.query_selector(".chart-container-1x1")
+        total_frames = int(FPS * ENTRANCE_DUR)
+        for i in range(total_frames):
+            await container.screenshot(
+                path=f"{FRAMES_DIR}/frame_{i:04d}.png")
+            await asyncio.sleep(1.0 / FPS)
+        await browser.close()
+
+    last_frame = f"{FRAMES_DIR}/frame_{total_frames-1:04d}.png"
+    entrance = f"{FRAMES_DIR}/entrance.mp4"
+    static = f"{FRAMES_DIR}/static.mp4"
+    exit_rev = f"{FRAMES_DIR}/exit.mp4"
+
+    # Step 1: entrance
+    subprocess.run([
+        "ffmpeg", "-y", "-framerate", str(FPS),
+        "-i", f"{FRAMES_DIR}/frame_%04d.png",
+        "-c:v", "libx264", "-pix_fmt", "yuv420p",
+        "-preset", "ultrafast", entrance
+    ])
+    # Step 2: static (last frame loop)
+    subprocess.run([
+        "ffmpeg", "-y", "-loop", "1", "-i", last_frame,
+        "-t", str(STATIC_DUR), "-r", str(FPS),
+        "-c:v", "libx264", "-pix_fmt", "yuv420p",
+        "-preset", "ultrafast", static
+    ])
+    # Step 3: exit (reverse entrance)
+    subprocess.run([
+        "ffmpeg", "-y", "-i", entrance, "-vf", "reverse",
+        "-c:v", "libx264", "-pix_fmt", "yuv420p",
+        "-preset", "ultrafast", exit_rev
+    ])
+    # Step 4: concat
+    concat_file = f"{FRAMES_DIR}/concat.txt"
+    with open(concat_file, "w") as f:
+        f.write(f"file '{entrance}'\n")
+        f.write(f"file '{static}'\n")
+        f.write(f"file '{exit_rev}'\n")
+    subprocess.run([
+        "ffmpeg", "-y", "-f", "concat", "-safe", "0",
+        "-i", concat_file, "-c:v", "libx264",
+        "-pix_fmt", "yuv420p", "-preset", "ultrafast",
+        mp4_path
+    ])
+    print(f"Done: {mp4_path}")</div>
+
+<h2>CORE RULES</h2>
+<ol>
+<li><b>Auto-play</b>: CSS animation triggers on page load, no JS trigger needed</li>
+<li><b>4-stage hierarchy</b>: logo(0s) → title(1.5s) → chrome(3s) → body(4.5s)</li>
+<li><b>16s total</b>: 6s entrance + 4s hold + 6s exit (reverse)</li>
+<li><b>Element screenshot</b>: record .chart-container-1x1, not viewport</li>
+<li><b>3-step ffmpeg</b>: entrance → static(loop) → exit(reverse) → concat</li>
+<li><b>Chart-specific</b>: pie sweep, bar grow, table row stagger, card slideUp</li>
+<li><b>Clean recording</b>: hide banner, white background, no padding</li>
+</ol>
+
+</body>
+</html>

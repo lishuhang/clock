@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沈腾：三阶段评论变迁 - 6/6</title>
+<style>
+    @import url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/style.css');
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-55-Regular.ttf') format('truetype');
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-85-Bold.ttf') format('truetype');
+        font-weight: 700;
+    }
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-115-Black.ttf') format('truetype');
+        font-weight: 900;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background: #f0f0f0;
+        font-family: 'AliPuHui', 'Alibaba PuHuiTi 3.0', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        display: flex; justify-content: center; align-items: center;
+        min-height: 100vh; padding: 20px;
+    }
+    .chart-container-1x1 {
+        width: 1080px;
+        height: 1080px;
+        padding: 36px 44px;
+        background: #fff;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+    .chart-container-1x1::before {
+        content: '娱乐资本论';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%) rotate(-30deg);
+        font-size: 160px;
+        font-weight: 900;
+        color: #312e2e;
+        opacity: 0.04;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .chart-container-1x1 > * { position: relative; z-index: 1; }
+    .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 28px;
+        flex-shrink: 0;
+    }
+    .title-row .title {
+        font-size: 48px;
+        font-weight: 900;
+        color: #312e2e;
+        line-height: 1.25;
+        width: 80%;
+    }
+    .title-row .logo {
+        font-size: 28px;
+        font-weight: 900;
+        color: #fc8166;
+        white-space: nowrap;
+        width: 20%;
+        text-align: right;
+    }
+    .chart-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 0;
+    }
+    .chart-footer-1x1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+    }
+    .chart-footer-1x1 .source {
+        font-size: 27px;
+        color: #aaa;
+    }
+    .chart-footer-1x1 .part-num {
+        font-size: 27px;
+        color: #aaa;
+        font-weight: 700;
+    }
+    
+        .st-phase-badge {
+            display: inline-block; background: #fc8166; color: #fff; font-size: 40px;
+            font-weight: 700; padding: 8px 28px; border-radius: 30px; margin-bottom: 20px;
+        }
+        .st-film {
+            font-size: 40px; color: #888; margin-bottom: 8px;
+        }
+        .st-year {
+            font-size: 32px; color: #bbb; margin-bottom: 40px;
+        }
+        .st-quote-box {
+            background: #fafafa; border-left: 6px solid #fc8166; padding: 40px 44px; border-radius: 0 12px 12px 0;
+            margin-bottom: 40px;
+        }
+        .st-quote {
+            font-size: 46px; color: #312e2e; line-height: 1.8; font-weight: 400;
+        }
+        .st-meta { display: flex; gap: 16px; font-size: 32px; color: #bbb; }
+        .st-meta span { background: #f0f0f0; padding: 6px 16px; border-radius: 8px; }
+        .st-actor-label {
+            font-size: 36px; color: #888; margin-bottom: 20px; font-weight: 400;
+        }
+        .st-timeline-bar {
+            display: flex; gap: 6px; margin-top: 40px;
+        }
+        .st-tl-dot {
+            width: 14px; height: 14px; border-radius: 50%; background: #e0e0e0;
+        }
+        .st-tl-dot.active { background: #fc8166; width: 36px; border-radius: 8px; }
+        </style>
+
+    <style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .logo { animation: fadeIn 0.8s ease-out 0s both; }
+    .title-row, .chart-title { animation: fadeIn 0.8s ease-out 0.2s both; }
+    .legend-row, .chart-subtitle { animation: fadeIn 0.8s ease-out 0.5s both; }
+    .chart-body, .heatmap-table, .bar-section, .comparison-section, .comment-card { animation: fadeIn 0.9s ease-out 0.8s both; }
+    .chart-footer, .chart-footer-1x1 { animation: fadeIn 0.7s ease-out 1.0s both; }
+    </style>
+    </head>
+<body>
+<div class="chart-container-1x1">
+    <div class="title-row">
+        <div class="title">沈腾：三阶段评论变迁</div>
+        <div class="logo">娱乐资本论</div>
+    </div>
+    <div class="chart-body">
+        <div class="st-actor-label">沈腾 · 三阶段代表评论</div><div class="st-phase-badge">阶段三</div><div class="st-film">欢迎来龙餐馆</div><div class="st-year">2026</div><div class="st-quote-box"><div class="st-quote">「沈腾给家里打电话那场戏……可以把眼睛捐给赛夫。」</div></div><div class="st-meta"><span>749赞</span><span>5星</span></div><div class="st-timeline-bar"><div class="st-tl-dot"></div><div class="st-tl-dot"></div><div class="st-tl-dot"></div><div class="st-tl-dot"></div><div class="st-tl-dot"></div><div class="st-tl-dot active"></div></div>
+    </div>
+    <div class="chart-footer-1x1">
+        <span class="source">数据来源：豆瓣电影评论</span>
+        <span class="part-num">6/6</span>
+    </div>
+</div>
+</body>
+</html>

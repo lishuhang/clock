@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>观众评价沈腾的六大维度</title>
+<style>
+    @import url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/style.css');
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-55-Regular.ttf') format('truetype');
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-85-Bold.ttf') format('truetype');
+        font-weight: 700;
+    }
+    @font-face {
+        font-family: 'AliPuHui';
+        src: url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-115-Black.ttf') format('truetype');
+        font-weight: 900;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background: #f0f0f0;
+        font-family: 'AliPuHui', 'Alibaba PuHuiTi 3.0', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        display: flex; justify-content: center; padding: 40px 20px;
+    }
+    .chart-container {
+        width: 900px;
+        padding: 56px 48px;
+        background: #fff;
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+    }
+    .chart-container::before {
+        content: '娱乐资本论';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%) rotate(-30deg);
+        font-size: 180px;
+        font-weight: 900;
+        color: #312e2e;
+        opacity: 0.04;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .chart-container > * { position: relative; z-index: 1; }
+    .chart-title {
+        font-size: 68px;
+        font-weight: 900;
+        color: #312e2e;
+        line-height: 1.2;
+        margin-bottom: 40px;
+    }
+    .chart-subtitle {
+        font-size: 24px;
+        color: #888;
+        margin-bottom: 36px;
+        font-weight: 400;
+    }
+    .chart-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+    .chart-footer .source {
+        font-size: 16px;
+        color: #aaa;
+    }
+    .chart-footer .brand {
+        font-size: 20px;
+        font-weight: 900;
+        color: #fc8166;
+    }
+    
+    .heatmap-table {
+        width: 100%; border-collapse: collapse; font-size: 18px;
+    }
+    .heatmap-table th, .heatmap-table td {
+        padding: 10px 8px; text-align: center; border-bottom: 1px solid #f0f0f0;
+    }
+    .heatmap-table thead th {
+        font-size: 15px; font-weight: 700; color: #666; padding-bottom: 16px;
+        border-bottom: 2px solid #ddd;
+    }
+    .heatmap-table thead th:first-child { text-align: left; width: 160px; }
+    .heatmap-table tbody td:first-child {
+        text-align: left; font-weight: 700; color: #312e2e; font-size: 17px; white-space: nowrap;
+    }
+    .heatmap-table tbody td .year {
+        font-weight: 400; color: #aaa; font-size: 14px; margin-left: 4px;
+    }
+    .cell-heat {
+        min-width: 72px; border-radius: 4px; color: #312e2e; font-weight: 600; font-size: 16px;
+        transition: transform 0.2s;
+    }
+    .cell-heat.zero { color: #ccc; }
+    .legend-row {
+        display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 28px;
+    }
+    .legend-item {
+        display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666;
+    }
+    .legend-dot {
+        width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+    }
+    </style>
+</head>
+<body>
+<div class="chart-container">
+    <div class="chart-title">观众评价沈腾的六大维度</div>
+    <div class="legend-row"><div class="legend-item"><div class="legend-dot" style="background:#fc8166"></div>专业能力</div><div class="legend-item"><div class="legend-dot" style="background:#4e79a7"></div>道德人格</div><div class="legend-item"><div class="legend-dot" style="background:#e15759"></div>民族国家</div><div class="legend-item"><div class="legend-dot" style="background:#59a14f"></div>商业资本</div><div class="legend-item"><div class="legend-dot" style="background:#f28e2b"></div>社会文化/性别</div><div class="legend-item"><div class="legend-dot" style="background:#76b7b2"></div>身份符号</div></div><table class="heatmap-table"><thead><tr><th>影片</th><th>专业能力</th><th>道德人格</th><th>民族国家</th><th>商业资本</th><th>社会文化/性别</th><th>身份符号</th></tr></thead><tbody><tr><td>夏洛特烦恼<span class="year">2015</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.71)">71%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">3%</div></td><td><div class="cell-heat zero" style="background:rgba(225,87,89,0.05)">0%</div></td><td><div class="cell-heat zero" style="background:rgba(89,161,79,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.22)">22%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">4%</div></td></tr>
+<tr><td>羞羞的铁拳<span class="year">2017</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.96)">96%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">1%</div></td><td><div class="cell-heat zero" style="background:rgba(225,87,89,0.05)">0%</div></td><td><div class="cell-heat zero" style="background:rgba(89,161,79,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.05)">2%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">1%</div></td></tr>
+<tr><td>西虹市首富<span class="year">2018</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.85)">85%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">2%</div></td><td><div class="cell-heat zero" style="background:rgba(225,87,89,0.05)">0%</div></td><td><div class="cell-heat zero" style="background:rgba(89,161,79,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.10)">10%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">3%</div></td></tr>
+<tr><td>飞驰人生<span class="year">2019</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.82)">82%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">3%</div></td><td><div class="cell-heat" style="background:rgba(225,87,89,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.05)">2%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.08)">8%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">4%</div></td></tr>
+<tr><td>日不落酒店<span class="year">2021</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.45)">45%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">2%</div></td><td><div class="cell-heat zero" style="background:rgba(225,87,89,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.40)">40%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.08)">8%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">5%</div></td></tr>
+<tr><td>独行月球<span class="year">2022</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.78)">78%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">3%</div></td><td><div class="cell-heat" style="background:rgba(225,87,89,0.05)">5%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.05)">2%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.10)">10%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">2%</div></td></tr>
+<tr><td>超能一家人<span class="year">2023</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.35)">35%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">1%</div></td><td><div class="cell-heat zero" style="background:rgba(225,87,89,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.50)">50%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.12)">12%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">2%</div></td></tr>
+<tr><td>满江红<span class="year">2023</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.88)">88%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">2%</div></td><td><div class="cell-heat" style="background:rgba(225,87,89,0.05)">3%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.05)">4%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">2%</div></td></tr>
+<tr><td>抓娃娃<span class="year">2024</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.55)">55%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(225,87,89,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(89,161,79,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.40)">40%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">2%</div></td></tr>
+<tr><td>欢迎来龙餐馆<span class="year">2026</span></td><td><div class="cell-heat" style="background:rgba(252,129,102,0.92)">92%</div></td><td><div class="cell-heat" style="background:rgba(78,121,167,0.05)">1%</div></td><td><div class="cell-heat" style="background:rgba(225,87,89,0.05)">3%</div></td><td><div class="cell-heat zero" style="background:rgba(89,161,79,0.05)">0%</div></td><td><div class="cell-heat" style="background:rgba(242,142,43,0.05)">3%</div></td><td><div class="cell-heat" style="background:rgba(118,183,178,0.05)">1%</div></td></tr>
+</tbody></table>
+    <div class="chart-footer">
+        <span class="source">数据来源：豆瓣电影评论</span>
+        <span class="brand">娱乐资本论</span>
+    </div>
+</div>
+</body>
+</html>
