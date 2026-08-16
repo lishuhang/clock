@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=900">
+<title>沈腾作品评论汇总 · 三阶段</title>
+<style>
+@font-face{font-family:'AliPuHui';src:url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-55-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
+@font-face{font-family:'AliPuHui';src:url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-85-Bold.ttf') format('truetype');font-weight:700;font-display:swap;}
+@font-face{font-family:'AliPuHui';src:url('https://cdn.jsdelivr.net/npm/@fontpkg/alibaba-puhuiti-3-0@0.0.0/AlibabaPuHuiTi-3-115-Black.ttf') format('truetype');font-weight:900;font-display:swap;}
+:root{
+  --yz-accent:#fc8166; --yz-accent-deep:#e55b46; --yz-ink:#312e2e;
+  --yz-text:#312e2e; --yz-text-secondary:#6b6666; --yz-text-muted:#9a9595;
+  --yz-bg:#fff; --yz-border:#dcdcdc; --yz-border-soft:#e5e5e5;
+  --yz-radius:6px; --yz-font:'AliPuHui','阿里巴巴普惠体',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#f0f0f0;}
+body{font-family:var(--yz-font);color:var(--yz-text);background:#f0f0f0;}
+.chart-container{position:relative;width:900px;min-height:auto;height:auto;margin:0 auto;background:#fff;padding:56px 48px;border-radius:var(--yz-radius);overflow:hidden;display:flex;flex-direction:column;}
+.yz-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1;}
+.yz-watermark span{font-size:200px;font-weight:900;color:#fc8166;opacity:0.06;transform:rotate(-20deg);white-space:nowrap;}
+.chart-title{position:relative;z-index:2;font-size:58px;font-weight:900;color:var(--yz-text);margin-bottom:10px;line-height:1.25;}
+.chart-subtitle{position:relative;z-index:2;font-size:26px;color:var(--yz-text-secondary);margin-bottom:26px;line-height:1.5;}
+.chart-body{position:relative;z-index:2;flex:0 1 auto;display:flex;flex-direction:column;gap:18px;}
+.phase-card{border:1px solid var(--yz-border-soft);border-radius:10px;padding:20px 22px;background:#fff;}
+.phase-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.phase-badge{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;background:var(--yz-accent);color:#fff;border-radius:50%;font-size:26px;font-weight:900;flex-shrink:0;}
+.phase-name{font-size:30px;font-weight:900;color:var(--yz-text);}
+.phase-years{font-size:22px;color:var(--yz-text-muted);margin-left:auto;}
+.phase-films{font-size:23px;color:var(--yz-text-secondary);margin-bottom:12px;}
+.phase-quote{font-size:25px;line-height:1.55;color:var(--yz-text);background:#fafafa;border-left:5px solid var(--yz-accent);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:8px;}
+.phase-quote:last-child{margin-bottom:0;}
+.phase-quote .like{color:var(--yz-accent-deep);font-weight:900;}
+.chart-footer{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;padding-top:18px;border-top:1px solid var(--yz-border-soft);flex-shrink:0;}
+.chart-source{font-size:24px;color:var(--yz-text-muted);text-align:left;line-height:1.6;max-width:62%;}
+.yz-logo{font-size:30px;font-weight:900;color:var(--yz-accent);flex-shrink:0;}
+</style>
+</head>
+<body>
+<div class="chart-container">
+  <div class="yz-watermark"><span>娱乐资本论</span></div>
+  <div class="chart-title">沈腾作品评论汇总 · 三阶段</div>
+  <div class="chart-subtitle">2015–2026 · 十部电影 2600 条豆瓣短评 · 从"好笑"到"欠他一个影帝"</div>
+
+  <div class="chart-body">
+    <div class="phase-card">
+      <div class="phase-head"><div class="phase-badge">1</div><div class="phase-name">喜剧演员定型期</div><div class="phase-years">2015–2018</div></div>
+      <div class="phase-films">《夏洛特烦恼》《羞羞的铁拳》《西虹市首富》</div>
+      <div class="phase-quote">"话剧演员的表演功力绝对能让人又哭又笑。" <span class="like">4 星 · 6633 赞</span></div>
+      <div class="phase-quote">"只有沈腾的部分好笑，其他部分是真腻歪。" <span class="like">900+ 赞</span></div>
+      <div class="phase-quote">"作为女性，对于这种中年男人的意淫完全接受不了……" <span class="like">8823 赞</span></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-head"><div class="phase-badge">2</div><div class="phase-name">形象扩容与争议期</div><div class="phase-years">2019–2023</div></div>
+      <div class="phase-films">《飞驰人生》《独行月球》《超能一家人》《日不落酒店》</div>
+      <div class="phase-quote">"很搞笑，拉力赛超级燃，后面有点感动，居然还看哭了。"</div>
+      <div class="phase-quote">"沈腾贡献了最富层次的一次表演。"（独行月球）</div>
+      <div class="phase-quote">"含腾量 10 分钟不到，沈腾不要再这样消耗观众的信任度了 OK？" <span class="like">1 星 · 2241 赞</span></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-head"><div class="phase-badge">3</div><div class="phase-name">转型期</div><div class="phase-years">2023–2026</div></div>
+      <div class="phase-films">《满江红》《抓娃娃》《逆鳞》《欢迎来龙餐馆》</div>
+      <div class="phase-quote">"被喜剧包裹的恐怖片。" <span class="like">2.2 万赞</span></div>
+      <div class="phase-quote">"这就是沈腾的奥德赛，足以让'沈腾 0 票'成为那个奖永远的耻辱柱。" <span class="like">3240 赞</span></div>
+      <div class="phase-quote">"沈腾给家里打电话那场戏……可以把眼睛捐给赛夫。" <span class="like">5 星 · 749 赞</span></div>
+      <div class="phase-quote">《欢迎来龙餐馆》豆瓣开分 <span class="like">8.4</span>，为沈腾主演电影最高。</div>
+    </div>
+  </div>
+
+  <div class="chart-footer">
+    <div class="chart-source">数据来源：豆瓣短评 2600 条 · 娱乐资本论整理<br>AI 作图 by 娱乐资本论</div>
+    <div class="yz-logo">娱乐资本论</div>
+  </div>
+</div>
+</body>
+</html>
