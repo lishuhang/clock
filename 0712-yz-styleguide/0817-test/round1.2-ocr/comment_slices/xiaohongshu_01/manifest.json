@@ -1,0 +1,43 @@
+{
+  "source": "/home/ubuntu/upload/640(1).jpg",
+  "pixel_width": 1080,
+  "pixel_height": 1791,
+  "aspect_ratio": "120:199",
+  "aspect_ratio_decimal_width_over_height": 0.603015,
+  "orientation": "portrait",
+  "tiled": true,
+  "mode": "vertical",
+  "overlap_fraction_requested_target": 0.12,
+  "overlap_fraction_actual_minimum": {
+    "horizontal": 0.0,
+    "vertical": 0.393827
+  },
+  "reading_order": "top-to-bottom",
+  "tile_count": 3,
+  "tiles": [
+    {
+      "index": 1,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.2-ocr/comment_slices/xiaohongshu_01/tile_001_x000000_y000000.png",
+      "x": 0,
+      "y": 0,
+      "pixel_width": 1080,
+      "pixel_height": 810
+    },
+    {
+      "index": 2,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.2-ocr/comment_slices/xiaohongshu_01/tile_002_x000000_y000490.png",
+      "x": 0,
+      "y": 490,
+      "pixel_width": 1080,
+      "pixel_height": 810
+    },
+    {
+      "index": 3,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.2-ocr/comment_slices/xiaohongshu_01/tile_003_x000000_y000981.png",
+      "x": 0,
+      "y": 981,
+      "pixel_width": 1080,
+      "pixel_height": 810
+    }
+  ]
+}

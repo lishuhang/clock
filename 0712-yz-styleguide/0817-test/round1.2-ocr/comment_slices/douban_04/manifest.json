@@ -1,0 +1,35 @@
+{
+  "source": "/home/ubuntu/upload/640(1).png",
+  "pixel_width": 1080,
+  "pixel_height": 173,
+  "aspect_ratio": "1080:173",
+  "aspect_ratio_decimal_width_over_height": 6.242775,
+  "orientation": "landscape",
+  "tiled": true,
+  "mode": "horizontal",
+  "overlap_fraction_requested_target": 0.12,
+  "overlap_fraction_actual_minimum": {
+    "horizontal": 0.2,
+    "vertical": 0.0
+  },
+  "reading_order": "left-to-right",
+  "tile_count": 2,
+  "tiles": [
+    {
+      "index": 1,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.2-ocr/comment_slices/douban_04/tile_001_x000000_y000000.png",
+      "x": 0,
+      "y": 0,
+      "pixel_width": 600,
+      "pixel_height": 173
+    },
+    {
+      "index": 2,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.2-ocr/comment_slices/douban_04/tile_002_x000480_y000000.png",
+      "x": 480,
+      "y": 0,
+      "pixel_width": 600,
+      "pixel_height": 173
+    }
+  ]
+}

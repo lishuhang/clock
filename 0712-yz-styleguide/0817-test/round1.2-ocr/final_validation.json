@@ -1,0 +1,169 @@
+{
+  "counts": {
+    "round1_html": 4,
+    "round1_png": 4,
+    "round2_html": 16,
+    "round2_png": 16,
+    "round3_motion_html": 16,
+    "round3_mp4": 16
+  },
+  "brand_checks": {
+    "all_use_AliPuHui": true,
+    "all_inline_original_symbols": true,
+    "no_noto_font": true,
+    "no_previous_top_bar_rule": true
+  },
+  "official_data_spot_checks": {
+    "heatmap_夏洛特烦恼_专业能力_72pct": true,
+    "heatmap_抓娃娃_社会文化性别_57pct": true,
+    "heatmap_欢迎来龙餐馆_专业能力_92pct": true,
+    "all_three_source_csv_copied": true
+  },
+  "video_specs": [
+    {
+      "file": "comment-part1-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part2-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part3-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part4-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part5-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part6-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "comment-part7-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img1-part1-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img1-part2-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img1-part3-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img2-part1-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img2-part2-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img2-part3-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img3-part1-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img3-part2-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    },
+    {
+      "file": "img3-part3-styled.mp4",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1080,
+      "fps": "30/1",
+      "frames": "480",
+      "duration": "16.000000"
+    }
+  ],
+  "all_videos_match_v222c_timing": true
+}

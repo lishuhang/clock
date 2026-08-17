@@ -1,0 +1,401 @@
+{
+  "sources": {
+    "shenteng_works_heatmap.csv": 10,
+    "shenteng_dumbbell_chart.csv": 30,
+    "f1_subdim_chart.csv": 10,
+    "f1_subdim_matrix.csv": 10,
+    "chart_04_f4_f3.csv": 10
+  },
+  "heatmap_sum_checks": [
+    {
+      "作品": "夏洛特烦恼",
+      "年份": "2015",
+      "sum_pct": 98.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "羞羞的铁拳",
+      "年份": "2017",
+      "sum_pct": 99.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "西虹市首富",
+      "年份": "2018",
+      "sum_pct": 99.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "飞驰人生",
+      "年份": "2019",
+      "sum_pct": 99.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "独行月球",
+      "年份": "2022",
+      "sum_pct": 99.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "超能一家人",
+      "年份": "2023",
+      "sum_pct": 100.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "满江红",
+      "年份": "2023",
+      "sum_pct": 100.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "sum_pct": 100.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "飞驰人生3",
+      "年份": "2025",
+      "sum_pct": 100.0,
+      "valid_integer_rounding": true
+    },
+    {
+      "作品": "欢迎来龙餐馆",
+      "年份": "2026",
+      "sum_pct": 100.0,
+      "valid_integer_rounding": true
+    }
+  ],
+  "dumbbell_delta_checks": [
+    {
+      "作品": "夏洛特烦恼",
+      "年份": "2015",
+      "维度": "专业能力",
+      "上映期占比%": 69.5,
+      "近年回看占比%": 77.4,
+      "变化Δpp_source": 7.8,
+      "变化Δpp_recomputed": 7.9,
+      "within_display_tolerance": false
+    },
+    {
+      "作品": "夏洛特烦恼",
+      "年份": "2015",
+      "维度": "民族国家",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 1.2,
+      "变化Δpp_source": 1.2,
+      "变化Δpp_recomputed": 1.2,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "夏洛特烦恼",
+      "年份": "2015",
+      "维度": "社会文化/性别",
+      "上映期占比%": 27.8,
+      "近年回看占比%": 15.5,
+      "变化Δpp_source": -12.3,
+      "变化Δpp_recomputed": -12.3,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "羞羞的铁拳",
+      "年份": "2017",
+      "维度": "专业能力",
+      "上映期占比%": 96.1,
+      "近年回看占比%": 96.3,
+      "变化Δpp_source": 0.2,
+      "变化Δpp_recomputed": 0.2,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "羞羞的铁拳",
+      "年份": "2017",
+      "维度": "民族国家",
+      "上映期占比%": 0.6,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": -0.6,
+      "变化Δpp_recomputed": -0.6,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "羞羞的铁拳",
+      "年份": "2017",
+      "维度": "社会文化/性别",
+      "上映期占比%": 0.6,
+      "近年回看占比%": 2.4,
+      "变化Δpp_source": 1.8,
+      "变化Δpp_recomputed": 1.8,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "西虹市首富",
+      "年份": "2018",
+      "维度": "专业能力",
+      "上映期占比%": 78.5,
+      "近年回看占比%": 96.1,
+      "变化Δpp_source": 17.6,
+      "变化Δpp_recomputed": 17.6,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "西虹市首富",
+      "年份": "2018",
+      "维度": "民族国家",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": 0.0,
+      "变化Δpp_recomputed": 0.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "西虹市首富",
+      "年份": "2018",
+      "维度": "社会文化/性别",
+      "上映期占比%": 13.9,
+      "近年回看占比%": 3.9,
+      "变化Δpp_source": -10.0,
+      "变化Δpp_recomputed": -10.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "飞驰人生",
+      "年份": "2019",
+      "维度": "专业能力",
+      "上映期占比%": 98.0,
+      "近年回看占比%": 98.8,
+      "变化Δpp_source": 0.8,
+      "变化Δpp_recomputed": 0.8,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "飞驰人生",
+      "年份": "2019",
+      "维度": "民族国家",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": 0.0,
+      "变化Δpp_recomputed": 0.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "飞驰人生",
+      "年份": "2019",
+      "维度": "社会文化/性别",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 1.2,
+      "变化Δpp_source": 1.2,
+      "变化Δpp_recomputed": 1.2,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "独行月球",
+      "年份": "2022",
+      "维度": "专业能力",
+      "上映期占比%": 84.3,
+      "近年回看占比%": 95.2,
+      "变化Δpp_source": 10.9,
+      "变化Δpp_recomputed": 10.9,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "独行月球",
+      "年份": "2022",
+      "维度": "民族国家",
+      "上映期占比%": 10.5,
+      "近年回看占比%": 1.2,
+      "变化Δpp_source": -9.3,
+      "变化Δpp_recomputed": -9.3,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "独行月球",
+      "年份": "2022",
+      "维度": "社会文化/性别",
+      "上映期占比%": 3.9,
+      "近年回看占比%": 1.2,
+      "变化Δpp_source": -2.7,
+      "变化Δpp_recomputed": -2.7,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "超能一家人",
+      "年份": "2023",
+      "维度": "专业能力",
+      "上映期占比%": 83.6,
+      "近年回看占比%": 91.7,
+      "变化Δpp_source": 8.0,
+      "变化Δpp_recomputed": 8.1,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "超能一家人",
+      "年份": "2023",
+      "维度": "民族国家",
+      "上映期占比%": 1.3,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": -1.3,
+      "变化Δpp_recomputed": -1.3,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "超能一家人",
+      "年份": "2023",
+      "维度": "社会文化/性别",
+      "上映期占比%": 3.1,
+      "近年回看占比%": 2.4,
+      "变化Δpp_source": -0.8,
+      "变化Δpp_recomputed": -0.7,
+      "within_display_tolerance": false
+    },
+    {
+      "作品": "满江红",
+      "年份": "2023",
+      "维度": "专业能力",
+      "上映期占比%": 86.1,
+      "近年回看占比%": 95.2,
+      "变化Δpp_source": 9.2,
+      "变化Δpp_recomputed": 9.1,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "满江红",
+      "年份": "2023",
+      "维度": "民族国家",
+      "上映期占比%": 2.5,
+      "近年回看占比%": 1.2,
+      "变化Δpp_source": -1.3,
+      "变化Δpp_recomputed": -1.3,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "满江红",
+      "年份": "2023",
+      "维度": "社会文化/性别",
+      "上映期占比%": 8.9,
+      "近年回看占比%": 2.4,
+      "变化Δpp_source": -6.5,
+      "变化Δpp_recomputed": -6.5,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "维度": "专业能力",
+      "上映期占比%": 30.2,
+      "近年回看占比%": 60.8,
+      "变化Δpp_source": 30.6,
+      "变化Δpp_recomputed": 30.6,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "维度": "民族国家",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": 0.0,
+      "变化Δpp_recomputed": 0.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "维度": "社会文化/性别",
+      "上映期占比%": 69.2,
+      "近年回看占比%": 38.1,
+      "变化Δpp_source": -31.0,
+      "变化Δpp_recomputed": -31.1,
+      "within_display_tolerance": false
+    },
+    {
+      "作品": "飞驰人生3",
+      "年份": "2025",
+      "维度": "专业能力",
+      "上映期占比%": 91.9,
+      "近年回看占比%": 96.9,
+      "变化Δpp_source": 5.0,
+      "变化Δpp_recomputed": 5.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "飞驰人生3",
+      "年份": "2025",
+      "维度": "民族国家",
+      "上映期占比%": 0.0,
+      "近年回看占比%": 2.1,
+      "变化Δpp_source": 2.1,
+      "变化Δpp_recomputed": 2.1,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "飞驰人生3",
+      "年份": "2025",
+      "维度": "社会文化/性别",
+      "上映期占比%": 5.0,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": -5.0,
+      "变化Δpp_recomputed": -5.0,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "欢迎来龙餐馆",
+      "年份": "2026",
+      "维度": "专业能力",
+      "上映期占比%": 91.2,
+      "近年回看占比%": 93.7,
+      "变化Δpp_source": 2.4,
+      "变化Δpp_recomputed": 2.5,
+      "within_display_tolerance": false
+    },
+    {
+      "作品": "欢迎来龙餐馆",
+      "年份": "2026",
+      "维度": "民族国家",
+      "上映期占比%": 7.5,
+      "近年回看占比%": 6.3,
+      "变化Δpp_source": -1.2,
+      "变化Δpp_recomputed": -1.2,
+      "within_display_tolerance": true
+    },
+    {
+      "作品": "欢迎来龙餐馆",
+      "年份": "2026",
+      "维度": "社会文化/性别",
+      "上映期占比%": 1.2,
+      "近年回看占比%": 0.0,
+      "变化Δpp_source": -1.2,
+      "变化Δpp_recomputed": -1.2,
+      "within_display_tolerance": true
+    }
+  ],
+  "key_values": {
+    "heatmap_抓娃娃_社会文化性别": "57%",
+    "heatmap_欢迎来龙餐馆_专业能力": "92%",
+    "dumbbell_抓娃娃_专业能力": {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "维度": "专业能力",
+      "上映期占比%": "30.2",
+      "近年回看占比%": "60.8",
+      "变化Δpp": "30.6"
+    },
+    "dumbbell_抓娃娃_社会文化性别": {
+      "作品": "抓娃娃",
+      "年份": "2024",
+      "维度": "社会文化/性别",
+      "上映期占比%": "69.2",
+      "近年回看占比%": "38.1",
+      "变化Δpp": "-31.0"
+    },
+    "dumbbell_独行月球_民族国家": {
+      "作品": "独行月球",
+      "年份": "2022",
+      "维度": "民族国家",
+      "上映期占比%": "10.5",
+      "近年回看占比%": "1.2",
+      "变化Δpp": "-9.3"
+    }
+  }
+}
