@@ -12,6 +12,8 @@
 | `round2` | `02-beyond-comedy.html/.png` | 关键作品趋势拆图 | 已按 `f1_subdim_chart.csv` 校准 |
 | `round2` | `03-issue-fade.html/.png` | 议题退潮代表案例拆图 | 已按 `chart_04_f4_f3.csv` 校准 |
 | `round3` | `01/02/03-*-motion.html/.png` | 对应 round2 的动效就绪版与静态终态预览 | 使用同一校准数据；HTML 中含入场 CSS |
+| `round2.1` | `01`–`04` 的 HTML/PNG | 为视频插入重构的 4 张 1080×1080 大字拆图 | 单屏单结论；放大标题、片名、比例和结论语 |
+| `round3.1` | `01`–`04` 的 HTML/PNG/MP4 | 对应 round2.1 的 4 条视频插入型动画 | H.264、1080×1080、24fps、4.5 秒；MP4 为正式交付 |
 
 ## 数据使用说明
 
@@ -39,7 +41,17 @@ python3 generate_infographics.py
 ./render_png.sh
 ```
 
-`generate_infographics.py` 生成可编辑的 HTML/SVG 源文件；`render_png.sh` 使用本地 Chromium 读取 SVG 的实际画布高度后输出 PNG，并等待动效结束以导出 round3 的静态终态。
+`generate_infographics.py` 生成原始 round1–round3 的 HTML/SVG 源文件；`render_png.sh` 使用本地 Chromium 读取 SVG 的实际画布高度后输出 PNG，并等待动效结束以导出 round3 的静态终态。
+
+对于视频插入版，执行：
+
+```bash
+python3 generate_video_cards.py
+./render_round21_png.sh
+python3 render_round31_mp4.py
+```
+
+`render_round31_mp4.py` 不依赖浏览器自动化或连接器；它以本地 Noto CJK 字体逐帧绘制动画并用 ffmpeg 编码为 H.264 MP4。每条视频为 1080×1080、24fps、108 帧、4.5 秒。
 
 ## 设计与编辑原则
 

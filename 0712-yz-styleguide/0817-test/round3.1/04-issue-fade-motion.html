@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=1080,initial-scale=1"><title>热映期的议题，不一定会留成演员标签</title><style>
+:root { --ink:#1E2430; --muted:#667085; --line:#DFE4EC; --paper:#FFFFFF; --coral:#FF6B54; --blue:#4869F5; --teal:#1FA487; --purple:#8668A8; --gold:#F3B51B; }
+* { box-sizing:border-box; }
+html,body { margin:0; width:1080px; height:1080px; overflow:hidden; background:var(--paper); }
+body { font-family:'Noto Sans CJK SC','Noto Sans SC','Microsoft YaHei',sans-serif; color:var(--ink); }
+.card { position:relative; width:1080px; height:1080px; overflow:hidden; background:#fff; padding:68px 72px 58px; }
+.card::before { content:''; position:absolute; left:0; top:0; width:100%; height:14px; background:var(--coral); }
+.kicker { color:var(--coral); font-weight:800; letter-spacing:.06em; font-size:24px; line-height:1; }
+h1 { position:relative; z-index:3; font-size:58px; line-height:1.18; letter-spacing:-.04em; margin:26px 0 12px; font-weight:900; }
+.deck { position:relative; z-index:3; max-width:900px; font-size:29px; line-height:1.45; color:var(--muted); margin:0; font-weight:500; }
+.brand { position:absolute; z-index:4; right:72px; bottom:48px; color:var(--coral); font-size:24px; font-weight:900; }
+.source { position:absolute; z-index:4; left:72px; bottom:50px; color:var(--muted); font-size:18px; font-weight:500; }
+.rule { position:absolute; left:72px; right:72px; bottom:96px; height:1px; background:var(--line); }
+.note { font-size:24px; line-height:1.45; color:var(--muted); font-weight:500; }
+.pill { display:inline-flex; align-items:center; border-radius:999px; padding:12px 20px; font-size:23px; font-weight:800; }
+.big-num { font-family:'Noto Sans',sans-serif; font-size:116px; font-weight:900; line-height:.85; letter-spacing:-.07em; }
+.big-label { font-size:32px; font-weight:800; line-height:1.25; }
+.static .in { opacity:1 !important; transform:none !important; clip-path:inset(0 0 0 0) !important; }
+.motion .in { opacity:0; transform:translateY(22px); }
+.motion .a1 { animation:rise .45s .12s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .a2 { animation:rise .55s .52s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .a3 { animation:rise .60s 1.14s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .a4 { animation:rise .60s 1.80s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .a5 { animation:rise .60s 2.40s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .draw { clip-path:inset(0 100% 0 0); animation:reveal .72s 1.18s cubic-bezier(.2,.8,.2,1) forwards; }
+.motion .late { opacity:0; animation:fade .45s 3.5s ease forwards; }
+@keyframes rise { to { opacity:1; transform:translateY(0); } }
+@keyframes fade { to { opacity:1; } }
+@keyframes reveal { to { clip-path:inset(0 0 0 0); } }
+</style></head>
+<body class="motion"><main class="card"><div class="kicker in a1">娱乐资本论 · 沈腾评论数据</div><h1 class="in a1">热映期的议题，不一定会留成演员标签</h1><p class="deck in a2">已收到的官方补充数据：热映期与近期回看中，民族国家与商业资本讨论均显著回落。</p>
+<style>
+.item{position:absolute;left:72px;right:72px;display:grid;grid-template-columns:310px 1fr 180px;gap:24px;align-items:center}.one{top:390px}.two{top:630px}.name{font-size:35px;line-height:1.23;font-weight:900}.name span{display:block;color:var(--purple);font-size:25px;margin-top:10px}.two .name span{color:#A77B00}.track{height:22px;background:#CAD2DE;border-radius:20px;position:relative}.track .run{height:22px;position:absolute;left:0;top:0;border-radius:20px;background:linear-gradient(90deg,var(--coral),var(--blue));}.dot{position:absolute;top:50%;width:38px;height:38px;border-radius:50%;transform:translate(-50%,-50%)}.hot{background:var(--coral)}.recent{background:var(--blue)}.value{font-size:31px;text-align:right;font-weight:900}.value span{display:block;font-size:24px;color:var(--muted);margin-top:7px}.caption{position:absolute;left:72px;right:72px;top:840px;padding:26px 32px;border-radius:20px;background:#F7F8FA;font-size:28px;line-height:1.45;font-weight:800}.caption b{color:var(--blue)}
+</style><div class="item one in a3"><div class="name">《独行月球》<span>民族国家（F3）</span></div><div class="track draw"><div class="run" style="width:87.5%"></div><i class="dot hot" style="left:87.5%"></i><i class="dot recent" style="left:10%"></i></div><div class="value">10.5% → 1.2%<span>−9.3pp</span></div></div><div class="item two in a4"><div class="name">《超能一家人》<span>商业资本（F4）</span></div><div class="track draw"><div class="run" style="width:94%"></div><i class="dot hot" style="left:94%"></i><i class="dot recent" style="left:40%"></i></div><div class="value">11.3% → 4.8%<span>−6.5pp</span></div></div><div class="caption late">热映期的题材性议题会退潮。<b>对作品的讨论，不等于演员的稳定标签。</b></div><div class="rule"></div><div class="source">数据：chart_04_f4_f3.csv</div><div class="brand">娱乐资本论</div></main></body></html>
