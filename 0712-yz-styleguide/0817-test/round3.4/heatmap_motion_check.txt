@@ -1,0 +1,21 @@
+Starting video analysis...
+Submitting video analysis task...
+Task submitted (ID: video-analysis-72a512cf-290a-4163-b2a4-1d82948051e9)
+[8s] Status: Analyzing video content with AI...
+[10s] Status: Analysis completed
+[10s] Analysis completed!
+Full analysis result saved to: /home/ubuntu/clock/0712-yz-styleguide/0817-test/video_img1-part1-styled_analysis_20260818_023523.md
+Note: This tool performs AI-based visual and audio analysis, not verbatim transcription. For detailed speech transcription, use `manus-speech-to-text` instead.
+Analysis result:
+
+画面随时间的动画表现如下：
+
+1.  **表格内容逐行显现（00:01 - 00:03）：** 表格内容并非从左上到右下单个单元格“绽放”，而是以**行为单位**，从上至下依次平滑出现。
+    *   00:01：出现表头及第一行（2015《夏洛特烦恼》）的数据。
+    *   00:02：接着显现第二行（2017《羞羞的铁拳》）和第三行（2018《西虹市首富》）。
+    *   00:03：最后显现第四行（2019《飞驰人生》）和第五行（2022《独行月球》），完成上半部分表格的展示。
+2.  **静态展示与消失（00:04 - 00:15）：**
+    *   00:04 - 00:12：表格保持完整显示状态。
+    *   00:13 - 00:15：表格内容开始按出现时的相反顺序（从下至上）逐行消失，最终画面回到仅剩标题和背景的状态。
+
+**关于遮罩与边框：** 经检查，画面背景始终为纯净的白色，**没有**出现画面中央的白色遮罩或灰色边框。

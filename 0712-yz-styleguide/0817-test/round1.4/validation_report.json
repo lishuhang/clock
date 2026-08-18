@@ -1,0 +1,396 @@
+{
+  "scope": "Shen Teng infographic a.4 canonical static charts",
+  "counts": {
+    "html": 4,
+    "png": 4
+  },
+  "png_dimensions": {
+    "img1-a-heatmap-styled.png": [
+      900,
+      1934
+    ],
+    "img2-a-professional-styled.png": [
+      900,
+      2225
+    ],
+    "img3-a-dumbbell-styled.png": [
+      900,
+      3068
+    ],
+    "comments-a-styled.png": [
+      900,
+      1863
+    ]
+  },
+  "checks": {
+    "fresh_canonical_render": true,
+    "four_expected_html_only": true,
+    "all_font_assets_present": true,
+    "yzSelfCheck_executed_for_each_file": true,
+    "yzSelfCheck_pass::img1-a-heatmap-styled.html": true,
+    "computed_a4_tokens::img1-a-heatmap-styled.html": true,
+    "yzSelfCheck_pass::img2-a-professional-styled.html": true,
+    "computed_a4_tokens::img2-a-professional-styled.html": true,
+    "yzSelfCheck_pass::img3-a-dumbbell-styled.html": true,
+    "computed_a4_tokens::img3-a-dumbbell-styled.html": true,
+    "yzSelfCheck_pass::comments-a-styled.html": true,
+    "computed_a4_tokens::comments-a-styled.html": true,
+    "png_exists::img1-a-heatmap-styled.png": true,
+    "png_container_crop::img1-a-heatmap-styled.png": true,
+    "required_nodes::img1-a-heatmap-styled.html": true,
+    "canonical_selfcheck_embedded::img1-a-heatmap-styled.html": true,
+    "a4_container_and_watermark_css::img1-a-heatmap-styled.html": true,
+    "AliPuHui_only::img1-a-heatmap-styled.html": true,
+    "vertical_and_horizontal_svg_symbols::img1-a-heatmap-styled.html": true,
+    "no_unresolved_placeholder::img1-a-heatmap-styled.html": true,
+    "title_exact_and_no_chart_prefix::img1-a-heatmap-styled.html": true,
+    "source_exact::img1-a-heatmap-styled.html": true,
+    "shared_components::img1-a-heatmap-styled.html": true,
+    "png_exists::img2-a-professional-styled.png": true,
+    "png_container_crop::img2-a-professional-styled.png": true,
+    "required_nodes::img2-a-professional-styled.html": true,
+    "canonical_selfcheck_embedded::img2-a-professional-styled.html": true,
+    "a4_container_and_watermark_css::img2-a-professional-styled.html": true,
+    "AliPuHui_only::img2-a-professional-styled.html": true,
+    "vertical_and_horizontal_svg_symbols::img2-a-professional-styled.html": true,
+    "no_unresolved_placeholder::img2-a-professional-styled.html": true,
+    "title_exact_and_no_chart_prefix::img2-a-professional-styled.html": true,
+    "source_exact::img2-a-professional-styled.html": true,
+    "shared_components::img2-a-professional-styled.html": true,
+    "png_exists::img3-a-dumbbell-styled.png": true,
+    "png_container_crop::img3-a-dumbbell-styled.png": true,
+    "required_nodes::img3-a-dumbbell-styled.html": true,
+    "canonical_selfcheck_embedded::img3-a-dumbbell-styled.html": true,
+    "a4_container_and_watermark_css::img3-a-dumbbell-styled.html": true,
+    "AliPuHui_only::img3-a-dumbbell-styled.html": true,
+    "vertical_and_horizontal_svg_symbols::img3-a-dumbbell-styled.html": true,
+    "no_unresolved_placeholder::img3-a-dumbbell-styled.html": true,
+    "title_exact_and_no_chart_prefix::img3-a-dumbbell-styled.html": true,
+    "source_exact::img3-a-dumbbell-styled.html": true,
+    "shared_components::img3-a-dumbbell-styled.html": true,
+    "png_exists::comments-a-styled.png": true,
+    "png_container_crop::comments-a-styled.png": true,
+    "required_nodes::comments-a-styled.html": true,
+    "canonical_selfcheck_embedded::comments-a-styled.html": true,
+    "a4_container_and_watermark_css::comments-a-styled.html": true,
+    "AliPuHui_only::comments-a-styled.html": true,
+    "vertical_and_horizontal_svg_symbols::comments-a-styled.html": true,
+    "no_unresolved_placeholder::comments-a-styled.html": true,
+    "title_exact_and_no_chart_prefix::comments-a-styled.html": true,
+    "source_exact::comments-a-styled.html": true,
+    "shared_components::comments-a-styled.html": true,
+    "comment_cards_translucent_under_watermark": true,
+    "official_csv_table1_heatmap_exact": true,
+    "official_csv_table2_f1_segments_exact": true,
+    "official_csv_table3_dumbbells_exact": true,
+    "ocr_comments_platform_and_movie_mapping_exact": true
+  },
+  "details": {
+    "fresh_canonical_render": {
+      "returncode": 0,
+      "stdout": "Rendered comments-a-styled.png {'x': 100, 'y': 0, 'width': 900, 'height': 1863.796875}\nRendered img1-a-heatmap-styled.png {'x': 100, 'y': 0, 'width': 900, 'height': 1934}\nRendered img2-a-professional-styled.png {'x': 100, 'y': 0, 'width': 900, 'height': 2225}\nRendered img3-a-dumbbell-styled.png {'x': 100, 'y': 0, 'width': 900, 'height': 3068}\n",
+      "stderr": ""
+    },
+    "four_expected_html_only": [
+      "comments-a-styled.html",
+      "img1-a-heatmap-styled.html",
+      "img2-a-professional-styled.html",
+      "img3-a-dumbbell-styled.html"
+    ],
+    "yzSelfCheck_executed_for_each_file": [
+      {
+        "file": "comments-a-styled.html",
+        "png": "comments-a-styled.png",
+        "pass": true,
+        "errors": [],
+        "banner": "a.4 自检通过",
+        "svgUse": "#yz-logo-vertical",
+        "fontReady": true,
+        "rect": {
+          "x": 100,
+          "y": 0,
+          "width": 900,
+          "height": 1863.796875
+        },
+        "style": {
+          "watermark": "420px",
+          "opacity": "0.1",
+          "logo": "62px",
+          "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+        }
+      },
+      {
+        "file": "img1-a-heatmap-styled.html",
+        "png": "img1-a-heatmap-styled.png",
+        "pass": true,
+        "errors": [],
+        "banner": "a.4 自检通过",
+        "svgUse": "#yz-logo-vertical",
+        "fontReady": true,
+        "rect": {
+          "x": 100,
+          "y": 0,
+          "width": 900,
+          "height": 1934
+        },
+        "style": {
+          "watermark": "420px",
+          "opacity": "0.1",
+          "logo": "62px",
+          "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+        }
+      },
+      {
+        "file": "img2-a-professional-styled.html",
+        "png": "img2-a-professional-styled.png",
+        "pass": true,
+        "errors": [],
+        "banner": "a.4 自检通过",
+        "svgUse": "#yz-logo-vertical",
+        "fontReady": true,
+        "rect": {
+          "x": 100,
+          "y": 0,
+          "width": 900,
+          "height": 2225
+        },
+        "style": {
+          "watermark": "420px",
+          "opacity": "0.1",
+          "logo": "62px",
+          "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+        }
+      },
+      {
+        "file": "img3-a-dumbbell-styled.html",
+        "png": "img3-a-dumbbell-styled.png",
+        "pass": true,
+        "errors": [],
+        "banner": "a.4 自检通过",
+        "svgUse": "#yz-logo-vertical",
+        "fontReady": true,
+        "rect": {
+          "x": 100,
+          "y": 0,
+          "width": 900,
+          "height": 3068
+        },
+        "style": {
+          "watermark": "420px",
+          "opacity": "0.1",
+          "logo": "62px",
+          "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+        }
+      }
+    ],
+    "yzSelfCheck_pass::img1-a-heatmap-styled.html": {
+      "file": "img1-a-heatmap-styled.html",
+      "png": "img1-a-heatmap-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 1934
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "computed_a4_tokens::img1-a-heatmap-styled.html": {
+      "file": "img1-a-heatmap-styled.html",
+      "png": "img1-a-heatmap-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 1934
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "yzSelfCheck_pass::img2-a-professional-styled.html": {
+      "file": "img2-a-professional-styled.html",
+      "png": "img2-a-professional-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 2225
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "computed_a4_tokens::img2-a-professional-styled.html": {
+      "file": "img2-a-professional-styled.html",
+      "png": "img2-a-professional-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 2225
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "yzSelfCheck_pass::img3-a-dumbbell-styled.html": {
+      "file": "img3-a-dumbbell-styled.html",
+      "png": "img3-a-dumbbell-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 3068
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "computed_a4_tokens::img3-a-dumbbell-styled.html": {
+      "file": "img3-a-dumbbell-styled.html",
+      "png": "img3-a-dumbbell-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 3068
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "yzSelfCheck_pass::comments-a-styled.html": {
+      "file": "comments-a-styled.html",
+      "png": "comments-a-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 1863.796875
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "computed_a4_tokens::comments-a-styled.html": {
+      "file": "comments-a-styled.html",
+      "png": "comments-a-styled.png",
+      "pass": true,
+      "errors": [],
+      "banner": "a.4 自检通过",
+      "svgUse": "#yz-logo-vertical",
+      "fontReady": true,
+      "rect": {
+        "x": 100,
+        "y": 0,
+        "width": 900,
+        "height": 1863.796875
+      },
+      "style": {
+        "watermark": "420px",
+        "opacity": "0.1",
+        "logo": "62px",
+        "font": "AliPuHui, 阿里巴巴普惠体, sans-serif"
+      }
+    },
+    "png_container_crop::img1-a-heatmap-styled.png": [
+      900,
+      1934
+    ],
+    "title_exact_and_no_chart_prefix::img1-a-heatmap-styled.html": "十部作品如何改写沈腾的形象",
+    "source_exact::img1-a-heatmap-styled.html": "数据来源：豆瓣短评；官方表1底稿",
+    "png_container_crop::img2-a-professional-styled.png": [
+      900,
+      2225
+    ],
+    "title_exact_and_no_chart_prefix::img2-a-professional-styled.html": "专业能力评价焦点如何变化",
+    "source_exact::img2-a-professional-styled.html": "数据来源：豆瓣短评；官方表2底稿",
+    "png_container_crop::img3-a-dumbbell-styled.png": [
+      900,
+      3068
+    ],
+    "title_exact_and_no_chart_prefix::img3-a-dumbbell-styled.html": "热映期与近年回看的评价对比",
+    "source_exact::img3-a-dumbbell-styled.html": "数据来源：豆瓣短评；官方表3底稿",
+    "png_container_crop::comments-a-styled.png": [
+      900,
+      1863
+    ],
+    "title_exact_and_no_chart_prefix::comments-a-styled.html": "豆瓣与抖音中的代表性评论",
+    "source_exact::comments-a-styled.html": "数据来源：用户提供评论截图 OCR 与原文段落映射",
+    "official_csv_table1_heatmap_exact": {
+      "rows": 10,
+      "expected_rows": 10
+    },
+    "official_csv_table2_f1_segments_exact": {
+      "rows": 10,
+      "expected_rows": 10
+    },
+    "official_csv_table3_dumbbells_exact": {
+      "rows": 30,
+      "expected_rows": 30
+    },
+    "ocr_comments_platform_and_movie_mapping_exact": {
+      "cards": 7,
+      "expected": 7
+    }
+  },
+  "all_pass": true
+}

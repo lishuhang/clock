@@ -8,10 +8,10 @@
             "width": 1080,
             "height": 1080,
             "r_frame_rate": "30/1",
-            "nb_frames": "405"
+            "nb_frames": "480"
         }
     ],
     "format": {
-        "duration": "13.500000"
+        "duration": "16.000000"
     }
 }

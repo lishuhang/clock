@@ -1,0 +1,59 @@
+{
+  "source": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/img3-a-dumbbell-styled.png",
+  "pixel_width": 900,
+  "pixel_height": 3068,
+  "aspect_ratio": "225:767",
+  "aspect_ratio_decimal_width_over_height": 0.293351,
+  "orientation": "portrait",
+  "tiled": true,
+  "mode": "vertical",
+  "overlap_fraction_requested_target": 0.12,
+  "overlap_fraction_actual_minimum": {
+    "horizontal": 0.0,
+    "vertical": 0.112593
+  },
+  "reading_order": "top-to-bottom",
+  "tile_count": 5,
+  "tiles": [
+    {
+      "index": 1,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/visual_check_img3/tile_001_x000000_y000000.png",
+      "x": 0,
+      "y": 0,
+      "pixel_width": 900,
+      "pixel_height": 675
+    },
+    {
+      "index": 2,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/visual_check_img3/tile_002_x000000_y000598.png",
+      "x": 0,
+      "y": 598,
+      "pixel_width": 900,
+      "pixel_height": 675
+    },
+    {
+      "index": 3,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/visual_check_img3/tile_003_x000000_y001196.png",
+      "x": 0,
+      "y": 1196,
+      "pixel_width": 900,
+      "pixel_height": 675
+    },
+    {
+      "index": 4,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/visual_check_img3/tile_004_x000000_y001795.png",
+      "x": 0,
+      "y": 1795,
+      "pixel_width": 900,
+      "pixel_height": 675
+    },
+    {
+      "index": 5,
+      "path": "/home/ubuntu/clock/0712-yz-styleguide/0817-test/round1.4/visual_check_img3/tile_005_x000000_y002393.png",
+      "x": 0,
+      "y": 2393,
+      "pixel_width": 900,
+      "pixel_height": 675
+    }
+  ]
+}
