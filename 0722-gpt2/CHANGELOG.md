@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-08-19 — 公开免费通道复核（未发布新版本）
+
+### Researched
+
+- 重新检索并核验 V2EX 公开 GPT-Image-2 候选及相关公开体验站，完整过程记录于 `diagnostics-20260819-research-notes.md`。
+- 以匿名浏览器分别检查 Keydraw、Flaq、gptimage2.com、NanoBananaTool、Morphic 及若干历史候选的当前登录、额度、验证码和可访问状态。
+- Keydraw 页面自身的最小测试任务在匿名访客流程中完成，但其访客 Key 没有第三方代理/分发授权，不能作为本项目生产上游。
+- Flaq 页面接受游客输入，但提交生成后要求 Cloudflare 人机验证；其他主要候选均要求登录、注册赠额，或已不可访问。
+
+### Changed
+
+- 新增 `README.md`，说明项目历史、当前线上基线、候选筛选结论、合规发布边界和下一次接手顺序。
+- 新增 `diagnostics-20260819-research-notes.md`，保存不含凭据的公开来源与浏览器实测结果。
+
+### Not Released
+
+- **未发布新的 Worker 通道，未覆盖 `gpt2.lishuhang.com`，未声明新的 slug 或版本号。**
+- 原因是本轮没有发现同时满足“免登录、免后续验证、可稳定第三方代理且获得明确授权”的免费 GPT-Image-2 上游。
+
+---
+
 ## kd-v2.2 (2026-07-23) — 修复设置面板 + 标题改名
 
 ### Fixed
