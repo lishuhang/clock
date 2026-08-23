@@ -1,2 +1,0 @@
-section,name,url,classification,status,final_url,content_type,playlist_latency_ms,playlist_bytes,manifest_level,segment_attempted,segment_ok,encrypted_hint,segment_statuses,segment_latency_ms,error,checked_at
-国际,NHK World Japan,https://media-osa.hls.nhkworld.jp/hls/wp/live/master.m3u8,transport_ok,200,https://media-osa.hls.nhkworld.jp/hls/wp/live/1/sig/704b873daf065a7f37bd3b9082b71865c3bfe1e06f4c6a1c24d89cc1985bf842/v1.m3u8,application/vnd.apple.mpegurl,3893.9,2714,master+media,1,1,False,[200],[2744.9],,2026-08-15T14:37:29+00:00
