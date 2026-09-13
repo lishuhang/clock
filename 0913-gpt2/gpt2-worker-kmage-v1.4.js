@@ -346,7 +346,7 @@ async function handleRequest(request) {
         }
       },
       shared: { logs_storage: 'localStorage: kmage_logs_v1', channel_storage: 'localStorage: kmage_channel_v1', form_storage: 'localStorage: kmage_form_v1（创作面板选项记忆，模型按通道分存）', history_storage: 'localStorage: kmage_hist_v1（任务历史，成功/失败均入册）' },
-      docs: '页面右上角「关于」按钮内含自包含 README 与 CHANGELOG；本 JSON 可作为排障入口',
+      docs: '页面右上角「关于」按钮内含自包含 README（含完整迭代时间线，与仓库 README.md 对齐互补）；本 JSON 可作为排障入口',
       generated_at: new Date().toISOString()
     });
   }
@@ -386,8 +386,8 @@ const HTML_CONTENT = `<!doctype html>
   AI AGENT / 排障提示（AI Agent Notice）:
   本页是自包含的单文件 Cloudflare Worker 应用（后端代理 + 内嵌前端 + 号池）。
   - 可将本页/本文件整体作为 skill 调用：所有交互均在页面内完成，无外部依赖
-  - 排障请先读: 右上角齿轮按钮 →「关于」选项卡（自包含 README 与 CHANGELOG，
-    含马良渠道至今完整迭代时间线）
+  - 排障请先读: 右上角齿轮按钮 →「关于」选项卡（自包含 README，
+    含马良渠道至今完整迭代时间线；仓库内 README.md 为维护者版，已并入原 CHANGELOG，两版对齐互补）
   - 服务自描述: GET /about（版本、双通道端点、存储键、真实上游地址）；
     健康: GET /healthz
   - 前端日志: localStorage["kmage_logs_v1"]；kmage 号池: localStorage["kmage_state_v1"]；
@@ -2178,7 +2178,7 @@ function saveKdrSettingsFromUI(){
   appLog('[kdr] 自定义 Key 已保存 ×'+lines.length,'i');
 }
 
-// ---------- 关于（自包含 README + 时间线 CHANGELOG + 使用帮助） ----------
+// ---------- 关于（自包含 README + 完整迭代时间线 + 使用帮助） ----------
 // 对外脱敏：源站一律以「kmage 站点 / kdr 站点」表述；真实上游仅经 GET /about 提供排障方
 var LOGO_SVG='<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5C8.4 5.5 3.5 10.3 3.5 16.3S8.4 27 14.5 27c1.8 0 2.9-1 2.9-2.4 0-.7-.3-1.2-.8-1.8-.4-.5-.7-1-.7-1.6 0-1.3 1-2.2 2.5-2.2h2.9c3 0 5.2-1.9 5.2-4.8 0-5.1-5.4-8.7-12-8.7z"/><path d="M19.8 19.5l6.3-9.9c.7-1.1.4-2.6-.7-3.3-1.1-.7-2.6-.4-3.3.7l-6.3 9.9 1 3.4z"/><circle cx="9.3" cy="12.4" r="1.3"/><circle cx="14.6" cy="10" r="1.3"/><circle cx="8.9" cy="18.7" r="1.3"/></svg>';
 function ABOUT_HTML(){
@@ -2223,7 +2223,7 @@ function ABOUT_HTML(){
   h.push('<p>· UA：Worker 端透传访客浏览器真实 UA（缺失时从 4 个常见池随机），不做 IP 伪造（马良 v26.1 已证实无效且移除）。</p>');
   h.push('<h3>12. 排障指引（AI Agent 适用）</h3>');
   h.push('<p>① GET /about 确认版本、通道端点与真实上游；② 打开「控制台」导出日志，定位首个非 2xx 上游请求（日志带 [kmage]/[kdr] 前缀）；③ kmage 常见错误：401 会话/Key 失效（自动重登重建）、402 积分不足（自动换号）、429 限流（5s 退避）、5xx 网关错误（4s 后同号+换号重试，失败自动返还积分）、180s 超时、403 account_environment_abnormal（2026-09-13 实测新增风控：从数据中心 IP 直连上游注册的未满 24h 新号生图被拒「账号使用环境异常，充值后解锁」，经本 Worker 代理路径正常；前端对新生号 403/400 自动换号重试）；④ kdr 常见错误：401/403 Key 被拒（自动刷新共享 Key 重试）、404 任务失效、轮询超时 180s（免费通道不扣费）；⑤ 号池/设置可导出 JSON 离线分析；⑥ 上游探活：kmage 站点直接访问首页（注册无验证码，签到接口账号未满 24h 返回 403）；kdr 站点 GET /api/gift-key 应返回 key/alias。</p>');
-  h.push('<h3>13. 项目迭代时间线（CHANGELOG · 按实际日期）</h3>');
+  h.push('<h3>13. 项目迭代时间线（按实际日期正序）</h3>');
   h.push('<div class="tl">');
   h.push('<div class="ti"><span class="td">2026-07 上旬前</span><span class="tc"><b>马良渠道 v0.x → v27.2</b>：项目起点，免费生图首条路线（上游「马良」站点）。本地迭代 27+ 版：号池轮换、水印模块、浏览器通知等能力成形，「拟人化凭据 / 随机化节奏 / UA 透传 / 不做 IP 伪造」等反模式化原则在此确立。后上游加 challenge 墙，服务端不可用，通道终止。</span></div>');
   h.push('<div class="ti"><span class="td">2026-07-22</span><span class="tc"><b>kd v1.0 → v1.2</b>：接入 Keydraw（V2EX 公开 Gift Key 模式）。v1.0 多通道架构（KeyDraw + 马良，自动故障切换）；v1.1 性能精简；v1.2 上游错误透传、自定义付费 Key 通道，马良标记下线。</span></div>');
@@ -2231,8 +2231,8 @@ function ABOUT_HTML(){
   h.push('<div class="ti"><span class="td">2026-07 下旬～08</span><span class="tc"><b>SQ / PM 路线试错</b>：Squido（人机验证阻断，KV+Cron 保活原型未走通）、Pixmind（登录接口 500，双 Worker 半自动方案止步）。<b>2026-08-19 复核结论</b>：当时无「免登录、免人机验证、可第三方代理、明确免费额度」的合格上游，未发版。</span></div>');
   h.push('<div class="ti"><span class="td">2026-09 上旬</span><span class="tc"><b>kdr 通道瘫死</b>：kdr 上游改版（Draw Studio），生成 API 契约变化——key 与 host 必须放入请求 body（host 由 /api/channels 下发），旧版 Authorization 头方式全部 400「请求地址只能选择…」，共享 Gift Key 本身仍有效。</span></div>');
   h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-v1.0 上线</b>：选定「kmage 站点」为新上游（官方 OpenAI 兼容 API、注册无验证码、签到 +5 分/天、失败返还）。号池模式全套（自动注册/批量签到/补建 Key/401 重登/402 换号/429 退避），同位替换瘫死的 kdr。</span></div>');
-  h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-1.1</b>：运行日志控制台（分组/导出/复制/持久化）、号池 JSON 导入导出、浏览器原生通知、24h 规则明确化（仅限签到）、反模式化（拟人凭据/随机节奏/UA 透传）、内嵌自包含文档与 /about。同日补丁：用户实测图生图偶发 504（大请求体），增加 5xx 同号+换号自动重试。</span></div>');
-  h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-kdr-1.2</b>：kdr 通道修复复活（适配 key/host 入 body 新契约、任务轮询、结果图代理转存，免费 Gift Key 实测可出图）；header 通道选择器（默认 kmage）；UI 重构——footer 移除，「号池」→「设置」、「日志」→「控制台」、「文档」+「帮助」合并为「关于」，均改线条 SVG 图标；新增画笔颜料盘 favicon 与「ai」字母组合 logo；设置级 JSON 导入导出（号池+全部设置项）；对外文档源站脱敏（以「kmage 站点 / kdr 站点」表述）；本文档整合马良至今完整时间线。</span></div>');
+  h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-1.1</b>：运行日志控制台（分组/导出/复制/持久化）、号池 JSON 导入导出、浏览器原生通知、24h 规则明确化（仅限签到）、反模式化（拟人凭据/随机节奏/UA 透传）、内嵌自包含文档与 /about；修复日志原文丢失问题（resp.json() 消费 body 后取不到原文，改先读全文再 parse）。同日补丁：用户实测图生图偶发 504（大请求体），增加 5xx 同号+换号自动重试。</span></div>');
+  h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-kdr-1.2</b>：kdr 通道修复复活（适配 key/host 入 body 新契约、任务轮询、结果图代理转存，免费 Gift Key 实测可出图）；header 通道选择器（默认 kmage）；UI 重构——footer 移除，「号池」→「设置」、「日志」→「控制台」、「文档」+「帮助」合并为「关于」，均改线条 SVG 图标；新增画笔颜料盘 favicon 与「ai」字母组合 logo；设置级 JSON 导入导出（号池+全部设置项）；对外文档源站脱敏（以「kmage 站点 / kdr 站点」表述）；本文档整合马良至今完整时间线；工程坑防守——内嵌模板字符串内禁止反斜杠转义序列（含正则），换行统一 String.fromCharCode(10)，静态检查强制（kd-v2.2 换行转义坑重演拦截）。</span></div>');
   h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-kdr-1.3</b>：竖屏手机适配——窄屏下设置/控制台/关于合并为单菜单按钮+选项卡浮窗（面板节点搬运复用，无重复 ID），版本号收进标题下方堆叠，触控目标、弹窗高度与历史列表换行按移动端优化；深色模式——CSS 全量变量化，设置内可选跟随系统/浅色/深色，跟随系统时实时感应系统切换；任务历史持久化——成功/失败/中断均入册，成功条目存 canvas 缩略图与 kdr 上游下载地址，点击回看，支持 ai-image-history JSON 导出/导入跨设备回看；图标修正——设置按钮太阳改齿轮，header 与关于页 logo 换为画笔+颜料盘（与 favicon 同款）；排障新知——上游对直连数据中心 IP 的新生号返回 403 环境异常风控（Worker 代理路径正常）。</span></div>');
   h.push('<div class="ti"><span class="td">2026-09-13</span><span class="tc"><b>kmage-kdr-1.4（本版）</b>：导航统一——全宽度右上角仅保留一个齿轮按钮，点开浮窗以选项卡切换设置/控制台/关于，桌面三按钮与窄屏汉堡按钮的双轨实现移除（面板 DOM 收敛为隐藏宿主 + 搬运复用，代码精简）；设置分区——「通用选项 / kmage 通道选项 / kdr 通道选项」三区常驻，选中任一通道均可直接调整另一通道的专属选项；创作面板记忆——模型（按通道分存）/比例/精细度/分辨率档/提示词存 kmage_form_v1，下次打开自动恢复；PWA 化——manifest + Service Worker + PNG 图标（白底圆角矩形叠加画笔颜料盘 logo），应用名「AI生图」，standalone 模式保留系统标题栏，设置 → 通用选项提供「安装到系统」按钮。</span></div>');
   h.push('</div>');
