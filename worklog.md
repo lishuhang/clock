@@ -140,3 +140,30 @@ Account ID：`ec44dddde866c789a9dd26f5d0cdb248`
 - 本地 mock 注入「首次 504 重试成功」场景 E2E 通过
 - 重新部署：/healthz kmage-1.1，线上脚本与本地 diff 一致，首页含 5xx 提示文本
 - 验证期积分消耗：本轮生产验证共注册 4 探针号（各 1 分），其中 1 次生图成功消耗
+
+---
+
+## 2026-09-13 09:30 UTC — kmage-kdr-1.2：kdr 通道修复复活 + 双通道选择器 + UI/文档重构
+
+### kdr 故障根因与新契约实测（curl 直连上游）
+- 上游存活：`/api/gift-key` → `{"alias":"20260907-BEST-KEY","key":"20260907-BEST-KEY"}`；`/api/channels` 下发两条线路（www/new.97api.com）与模型清单
+- 新契约（抓取改版后前端 bundle 分析 + 实测）：生成 `POST /api/image-tasks/generations`，body = `{client_task_id,key,host,model,prompt,quality,size,ratio,n:1}`（不再用 Authorization 头）；免费 Gift Key 固定 www.97api.com + gpt-image-2 + 1K；图生图 `POST /api/image-tasks/edits`（multipart 9 字段 + image[]）；轮询 `GET /api/image-tasks/{id}`（queued→running→success，结果 `data[].url` 为图床链接）
+- 直连实测：提交 → 33s 出图成功（quality=low 快速验证）
+
+### v1.2 实现（115.9KB，基于 v1.1 外科手术+重写混合）
+- 后端：新增 `/api/kdr/*` 透明代理（UA/Origin/Referer 伪装沿用，multipart 兼容）与 `/kdr/img?url=` 结果图拉取代理；healthz/about 双通道化
+- 前端：通道选择器（ver 右侧，默认 kmage，持久化 kmage_channel_v1）；kdr 状态独立存储（kdr_state_v1）+ 旧 maliang_state 自定义 Key 自动迁移；generate 拆分为统一入口 + generateKmage/generateKdr 双流程；kdr 任务轮询（3s/180s）、URL→b64（/kdr/img → FileReader）、Key 被拒自动刷新共享 Key、提交 5xx 4s 重试
+- UI：footer 删除；「文档」+「帮助」→「关于」；「号池」→「设置」（齿轮 SVG）、「日志」→「控制台」（终端 SVG）、「关于」（圆圈 i SVG）；画笔+颜料盘 favicon；「ai」字母组合 logo（header + 关于顶部）；设置级 JSON 导出（号池+全部设置+kdr 配置）/导入（自动识别三种格式）
+- 文档：对外脱敏（页面零源站域名，统一「kmage 站点/kdr 站点」，真实上游仅 /about）；关于弹窗整合马良→至今完整时间线（正序）；仓库 CHANGELOG/README 按实际日期重排
+
+### 关键 bug（本地 E2E 拦截）
+- **kd-v2.2 经典坑重演**：`split(/\r?\n/)` 写在 HTML_CONTENT 内，`\r\n` 被外层模板字符串吞成真实换行 → 内层正则非法、整个 script 块静默不执行（node --check 查不出，HTML 模板内容不参与语法检查）。浏览器 eval 分块定位后改 String.fromCharCode 拆行；静态检查脚本新增「HTML_CONTENT 内禁 `\` 转义」规则永久拦截
+- kdrFetchB64 `'resp.ok'` 字面量笔误（恒真）→ 修正
+- 部署脚本 multipart 两连坑：boundary 缺失（10021）→ part name 应为 worker.js 而非 body_part；最终 curl -F 直传成功
+
+### 验证
+- 静态：node --check + 自检脚本（id 引用 59/62、89 函数定义、34 绑定、脱敏断言、双通道路由）全过
+- 本地 E2E（mock 双上游 + 无头浏览器）：kmage 注册→生图、kdr Gift Key→生图（queued→running→success→URL→b64）、kdr 图生图 edits（2 图）、kdr 任务 error 终态、kdr 503 重试（日志确认）、kmage 402、控制台 55 条分组日志、关于弹窗（logo/时间线/脱敏）、设置导出→改→导入回环（通道/kdr Key/UI 联动恢复），全过
+- 部署：CF API PUT HTTP 200；/healthz kmage-kdr-1.2 + 双上游；线上页面与本地逐字节一致
+- **生产双通道端到端**：kdr 免费 Gift Key 真实出图 36.6s（2,259KB PNG，橘猫画画，与提示词一致）；kmage 注册新号（+1 分）→ sunburst 生图 30.7s 成功（1 分扣减正常）
+- 积分消耗：本轮注册 1 探针号（+1 分免费额度，自给自足）

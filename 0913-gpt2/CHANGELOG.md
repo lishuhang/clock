@@ -1,218 +1,113 @@
-# Changelog — AI生图 Worker
+# Changelog — AI生图 Worker（kmage + kdr 双通道）
 
-所有版本变更记录。v0.x-v1.2 为多通道架构，kd-v2.0 起合并为单一 keydraw 通道，kmage-v1.0 起为 kmage 通道。
+按**实际迭代发生日期正序**排列，整合从马良渠道至今的完整试错过程。
+当前生产：`kmage-kdr-1.2`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
+
+> 页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点」表述）；本仓库文档为维护者视角，保留真实上游地址。
 
 ---
+
+## 阶段一：马良渠道（2026-07 上旬及以前，本地迭代 v0.x → v27.2）
+
+项目的起点。上游为马良站点（grok.17nas.com，grok webui 中转）。在本地持续迭代了 27+ 个版本，沉淀了本项目的全部核心资产：
+
+- **号池模式**：多账号注册/轮换（most-credits / round-robin）、签到自动化、401 重登、402 换号
+- **反模式化原则**：拟人化邮箱/密码生成（去固定指纹）、批量操作随机间隔与乱序、UA 透传真实访客 UA；IP 伪造在 v26.1 实测无效后移除
+- 功能资产：历史记录、提示词库、参考图（图生图）、浏览器通知、主题切换、Gemini 水印模块（v27.2 修复 alpha 强度并加入自动增益检测）
+- **终局**：上游加 Cloudflare Challenge 墙，server-side 不可用，马良通道终止。单文件 Worker 内嵌模板字符串的 `\n` 转义坑、同名 const 冲突等工程教训均在同期记录
+
+代表性文件：`gpt2-worker-v27.2.js`（留档）。
+
+## 2026-07-22 — kd v0.x → v1.2（Keydraw 接入与多通道时期）
+
+- **v0.1**：接入 keydraw.97api.com（V2EX 自荐帖公开 Gift Key 模式，免注册共享 Key）
+- **v0.5-v0.6**：HTML_CONTENT 模板字符串内 `//` 行注释吞代码、`apiFetch` 双 `/api/` 前缀等前端 bug 修复
+- **v1.0 多通道架构**：顶部通道选择器（自动/KeyDraw/马良），后端按 `X-Channel` 头分发，账号池按通道独立
+- **v1.1**：gift-key 异步刷新不阻塞首屏；移除 video 模型与 `autoFallbackGpt2` 等死代码
+- **v1.2**：`pollTask()` 将 `status:"error"` 视为终止态（修复「日限额已用完」被持续轮询 300s 误报超时）；`extractErrorMessage()` 上游错误原样透传；新增 custom-97api 自定义付费 Key 通道；**马良通道标记 deprecated**
+
+## 2026-07-23 — kd-v2.0 → v2.2（单通道收敛）
+
+- **kd-v2.0**：移除多通道架构（`CHANNELS`/`pickChannel` 等），收敛为单一 keydraw 通道；邀请面板下线
+- **kd-v2.1**：日额度本地计数器（GMT+8 零点重置，右上角徽章「今日 X / 999」）；多自定义 Key 共池轮换；旧 state 自动迁移
+- **kd-v2.2**：修复 v2.1 误删 5 个设置函数导致齿轮不可点；**修复 `split('\n')` 在 HTML_CONTENT 模板中被解释为真实换行导致 JS 语法错误的经典坑**（改用 `String.fromCharCode(10)`）；标题改为「AI生图」
+- 部署：`ai-image.lishuhang.workers.dev` + `gpt.lishuhang.com`
+
+## 2026-07 下旬 ～ 2026-08-19 — SQ / PM 路线试错与公开通道复核（未发布版本）
+
+- **SQ 路线（Squido.ai，sq-v1.0）**：Turnstile 人机验证无法在 headless 容器绕过；手工配置 session 后 credits=0；KV+Cron 保活原型未完成端到端验证
+- **PM 路线（Pixmind.io，pm-v1.1~v1.2）**：双 Worker 半自动方案已部署；emailPassword 登录 API 返回 500 未解决
+- **2026-08-19 复核结论**：重新检索并匿名实测 V2EX 公开候选（Keydraw / Flaq / gptimage2.com / NanoBananaTool / Morphic 等），未找到同时满足「免登录、免人机验证、可稳定第三方代理、明确免费额度」的上游；该轮未发布任何版本、未覆盖生产域名（过程记录见 git 历史的 research notes）
+
+## 2026-08 下旬 ～ 09 上旬 — kdr-v1.2 时期与上游改版瘫死
+
+- **kdr-v1.2**（KeyDraw 通道独立版）：单通道 + Gift Key 自动轮换 + 自定义 97api Key + 媒体代理，部署于 `ai-image`，为 kmage 之前的线上基线
+- **2026-09 上旬上游改版（Draw Studio）**：生成 API 契约变化——`key` 与 `host` 必须放入请求 body（host 由 `/api/channels` 下发：www.97api.com / new.97api.com），旧版仅用 Authorization 头 → 全部生成请求 400「请求地址只能选择 www.97api.com 或 new.97api.com」。共享 Gift Key 本身仍有效。kdr 前端未适配，通道瘫死
+
+## kmage-v1.0 (2026-09-13) — kmage 通道上线，同位替换 kdr
+
+### Background
+- kdr 瘫死后探查新上游 image.dddd.zone（kmage · AI 视觉工作台）：官方 OpenAI 兼容 API、注册仅邮箱+密码无验证码、签到 +5 分/天（注册满 24h 开放）、1 积分 = 1 张图、失败自动返还
+- 号池模式与反模式化原则继承自马良 v27.2
+
+### Added
+- 号池管理：自动注册（+1 分）、批量签到（+5 分/天/号）、补建 API Key、刷新额度、禁用/归档、删除
+- 轮换策略 most-credits / round-robin；401 自动重登重建 Key；402 自动换号；429 退避重试
+- 生图：gpt-image-2 / gpt-image-2.5-flare / gpt-image-2.5-sunburst；7 种比例；质量 auto/low/medium/high；图生图 ≤10 张（PNG/JPG/WebP ≤10MB）
+- 会话代理 `/api/kmage/*`（X-Kmage-Session 头 ↔ Cookie 还原）、Bearer 代理 `/kmage/v1/*`、`/healthz`
+- 全部状态 localStorage，Worker 无状态无 KV
+
+### Deployment
+- 部署 `ai-image`；生产端到端：注册 201 → 建 Key → 生图 HTTP 200（42s，735KB PNG）
+- 备份 `0913-gpt2/gpt2-worker-kmage-v1.0.js`（48,600 bytes）
 
 ## kmage-1.1 (2026-09-13) — 可观测性与号池运维增强
 
 ### Added
-- **运行日志控制台**（右上角「日志」）：每次生图按运行号（R+时间戳）分组记录账号选择、请求参数、上游状态码与耗时、错误响应原文（含非 JSON 响应截断，修复 body 双重读取导致原文丢失的问题）、换号/重试决策；支持导出全部/本次运行（.txt 含版本/UA/页面地址）、一键复制、只看错误、清空；持久化 localStorage（`kmage_logs_v1`，300 条环形缓冲），刷新不丢
-- **号池 JSON 导入/导出**：导出含邮箱密码/会话/API Key 的完整 JSON；导入按邮箱去重、缺会话账号自动重登恢复（导入后随机间隔逐个登录）
-- **浏览器原生通知**：生图成功/失败/超时系统级通知（tag+renotify，点击聚焦窗口，9s 自动关闭）；号池设置开关，首次开启请求权限，被拒绝时开关自动回退
-- **`/about` 自描述接口**：版本、端点、存储键，供 AI Agent 排障入口
-- **内嵌自包含文档**：右上角「文档」按钮，含 README（架构/数据模型/24h 规则/反模式化原则/排障指引）与 CHANGELOG；页面 HTML 头部注释与页脚含 AI Agent 提示（本页可整体作为 skill 调用）
-
-- **5xx 网关错误自动重试**（debug 截图分析新增）：图生图大请求体（约 1MB 参考图）时上游偶发 504 网关超时——实测同一请求重试即成功（200，34.9s）；v1.0 对 5xx 直接报错，现改为 4s 后同号重试一次、仍失败换号再试一次，全程记日志。上游失败自动返还积分，重试无额外成本
+- **运行日志控制台**：按运行号（R+时间戳）分组记录账号选择、请求参数、上游状态码与耗时、错误响应原文（修复 body 双重读取丢失原文）；导出全部/本次运行（.txt）、复制、只看错误、清空；localStorage 环形缓冲 300 条刷新不丢
+- **号池 JSON 导入/导出**（含会话与 Key；导入按邮箱去重、缺会话自动重登）
+- **浏览器原生通知**（成功/失败/超时；tag+renotify；权限拒绝自动回退开关）
+- **`/about` 自描述接口** 与内嵌自包含 README/CHANGELOG（AI Agent 可将本页整体作为 skill 调用）
+- **5xx 网关错误自动重试**（debug 截图归因：图生图 ~1MB 大请求体上游偶发 504，实测重试即成功）：4s 同号重试一次 → 换号再试一次
 
 ### Changed
-- **24 小时规则明确化**：24h 冷却仅限制签到（上游 403 + eligible:false），不限制生图（新生号实测可立即生图）；签到等待提示精确到「X小时Y分后开放」；号池状态列「待激活」同样精确显示；新生号生图被拒（403/400）时自动提示剩余冷却并切换其他账号重试
-- **反模式化（马良 v27.2 原则）**：
-  - 邮箱改为拟人化生成：姓名/形容词/名词词库 × 6 种模式 × 随机大小写；去除 v1.0 的固定 `kmg` 前缀与时间戳指纹
-  - 密码改为 12~15 位完全随机，去除固定 `Zq9` 后缀；API Key 备注名从词池随机（去除固定 `pool-` 前缀）
-  - 批量注册间隔 600~1500ms → 2.5~8s 随机（15% 概率再 +4s）；批量签到改为乱序 + 0.8~2.8s 随机间隔
-  - Worker 端 UA 透传访客浏览器真实 UA（缺失时从 4 个常见池随机）
-- **div.brand 改为「AI生图」**，版本小字 `kmage-1.1`；`<title>` 更新
-- `kmageApi`/`kmageV1` 全量埋点自动入日志；`upstreamErrMsg` 支持非 JSON 响应原文
-- 修复 `resp.json()` 失败后 body 已消费导致无法取响应原文的问题（先读全文再 parse）——修复后用户截图中只显示「生成失败」的 504 场景现会显示 `error code: 504` 原文
+- **24h 规则明确化**：冷却仅限制签到（上游 403 + eligible:false），不限制生图；等待提示精确到「X小时Y分」；新生号生图被拒自动提示剩余时间并换号
+- **反模式化（马良原则）**：拟人邮箱池（去 v1.0 固定 `kmg` 前缀+时间戳指纹）、12~15 位随机密码（去 `Zq9` 后缀）、Key 备注名词池随机；批量注册 2.5~8s 随机间隔（15% +4s）、签到乱序 0.8~2.8s；UA 透传
+- div.brand 改「AI生图」；修复 `resp.json()` 消费 body 后取不到原文的问题（先读全文再 parse）
 
 ### Deployment
-- 部署目标：`ai-image`（ai-image.lishuhang.workers.dev），CF API PUT `body_part` 格式
-- 部署验证：/healthz 返回 kmage-1.1；首页 200（72,625B）含 AI生图/kmage-1.1 标记 ×4；CF API GET 线上脚本与本地逐字节一致；/about 正常
-- 生产端到端：注册新号（+1 分）→ 建 Key → 生图 HTTP 200（46s，1,027,451B PNG，内容与提示词一致）
-- 本地 E2E（mock 上游 + 无头浏览器）：成功/500 HTML/503/402/限流路径、日志控制台渲染与筛选、导入导出、通知开关回退、批量签到乱序与自动重登、日志刷新恢复，全部通过
-- 备份：`0913-gpt2/gpt2-worker-kmage-v1.1.js`（81,856 bytes）
+- 生产端到端 46s 成功（1,027,451B PNG）；E2E mock 故障注入全路径通过
+- 备份 `0913-gpt2/gpt2-worker-kmage-v1.1.js`（最终 83,812 bytes，含 5xx 补丁）
 
----
-
-## kmage-v1.0 (2026-09-13) — 新通道 kmage 上线（上游 image.dddd.zone），kdr 停用
-
-### Background
-- kdr 通道故障：上游 keydraw.97api.com 改版，生成 API 契约变化（`key`/`host` 必须放 body，Authorization 头弃用），旧请求全部 400。
-- 新上游选定 image.dddd.zone（kmage · AI 视觉工作台）：官方 OpenAI 兼容 API，注册无验证码，签到 +5 分/天，1 积分 = 1 张图，失败自动返还。
-
-### Added
-- 号池管理：自动注册（+1 分）、批量签到（+5 分/天/号）、补建 API Key、刷新额度、禁用/归档、删除
-- 轮换策略：most-credits（积分优先）/ round-robin（轮询均衡）；402 自动换号；401 自动重登并重建 Key；429 退避重试
-- 生图：gpt-image-2 / gpt-image-2.5-flare / gpt-image-2.5-sunburst；比例 1:1/3:2/2:3/16:9/9:16/4:3/3:4/auto；质量 auto/low/medium/high；图生图（reference_images ≤10 张，PNG/JPG/WebP）
-- 会话代理：`/api/kmage/*` 以 X-Kmage-Session 头承载各账号 kmage_session，Set-Cookie 经 X-Kmage-Set-Session 回传前端
-- Bearer 代理：`/kmage/v1/*` 透传上游官方 OpenAI 兼容接口；`/healthz` 健康检查
-- 全部状态存 localStorage（Worker 无状态，无 KV 依赖）
-
-### Deployment
-- 部署目标：`ai-image`（ai-image.lishuhang.workers.dev），与 kdr-v1.2 同位替换
-- 部署验证：首页 200 + 版本标记 + /healthz + CF API 脚本 diff 一致 + 生产路由端到端生图成功
-- 备份：`0913-gpt2/gpt2-worker-kmage-v1.0.js`（48,600 bytes）
-
----
-
-## 2026-08-19 — 公开免费通道复核（未发布新版本）
-
-### Researched
-
-- 重新检索并核验 V2EX 公开 GPT-Image-2 候选及相关公开体验站，完整过程记录于 `diagnostics-20260819-research-notes.md`。
-- 以匿名浏览器分别检查 Keydraw、Flaq、gptimage2.com、NanoBananaTool、Morphic 及若干历史候选的当前登录、额度、验证码和可访问状态。
-- Keydraw 页面自身的最小测试任务在匿名访客流程中完成，但其访客 Key 没有第三方代理/分发授权，不能作为本项目生产上游。
-- Flaq 页面接受游客输入，但提交生成后要求 Cloudflare 人机验证；其他主要候选均要求登录、注册赠额，或已不可访问。
-
-### Changed
-
-- 新增 `README.md`，说明项目历史、当前线上基线、候选筛选结论、合规发布边界和下一次接手顺序。
-- 新增 `diagnostics-20260819-research-notes.md`，保存不含凭据的公开来源与浏览器实测结果。
-
-### Not Released
-
-- **未发布新的 Worker 通道，未覆盖 `gpt2.lishuhang.com`，未声明新的 slug 或版本号。**
-- 原因是本轮没有发现同时满足“免登录、免后续验证、可稳定第三方代理且获得明确授权”的免费 GPT-Image-2 上游。
-
----
-
-## kd-v2.2 (2026-07-23) — 修复设置面板 + 标题改名
+## kmage-kdr-1.2 (2026-09-13) — kdr 修复复活 + 双通道 + UI/文档重构（本版）
 
 ### Fixed
-- 修复 kd-v2.1 中 `loadSettingsUI`/`saveSettings`/`testCustomApiKey`/`onNotificationsToggle`/`updateNotificationsHint` 5 个函数被误删导致设置齿轮不可点的问题
-- 修复 `split('\n')`/`join('\n')` 在 HTML_CONTENT 模板字符串中被解释为实际换行符导致 JS 语法错误的问题，改用 `String.fromCharCode(10)`
-
-### Changed
-- 左上角标题从 "GPT2 生图" 改为 "AI生图"
-- 版本号小字从 nav-right 移到标题右侧（紧贴标题显示）
-- VERSION 更新为 `kd-v2.2`
-
----
-
-## kd-v2.1 (2026-07-23) — 多 key 轮换 + 水印模块恢复
+- **kdr 通道修复复活**：适配上游 2026-09 新契约——
+  - 生成请求不再使用 Authorization 头，改为 `key`/`host` 放入请求 body（`POST /api/image-tasks/generations`，body 含 client_task_id/key/host/model/prompt/quality/size/ratio/n）
+  - 图生图走 `POST /api/image-tasks/edits`（multipart：key/host/model/prompt/quality/size/ratio/n/client_task_id + image 文件数组）
+  - 任务制轮询 `GET /api/image-tasks/{id}`（3s 间隔 / 180s 上限；queued→running→success/error）
+  - 结果为图床 URL：新增 Worker 代理 `/kdr/img?url=` 带 Referer 拉取，前端转 base64（与 kmage 的 b64 数据流对齐）
+  - 免费 Gift Key 固定「主线路 + gpt-image-2 + 1K」档；设置页可填自定义付费 Key 自动优先，解锁全部模型与 2K/4K
+  - 401/403 Key 被拒自动刷新共享 Key 重试；5xx 提交 4s 重试；轮询网络异常容错
+  - 真实验证：直连上游 curl 出图（queued→running→success 33s）+ 生产 Worker 全链路 36.6s 出图（2,259KB PNG）
+- kdr 旧版 localStorage（maliang_state）中的自定义 Key 自动迁移
 
 ### Added
-- **日额度本地计数器**：`state.dailyUsage = {date, count, exhausted}`
-  - `getTodayGMT8()` 返回 GMT+8 当日日期字符串
-  - `checkAndResetDailyUsage()` 跨日自动重置
-  - `incrementDailyUsage()` 任务成功提交后 +1
-  - `markDailyExhausted()` 遇"日限额已用完"错误立即标记当日已耗尽
-  - `renderDailyUsageBadge()` 右上角徽章渲染（共享 key 显示 X/999，自定义 key 显示 X，已耗尽显示 0/999 红色）
-  - 常量 `DAILY_QUOTA = 999`
-- **自定义 key 自动切换**：用户在设置面板填入 `customApiKey95` 后，`getEffectiveKey()` 自动优先使用，无需切换通道
-- **`isUsingCustomKey()` 工具函数**：用于决定 UI 显示模式
+- **通道选择器**：header `.ver` 右侧下拉（kmage 默认 / kdr），持久化 `kmage_channel_v1`；切换联动模型列表、分辨率档、徽章、生成按钮文案与设置弹窗区块
+- **设置级 JSON 导入/导出**：「导出全部设置」打包 kmage 号池+设置项 + kdr 自定义 Key/Gift Key + 通知开关 + 当前通道；「导入设置」自动识别设置包 / 旧号池 / 裸账号数组
+- **favicon**：画笔+颜料盘线条 SVG（data URI 内联）
+- **「ai」字母组合 logo**：线条 SVG，出现于 header 左上角与「关于」弹窗顶部
 
 ### Changed
-- **单通道架构**：`CHANNELS` 字典 → `UPSTREAM` 单一常量
-- **`apiFetch / apiFetchMultipart`**：移除 `X-Channel` 头，直接用 `Authorization: Bearer <effectiveKey>`
-- **`executeTask` 包装层**：移除通道故障切换逻辑，直接委托给 `executeTaskOnChannel`，并在成功后 `incrementDailyUsage()`，失败时检测日限额错误并 `markDailyExhausted()`
-- **`registerAccount()`**：合并 `registerKeydrawAccount`，单一函数处理 Gift Key 刷新；若用户已配置 `customApiKey95` 则直接返回当前账号
-- **`loginAccount()`**：移除 maliang 分支，单一 gift-key 模式无需登录
-- **`refreshQuota()`**：简化为直接维持 credits=9999（keydraw 无 quota API）
-- **`ensureChannelReady()`**：单一逻辑，根据 `getEffectiveKey()` 初始化账号池
-- **`migrateOldStateIfNeeded()`**：删除 v1.x 遗留字段（`accountsByKeydraw/Maliang/Custom97api`, `activeChannel`, `lastChannel`, `defaultPassword`, `autoCheckin`, `autoFallbackGpt2`），把 `accountsByKeydraw` 合并到 `state.accounts`
-- **`saveSettings() / loadSettingsUI()`**：移除 `defaultPassword/autoCheckin/autoFallbackGpt2` 字段；新增 `customApiKey95` 变化时重新初始化账号池
-- **Worker 后端 `handleProxy`**：移除 `pickChannel`，直接用 `UPSTREAM` 常量
-- **`corsHeaders()`**：`Access-Control-Allow-Headers` 移除 `X-Channel`，新增 `Authorization`
-- **顶部导航栏**：移除 `channelSelect` 下拉框，改为 `dailyUsageBadge` 徽章
-- **产品标题**：`AI生图` → `GPT2 生图`
-- **设置面板按钮**：移除"注册新账号/手动添加/批量签到/清理无余额/邀请好友/官网注册"，保留"刷新 Gift Key/刷新额度/批量验证/97api 官网"
-- **设置面板字段**：移除"默认密码/额度耗尽自动签到/autoFallbackGpt2"，保留"轮换策略/autoRegister/通知/自定义 97api API Key"
-- **邀请好友面板**：完全移除（keydraw 共享 Gift Key 模式无邀请系统）
-- **帮助面板**：更新产品简介、额度说明，移除"通道选择"章节
-
-### Removed
-- `CHANNELS` 字典（含 keydraw/custom-97api/maliang 三通道配置）
-- `DEFAULT_CHANNEL`, `CHANNEL_HEADER` 常量
-- `pickChannel()` Worker 后端函数
-- `getActiveChannel()`, `getChannelAuthHeaders()`, `onChannelChange()`
-- `syncAccountsToActiveChannel()`, `effectiveChannel()`, `persistActiveChannelAccounts()`
-- `var _origSaveState = saveState; saveState = function(){...}` hook
-- `generateUsername()`, `generatePassword()`
-- `getChainInviteCode()`
-- `registerMaliangAccount()`, `registerKeydrawAccount()`（合并到 `registerAccount()`）
-- `loginAccount()` 中的 maliang 分支
-- `checkinAccount()`, `checkinAll()`
-- `addManualAccount()`
-- `showInvitePanel()`, `closeInvitePanel()`, `copyInviteLink()`
-- `cleanupInsufficientAccounts()`（keydraw 共享 key 模式下"废弃"由日限额耗尽自动触发）
-- 设置面板"批量签到(已下线)"按钮、"官网注册"链接（指向 grok.17nas.com）
-- 邀请好友面板 HTML
-- `state.accountsByKeydraw/Maliang/Custom97api`, `state.abandonedAccountsByKeydraw/Maliang/Custom97api`
-- `state.activeChannel`, `state.lastChannel`
-- `state.settings.defaultPassword/autoCheckin/autoFallbackGpt2`
-
-### Preserved
-- 继承 v1.2 的核心 bug 修复：`pollTask()` 将 `status:"error"` 视为终止状态
-- 继承 v1.2 的 `extractErrorMessage()` 上游错误透传逻辑
-- 历史记录 / 提示词库 / 参考图 / 浏览器通知 / 主题切换 / 媒体代理 等所有用户功能
-- v1.x 旧 state 自动迁移到 kd-v2.0 单一 accounts 池
+- **UI 重构**：footer 区域删除；「文档」与「帮助」合并为「关于」；「号池」按钮改「设置」（齿轮线条 SVG 图标）、「日志」改「控制台」（终端线条 SVG 图标）、「关于」（圆圈 i 线条 SVG 图标），均为纯图标按钮（title/aria-label 保留）
+- **对外文档脱敏**：页面可见文案与内嵌文档不再出现任何源站域名/品牌名，统一以「kmage 站点 / kdr 站点」表述；真实上游仅经 `GET /about` 自描述接口提供排障方（本仓库文档保留真实地址）
+- **内嵌「关于」文档整合完整迭代时间线**：从马良渠道（v27.2 收官）→ kd 多通道 → kd-v2.x → SQ/PM 试错与 08-19 复核 → kdr 改版瘫死 → kmage v1.0/1.1 → 本版，按实际日期正序
+- `/healthz`、`/about` 扩展双通道信息；日志行增加 `[kmage]`/`[kdr]` 前缀；近期任务列表增加通道标签
+- **工程坑防守**：内嵌模板字符串内禁止 `\` 转义序列（含正则），静态检查脚本强制（kd-v2.2 坑重演拦截：`split(/\r?\n/)` → `String.fromCharCode` 拆行）
 
 ### Deployment
-- 部署目标：`ai-image.lishuhang.workers.dev` + `gpt.lishuhang.com`
-- v1.x beta 站点（`ai-image-beta.workers.dev` + `gpt2b.lishuhang.com`）由用户自行下线
-
----
-
-## v1.2 (2026-07-22) — 上游错误透传 + 自定义 97api Key 通道 + 马良通道下线标记
-
-### Added
-- `pollTask()` 将 `status:"error"` 视为终止状态（v1.1 只识别 success/failed，导致对"日限额已用完"持续轮询 300s 然后误报"超时"）
-- `extractErrorMessage()` 原样透传"日限额/api key/quota/额度"等关键字错误
-- 超时消息附带 `upstreamError / upstreamProgress`
-- `custom-97api` 通道：用户填入自己的 97api.com API Key
-- 设置面板新增 API Key 输入框 + 显示/隐藏 + 测试按钮
-- `auto` 模式下，keydraw 配额耗尽时自动切换到 custom-97api 重试
-
-### Changed
-- 马良通道（grok.17nas.com）标记为 `deprecated: true`
-- `channelSelect` 中马良选项加 "(已下线)" 标记并 disabled
-- `ensureChannelReady()` 跳过马良的自动注册分支
-
----
-
-## v1.1 (2026-07-22) — 性能优化与代码精简
-
-- gift-key 异步刷新：先用 fallback key 渲染首屏，gift-key 异步获取不阻塞
-- 移除 `autoFallbackGpt2` 整段（v0.7 起已禁用，gpt-image-2 是唯一模型）
-- 移除 `refreshModelAvailability / updateModelAvailabilityUI / modelAvailHint`
-- 移除 `calcGptImage2Size`（仅 fallback 路径使用）
-- 移除 video 模型相关函数（`isVideoModel / VIDEO_CREDITS_PER_SEC / durationSelect` 等）
-- 移除 `grok-imagine-*` 模型选项与 `MODEL_CREDITS_PER_IMAGE` 中的对应条目
-- 精简 btn 系列 CSS
-- 移除 changelog `<dl>`（v0.1-v0.7 历史，~3KB）
-
----
-
-## v1.0 — 多通道架构
-
-- 新增顶部通道选择器（自动 / KeyDraw / 马良）
-- '自动' 模式：硬失败时自动切换到另一通道
-- 后端 `handleProxy / image-proxy / gift-key` 按 `X-Channel` 头分发
-- 账号池按通道独立维护：`state.accountsByKeydraw / state.accountsByMaliang`
-- 旧 state 自动迁移
-
----
-
-## v0.7 — 四项修复
-
-- `addToPromptLib` 缺失 `renderPromptLib()` 调用
-- `refreshModelAvailability` 改为 no-op
-- `showInvitePanel` 友好降级
-- `getChainInviteCode` 短路返回 null
-
----
-
-## v0.5-v0.6 — 前端 JS bug 修复
-
-- v0.5: 修复 HTML_CONTENT 模板字符串内 `//` 行注释吞掉后续代码的两个语法错误
-- v0.6: 修复 `apiFetch` 双 `/api/` 前缀 bug
-
----
-
-## v0.1-v0.4 — 早期版本
-
-- v0.1: 接入 keydraw.97api.com（V2EX 帖 https://www.v2ex.com/t/1222012）
-- v0.3: 版本徽章
-- v0.4: `client_task_id` 格式要求 `timestamp-randomhex`
+- 部署 `ai-image`（CF API PUT，metadata `{"body_part":"worker.js"}`，HTTP 200）
+- 验证：/healthz 返回 kmage-kdr-1.2 + 双上游；/about 双通道；线上页面与本地逐字节一致
+- 生产端到端双通道：**kdr 免费 Gift Key 真实出图 36.6s（2,259KB PNG，内容与提示词一致）**；**kmage 注册新号（+1 分）→ 生图 30.7s 成功**
+- 本地 E2E：mock 双上游 + 无头浏览器，kmage 生图 / kdr 任务轮询与图生图 / 任务 error / 503 重试 / 402 换号 / 设置导入导出回环 / 控制台与关于弹窗，全部通过
+- 备份：`0913-gpt2/gpt2-worker-kmage-v1.2.js`（约 115.9 KB）
