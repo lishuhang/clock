@@ -4,6 +4,27 @@
 
 ---
 
+## kmage-v1.0 (2026-09-13) — 新通道 kmage 上线（上游 image.dddd.zone），kdr 停用
+
+### Background
+- kdr 通道故障：上游 keydraw.97api.com 改版，生成 API 契约变化（`key`/`host` 必须放 body，Authorization 头弃用），旧请求全部 400。
+- 新上游选定 image.dddd.zone（kmage · AI 视觉工作台）：官方 OpenAI 兼容 API，注册无验证码，签到 +5 分/天，1 积分 = 1 张图，失败自动返还。
+
+### Added
+- 号池管理：自动注册（+1 分）、批量签到（+5 分/天/号）、补建 API Key、刷新额度、禁用/归档、删除
+- 轮换策略：most-credits（积分优先）/ round-robin（轮询均衡）；402 自动换号；401 自动重登并重建 Key；429 退避重试
+- 生图：gpt-image-2 / gpt-image-2.5-flare / gpt-image-2.5-sunburst；比例 1:1/3:2/2:3/16:9/9:16/4:3/3:4/auto；质量 auto/low/medium/high；图生图（reference_images ≤10 张，PNG/JPG/WebP）
+- 会话代理：`/api/kmage/*` 以 X-Kmage-Session 头承载各账号 kmage_session，Set-Cookie 经 X-Kmage-Set-Session 回传前端
+- Bearer 代理：`/kmage/v1/*` 透传上游官方 OpenAI 兼容接口；`/healthz` 健康检查
+- 全部状态存 localStorage（Worker 无状态，无 KV 依赖）
+
+### Deployment
+- 部署目标：`ai-image`（ai-image.lishuhang.workers.dev），与 kdr-v1.2 同位替换
+- 部署验证：首页 200 + 版本标记 + /healthz + CF API 脚本 diff 一致 + 生产路由端到端生图成功
+- 备份：`0913-gpt2/gpt2-worker-kmage-v1.0.js`（48,600 bytes）
+
+---
+
 ## 2026-08-19 — 公开免费通道复核（未发布新版本）
 
 ### Researched
