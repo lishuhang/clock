@@ -167,3 +167,22 @@ Account ID：`ec44dddde866c789a9dd26f5d0cdb248`
 - 部署：CF API PUT HTTP 200；/healthz kmage-kdr-1.2 + 双上游；线上页面与本地逐字节一致
 - **生产双通道端到端**：kdr 免费 Gift Key 真实出图 36.6s（2,259KB PNG，橘猫画画，与提示词一致）；kmage 注册新号（+1 分）→ sunburst 生图 30.7s 成功（1 分扣减正常）
 - 积分消耗：本轮注册 1 探针号（+1 分免费额度，自给自足）
+
+---
+Task ID: 7
+Agent: Super Z (main)
+Task: kmage-kdr-1.3（竖屏适配 + 深色模式 + 任务历史持久化 + 图标修正 + 部署）
+
+Work Log:
+- 探针实测：kmage 上游 b64 模式响应无 URL 字段；response_format=url 仅回 data URI（无持久 CDN 地址）；kdr 任务结果自带上游图床 URL——决定历史记录方案（kmage 存 canvas 缩略图，kdr 存上游 URL）
+- 新发现上游风控（已入库）：数据中心 IP 直连注册的新生号生图 403 account_environment_abnormal（"账号使用环境异常"），经生产 Worker 代理路径正常
+- 四批次补丁实施：CSS 全量变量化+深色（data-theme+prefers-color-scheme）+≤680px/360px 竖屏断点；header 重构（画笔+颜料盘 logo、版本号堆叠、齿轮图标、菜单按钮）；hub 合并浮窗（三面板 body 节点搬运复用，无重复 ID）；历史持久化 kmage_hist_v1（成功/失败/中断均入册、缩略图、kdr url、回看三优先级、导出导入去重）；/about ui 字段；关于弹窗新 6 节+403 排障+时间线 1.2/1.3 修正
+- 修复 v1.2 harness 遗留问题：mock tinyPng base64 数据损坏（PIL 亦无法解码）导致缩略图 E2E 假阴性，换真实 64x64 PNG 后通过
+- E2E（无头浏览器）：375/320px 竖屏无溢出、hub 三选项卡切换与关闭归位、注册→成功（thumb+ms 入册）→失败入册→刷新持久化→running 中断清理→回看→kdr url 记录→导入去重→深色/浅色/跟随系统 media 实时切换，全通过；发现并修复 brand-txt 被 chan-sel 遮挡（flex:none）
+- 部署 CF HTTP 200；/healthz 与 /about 返回 1.3；线上与本地逐字节一致（107,256 字符）
+- 生产端到端（375×812 竖屏）：kdr 免费 Gift Key 36.8s 出图，历史条目含上游 URL（公网 HTTP 200，1.69MB PNG）与缩略图
+
+Stage Summary:
+- kmage-kdr-1.3 已上线 https://ai-image.lishuhang.workers.dev/（135KB）
+- 仓库备份 0913-gpt2/gpt2-worker-kmage-v1.3.js + README/CHANGELOG 时间线更新
+- 积分消耗：本轮生产验证 kdr 免费 Gift Key（0 kmage 积分）；直连探针注册 3 号（上游风控研究用）
