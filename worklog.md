@@ -87,3 +87,36 @@ Account ID：`ec44dddde866c789a9dd26f5d0cdb248`
 ### 遗留事项
 - kdr v1.2 可按新契约修复（body 传 key+host），暂留源码待定
 - kmage 积分总耗用：验证期共注册 3 个探针/验证号，消耗 3 积分
+---
+
+## 2026-09-13 08:45 UTC — kmage-1.1（可观测性与号池运维增强）
+
+### 用户反馈驱动（v1.0 上线后）
+- 生图失败无详细日志 → 需要控制台与日志导出（参考 tts.lishuhang.workers.dev 形态）
+- 号池签到 24h 等待提示不精确；号池需要 JSON 导入导出
+- 需要浏览器原生通知；需要核对马良反模式化原则；readme/changelog 需自包含并提示 AI Agent；div.brand 改「AI生图」
+
+### 实现（gpt2-worker-kmage-v1.1.js，81,856 bytes）
+- **日志控制台**：运行号分组（R+时间戳），记录账号选择/参数/上游状态码/耗时/错误原文（含非 JSON 截断）/换号重试决策；导出全部或本次运行（.txt 含版本/UA/页面）、复制、只看错误、清空；localStorage 持久化 300 条
+- **号池导入导出**：完整凭据 JSON，导入去重 + 缺会话自动重登
+- **通知**：Notification API，成功/失败/超时，开关在号池设置，拒绝时自动回退
+- **24h 规则**：仅限签到不影响生图（实测确认）；提示精确到时分；新生号生图被拒自动换号并提示剩余时间
+- **反模式化**：拟人邮箱（词库×6模式×随机大小写）、无指纹密码/KeyName、批量注册 2.5~8s 随机间隔、签到乱序 0.8~2.8s、UA 透传
+- **文档**：内嵌自包含 README+CHANGELOG（「文档」按钮）、HTML 头部 AI Agent 注释、页脚提示、/about 自描述接口
+- **品牌**：div.brand=「AI生图」，kmage-1.1
+
+### 关键坑（历史重演）
+- kd-v2.2 教训再现：HTML_CONTENT 模板字符串内页面 JS 的 `\n` 转义在 Node 求值时变真实换行 → 浏览器 script 块语法错误（node --check 查不出，因为文件本身合法）。本次 logsToText 的 join('\n') 与 DOCS pre 块均改为 String.fromCharCode(10)
+- resp.json() 失败后 body 已消费，resp.text() 拿不到原文 → 改为先读全文再 JSON.parse
+
+### 验证
+- node --check 整文件 + 3 个内嵌 script 块分别通过
+- 本地 E2E（Node harness 跑真实 worker 代码 + mock 上游 + 无头浏览器）：成功/500 HTML/503/402 路径、日志渲染筛选导出、导入去重、通知回退、批量签到乱序自动重登、刷新日志恢复——全部通过，UI 截图确认
+- 生产：PUT `accounts/{id}/workers/scripts/ai-image`（metadata body_part 格式）→ /healthz 返回 kmage-1.1，首页 72,625B，CF API GET 线上脚本与本地逐字节一致
+- 生产端到端：新号注册→建Key→生图 200（46s，1MB PNG 内容正确）；/about 正常
+- 积分消耗：验证期注册 2 个探针号（本地 mock 不耗分；生产 2 号各耗 1 分生图验证）
+
+### 部署
+- 线上：https://ai-image.lishuhang.workers.dev/ （worker 名 ai-image）
+- 备份：`0913-gpt2/gpt2-worker-kmage-v1.1.js`
+- README.md 重写为自包含（当前生产状态/架构/排障指引/历史归档），CHANGELOG.md 增 kmage-1.1 条目
