@@ -206,3 +206,23 @@ Stage Summary:
 
 ### 部署
 - 直接替换 index.html 并 push（静态文件，无 CF Worker 变更；Pages/源站随仓库自动生效）
+
+---
+
+## 2026-09-14 07:15 UTC+8 — golden-quote：姓名字体双选（得意黑 / 阿里妈妈东方大楷）+ 占位符引号修复
+
+### 变更清单（0913-golden-quote/）
+1. **新增字体文件** `AlimamaDongFangDaKai-Regular.woff2`（2,665,324 bytes，全量单文件）——来源 GitHub 公开镜像（MoviCloud-com/movicloud-app，官方 Version 1.006;beta）。fontTools 验证：family=阿里妈妈东方大楷、cmap 7017 字形、CJK 基本区 6763 汉字与官方描述精确一致、嘉宾姓名/长头衔/标点测试字符全覆盖。iconfont 官方下载需登录、其预览 woff2 仅 304 字节子集、npm cn-fontsource 包为切片字体（几百个小文件）均不符合"单文件最压缩 webfont"要求，故采用镜像全量 woff2（对比 ttf 5.0MB / otf 3.6MB / woff 3.0MB，woff2 最压缩）。
+2. **@font-face**：`'Alimama DongFangDaKai'`，沿用现有嵌入模式：`url('./AlimamaDongFangDaKai-Regular.woff2')` + `local('阿里妈妈东方大楷')` fallback，font-display: swap。
+3. **切换控件**：主视图 嘉宾选择 组内新增"姓名字体"下拉（得意黑（默认）/ 阿里妈妈东方大楷），仅作用于海报姓名（得意黑唯一使用处）；state.nameFont 入 state，导出/导入 JSON 自然携带。
+4. **持久化**：`goldenQuote_nameFont_v1` 独立键，切换即存、启动恢复，配额异常降级 warn。
+5. **字号自适应泛化**：fitTitleSize 重构为 fitSingleLine(el, minFs) + fitNameAndTitle()——姓名（保底50px）与头衔（保底12px）统一自适应；东方大楷为全角字形，8字姓名 85px 会超 900px 容宽，实测自动降至 78px 单行完整；document.fonts loadingdone 时二次校准（大楷异步就绪后修正度量）。
+6. **顺手修复（上轮回归显性化的原始隐患）**：SVG_AVATAR_PLACEHOLDER 数据 URL 内含双引号，嵌入 src="..." 模板破坏 HTML 属性，无头像嘉宾行显示乱码文本（gq-initial 原始写法即有隐患，上轮加 title 属性后显性化）。改为 SVG 内单引号 + 外层双引号，无头像占位图标恢复正常渲染。
+
+### 验证（无头 Chromium E2E）
+- 静态：emoji 零残留、内嵌 JS node --check 通过、12 项改动点全部命中
+- 功能：默认得意黑 85px；切大楷即时应用（document.fonts.check 确认真加载）并即时入 LS；刷新后字体偏好+下拉框+海报渲染恢复；8字姓名+大楷自动缩至 78px 单行；切回得意黑恢复 CSS 默认；控制台零报错
+- 视觉：双字体海报截图对比（书法颜体质感 vs 斜切黑体），嘉宾行占位图标正常
+
+### 部署
+- index.html + 字体文件 + 本日志单次 commit 推送（静态文件，无 CF Worker 变更）
