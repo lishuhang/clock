@@ -186,3 +186,23 @@ Stage Summary:
 - kmage-kdr-1.3 已上线 https://ai-image.lishuhang.workers.dev/（135KB）
 - 仓库备份 0913-gpt2/gpt2-worker-kmage-v1.3.js + README/CHANGELOG 时间线更新
 - 积分消耗：本轮生产验证 kdr 免费 Gift Key（0 kmage 积分）；直连探针注册 3 号（上游风控研究用）
+
+---
+
+## 2026-09-13 14:42 UTC+8 — golden-quote 小修：头衔溢出自适应 + 全量去 emoji（齿轮 SVG 化）+ 嘉宾行内编辑持久化 + 标题改名
+
+### 变更清单（0913-golden-quote/index.html，156+/17-）
+1. **头衔溢出修复**：新增 `fitTitleSize()`——`#renderTitle.profile-title` 文本超出 980px 容宽时逐级缩小字号（45px 起、步长 1px、保底 12px），保证头衔单行完整显示；`updateCanvas()` 末尾调用 + `document.fonts.ready` 后二次校准（字体异步加载致宽度变化）。不限制最大字数（用户要求）。
+2. **去 emoji + 齿轮 SVG 化**：清除全部 13 处 UI emoji（👥💬✨📸➕🎨🖼️💾⬇️⬆️⚙️⬅️ 等）；设置齿轮改 Material 齿轮 SVG（fill=currentColor），成为全应用唯一保留图标；设置开启时齿轮旋转 180° + title 切换"设置/返回"替代原 ⬅️。海报画布内的头像/二维码占位 SVG 属内容占位符，非 UI 图标，保留。
+3. **现有嘉宾行内编辑**：设置→现有嘉宾 中姓名/头衔点击变文本框（focus+全选），失焦即保存；Enter 提交、Esc 取消；空姓名失焦自动回退；头像点击弹系统上传对话框（公用隐藏 file input + DataTransfer 目标绑定）。改动后就地还原 span（不重建整表），规避"编辑后立即点删除被吞点击"的时序坑。
+4. **localStorage 即时持久化**：新增 `goldenQuote_guests_v1` 键（guests+currentGuestId），姓名/头衔/头像编辑、新增、删除、JSON 导入均即时写入；启动时优先恢复。配额超限 try/catch 降级 console.warn。
+5. **页面标题**：`海报生成器 - Poster Generator Pro` → `金句生成器 - 娱乐资本论`。
+
+### 验证（无头 Chromium 全流程 E2E）
+- 静态：emoji 区段扫描（U+2600-27BF/2B00-2BFF/1F000-1FAFF/FE0F）零残留；内嵌 JS node --check 通过
+- 功能：长头衔 25 字 45px→34px 单行完整（scrollWidth=clientWidth）；改短头衔自动恢复 45px；姓名/头衔编辑失焦即时入 LS、海报与选择器同步；Esc 取消、空名回退；编辑后紧跟删除正常；头像上传→LS+海报+选择器三处联动；刷新后嘉宾/选中项/头像完整恢复；齿轮开合状态正常
+- 视觉：双视图截图确认无 emoji、齿轮 SVG 渲染正常、海报高亮金句正常
+- 测试坑记录：刷新后 #viewSettings 处于 display:none，直接 eval 操作其中输入框会因"隐藏元素不可聚焦"产生假阴性，须先点开设置再测（真实用户路径）
+
+### 部署
+- 直接替换 index.html 并 push（静态文件，无 CF Worker 变更；Pages/源站随仓库自动生效）

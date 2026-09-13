@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海报生成器 - Poster Generator Pro</title>
+    <title>金句生成器 - 娱乐资本论</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* ================= 字体定义 ================= */
@@ -71,6 +71,9 @@
             background: none; border: none; font-size: 24px; cursor: pointer; color: #666; transition: color 0.3s;
         }
         .btn-icon:hover { color: #000; }
+        .btn-icon svg { display: block; }
+        .btn-icon .icon-gear { transition: transform 0.3s; }
+        .btn-icon.is-open .icon-gear { transform: rotate(180deg); }
 
         .panel-content { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
         
@@ -130,6 +133,10 @@
         .guest-table-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .guest-table-name { font-size: 14px; font-weight: bold; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .guest-table-title { font-size: 12px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* 现有嘉宾行内编辑：文字/头像可点击修改 */
+        .guest-table-name, .guest-table-title, .guest-table-avatar { cursor: pointer; }
+        .guest-table-name:hover, .guest-table-title:hover { color: var(--color-primary); }
+        .guest-table-info input.guest-edit-input { margin: 0; padding: 2px 6px; font-size: 13px; width: 100%; min-width: 0; border: 1px solid var(--color-primary); border-radius: 4px; }
         .btn-delete-small {
             background: #ff4d4f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s;
         }
@@ -196,45 +203,47 @@
     <div class="controls-panel">
         <div class="panel-header">
             <h2 id="panelTitle">编辑海报</h2>
-            <button class="btn-icon" id="btnSettingsToggle" title="设置">⚙️</button>
+            <button class="btn-icon" id="btnSettingsToggle" title="设置" aria-label="设置">
+                <svg class="icon-gear" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+            </button>
         </div>
 
         <div class="panel-content">
             <!-- ===== 主视图 (作图时所需) ===== -->
             <div id="viewMain" class="view-section active">
                 <div class="control-group">
-                    <h3>👥 嘉宾选择</h3>
+                    <h3>嘉宾选择</h3>
                     <div class="guest-selector" id="guestListUI">
                         <!-- 动态渲染嘉宾列表 -->
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <h3>💬 金句内容</h3>
+                    <h3>金句内容</h3>
                     <textarea id="inputQuote" rows="4" placeholder="输入金句..."></textarea>
                     
-                    <label style="margin-top:10px;">✨ 高光词汇 (输入词语后按空格添加)</label>
+                    <label style="margin-top:10px;">高光词汇 (输入词语后按空格添加)</label>
                     <div class="tag-input-container" id="tagInputWrapper">
                         <div id="tagList" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
                         <input type="text" id="tagInput" class="tag-input" placeholder="输入高光词...">
                     </div>
                 </div>
                 
-                <button class="btn-primary" id="btnExport">📸 生成并下载海报</button>
+                <button class="btn-primary" id="btnExport">生成并下载海报</button>
             </div>
 
             <!-- ===== 设置视图 (收纳不常用选项) ===== -->
             <div id="viewSettings" class="view-section">
                 
                 <div class="control-group">
-                    <h3>👥 嘉宾管理</h3>
+                    <h3>嘉宾管理</h3>
                     <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #ddd; margin-bottom:15px;">
                         <label>添加新嘉宾</label>
                         <input type="text" id="newGuestName" placeholder="姓名" maxlength="8">
                         <input type="text" id="newGuestTitle" placeholder="头衔" maxlength="30">
                         <label>上传头像</label>
                         <input type="file" id="newGuestAvatar" accept="image/*">
-                        <button class="btn-primary" id="btnAddGuest" style="padding: 8px; font-size:14px; margin-top:5px;">➕ 确认添加嘉宾</button>
+                        <button class="btn-primary" id="btnAddGuest" style="padding: 8px; font-size:14px; margin-top:5px;">确认添加嘉宾</button>
                     </div>
                     
                     <h4>现有嘉宾</h4>
@@ -244,7 +253,7 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>🎨 主题与色调</h3>
+                    <h3>主题与色调</h3>
                     <select id="themeSelect">
                         <option value="preset1">黑金商务 (默认)</option>
                         <option value="preset2">科技蓝调</option>
@@ -261,7 +270,7 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>🖼️ 全局图片配置</h3>
+                    <h3>全局图片配置</h3>
                     <label>背景图 (bg.png)</label>
                     <input type="file" id="inputBg" accept="image/*">
                     <label>顶部赞助商 Logo (sponsor.png)</label>
@@ -275,10 +284,10 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>💾 数据管理 (JSON)</h3>
-                    <button class="btn-primary" id="btnExportData" style="background:#607d8b; padding:8px; font-size:14px;">⬇️ 导出配置 (备份)</button>
+                    <h3>数据管理 (JSON)</h3>
+                    <button class="btn-primary" id="btnExportData" style="background:#607d8b; padding:8px; font-size:14px;">导出配置 (备份)</button>
                     <input type="file" id="inputImportData" accept=".json" style="display:none;">
-                    <button class="btn-primary btn-outline" id="btnImportData" style="padding:8px; font-size:14px;">⬆️ 导入配置</button>
+                    <button class="btn-primary btn-outline" id="btnImportData" style="padding:8px; font-size:14px;">导入配置</button>
                 </div>
             </div>
         </div>
@@ -409,6 +418,9 @@ document.addEventListener("DOMContentLoaded", () => {
             htmlQuote = htmlQuote.replace(regex, `<span class="highlight">$1</span>`);
         });
         nodes.quote.innerHTML = htmlQuote;
+
+        // 头衔字号自适应：字数较多时缩小字号，保证在一行内完整显示
+        fitTitleSize();
     }
 
     function renderImageLayer(base64Data, imgNode, placeholderNode) {
@@ -422,13 +434,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ================= 头衔字号自适应 =================
+    // .profile-title 字数较多时逐级缩小字号（不限制最大字数），保证头衔始终单行完整显示
+    function fitTitleSize() {
+        const el = nodes.title;
+        el.style.fontSize = ''; // 先恢复 CSS 默认字号再测量
+        if (!el.textContent) return;
+        let guard = 0;
+        while (el.scrollWidth > el.clientWidth && guard < 80) {
+            const fs = parseFloat(window.getComputedStyle(el).fontSize);
+            if (fs <= 12) break; // 保底最小字号，避免极端长文本无限缩小
+            el.style.fontSize = (fs - 1) + 'px';
+            guard++;
+        }
+    }
+
     // ================= 视图交互与同步 =================
     let isSettingsOpen = false;
     btnToggle.addEventListener('click', () => {
         isSettingsOpen = !isSettingsOpen;
         views.main.classList.toggle('active', !isSettingsOpen);
         views.settings.classList.toggle('active', isSettingsOpen);
-        btnToggle.textContent = isSettingsOpen ? '⬅️' : '⚙️';
+        btnToggle.classList.toggle('is-open', isSettingsOpen);
+        btnToggle.title = isSettingsOpen ? '返回' : '设置';
         panelTitle.textContent = isSettingsOpen ? '系统设置' : '编辑海报';
         if(isSettingsOpen) syncFormsFromState();
     });
@@ -498,6 +526,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const guestListUI = document.getElementById('guestListUI');
     const guestManagementList = document.getElementById('guestManagementList');
 
+    // ================= 嘉宾数据本地持久化（localStorage 即时保存） =================
+    const GUESTS_STORAGE_KEY = 'goldenQuote_guests_v1';
+    function persistGuests() {
+        try {
+            localStorage.setItem(GUESTS_STORAGE_KEY, JSON.stringify({
+                guests: state.guests,
+                currentGuestId: state.currentGuestId
+            }));
+        } catch (e) {
+            console.warn('[本地存储] 嘉宾数据保存失败（可能超出浏览器存储配额）:', e);
+        }
+    }
+    function loadGuestsFromStorage() {
+        try {
+            const raw = localStorage.getItem(GUESTS_STORAGE_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (data && Array.isArray(data.guests)) {
+                state.guests = data.guests;
+                state.currentGuestId = state.guests.some(g => g.id === data.currentGuestId)
+                    ? data.currentGuestId
+                    : (state.guests.length > 0 ? state.guests[0].id : null);
+            }
+        } catch (e) {
+            console.warn('[本地存储] 嘉宾数据读取失败:', e);
+        }
+    }
+
     // 1. 渲染主面板的横向选择器
     function renderGuestSelector() {
         guestListUI.innerHTML = '';
@@ -547,13 +603,27 @@ document.addEventListener("DOMContentLoaded", () => {
             const row = document.createElement('div');
             row.className = 'guest-table-row';
             row.innerHTML = `
-                <img class="guest-table-avatar" src="${guest.avatar || SVG_AVATAR_PLACEHOLDER}" />
+                <img class="guest-table-avatar" src="${guest.avatar || SVG_AVATAR_PLACEHOLDER}" title="点击更换头像" />
                 <div class="guest-table-info">
-                    <span class="guest-table-name">${guest.name}</span>
-                    <span class="guest-table-title">${guest.title || '<span style="color:#ccc;">无头衔</span>'}</span>
+                    <span class="guest-table-name" title="点击修改姓名">${guest.name}</span>
+                    <span class="guest-table-title" title="点击修改头衔">${guest.title || '<span style="color:#ccc;">无头衔</span>'}</span>
                 </div>
                 <button class="btn-delete-small" data-id="${guest.id}">删除</button>
             `;
+
+            // 点击头像 → 弹出上传图片对话框，选定后即时保存
+            row.querySelector('.guest-table-avatar').addEventListener('click', () => {
+                avatarEditTargetId = guest.id;
+                avatarEditInput.value = '';
+                avatarEditInput.click();
+            });
+
+            // 点击姓名/头衔 → 原地变为文本框，焦点离开即保存到本地存储
+            const nameSpan = row.querySelector('.guest-table-name');
+            const titleSpan = row.querySelector('.guest-table-title');
+            nameSpan.addEventListener('click', () => startInlineEdit(nameSpan, guest, 'name'));
+            titleSpan.addEventListener('click', () => startInlineEdit(titleSpan, guest, 'title'));
+
             guestManagementList.appendChild(row);
         });
 
@@ -571,11 +641,73 @@ document.addEventListener("DOMContentLoaded", () => {
                         state.currentGuestId = state.guests.length > 0 ? state.guests[0].id : null;
                     }
                     
+                    persistGuests();
                     syncFormsFromState();
                     updateCanvas();
                 }
             });
         });
+    }
+
+    // ================= 嘉宾行内编辑（设置 → 现有嘉宾） =================
+    // 隐藏的公用头像上传入口（点击头像时触发）
+    const avatarEditInput = document.createElement('input');
+    avatarEditInput.type = 'file';
+    avatarEditInput.accept = 'image/*';
+    avatarEditInput.style.display = 'none';
+    document.body.appendChild(avatarEditInput);
+    let avatarEditTargetId = null;
+
+    avatarEditInput.addEventListener('change', (e) => {
+        const guest = state.guests.find(g => g.id === avatarEditTargetId);
+        if (!guest || !e.target.files[0]) return;
+        fileToBase64(e.target.files[0], base64 => {
+            guest.avatar = base64;
+            persistGuests();
+            renderGuestSelector();
+            renderGuestManagementList();
+            updateCanvas();
+        });
+    });
+
+    // 点击文字 → 变为文本框；焦点离开 → 保存并还原为文字展示
+    function startInlineEdit(span, guest, field) {
+        if (span.querySelector('input')) return; // 已处于编辑态
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'guest-edit-input';
+        input.value = guest[field] || '';
+        span.innerHTML = '';
+        span.appendChild(input);
+        input.focus();
+        input.select();
+
+        let done = false;
+        const finish = (save) => {
+            if (done) return;
+            done = true;
+            const val = input.value.trim();
+            if (save && val && val !== (guest[field] || '')) {
+                guest[field] = val;
+                persistGuests();
+                renderGuestSelector(); // 同步主面板选择器中的姓名
+                updateCanvas();
+            }
+            restoreGuestSpan(span, guest, field);
+        };
+        input.addEventListener('blur', () => finish(true));
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+            else if (e.key === 'Escape') { finish(false); }
+        });
+    }
+
+    function restoreGuestSpan(span, guest, field) {
+        if (field === 'name') {
+            span.textContent = guest.name;
+        } else {
+            span.innerHTML = guest.title ? guest.title : '<span style="color:#ccc;">无头衔</span>';
+        }
     }
 
     // 新增嘉宾动作
@@ -608,6 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
         avatarInput.value = '';
         tempNewAvatar = '';
         
+        persistGuests();
         syncFormsFromState();
         updateCanvas();
     });
@@ -665,6 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const parsed = JSON.parse(event.target.result);
                 if(parsed && typeof parsed === 'object') {
                     state = Object.assign(state, parsed);
+                    persistGuests();
                     syncFormsFromState();
                     updateCanvas();
                     alert('配置导入成功！');
@@ -819,9 +953,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ================= 初始化 =================
+    loadGuestsFromStorage(); // 优先恢复上次保存在浏览器本地的嘉宾数据
     syncFormsFromState();
     updateCanvas();
     scalePoster();
+    // 字体异步加载完成后文字宽度会变化，重新校准一次头衔字号
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => fitTitleSize());
+    }
 
     // 触发自动加载同名环境配置文件
     autoLoadLocalAsset('bg.png', 'bg');
