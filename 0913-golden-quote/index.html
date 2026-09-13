@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海报生成器 - Poster Generator Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* ================= 字体定义 ================= */
+        @font-face {
+            font-family: 'Smiley Sans';
+            src: url('./SmileySans-Oblique.ttf.woff2') format('woff2'),
+                 local('Smiley Sans'), local('得意黑');
+            font-weight: normal; font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Alibaba PuHuiTi';
+            src: url('./AlibabaPuHuiTi-3-55-Regular.woff') format('woff'),
+                 local('Alibaba PuHuiTi'), local('阿里巴巴普惠体');
+            font-weight: normal; font-style: normal;
+            font-display: swap;
+        }
+
+        /* ================= CSS 变量 (主题色系) ================= */
+        :root {
+            --color-bg-base: #1A1813;
+            --color-primary: #F3B64A; /* 所有的UI强调色现在都与海报主色调绑定 */
+            --color-text-main: #FFFFFF;
+            --color-quote-bg: rgba(50, 52, 45, 0.85);
+            --control-panel-bg: #f8f9fa;
+            --control-border: #e9ecef;
+        }
+
+        /* ================= 全局重置与响应式布局 ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Alibaba PuHuiTi', 'Segoe UI', sans-serif;
+            background-color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .app-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+        @media (min-width: 900px) { .app-container { flex-direction: row; } }
+
+        /* ================= 控制面板区 (主界面与设置) ================= */
+        .controls-panel {
+            flex: 0 0 auto;
+            background-color: var(--control-panel-bg);
+            border-right: 1px solid var(--control-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        @media (min-width: 900px) { .controls-panel { width: 420px; height: 100%; } }
+        @media (max-width: 899px) { .controls-panel { height: 45vh; border-bottom: 1px solid var(--control-border); } }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid var(--control-border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .panel-header h2 { font-size: 18px; color: #333; }
+        .btn-icon {
+            background: none; border: none; font-size: 24px; cursor: pointer; color: #666; transition: color 0.3s;
+        }
+        .btn-icon:hover { color: #000; }
+
+        .panel-content { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
+        
+        /* 视图切换 */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* UI 组件 */
+        .control-group { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .control-group h3 { font-size: 14px; margin-bottom: 12px; color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .control-group h4 { font-size: 13px; margin: 10px 0; color: #666; }
+        label { display: block; margin-bottom: 6px; font-size: 12px; color: #777; font-weight: bold; }
+        input[type="text"], textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 14px; margin-bottom: 12px; transition: border-color 0.3s; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--color-primary); outline: none; }
+        input[type="file"] { font-size: 12px; margin-bottom: 12px; width: 100%; }
+        
+        /* 按钮与主题色绑定 */
+        button.btn-primary { width: 100%; padding: 12px; background-color: var(--color-primary); color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); transition: filter 0.2s; }
+        button.btn-primary:hover { filter: brightness(1.1); }
+        button.btn-outline { background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); margin-top: 5px; text-shadow: none; }
+        button.btn-outline:hover { background: var(--color-primary); color: #fff; }
+
+        /* ================= 嘉宾选择器 (Guest Selector) ================= */
+        .guest-selector {
+            display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px; margin-bottom: 10px;
+            /* 隐藏滚动条 */
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .guest-selector::-webkit-scrollbar { display: none; }
+        .guest-item {
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 64px; position: relative;
+            transition: transform 0.2s;
+        }
+        .guest-item:hover { transform: translateY(-2px); }
+        .guest-avatar-wrap { position: relative; width: 60px; height: 60px; border-radius: 50%; padding: 2px; border: 2px solid transparent; transition: border-color 0.3s; }
+        /* 激活状态绑定主色调 */
+        .guest-item.active .guest-avatar-wrap { border-color: var(--color-primary); }
+        .guest-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #eee; }
+        .guest-name { font-size: 12px; color: #555; margin-top: 6px; text-align: center; white-space: nowrap; max-width: 64px; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* 嘉宾选择器新增按钮 */
+        .guest-add-btn {
+            width: 56px; height: 56px; border-radius: 50%; border: 2px dashed #ccc; display: flex; justify-content: center; align-items: center; font-size: 30px; color: #ccc; cursor: pointer; margin-top: 2px; transition: all 0.2s; background: #fafafa;
+        }
+        .guest-item:hover .guest-add-btn { border-color: var(--color-primary); color: var(--color-primary); }
+
+        /* ================= 嘉宾管理表格 (Settings) ================= */
+        .guest-management-list {
+            border: 1px solid #ddd; border-radius: 6px; background: #fff; max-height: 200px; overflow-y: auto;
+        }
+        .guest-table-row {
+            display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; gap: 10px;
+        }
+        .guest-table-row:last-child { border-bottom: none; }
+        .guest-table-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #eee; border: 1px solid #ddd; }
+        .guest-table-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .guest-table-name { font-size: 14px; font-weight: bold; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .guest-table-title { font-size: 12px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-delete-small {
+            background: #ff4d4f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s;
+        }
+        .btn-delete-small:hover { background: #ff7875; }
+        .empty-guest-hint { padding: 15px; text-align: center; color: #999; font-size: 13px; }
+
+        /* ================= 高光词汇 Tag Input ================= */
+        .tag-input-container {
+            display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; border: 1px solid #ddd; border-radius: 6px; background: #fff; min-height: 42px; align-items: center; transition: border-color 0.3s;
+        }
+        /* Tag焦点边框绑定主色调 */
+        .tag-input-container.focus { border-color: var(--color-primary); }
+        .tag { background: #eef2f5; color: #333; padding: 4px 10px; border-radius: 12px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+        .tag .remove { cursor: pointer; color: #999; font-weight: bold; }
+        .tag .remove:hover { color: #f44336; }
+        .tag-input { border: none !important; padding: 0 !important; margin: 0 !important; flex: 1; min-width: 80px; font-size: 13px; outline: none !important; }
+
+        /* ================= 实时预览区 ================= */
+        .preview-panel { flex: 1; display: flex; justify-content: center; align-items: center; background-color: #2c2c2c; overflow: auto; position: relative; padding: 20px; }
+        .poster-wrapper { position: relative; transform-origin: center center; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 1080px; height: 1920px; }
+        .poster-canvas { width: 1080px; height: 1920px; background-color: var(--color-bg-base); position: relative; overflow: hidden; background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.5) 100%); }
+        .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.85; display: none; }
+        .content-layer { position: relative; z-index: 10; width: 100%; height: 100%; }
+
+        /* 画布内元素样式 */
+        .header-logo-wrapper { position: absolute; top: 105px; left: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 120px; padding: 0 40px; }
+        .top-logo-img { max-height: 100%; max-width: 100%; object-fit: contain; display: none; }
+        .logo-placeholder { font-size: 24px; color: var(--color-text-main); font-weight: bold; padding: 10px 20px; border: 2px dashed var(--color-text-main); border-radius: 8px; background: rgba(0,0,0,0.3); }
+
+        .profile-section { position: absolute; top: 260px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .avatar-container { width: 380px; height: 380px; border-radius: 50%; border: 10px solid var(--color-primary); overflow: hidden; display: flex; justify-content: center; align-items: center; background-color: rgba(255,255,255,0.1); }
+        .avatar-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .avatar-placeholder { width: 50%; height: 50%; fill: var(--color-primary); }
+        .profile-name { margin-top: 50px; font-family: 'Smiley Sans', sans-serif; font-size: 85px; font-weight: bold; color: var(--color-text-main); letter-spacing: 30px; padding-left: 30px; text-shadow: 0 4px 10px rgba(0,0,0,0.8); white-space: nowrap; max-width: 900px; overflow: hidden; text-overflow: ellipsis; }
+        .profile-title { margin-top: 30px; font-family: 'Alibaba PuHuiTi', sans-serif; font-size: 45px; font-weight: 500; color: var(--color-primary); letter-spacing: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.8); white-space: nowrap; max-width: 980px; overflow: hidden; }
+
+        .quote-box { position: absolute; top: 950px; left: 50%; transform: translateX(-50%) translateZ(0); width: 920px; background-color: var(--color-quote-bg); border-radius: 60px; padding: 60px 50px; z-index: 10; }
+        .quote-text { font-size: 50px; color: var(--color-text-main); line-height: 1.6; text-align: left; display: block; max-height: 400px; overflow: hidden; position: relative; z-index: 1; }
+        .quote-text .highlight { color: var(--color-primary); }
+        .quote-text-rendered { display: block; width: 100%; }
+
+        .bottom-left { position: absolute; bottom: 100px; left: 80px; height: 280px; display: flex; align-items: flex-end; }
+        .event-logo-img { max-height: 238px; max-width: 1000px; object-fit: contain; display: none; }
+
+        .bottom-right { position: absolute; bottom: 100px; right: 80px; display: flex; flex-direction: column; align-items: center; }
+        .qr-container { width: 176px; height: 176px; display: flex; justify-content: center; align-items: center; background: transparent; }
+        .qr-img { width: 100%; height: 100%; object-fit: contain; display: none; background: transparent; }
+        .qr-placeholder { width: 60%; height: 60%; fill: #ccc; }
+        .qr-desc { margin-top: 25px; font-size: 32px; color: var(--color-primary); letter-spacing: 2px; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.8); white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+
+        /* 工具类与遮罩 */
+        .color-picker-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .color-picker-row input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; border-radius: 4px; }
+        
+        #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; font-size: 24px; z-index: 9999; }
+        .loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- ================= 控制面板 ================= -->
+    <div class="controls-panel">
+        <div class="panel-header">
+            <h2 id="panelTitle">编辑海报</h2>
+            <button class="btn-icon" id="btnSettingsToggle" title="设置">⚙️</button>
+        </div>
+
+        <div class="panel-content">
+            <!-- ===== 主视图 (作图时所需) ===== -->
+            <div id="viewMain" class="view-section active">
+                <div class="control-group">
+                    <h3>👥 嘉宾选择</h3>
+                    <div class="guest-selector" id="guestListUI">
+                        <!-- 动态渲染嘉宾列表 -->
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>💬 金句内容</h3>
+                    <textarea id="inputQuote" rows="4" placeholder="输入金句..."></textarea>
+                    
+                    <label style="margin-top:10px;">✨ 高光词汇 (输入词语后按空格添加)</label>
+                    <div class="tag-input-container" id="tagInputWrapper">
+                        <div id="tagList" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+                        <input type="text" id="tagInput" class="tag-input" placeholder="输入高光词...">
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="btnExport">📸 生成并下载海报</button>
+            </div>
+
+            <!-- ===== 设置视图 (收纳不常用选项) ===== -->
+            <div id="viewSettings" class="view-section">
+                
+                <div class="control-group">
+                    <h3>👥 嘉宾管理</h3>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #ddd; margin-bottom:15px;">
+                        <label>添加新嘉宾</label>
+                        <input type="text" id="newGuestName" placeholder="姓名" maxlength="8">
+                        <input type="text" id="newGuestTitle" placeholder="头衔" maxlength="30">
+                        <label>上传头像</label>
+                        <input type="file" id="newGuestAvatar" accept="image/*">
+                        <button class="btn-primary" id="btnAddGuest" style="padding: 8px; font-size:14px; margin-top:5px;">➕ 确认添加嘉宾</button>
+                    </div>
+                    
+                    <h4>现有嘉宾</h4>
+                    <div id="guestManagementList" class="guest-management-list">
+                        <!-- 动态渲染管理表格 -->
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>🎨 主题与色调</h3>
+                    <select id="themeSelect">
+                        <option value="preset1">黑金商务 (默认)</option>
+                        <option value="preset2">科技蓝调</option>
+                        <option value="preset3">中国红韵</option>
+                    </select>
+                    <div class="color-picker-row">
+                        <label>主色调(Primary):</label>
+                        <input type="color" id="colorPrimary">
+                    </div>
+                    <div class="color-picker-row">
+                        <label>底色(Background):</label>
+                        <input type="color" id="colorBgBase">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>🖼️ 全局图片配置</h3>
+                    <label>背景图 (bg.png)</label>
+                    <input type="file" id="inputBg" accept="image/*">
+                    <label>顶部赞助商 Logo (sponsor.png)</label>
+                    <input type="file" id="inputTopLogo" accept="image/*">
+                    <label>左下角活动 Logo (logo.png)</label>
+                    <input type="file" id="inputEventLogo" accept="image/*">
+                    <label>二维码图 (qr.png)</label>
+                    <input type="file" id="inputQR" accept="image/*">
+                    <label>二维码下方说明</label>
+                    <input type="text" id="inputQRDesc" maxlength="15">
+                </div>
+
+                <div class="control-group">
+                    <h3>💾 数据管理 (JSON)</h3>
+                    <button class="btn-primary" id="btnExportData" style="background:#607d8b; padding:8px; font-size:14px;">⬇️ 导出配置 (备份)</button>
+                    <input type="file" id="inputImportData" accept=".json" style="display:none;">
+                    <button class="btn-primary btn-outline" id="btnImportData" style="padding:8px; font-size:14px;">⬆️ 导入配置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 预览区 ================= -->
+    <div class="preview-panel" id="previewContainer">
+        <div class="poster-wrapper" id="posterWrapper">
+            <div class="poster-canvas" id="captureTarget">
+                <!-- 背景图 -->
+                <img id="renderBg" class="bg-layer" alt="background">
+                <div class="content-layer">
+                    <div class="header-logo-wrapper">
+                        <img id="renderTopLogo" class="top-logo-img" alt="Top Logo">
+                        <div class="logo-placeholder" id="topLogoPlaceholder">sponsor.png</div>
+                    </div>
+                    <div class="profile-section">
+                        <div class="avatar-container">
+                            <svg class="avatar-placeholder" id="avatarPlaceholder" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <img id="renderAvatar" class="avatar-img" alt="avatar">
+                        </div>
+                        <div class="profile-name" id="renderName"></div>
+                        <div class="profile-title" id="renderTitle"></div>
+                    </div>
+                    <div class="quote-box">
+                        <div class="quote-text" id="renderQuote"></div>
+                    </div>
+                    <div class="bottom-left">
+                        <img id="renderEventLogo" class="event-logo-img" alt="Event Logo">
+                        <div class="logo-placeholder" id="eventLogoPlaceholder" style="font-size: 18px; padding: 5px 10px;">logo.png</div>
+                    </div>
+                    <div class="bottom-right">
+                        <div class="qr-container">
+                            <svg class="qr-placeholder" id="qrPlaceholder" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-2h2v2h-2zm-2 2h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm-2-4h2v4h-2zm4 4h2v2h-2z"/></svg>
+                            <img id="renderQR" class="qr-img" alt="qr">
+                        </div>
+                        <div class="qr-desc" id="renderQRDesc"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading">
+    <div class="loading-spinner"></div>
+    <div>正在处理，请稍候...</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // ================= 状态管理 (State) =================
+    let state = {
+        theme: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteBg: 'rgba(50, 52, 45, 0.85)' },
+        images: { bg: '', topLogo: '', eventLogo: '', qr: '' },
+        guests: [], // 初始为空配置
+        currentGuestId: null,
+        quote: '长番剧不同，漫剧需要在黄金30秒内吸引观众。有时候都不是黄金30秒，是黄金3秒。',
+        highlights: ['黄金30秒', '黄金3秒'],
+        qrDesc: 'AI(漫)剧交流群'
+    };
+
+    // ================= 节点引用 =================
+    const root = document.documentElement;
+    const views = { main: document.getElementById('viewMain'), settings: document.getElementById('viewSettings') };
+    const btnToggle = document.getElementById('btnSettingsToggle');
+    const panelTitle = document.getElementById('panelTitle');
+    
+    const nodes = {
+        name: document.getElementById('renderName'),
+        title: document.getElementById('renderTitle'),
+        quote: document.getElementById('renderQuote'),
+        qrDesc: document.getElementById('renderQRDesc'),
+        bg: document.getElementById('renderBg'),
+        topLogo: document.getElementById('renderTopLogo'),
+        eventLogo: document.getElementById('renderEventLogo'),
+        avatar: document.getElementById('renderAvatar'),
+        qr: document.getElementById('renderQR'),
+        phAvatar: document.getElementById('avatarPlaceholder'),
+        phTopLogo: document.getElementById('topLogoPlaceholder'),
+        phEventLogo: document.getElementById('eventLogoPlaceholder'),
+        phQR: document.getElementById('qrPlaceholder')
+    };
+
+    const SVG_AVATAR_PLACEHOLDER = 'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"%23ccc\"><path d=\"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\"/></svg>';
+
+    // ================= 核心渲染逻辑 =================
+    function updateCanvas() {
+        // 渲染主题色 (放在前面确保优先更新全局强调色)
+        root.style.setProperty('--color-primary', state.theme.primary);
+        root.style.setProperty('--color-bg-base', state.theme.bgBase);
+        root.style.setProperty('--color-text-main', state.theme.textMain);
+        root.style.setProperty('--color-quote-bg', state.theme.quoteBg);
+
+        // 渲染嘉宾信息
+        const guest = state.guests.find(g => g.id === state.currentGuestId);
+        if (guest) {
+            nodes.name.textContent = guest.name;
+            nodes.title.textContent = guest.title;
+            if (guest.avatar) {
+                nodes.avatar.src = guest.avatar;
+                nodes.avatar.style.display = 'block';
+                nodes.phAvatar.style.display = 'none';
+            } else {
+                nodes.avatar.style.display = 'none';
+                nodes.phAvatar.style.display = 'block';
+            }
+        } else {
+            // 没有选中嘉宾或列表为空时的占位符处理
+            nodes.name.textContent = '';
+            nodes.title.textContent = '';
+            nodes.avatar.style.display = 'none';
+            nodes.phAvatar.style.display = 'block';
+        }
+
+        // 渲染全局文本与图片
+        nodes.qrDesc.textContent = state.qrDesc;
+        renderImageLayer(state.images.bg, nodes.bg, null);
+        renderImageLayer(state.images.topLogo, nodes.topLogo, nodes.phTopLogo);
+        renderImageLayer(state.images.eventLogo, nodes.eventLogo, nodes.phEventLogo);
+        renderImageLayer(state.images.qr, nodes.qr, nodes.phQR);
+
+        // 渲染金句和高光
+        let htmlQuote = state.quote;
+        state.highlights.forEach(word => {
+            const safeWord = word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp(`(${safeWord})`, 'g');
+            htmlQuote = htmlQuote.replace(regex, `<span class="highlight">$1</span>`);
+        });
+        nodes.quote.innerHTML = htmlQuote;
+    }
+
+    function renderImageLayer(base64Data, imgNode, placeholderNode) {
+        if (base64Data) {
+            imgNode.src = base64Data;
+            imgNode.style.display = 'block';
+            if(placeholderNode) placeholderNode.style.display = 'none';
+        } else {
+            imgNode.style.display = 'none';
+            if(placeholderNode) placeholderNode.style.display = 'block';
+        }
+    }
+
+    // ================= 视图交互与同步 =================
+    let isSettingsOpen = false;
+    btnToggle.addEventListener('click', () => {
+        isSettingsOpen = !isSettingsOpen;
+        views.main.classList.toggle('active', !isSettingsOpen);
+        views.settings.classList.toggle('active', isSettingsOpen);
+        btnToggle.textContent = isSettingsOpen ? '⬅️' : '⚙️';
+        panelTitle.textContent = isSettingsOpen ? '系统设置' : '编辑海报';
+        if(isSettingsOpen) syncFormsFromState();
+    });
+
+    const elQuote = document.getElementById('inputQuote');
+    const elQRDesc = document.getElementById('inputQRDesc');
+    
+    function syncFormsFromState() {
+        elQuote.value = state.quote;
+        elQRDesc.value = state.qrDesc;
+        document.getElementById('colorPrimary').value = state.theme.primary;
+        document.getElementById('colorBgBase').value = state.theme.bgBase;
+        renderGuestSelector();
+        renderGuestManagementList();
+        renderTagsUI();
+    }
+
+    elQuote.addEventListener('input', (e) => { state.quote = e.target.value; updateCanvas(); });
+    elQRDesc.addEventListener('input', (e) => { state.qrDesc = e.target.value; updateCanvas(); });
+
+    // ================= 高光词汇 Tag 交互 =================
+    const tagInput = document.getElementById('tagInput');
+    const tagList = document.getElementById('tagList');
+    const tagInputWrapper = document.getElementById('tagInputWrapper');
+
+    tagInput.addEventListener('focus', () => tagInputWrapper.classList.add('focus'));
+    tagInput.addEventListener('blur', () => tagInputWrapper.classList.remove('focus'));
+
+    function renderTagsUI() {
+        tagList.innerHTML = '';
+        state.highlights.forEach((tag, index) => {
+            const el = document.createElement('div');
+            el.className = 'tag';
+            el.innerHTML = `<span>${tag}</span><span class="remove" data-idx="${index}">×</span>`;
+            tagList.appendChild(el);
+        });
+        tagList.querySelectorAll('.remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                state.highlights.splice(idx, 1);
+                renderTagsUI();
+                updateCanvas();
+            });
+        });
+    }
+
+    tagInput.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            const val = tagInput.value.trim();
+            if (val && !state.highlights.includes(val)) {
+                state.highlights.push(val);
+                tagInput.value = '';
+                renderTagsUI();
+                updateCanvas();
+            }
+        } else if (e.key === 'Backspace' && tagInput.value === '') {
+            if (state.highlights.length > 0) {
+                state.highlights.pop();
+                renderTagsUI();
+                updateCanvas();
+            }
+        }
+    });
+
+    // ================= 嘉宾管理核心 =================
+    const guestListUI = document.getElementById('guestListUI');
+    const guestManagementList = document.getElementById('guestManagementList');
+
+    // 1. 渲染主面板的横向选择器
+    function renderGuestSelector() {
+        guestListUI.innerHTML = '';
+        state.guests.forEach(guest => {
+            const item = document.createElement('div');
+            item.className = `guest-item ${guest.id === state.currentGuestId ? 'active' : ''}`;
+            item.innerHTML = `
+                <div class="guest-avatar-wrap">
+                    <img class="guest-avatar" src="${guest.avatar || SVG_AVATAR_PLACEHOLDER}" alt="${guest.name}">
+                </div>
+                <div class="guest-name">${guest.name}</div>
+            `;
+            item.addEventListener('click', () => {
+                state.currentGuestId = guest.id;
+                renderGuestSelector();
+                updateCanvas();
+            });
+            guestListUI.appendChild(item);
+        });
+
+        // 在选择器末尾固定附加“新增嘉宾”的 + 号按钮
+        const addBtn = document.createElement('div');
+        addBtn.className = 'guest-item';
+        addBtn.innerHTML = `
+            <div class="guest-add-btn">+</div>
+            <div class="guest-name" style="color:#999;">添加嘉宾</div>
+        `;
+        addBtn.addEventListener('click', () => {
+            if(!isSettingsOpen) btnToggle.click();
+            // 稍作延迟以确保动画展示完成后能够滚动/focus
+            setTimeout(() => {
+                document.getElementById('newGuestName').focus();
+            }, 300);
+        });
+        guestListUI.appendChild(addBtn);
+    }
+
+    // 2. 渲染设置页的管理表格
+    function renderGuestManagementList() {
+        guestManagementList.innerHTML = '';
+        if (state.guests.length === 0) {
+            guestManagementList.innerHTML = '<div class="empty-guest-hint">暂无嘉宾，请在上方添加</div>';
+            return;
+        }
+
+        state.guests.forEach(guest => {
+            const row = document.createElement('div');
+            row.className = 'guest-table-row';
+            row.innerHTML = `
+                <img class="guest-table-avatar" src="${guest.avatar || SVG_AVATAR_PLACEHOLDER}" />
+                <div class="guest-table-info">
+                    <span class="guest-table-name">${guest.name}</span>
+                    <span class="guest-table-title">${guest.title || '<span style="color:#ccc;">无头衔</span>'}</span>
+                </div>
+                <button class="btn-delete-small" data-id="${guest.id}">删除</button>
+            `;
+            guestManagementList.appendChild(row);
+        });
+
+        // 绑定表格内每一行的删除事件
+        guestManagementList.querySelectorAll('.btn-delete-small').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetId = e.target.getAttribute('data-id');
+                const guestName = state.guests.find(g => g.id === targetId)?.name;
+                
+                if(confirm(`确定要彻底删除嘉宾【${guestName}】的配置吗？`)) {
+                    state.guests = state.guests.filter(g => g.id !== targetId);
+                    
+                    // 如果删除的是当前正在显示的嘉宾，则自动切换到下一个可用的
+                    if (state.currentGuestId === targetId) {
+                        state.currentGuestId = state.guests.length > 0 ? state.guests[0].id : null;
+                    }
+                    
+                    syncFormsFromState();
+                    updateCanvas();
+                }
+            });
+        });
+    }
+
+    // 新增嘉宾动作
+    let tempNewAvatar = '';
+    document.getElementById('newGuestAvatar').addEventListener('change', (e) => {
+        fileToBase64(e.target.files[0], base64 => tempNewAvatar = base64);
+    });
+    
+    document.getElementById('btnAddGuest').addEventListener('click', () => {
+        const nameInput = document.getElementById('newGuestName');
+        const titleInput = document.getElementById('newGuestTitle');
+        const avatarInput = document.getElementById('newGuestAvatar');
+        
+        const name = nameInput.value.trim();
+        const title = titleInput.value.trim();
+        
+        if(!name) return alert('请输入嘉宾姓名');
+        
+        const newId = 'g_' + Date.now();
+        state.guests.push({ id: newId, name, title, avatar: tempNewAvatar });
+        
+        // 如果是添加的第一个嘉宾，自动选中
+        if (state.guests.length === 1) {
+            state.currentGuestId = newId;
+        }
+        
+        // 重置表单
+        nameInput.value = '';
+        titleInput.value = '';
+        avatarInput.value = '';
+        tempNewAvatar = '';
+        
+        syncFormsFromState();
+        updateCanvas();
+    });
+
+    // ================= 图片上传与转换 =================
+    function fileToBase64(file, callback) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => callback(e.target.result);
+        reader.readAsDataURL(file);
+    }
+
+    const bindUpload = (inputId, stateKey) => {
+        document.getElementById(inputId).addEventListener('change', e => {
+            fileToBase64(e.target.files[0], base64 => {
+                state.images[stateKey] = base64;
+                updateCanvas();
+            });
+        });
+    };
+    bindUpload('inputBg', 'bg');
+    bindUpload('inputTopLogo', 'topLogo');
+    bindUpload('inputEventLogo', 'eventLogo');
+    bindUpload('inputQR', 'qr');
+
+    // ================= 主题色处理 =================
+    const presets = {
+        preset1: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteBg: 'rgba(50, 52, 45, 0.85)' },
+        preset2: { primary: '#00D2FF', bgBase: '#0B132B', textMain: '#F0F4F8', quoteBg: 'rgba(28, 37, 65, 0.85)' },
+        preset3: { primary: '#E63946', bgBase: '#1D0A0A', textMain: '#F1FAEE', quoteBg: 'rgba(69, 12, 12, 0.85)' }
+    };
+    document.getElementById('themeSelect').addEventListener('change', (e) => {
+        const p = presets[e.target.value];
+        if(p) { state.theme = {...p}; syncFormsFromState(); updateCanvas(); }
+    });
+    document.getElementById('colorPrimary').addEventListener('input', e => { state.theme.primary = e.target.value; updateCanvas(); });
+    document.getElementById('colorBgBase').addEventListener('input', e => { state.theme.bgBase = e.target.value; updateCanvas(); });
+
+    // ================= JSON 导入导出 =================
+    document.getElementById('btnExportData').addEventListener('click', () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        const anchor = document.createElement('a');
+        anchor.setAttribute("href", dataStr);
+        anchor.setAttribute("download", "poster_settings.json");
+        anchor.click();
+    });
+
+    document.getElementById('btnImportData').addEventListener('click', () => document.getElementById('inputImportData').click());
+    document.getElementById('inputImportData').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const parsed = JSON.parse(event.target.result);
+                if(parsed && typeof parsed === 'object') {
+                    state = Object.assign(state, parsed);
+                    syncFormsFromState();
+                    updateCanvas();
+                    alert('配置导入成功！');
+                }
+            } catch(e) { alert('JSON 格式无效'); }
+        };
+        reader.readAsText(file);
+    });
+
+    // ================= 本地同名文件自动加载策略 =================
+    async function autoLoadLocalAsset(filename, stateImageKey) {
+        try {
+            const res = await fetch('./' + filename, { cache: "no-store" });
+            if (!res.ok) return;
+            const blob = await res.blob();
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                state.images[stateImageKey] = reader.result;
+                updateCanvas();
+            };
+            reader.readAsDataURL(blob);
+        } catch (e) {
+            console.log(`[自动加载提示] 文件 ${filename} 未找到或受限于浏览器 file:// 安全策略。可手动上传。`);
+        }
+    }
+
+    // ================= 画布自适应与截图导出 =================
+    const previewContainer = document.getElementById('previewContainer');
+    const posterWrapper = document.getElementById('posterWrapper');
+    function scalePoster() {
+        const scale = Math.min((previewContainer.clientWidth - 40) / 1080, (previewContainer.clientHeight - 40) / 1920, 1);
+        posterWrapper.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener('resize', scalePoster);
+
+    // ================= 金句文本 Canvas 预渲染 (修复html2canvas中文重叠/折行bug) =================
+    /**
+     * 将金句文本用 Canvas 2D API 精确渲染为图片，避免 html2canvas 处理中文+高亮span时的布局偏差。
+     * 核心逻辑：逐字测量宽度，按行宽自动换行，高亮词用主色调绘制。
+     */
+    function renderQuoteToCanvas() {
+        const canvasW = 820; // quote-box内可用宽度: 920 - padding(50*2) = 820
+        const fontSize = 50;
+        const lineHeight = fontSize * 1.6; // 80px, 与CSS line-height:1.6一致
+        const maxLines = 5; // 最多5行, 5*80=400 <= max-height:400px
+        const fontFamily = '"Alibaba PuHuiTi", "PingFang SC", "Microsoft YaHei", sans-serif';
+
+        const canvas = document.createElement('canvas');
+        canvas.width = canvasW;
+        canvas.height = lineHeight * maxLines;
+        const ctx = canvas.getContext('2d');
+
+        // 构建字符数组：每个元素 { char, isHighlight }
+        const text = state.quote;
+        const charArr = [];
+        // 标记高亮区间
+        const highlightRanges = [];
+        state.highlights.forEach(word => {
+            if (!word) return;
+            let startIdx = 0;
+            while (true) {
+                const idx = text.indexOf(word, startIdx);
+                if (idx === -1) break;
+                highlightRanges.push({ start: idx, end: idx + word.length });
+                startIdx = idx + 1;
+            }
+        });
+        // 合并重叠区间
+        highlightRanges.sort((a, b) => a.start - b.start || a.end - b.end);
+        const merged = [];
+        highlightRanges.forEach(r => {
+            if (merged.length > 0 && r.start <= merged[merged.length - 1].end) {
+                merged[merged.length - 1].end = Math.max(merged[merged.length - 1].end, r.end);
+            } else {
+                merged.push({ start: r.start, end: r.end });
+            }
+        });
+        for (let i = 0; i < text.length; i++) {
+            const isHL = merged.some(r => i >= r.start && i < r.end);
+            charArr.push({ char: text[i], isHighlight: isHL });
+        }
+
+        // 逐行逐字渲染
+        ctx.textBaseline = 'top';
+        ctx.font = `${fontSize}px ${fontFamily}`;
+
+        let curX = 0;
+        let curY = 0;
+        let lineChars = 0;
+
+        for (let i = 0; i < charArr.length; i++) {
+            const ch = charArr[i];
+            const charW = ctx.measureText(ch.char).width;
+
+            // 换行判断：当前行放不下这个字了
+            if (curX + charW > canvasW && lineChars > 0) {
+                curX = 0;
+                curY += lineHeight;
+                lineChars = 0;
+                if (curY >= canvas.height) break; // 超出最大行数
+            }
+
+            ctx.fillStyle = ch.isHighlight ? state.theme.primary : state.theme.textMain;
+            ctx.fillText(ch.char, curX, curY);
+            curX += charW;
+            lineChars++;
+        }
+
+        // 裁剪到实际内容高度
+        const actualHeight = Math.min(curY + lineHeight, canvas.height);
+        const trimmedCanvas = document.createElement('canvas');
+        trimmedCanvas.width = canvasW;
+        trimmedCanvas.height = actualHeight;
+        const trimmedCtx = trimmedCanvas.getContext('2d');
+        trimmedCtx.drawImage(canvas, 0, 0, canvasW, actualHeight, 0, 0, canvasW, actualHeight);
+
+        return trimmedCanvas.toDataURL('image/png');
+    }
+
+    document.getElementById('btnExport').addEventListener('click', () => {
+        const loading = document.getElementById('loading');
+        const target = document.getElementById('captureTarget');
+        loading.style.display = 'flex';
+        posterWrapper.style.transform = 'none'; // 重置缩放避免网格bug
+
+        // ---- 修复：预渲染金句文本为图片，替换DOM中的文本节点 ----
+        const quoteEl = document.getElementById('renderQuote');
+        const originalHTML = quoteEl.innerHTML; // 备份原始HTML
+        const originalStyle = quoteEl.getAttribute('style') || '';
+
+        // 用Canvas预渲染金句
+        const quoteImgDataURL = renderQuoteToCanvas();
+        quoteEl.innerHTML = `<img class="quote-text-rendered" src="${quoteImgDataURL}" />`;
+        quoteEl.style.overflow = 'visible';
+        quoteEl.style.maxHeight = 'none';
+
+        setTimeout(() => {
+            html2canvas(target, { scale: 1, width: 1080, height: 1920, useCORS: true, backgroundColor: null, logging: false })
+            .then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'poster_generated.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            }).catch(e => alert("导出失败:" + e)).finally(() => {
+                // ---- 恢复DOM原始状态 ----
+                quoteEl.innerHTML = originalHTML;
+                quoteEl.setAttribute('style', originalStyle);
+                scalePoster();
+                loading.style.display = 'none';
+            });
+        }, 200);
+    });
+
+    // ================= 初始化 =================
+    syncFormsFromState();
+    updateCanvas();
+    scalePoster();
+
+    // 触发自动加载同名环境配置文件
+    autoLoadLocalAsset('bg.png', 'bg');
+    autoLoadLocalAsset('sponsor.png', 'topLogo');
+    autoLoadLocalAsset('logo.png', 'eventLogo');
+    autoLoadLocalAsset('qr.png', 'qr');
+});
+</script>
+</body>
+</html>
