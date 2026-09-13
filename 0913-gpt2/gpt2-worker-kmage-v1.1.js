@@ -475,7 +475,7 @@ footer{margin-top:32px;text-align:center;color:var(--text-muted);font-size:12px}
     <h4>号池怎么用</h4>
     <p>· 点"注册新账号"或批量注册，工具会自动完成注册、创建 API Key、记录会话；全部数据只保存在你浏览器的 localStorage 中。</p>
     <p>· 每天打开页面时（或手动点"批量签到"），工具会自动为满足条件的账号签到。"待激活"状态的账号要等注册满 24 小时才会开放签到。</p>
-    <p>· 生成时按轮换策略选号：积分优先（most-credits）或轮询均衡（round-robin）。遇 402（积分不足）自动换下一个号；遇 401（会话失效）自动用保存的邮箱密码重登并重建 Key。</p>
+    <p>· 生成时按轮换策略选号：积分优先（most-credits）或轮询均衡（round-robin）。遇 402（积分不足）自动换下一个号；401（会话失效）自动重登并重建 Key；429 限流退避重试；5xx 网关错误（如图生图偶发 504）自动同号重试一次再换号重试一次。</p>
     <h4>排障与日志</h4>
     <p>· 右上角「日志」打开运行控制台：每次生图与号池操作的请求、状态码、耗时、上游响应摘要都会记录；可按运行导出 / 复制 / 只看错误，日志本地持久化，刷新不丢。</p>
     <p>· 生图失败时状态栏只显示简短原因，完整上游返回请在日志控制台查看或导出后交给维护者分析。</p>
@@ -1123,6 +1123,34 @@ async function generate(){
         if(r.ok&&r.data&&r.data.data&&r.data.data.length&&r.data.data[0].b64_json){
           finishGenSuccess(r,acc,histEntry,currentRunId);
         }else{throw new Error(upstreamErrMsg(r,'限流重试失败'))}
+      }else if(r.status>=500){
+        // 网关类错误（502/503/504，图生图大请求体时偶发，上游失败自动返还积分）：
+        // 等 4s 同号重试一次，仍失败换号再试一次（均记日志）
+        appLog('上游网关错误 HTTP '+r.status+'，4 秒后同号重试','w','',currentRunId);
+        setStatus('genStatus','上游网关错误（HTTP '+r.status+'），4 秒后自动重试…','info');
+        await sleep(4000);
+        r=await genWithAccount(acc,body,currentRunId);
+        if(!(r.ok&&r.data&&r.data.data&&r.data.data.length&&r.data.data[0].b64_json)){
+          appLog('同号重试仍失败（HTTP '+r.status+'），换号再试','w','',currentRunId);
+          setStatus('genStatus','重试仍失败，切换其他账号…','info');
+          var accG=null;
+          for(var gi=0;gi<state.accounts.length;gi++){
+            var candG=state.accounts[gi];
+            if(candG!==acc&&!candG.disabled&&candG.apiKey&&(typeof candG.credits==='number'&&candG.credits>=1)){accG=candG;break}
+          }
+          if(accG){
+            histEntry.account=maskEmail(accG.email);
+            appLog('切换到 '+maskEmail(accG.email)+'（积分 '+accG.credits+'）重试','i','',currentRunId);
+            r=await genWithAccount(accG,body,currentRunId);
+            if(r.ok&&r.data&&r.data.data&&r.data.data.length&&r.data.data[0].b64_json){
+              finishGenSuccess(r,accG,histEntry,currentRunId);
+            }else{throw new Error(upstreamErrMsg(r,'换号重试后仍失败（HTTP '+r.status+'）'))}
+          }else{
+            throw new Error(upstreamErrMsg(r,'网关错误 '+r.status+'（重试与换号均不可用）'));
+          }
+        }else{
+          finishGenSuccess(r,acc,histEntry,currentRunId);
+        }
       }else{
         // 新生号保护：若账号注册未满 24h 且生图被拒（如 403），自动换其他账号重试一次
         var fresh=acc.createdAt&&(Date.now()-acc.createdAt)<24*3600*1000;
@@ -1305,7 +1333,7 @@ function DOCS_HTML(){
   h.push('<h3>6. 运行日志控制台</h3>');
   h.push('<p>右上角「日志」打开控制台。每次生图以运行号（R+时间戳）分组记录：账号选择、请求参数、上游状态码与耗时、错误响应摘要（含非 JSON 响应原文截断）、换号/重试决策。支持导出全部/本次运行（.txt，含版本、UA、页面地址）、一键复制、只看错误、清空；日志持久化到 localStorage，刷新不丢。</p>');
   h.push('<h3>7. 排障指引（AI Agent 适用）</h3>');
-  h.push('<p>① GET /about 确认版本与端点；② 打开日志控制台导出日志，定位首个非 2xx 上游请求；③ 常见错误：401 会话/Key 失效（自动重登重建）、402 积分不足（自动换号）、429 限流（5s 退避）、180s 超时（积分不扣则上游返还）；④ 号池数据可导出 JSON 离线分析（含明文凭据，注意保密）；⑤ 上游探活: 直接访问 image.dddd.zone 首页。</p>');
+  h.push('<p>① GET /about 确认版本与端点；② 打开日志控制台导出日志，定位首个非 2xx 上游请求；③ 常见错误：401 会话/Key 失效（自动重登重建）、402 积分不足（自动换号）、429 限流（5s 退避）、5xx 网关错误（图生图大请求体偶发 504，4s 后自动同号重试+换号重试，失败自动返还积分）、180s 超时；④ 号池数据可导出 JSON 离线分析（含明文凭据，注意保密）；⑤ 上游探活: 直接访问 image.dddd.zone 首页。</p>');
   h.push('<h3>8. CHANGELOG</h3>');
   h.push('<p><b>kmage-1.1 (2026-09-13)</b>：运行日志控制台（记录/导出/复制/持久化）；号池 JSON 导入导出（自动重登恢复会话）；浏览器原生通知（成功/失败/超时，设置开关）；24h 规则明确化（仅限签到，新生号生图异常自动换号提示）；反模式化（拟人邮箱/密码、批量注册与签到随机化乱序、UA 透传）；div.brand 改为「AI生图」；内嵌自包含文档与 AI Agent 提示；新增 /about。</p>');
   h.push('<p><b>kmage-v1.0 (2026-09-13)</b>：新通道上线（上游 image.dddd.zone，替换瘫死的 kdr-v1.2）。号池模式（自动注册/批量签到/补建Key/401重登/402换号/429退避）、most-credits 与 round-robin 轮换、图生图 ≤10 张、会话代理与 Bearer 代理、全量状态 localStorage。</p>');
