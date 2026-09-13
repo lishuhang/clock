@@ -1,7 +1,7 @@
 # Changelog — AI生图 Worker（kmage + kdr 双通道）
 
 按**实际迭代发生日期正序**排列，整合从马良渠道至今的完整试错过程。
-当前生产：`kmage-kdr-1.3`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
+当前生产：`kmage-kdr-1.4`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
 
 > 页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点」表述）；本仓库文档为维护者视角，保留真实上游地址。
 
@@ -80,33 +80,7 @@
 - 备份 `0913-gpt2/gpt2-worker-kmage-v1.1.js`（最终 83,812 bytes，含 5xx 补丁）
 
 
-## kmage-kdr-1.3 (2026-09-13) — 竖屏适配 + 深色模式 + 任务历史持久化（本版）
-
-### Added
-- **深色模式**：CSS 全量变量化（拆分 `--accent-strong` 文字色与 `--accent-hover` 悬停色），设置新增「界面主题」：跟随系统（默认，`prefers-color-scheme` 实时感应切换）/ 浅色 / 深色（`data-theme` 持久化，随设置包迁移）
-- **任务历史持久化与跨设备回看**：
-  - 新存储键 `kmage_hist_v1`（上限 40 条；容量不足自动剥离缩略图兜底保存）
-  - 成功/失败/中断任务均入册（启动时自动把残留 `running` 标记为「页面刷新/关闭导致中断」）
-  - 成功条目：canvas 本地缩略图（长边 160px JPEG q0.65，约 4~10KB/条）+ kdr 上游下载地址
-  - 点击条目回看：本次会话原图 → kdr 上游 URL 在线加载 → 本地缩略图；失败条目点击显示错误原因
-  - 「近期任务」栏新增导出/导入：`ai-image-history` JSON，按运行号合并去重，kdr 条目在任意设备可在线回看上游原图（实测上游 URL 公网可访问）
-- **移动端合并面板**：窄屏（≤680px）下设置/控制台/关于三个图标按钮合并为单一菜单按钮，点开浮窗以选项卡切换；面板 body 节点按需搬运进 hub（全站唯一 ID、事件绑定随节点走），关闭时归位
-- **排障新知入库**（kmage 上游风控，实测 2026-09-13）：从数据中心 IP 直连上游注册的未满 24h 新号生图返回 `403 account_environment_abnormal`（「账号使用环境异常，充值后解锁」）；经本 Worker 代理路径（访客 UA 透传）正常。前端已有新生号 403/400 自动换号逻辑覆盖
-
-### Changed
-- **竖屏/窄屏适配**（≤680px 断点 + 360px 二档）：header 单行收紧（触控目标 36px）、版本号收进标题下方堆叠（不再摊开占宽）、设置栅格单列、历史条目两行截断换行、弹窗高度改 `dvh`（移动浏览器地址栏感知）、toast 横贯底部、320px 宽度实测无横向溢出
-- **图标修正**：设置按钮由「太阳」换为标准齿轮线条 SVG；header 左上角与「关于」顶部 logo 由「ai 字母组合」换为画笔+颜料盘线条 SVG（与 favicon 同款图形，currentColor 描边）
-- `/about` 新增 `ui` 字段（brand/theme/layout/history 自描述）；页面头部 AI Agent 注释补记 `kmage_hist_v1` 与主题说明
-- 内嵌「关于」文档：新增「6. 任务历史与回看」节（后续节顺延），数据模型补 `kmage_hist_v1` 与 settings.theme，排障指引补 403 风控条目，时间线追加本版条目
-
-### Deployment
-- 部署 `ai-image`（CF API PUT，HTTP 200）；线上脚本与本地逐字节一致（107,256 字符）
-- 本地 E2E（mock 双上游 + 无头浏览器 375/320px 竖屏 + 1280px 桌面）：注册→生图成功（缩略图/耗时入册）→ 失败任务入册 → 刷新持久化 → running 中断清理 → 历史回看三优先级 → kdr url 记录 → 历史导入去重回环 → hub 三选项卡切换与面板归位 → 深色/浅色/跟随系统（media 模拟）实时切换，全部通过
-- 生产端到端（竖屏 375×812）：**kdr 免费 Gift Key 真实出图 36.8s**，历史条目含上游存储 URL（HTTP 200，1.69MB PNG 公网可访问）与本地缩略图
-- 备份：`0913-gpt2/gpt2-worker-kmage-v1.3.js`（约 135 KB）
-
----
-
+## kmage-kdr-1.2 (2026-09-13) — kdr 通道修复复活 + 双通道选择器 + UI 重构
 
 ### Fixed
 - **kdr 通道修复复活**：适配上游 2026-09 新契约——
@@ -138,3 +112,45 @@
 - 生产端到端双通道：**kdr 免费 Gift Key 真实出图 36.6s（2,259KB PNG，内容与提示词一致）**；**kmage 注册新号（+1 分）→ 生图 30.7s 成功**
 - 本地 E2E：mock 双上游 + 无头浏览器，kmage 生图 / kdr 任务轮询与图生图 / 任务 error / 503 重试 / 402 换号 / 设置导入导出回环 / 控制台与关于弹窗，全部通过
 - 备份：`0913-gpt2/gpt2-worker-kmage-v1.2.js`（约 115.9 KB）
+
+## kmage-kdr-1.3 (2026-09-13) — 竖屏适配 + 深色模式 + 任务历史持久化
+
+### Added
+- **深色模式**：CSS 全量变量化（拆分 `--accent-strong` 文字色与 `--accent-hover` 悬停色），设置新增「界面主题」：跟随系统（默认，`prefers-color-scheme` 实时感应切换）/ 浅色 / 深色（`data-theme` 持久化，随设置包迁移）
+- **任务历史持久化与跨设备回看**：
+  - 新存储键 `kmage_hist_v1`（上限 40 条；容量不足自动剥离缩略图兜底保存）
+  - 成功/失败/中断任务均入册（启动时自动把残留 `running` 标记为「页面刷新/关闭导致中断」）
+  - 成功条目：canvas 本地缩略图（长边 160px JPEG q0.65，约 4~10KB/条）+ kdr 上游下载地址
+  - 点击条目回看：本次会话原图 → kdr 上游 URL 在线加载 → 本地缩略图；失败条目点击显示错误原因
+  - 「近期任务」栏新增导出/导入：`ai-image-history` JSON，按运行号合并去重，kdr 条目在任意设备可在线回看上游原图（实测上游 URL 公网可访问）
+- **移动端合并面板**：窄屏（≤680px）下设置/控制台/关于三个图标按钮合并为单一菜单按钮，点开浮窗以选项卡切换；面板 body 节点按需搬运进 hub（全站唯一 ID、事件绑定随节点走），关闭时归位
+- **排障新知入库**（kmage 上游风控，实测 2026-09-13）：从数据中心 IP 直连上游注册的未满 24h 新号生图返回 `403 account_environment_abnormal`（「账号使用环境异常，充值后解锁」）；经本 Worker 代理路径（访客 UA 透传）正常。前端已有新生号 403/400 自动换号逻辑覆盖
+
+### Changed
+- **竖屏/窄屏适配**（≤680px 断点 + 360px 二档）：header 单行收紧（触控目标 36px）、版本号收进标题下方堆叠（不再摊开占宽）、设置栅格单列、历史条目两行截断换行、弹窗高度改 `dvh`（移动浏览器地址栏感知）、toast 横贯底部、320px 宽度实测无横向溢出
+- **图标修正**：设置按钮由「太阳」换为标准齿轮线条 SVG；header 左上角与「关于」顶部 logo 由「ai 字母组合」换为画笔+颜料盘线条 SVG（与 favicon 同款图形，currentColor 描边）
+- `/about` 新增 `ui` 字段（brand/theme/layout/history 自描述）；页面头部 AI Agent 注释补记 `kmage_hist_v1` 与主题说明
+- 内嵌「关于」文档：新增「6. 任务历史与回看」节（后续节顺延），数据模型补 `kmage_hist_v1` 与 settings.theme，排障指引补 403 风控条目，时间线追加本版条目
+
+### Deployment
+- 部署 `ai-image`（CF API PUT，HTTP 200）；线上脚本与本地逐字节一致（107,256 字符）
+- 本地 E2E（mock 双上游 + 无头浏览器 375/320px 竖屏 + 1280px 桌面）：注册→生图成功（缩略图/耗时入册）→ 失败任务入册 → 刷新持久化 → running 中断清理 → 历史回看三优先级 → kdr url 记录 → 历史导入去重回环 → hub 三选项卡切换与面板归位 → 深色/浅色/跟随系统（media 模拟）实时切换，全部通过
+- 生产端到端（竖屏 375×812）：**kdr 免费 Gift Key 真实出图 36.8s**，历史条目含上游存储 URL（HTTP 200，1.69MB PNG 公网可访问）与本地缩略图
+- 备份：`0913-gpt2/gpt2-worker-kmage-v1.3.js`（约 135 KB）
+
+## kmage-kdr-1.4 (2026-09-13) — 导航统一 + 设置三分区 + 界面记忆 + PWA（本版）
+
+### Added
+- **PWA 可安装**：新增 `/manifest.webmanifest`（名称「AI生图」，`display=standalone` 保留系统标题栏与窗口控制，`start_url/scope=/`，含主题色与浅/深双 `theme-color` meta）+ `/sw.js`（仅缓存页面外壳与图标：`/` 网络优先回退缓存，manifest/图标缓存优先；不拦截任何代理/API 请求；缓存名随版本号更新，activate 自动清理旧缓存）+ PNG 图标四枚（`/icon-192.png`、`/icon-512.png`、`/icon-maskable-512.png`（safe zone 收敛）、`/apple-touch-icon.png`，均为白底圆角矩形叠加画笔颜料盘 logo，与 favicon 同款图形，cairosvg 栅格化 + 调色板量化，合计约 16KB）
+- **「安装到系统」按钮**：设置 → 通用选项，捕获 `beforeinstallprompt` 后显示，点击触发安装选择并记日志；`appinstalled` 事件 toast 反馈；iOS 提示走「分享 → 添加到主屏幕」
+- **创作面板选项记忆**：新存储键 `kmage_form_v1`（{prompt,ratio,quality,kdrSize,model:{kmage,kdr}}）；模型按通道分存，切换通道各自恢复；提示词输入 400ms 防抖保存，生成前强存，beforeunload 兑底；恢复时校验选项值合法（不在列表内则用默认）
+
+### Changed
+- **导航统一（组件复用，双轨实现移除）**：全宽度右上角仅保留一个齿轮按钮（v1.3 的窄屏汉堡方案推广到全宽度，图标由汉堡改为齿轮），点开浮窗以选项卡切换设置/控制台/关于；删除桌面三图标按钮与 3 个独立 dialog（设置/控制台/关于降级为隐藏宿主 div，面板 DOM 搬运复用机制不变），关闭归位统一由 hub 的 `close` 事件驱动；新增 `.hub-pane .dlg-body` 内边距/高度归零规则避免双重滚动
+- **设置三分区**：设置面板重组为「通用选项（界面主题/浏览器通知/安装/设置导入导出）/ kmage 通道选项（号池全套）/ kdr 通道选项（Gift Key/自定义 Key）」，三区常驻——选中任一通道均可直接调整另一通道的专属选项（v1.2 的按通道显隐逻辑移除）；分区说明文案入页面
+- **验证**：线上 `/healthz` 版本 kmage-kdr-1.4，`/about` 新增 `ui.pwa` 与 `form_storage`/`history_storage` 字段；`/manifest.webmanifest`、`/sw.js`、四图标全部 200；无头浏览器 375px/1280px 无横向溢出，齿轮浮窗、选项卡切换、面板归位（注：headless Chromium 的 dialog `close` 事件为异步派发，归位校验需等待一拍）、跨通道模型记忆、深色模式、表单持久化回环全部通过；内嵌「关于」文档新增第 2 节（PWA 与界面记忆）并全节重排号，时间线追加本版条目
+
+### Deployment
+- 部署 `ai-image`（CF API PUT，metadata `{"body_part":"worker.js"}`，HTTP 200）
+- 生产端到端：**kdr 免费 Gift Key 真实出图 27.6s**，历史条目含上游存储 URL 与本地缩略图；SW 注册激活正常，`beforeinstallprompt` 触发
+- 备份：`0913-gpt2/gpt2-worker-kmage-v1.4.js`（约 166 KB）
