@@ -164,11 +164,16 @@
         .guest-table-name:hover, .guest-table-title:hover { color: var(--color-primary); }
         .guest-table-info input.guest-edit-input { margin: 0; padding: 2px 6px; font-size: 13px; width: 100%; min-width: 0; border: 1px solid var(--color-primary); border-radius: 4px; }
         .empty-guest-hint { padding: 15px; text-align: center; color: #999; font-size: 13px; }
-        /* 绿色新增按钮（替代原红色删除按钮位置） */
+        /* 绿色新增按钮 */
         .btn-add-small {
             background: #52c41a; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s; flex: 0 0 auto;
         }
         .btn-add-small:hover { background: #73d13d; }
+        /* 行内红色删除按钮 */
+        .btn-delete-small {
+            background: #ff4d4f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s; flex: 0 0 auto;
+        }
+        .btn-delete-small:hover { background: #ff7875; }
         /* 拖拽排序手柄：头像左侧竖条，按住上下拖拽换位 */
         .guest-drag-handle { width: 14px; height: 32px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; cursor: grab; touch-action: none; user-select: none; }
         .guest-drag-handle:active { cursor: grabbing; }
@@ -239,6 +244,19 @@
         .bg-opt.bg-opt-dark.active { background: #2b2b2b; color: #fff; border-color: #2b2b2b; }
         .bg-opt.bg-opt-light.active { background: #fff; color: #333; border-color: #999; font-weight: bold; position: relative; z-index: 1; }
         
+        /* 右下角 toast 轻提醒（自动消失，不打断操作） */
+        .toast-tip {
+            position: fixed; right: 20px; bottom: 24px; z-index: 10000;
+            background: rgba(40, 40, 40, 0.92); color: #fff; padding: 10px 16px;
+            border-radius: 8px; font-size: 13px; letter-spacing: 0.5px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            opacity: 0; transform: translateY(8px);
+            transition: opacity 0.25s, transform 0.25s;
+            pointer-events: none; max-width: 72vw;
+        }
+        .toast-tip.show { opacity: 1; transform: translateY(0); }
+        .toast-tip.toast-error { background: rgba(211, 47, 47, 0.95); }
+
         #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; font-size: 24px; z-index: 9999; }
         .loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -288,7 +306,7 @@
                 
                 <div class="control-group">
                     <h3>嘉宾管理</h3>
-                    <h4>可点击姓名、职位、头像修改，改完自动保存</h4>
+                    <h4>拖动排序，可点击姓名、职位、头像修改，自动保存</h4>
                     <div id="guestManagementList" class="guest-management-list">
                         <!-- 动态渲染管理列表（底部常设灰色新增示意行） -->
                     </div>
@@ -689,7 +707,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="guest-table-name" title="点击修改姓名">${guest.name}</span>
                     <span class="guest-table-title" title="点击修改职位">${guest.title || '<span style="color:#ccc;">无职位</span>'}</span>
                 </div>
+                <button type="button" class="btn-delete-small" data-id="${guest.id}" title="删除该嘉宾">删除</button>
             `;
+
+            // 点击删除 → 确认后彻底删除该嘉宾
+            row.querySelector('.btn-delete-small').addEventListener('click', () => removeGuest(guest.id));
 
             // 点击头像 → 弹出上传图片对话框，选定后即时保存
             row.querySelector('.guest-table-avatar').addEventListener('click', () => {
@@ -833,6 +855,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // 删除嘉宾：确认后彻底删除；若删除的是当前展示嘉宾则自动切换到第一个可用嘉宾
+    function removeGuest(id) {
+        const target = state.guests.find(g => g.id === id);
+        if (!target) return;
+        if (!confirm(`确定要彻底删除嘉宾【${target.name}】的配置吗？`)) return;
+        state.guests = state.guests.filter(g => g.id !== id);
+        if (state.currentGuestId === id) {
+            state.currentGuestId = state.guests.length > 0 ? state.guests[0].id : null;
+        }
+        persistGuests();
+        syncFormsFromState();
+        updateCanvas();
+    }
+
     // 新增嘉宾：基于底部灰色示意行创建（姓名/职位先为示意占位，变黑后点击即可修改）
     function addGuest() {
         const newId = 'g_' + Date.now();
@@ -895,6 +931,23 @@ document.addEventListener("DOMContentLoaded", () => {
         anchor.click();
     });
 
+    // ================= 右下角 toast 轻提醒（自动消失，不打断操作） =================
+    let toastTimer = null;
+    function showToast(msg, isError) {
+        let tip = document.getElementById('toastTip');
+        if (!tip) {
+            tip = document.createElement('div');
+            tip.id = 'toastTip';
+            tip.className = 'toast-tip';
+            document.body.appendChild(tip);
+        }
+        tip.textContent = msg;
+        tip.classList.toggle('toast-error', !!isError);
+        tip.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => tip.classList.remove('show'), 2600);
+    }
+
     document.getElementById('btnImportData').addEventListener('click', () => document.getElementById('inputImportData').click());
     document.getElementById('inputImportData').addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -903,14 +956,36 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.onload = (event) => {
             try {
                 const parsed = JSON.parse(event.target.result);
-                if(parsed && typeof parsed === 'object') {
+                if(parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                    // 导入文件为唯一事实来源：JSON 定义了哪项就按哪项覆盖（含字体、嘉宾及顺序）；
+                    // JSON 未定义/非法的项不覆盖 —— 已有本地存储的字段自然回退到浏览器存储
+                    const jsonHasGuests = Array.isArray(parsed.guests);
+                    const jsonHasFont = parsed.nameFont === 'dongfang' || parsed.nameFont === 'smiley';
+                    const jsonHasHighlights = Array.isArray(parsed.highlights);
+                    if (!jsonHasGuests) delete parsed.guests;
+                    if (!jsonHasFont) delete parsed.nameFont;
+                    if (!jsonHasHighlights) delete parsed.highlights;
+                    if (parsed.theme && typeof parsed.theme === 'object' && !Array.isArray(parsed.theme)) {
+                        state.theme = Object.assign({}, state.theme, parsed.theme); // 主题按字段合并，未定义字段保持现状
+                        delete parsed.theme;
+                    }
+                    if (parsed.images && typeof parsed.images === 'object' && !Array.isArray(parsed.images)) {
+                        state.images = Object.assign({}, state.images, parsed.images);
+                        delete parsed.images;
+                    }
                     state = Object.assign(state, parsed);
-                    persistGuests();
+                    if (!state.guests.some(g => g.id === state.currentGuestId)) {
+                        state.currentGuestId = state.guests.length > 0 ? state.guests[0].id : null; // 选中项无效时回落到第一个可用嘉宾
+                    }
+                    if (jsonHasGuests) persistGuests(); // 同步本地存储，刷新后嘉宾及顺序仍与 JSON 一致
+                    if (jsonHasFont) persistNameFont(); // 同步本地存储，刷新后字体仍与 JSON 一致
                     syncFormsFromState();
                     updateCanvas();
-                    alert('配置导入成功！');
+                    showToast('配置导入成功');
+                } else {
+                    showToast('JSON 格式无效', true);
                 }
-            } catch(e) { alert('JSON 格式无效'); }
+            } catch(err) { showToast('JSON 格式无效', true); }
         };
         reader.readAsText(file);
     });
