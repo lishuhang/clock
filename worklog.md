@@ -251,3 +251,18 @@ Stage Summary:
 
 ### 部署
 - index.html + manifest.json + sw.js + icon-192/512.png + icon-pwa.svg（源）+ 本日志，单次 commit 推送
+
+## 2026-09-14 10:09 UTC+8 — golden-quote 小修：姓名取消加粗（字体本就粗，去除叠加的 font-weight: bold）
+
+### 背景
+用户反馈：姓名（得意黑 / 阿里妈妈东方大楷 可切换处）如果加粗了就去掉，用普通字重即可——两款展示字体本身笔画已经很粗，浏览器再叠加 font-weight: bold 会产生「伪加粗」（synthetic bold），过粗发闷。
+
+### 变更清单（0913-golden-quote/index.html，仅 1 行）
+1. `.profile-name`（海报姓名元素 #renderName，即字体切换作用对象）删除 `font-weight: bold;` 声明，回归 normal（400）。两款 @font-face 均注册为 weight: normal，DOM 与 html2canvas 导出共用该样式，改此一处即全生效。
+
+### 验证（无头 Chromium）
+- 页面打开 computed fontWeight = 400（得意黑默认态）；切换东方大楷后仍 400；切换回默认回归通过；控制台零报错
+- 未动其他任何样式/逻辑；版本号保持 v2.0 不变（按要求不 bump）
+
+### 部署
+- index.html + 本日志，单次 commit 推送（覆盖式更新）
