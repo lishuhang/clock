@@ -294,3 +294,23 @@ Stage Summary:
 
 ### 部署
 - index.html + sw.js + manifest.json + 本日志，单次 commit 推送
+
+## 2026-09-14 12:06 UTC+8 — golden-quote v2.2：单文件化（PWA 资产内联 + 字体联网 fallback）+ Logo 改实心 serif 引号
+
+### 背景
+用户要求：PWA 散落资产（图标/manifest/sw）收进 html 保持单文件；字体加联网 fallback，最小套装「index.html + html2canvas.min.js」也能用；小分辨率图标可路由到大图；引号 Logo 从空心（像 66/99）改为用 serif 字体的中文引号绘制；输出 v2.2 后删除 icon png/svg、manifest.json、sw.js 等，文件夹仅保留 html2canvas.min.js + 两个字体 + index.html。
+
+### 变更清单
+1. **PWA 单文件化（sw.js/manifest.json/icon-192/512.png/icon-pwa.svg 全删）**：
+   - manifest 运行时生成：http(s) 环境下用 Canvas 现画 512px 图标（白色圆角矩形底 + 金色 #F3B64A 实心 serif 双引号，左上大“0.94x/基线0.84、右下小”0.5x/基线1.19，与 Logo 同构），toDataURL 为 PNG data URI；manifest JSON（name/short_name/description v2.2/start_url=origin+pathname 指向当前实例/scope=目录/display standalone/背景主题色/icons 192+512+maskable 三项同源）经 encodeURIComponent 注入 `link[rel=manifest]` data URI；file:// 协议静默跳过。
+   - 删除 SW 注册代码（无外部缓存清单可维护）。现代 Chromium（121+）无 SW 也可安装；iOS「添加到主屏幕」走截图图标（apple-touch-icon 不支持 data URI，已移除链接）。
+2. **字体联网 fallback（@font-face src 链）**：得意黑/东方大楷 = 本地文件 → jsDelivr(gh@main) → raw.githubusercontent(main) → local()；阿里巴巴普惠体（本地 woff 删除）= 本地(兼容旧部署) → jsDelivr/raw **@9e8e894ec97d2df4eb0b0e78a66b6bcc88a2163a 冻结 SHA**（文件删后 URL 永久有效）→ local()。CDN 均实测 200。
+3. **html2canvas 本地优先**：`<script src="./html2canvas.min.js">` + `window.html2canvas || document.write(cdnjs 1.4.1)` 兜底（原为纯 CDN，本地文件未参与）。
+4. **Logo 重绘（实心 serif 中文引号）**：SVG `<text>` Georgia/'Times New Roman'/serif 加粗实心「“」(30px, x0 y27) 左上 + 「”」(16px, x24 y38) 右下，fill #F3B64A；头部 inline SVG、favicon data URI 同一坐标体系；PWA 图标 canvas 同构。彻底摆脱空心圆圈"66/99"观感。
+5. **版本 v2.2**：title、#appVersion、运行时 manifest description 同步。
+6. **文件删除**：icon-192.png、icon-512.png、icon-pwa.svg、manifest.json、sw.js、logo.png、poster_settings-260913.json、AlibabaPuHuiTi-3-55-Regular.woff（git rm，历史可恢复）；文件夹仅剩 index.html + html2canvas.min.js + SmileySans-Oblique.ttf.woff2 + AlimamaDongFangDaKai-Regular.woff2。
+
+### 验证（无头 Chromium E2E）
+- 完整文件夹：title/小字 v2.2；html2canvas=本地加载；manifest data URI 注入且 start_url/scope 指向当前实例；图标 PNG 512×512 解码成功（导出目检：白圆角底金引号，形态正确）；三字体 check=true（普惠体实为 CDN 兜底加载，证明 fallback 生效）；头部 logo 放大目检为实心 serif 引号
+- 最小套装（临时目录仅 index.html，:8078）：html2canvas 从 cdnjs 加载、得意黑/东方大楷从 jsDelivr@main、普惠体从冻结 SHA 加载全部成功；海报截图姓名得意黑/头衔普惠体渲染正常；控制台零 JS 错误
+- 回归：触屏拖拽重排、行内编辑改名均通过

@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金句生成器 v2.1 - 娱乐资本论</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23F3B64A' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='8' cy='13.3' r='4.4'/%3E%3Cpath d='M8 8.9 Q8 5.7 12 4'/%3E%3Ccircle cx='18.5' cy='13.3' r='4.4'/%3E%3Cpath d='M18.5 8.9 Q18.5 5.7 22.5 4'/%3E%3Ccircle cx='21' cy='22.5' r='2.2'/%3E%3Cpath d='M21 24.7 Q21 26.8 17.5 28.5'/%3E%3Ccircle cx='27' cy='22.5' r='2.2'/%3E%3Cpath d='M27 24.7 Q27 26.8 23.5 28.5'/%3E%3C/g%3E%3C/svg%3E">
-    <link rel="manifest" href="./manifest.json">
+    <title>金句生成器 v2.2 - 娱乐资本论</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='0' y='27' font-family='Georgia,%20%27Times%20New%20Roman%27,serif' font-size='30' font-weight='bold' fill='%23F3B64A'%3E%E2%80%9C%3C/text%3E%3Ctext x='24' y='38' font-family='Georgia,%20%27Times%20New%20Roman%27,serif' font-size='16' font-weight='bold' fill='%23F3B64A'%3E%E2%80%9D%3C/text%3E%3C/svg%3E">
     <meta name="theme-color" content="#1A1813">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="./html2canvas.min.js"></script>
+    <script>window.html2canvas || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>');</script>
     <style>
         /* ================= 字体定义 ================= */
         @font-face {
             font-family: 'Smiley Sans';
             src: url('./SmileySans-Oblique.ttf.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/lishuhang/clock@main/0913-golden-quote/SmileySans-Oblique.ttf.woff2') format('woff2'),
+                 url('https://raw.githubusercontent.com/lishuhang/clock/main/0913-golden-quote/SmileySans-Oblique.ttf.woff2') format('woff2'),
                  local('Smiley Sans'), local('得意黑');
             font-weight: normal; font-style: normal;
             font-display: swap;
@@ -21,6 +22,8 @@
         @font-face {
             font-family: 'Alibaba PuHuiTi';
             src: url('./AlibabaPuHuiTi-3-55-Regular.woff') format('woff'),
+                 url('https://cdn.jsdelivr.net/gh/lishuhang/clock@9e8e894ec97d2df4eb0b0e78a66b6bcc88a2163a/0913-golden-quote/AlibabaPuHuiTi-3-55-Regular.woff') format('woff'),
+                 url('https://raw.githubusercontent.com/lishuhang/clock/9e8e894ec97d2df4eb0b0e78a66b6bcc88a2163a/0913-golden-quote/AlibabaPuHuiTi-3-55-Regular.woff') format('woff'),
                  local('Alibaba PuHuiTi'), local('阿里巴巴普惠体');
             font-weight: normal; font-style: normal;
             font-display: swap;
@@ -28,6 +31,8 @@
         @font-face {
             font-family: 'Alimama DongFangDaKai';
             src: url('./AlimamaDongFangDaKai-Regular.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/lishuhang/clock@main/0913-golden-quote/AlimamaDongFangDaKai-Regular.woff2') format('woff2'),
+                 url('https://raw.githubusercontent.com/lishuhang/clock/main/0913-golden-quote/AlimamaDongFangDaKai-Regular.woff2') format('woff2'),
                  local('阿里妈妈东方大楷'), local('Alimama DongFangDaKai');
             font-weight: normal; font-style: normal;
             font-display: swap;
@@ -246,10 +251,10 @@
     <div class="controls-panel">
         <div class="panel-header">
             <div class="panel-brand">
-                <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#F3B64A" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="13.3" r="4.4"/><path d="M8 8.9 Q8 5.7 12 4"/><circle cx="18.5" cy="13.3" r="4.4"/><path d="M18.5 8.9 Q18.5 5.7 22.5 4"/><circle cx="21" cy="22.5" r="2.2"/><path d="M21 24.7 Q21 26.8 17.5 28.5"/><circle cx="27" cy="22.5" r="2.2"/><path d="M27 24.7 Q27 26.8 23.5 28.5"/></g></svg>
+                <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><text x="0" y="27" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="#F3B64A">“</text><text x="24" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="bold" fill="#F3B64A">”</text></svg>
                 <div class="panel-title-wrap">
                     <h2 id="panelTitle">金句生成器</h2>
-                    <div class="app-version" id="appVersion">v2.1</div>
+                    <div class="app-version" id="appVersion">v2.2</div>
                 </div>
             </div>
             <button class="btn-icon" id="btnSettingsToggle" title="设置" aria-label="设置">
@@ -1054,11 +1059,53 @@ document.addEventListener("DOMContentLoaded", () => {
         document.fonts.addEventListener('loadingdone', () => fitNameAndTitle());
     }
 
-    // ================= PWA Service Worker 注册 =================
-    // file:// 本地直接打开时静默跳过；http(s) 部署（本地服务器/GitHub Pages 等）均可安装，
-    // 安装实例指向当前部署地址（start_url: ./），无需复制到用户电脑
-    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-        navigator.serviceWorker.register('./sw.js').catch((e) => console.warn('[PWA] Service Worker 注册失败:', e));
+    // ================= PWA（单文件方案：manifest 与图标运行时生成，零外部资产） =================
+    // file:// 直接打开不注入；http(s) 部署（本地服务器/GitHub Pages 等）打开即生成指向当前实例的 manifest，
+    // 图标由 Logo 设计（白色圆角矩形底 + 金色 serif 实心双引号）用 Canvas 现画为 PNG data URI
+    if (/^https?:$/.test(location.protocol)) {
+        const drawPwaIcon = (size) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const radius = size * 0.22;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.arcTo(size, 0, size, size, radius);
+            ctx.arcTo(size, size, 0, size, radius);
+            ctx.arcTo(0, size, 0, 0, radius);
+            ctx.arcTo(0, 0, size, 0, radius);
+            ctx.fill();
+            ctx.fillStyle = '#F3B64A';
+            ctx.textBaseline = 'alphabetic';
+            const serif = 'Georgia, "Times New Roman", serif';
+            ctx.font = 'bold ' + Math.round(size * 0.94) + 'px ' + serif;
+            ctx.fillText('\u201C', size * 0.03, size * 0.84);
+            ctx.font = 'bold ' + Math.round(size * 0.5) + 'px ' + serif;
+            ctx.fillText('\u201D', size * 0.75, size * 1.19);
+            return canvas.toDataURL('image/png');
+        };
+        const iconUri = drawPwaIcon(512);
+        const baseURL = location.origin + location.pathname;
+        const pwaManifest = {
+            name: '金句生成器 - 娱乐资本论',
+            short_name: '金句生成器',
+            description: '金句海报生成工具 - 娱乐资本论 v2.2',
+            start_url: baseURL,
+            scope: baseURL.replace(/[^/]*$/, ''),
+            display: 'standalone',
+            background_color: '#1A1813',
+            theme_color: '#1A1813',
+            icons: [
+                { src: iconUri, sizes: '192x192', type: 'image/png' },
+                { src: iconUri, sizes: '512x512', type: 'image/png' },
+                { src: iconUri, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+            ]
+        };
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
+        document.head.appendChild(manifestLink);
     }
 });
 </script>
