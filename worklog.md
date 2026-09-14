@@ -226,3 +226,28 @@ Stage Summary:
 
 ### 部署
 - index.html + 字体文件 + 本日志单次 commit 推送（静态文件，无 CF Worker 变更）
+
+---
+
+## 2026-09-14 08:30 UTC+8 — golden-quote v2.0：设置面板重组 + 嘉宾拖拽管理 + 双引号 logo + PWA 可安装
+
+### 变更清单（0913-golden-quote/）
+1. **主题区块重组**：「主题与色调」→「主题」；姓名字体下拉自主视图嘉宾组移入此处；「主色调」→「强调色」；删除底色 color picker，改为「黑底/白底」二选一按钮（与强调色同行不换行）——底色定义为 div.quote-box 色彩：黑底 rgba(0,0,0,.1) 白字（默认）/ 白底 rgba(255,255,255,.1) 黑字 #1A1813，均约 10% alpha；state.theme.quoteDark 入 state（JSON 导出导入携带），主题预设切换重置回黑底；Canvas 预渲染金句（renderQuoteToCanvas）同步用 quoteTextColor，避免导出图与预览不一致。
+2. **全局图片配置**：四个 label 去除 (bg.png) 等括号后缀；删除 autoLoadLocalAsset 自动搜索同名文件逻辑（图片实际以 blob 形式封装在 JSON 配置中）。
+3. **数据管理区块**：删除「数据管理 (JSON)」标题；两按钮移出 control-group 横排（.data-btn-row）；改名「导出配置（备份）」「导入配置（JSON）」。
+4. **双态图标**：设置态齿轮换为向左箭头（icon-back SVG，CSS 按 .is-open 切换显示，替换原 180° 旋转方案）；常规态标题「编辑海报」→「金句生成器」。
+5. **常规态精简**：删除「嘉宾选择」「金句内容」标题行与「高光词汇 (输入词语后按空格添加)」label；tagInput placeholder →「插入高光词，空格分隔」；选择器「添加嘉宾」+ 按钮点击改为仅打开设置（原聚焦的 newGuestName 输入框已不存在）。
+6. **嘉宾管理重组**：删除「添加新嘉宾」独立表单区块；h4 →「可点击姓名、职位、头像修改，改完自动保存」；列表底部常设灰色示意行（空白头像+姓名+职位灰字+绿色「新增」按钮），点击新增即创建黑色实体行（name=姓名/title=职位 占位可直接点击修改），红色「删除」按钮按需求移除（由绿色「新增」替代其位置概念）；行内编辑「无头衔」占位统一改「无职位」。
+7. **嘉宾拖拽排序**：每行头像左侧 4×24px 圆角竖条 handle（cursor:grab，hover 加深）；仅 handle mousedown 时启用 row.draggable（不干扰行内文本编辑）；HTML5 DnD dragover 按目标行上/下半区实时 insertBefore 预览，dragend 按 DOM 顺序写回 state.guests + persistGuests + 主面板选择器同步；灰色示意行不参与拖拽、常驻末尾。
+8. **金色双引号 logo**：线条 SVG——左上「66」形左引号（r=4.4，圆头在下尾向右上）+ 右下「99」形右引号（r=2.2，恰为 1/2，圆头在上尾向左下），金色 #F3B64A stroke 2.2 round；同款 inline SVG 置于常规态标题最左（28px）+ data-URI favicon；首版误将左右引号形态画反（99 在左上），已按中文引号「开引号似 66、闭引号似 99」惯例修正。
+9. **PWA**：新增 manifest.json（name/short_name/start_url ./、scope ./、display standalone 保留系统标题栏、theme/background #1A1813、icon-192/512 PNG + maskable）；新增 sw.js（golden-quote-v2.0 缓存，precache 9 项资产含 3 字体与 html2canvas CDN，Promise.allSettled 容错，fetch 缓存优先+后台回源刷新）；index.html 注册 SW（file:// 协议静默跳过，http(s) 本地部署/GitHub Pages 均可安装，安装实例指向当前部署地址）；图标 = logo 叠白色圆角矩形底（512 rect rx=110），cairosvg 生成 PNG。
+10. **版本 v2.0**：标签页 title「金句生成器 v2.0 - 娱乐资本论」；常规态标题下方小字 v2.0（设置态隐藏）。
+
+### 验证（无头 Chromium E2E）
+- 静态：内嵌 JS node --check 通过；colorBgBase/btn-delete-small/newGuest*/autoLoadLocalAsset/「编辑海报」「输入高光词」「无头衔」零残留；emoji 扫描仅注释箭头符（非 UI 图标）
+- 功能：title/版本号/logo/favicon/manifest 就位；设置态箭头切换与版本号隐藏；主视图三处标题/label 删除；强调色+底色同行（top 差 0.5px 亚像素）；黑↔白底切换背景/文字/按钮态三同步，预设切换重置黑底；新增两次→2 黑行+灰示意行常驻末尾+LS 持久化；模拟 DragEvent 双向拖拽 DOM/state/选择器三处同步、示意行不参与；行内编辑改名「曹睿」→LS→选择器同步回归通过；姓名字体下拉在设置内切换/持久化/海报应用回归通过；主面板+按钮跳转设置
+- PWA：SW 注册成功 scope=localhost:8077/，9 项预缓存资产全部命中；刷新后嘉宾数据恢复
+- 视觉：常规态（logo+标题+v2.0+精简表单+黑底金句框）、设置态（箭头+灰色示意行+绿色新增+拖拽竖条）、主题区块（强调色+黑/白底同行）、白底海报（10% alpha 浅框黑字金色高光）四组截图目检通过；控制台零报错
+
+### 部署
+- index.html + manifest.json + sw.js + icon-192/512.png + icon-pwa.svg（源）+ 本日志，单次 commit 推送

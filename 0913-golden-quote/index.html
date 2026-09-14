@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金句生成器 - 娱乐资本论</title>
+    <title>金句生成器 v2.0 - 娱乐资本论</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23F3B64A' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='8' cy='13.3' r='4.4'/%3E%3Cpath d='M8 8.9 Q8 5.7 12 4'/%3E%3Ccircle cx='18.5' cy='13.3' r='4.4'/%3E%3Cpath d='M18.5 8.9 Q18.5 5.7 22.5 4'/%3E%3Ccircle cx='21' cy='22.5' r='2.2'/%3E%3Cpath d='M21 24.7 Q21 26.8 17.5 28.5'/%3E%3Ccircle cx='27' cy='22.5' r='2.2'/%3E%3Cpath d='M27 24.7 Q27 26.8 23.5 28.5'/%3E%3C/g%3E%3C/svg%3E">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1A1813">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* ================= 字体定义 ================= */
@@ -34,7 +38,8 @@
             --color-bg-base: #1A1813;
             --color-primary: #F3B64A; /* 所有的UI强调色现在都与海报主色调绑定 */
             --color-text-main: #FFFFFF;
-            --color-quote-bg: rgba(50, 52, 45, 0.85);
+            --color-quote-text: #FFFFFF; /* 金句文字颜色：黑底白字/白底黑字 */
+            --color-quote-bg: rgba(0, 0, 0, 0.1); /* 金句框底色：黑/白二选一，约10% alpha */
             --control-panel-bg: #f8f9fa;
             --control-border: #e9ecef;
         }
@@ -79,8 +84,17 @@
         }
         .btn-icon:hover { color: #000; }
         .btn-icon svg { display: block; }
-        .btn-icon .icon-gear { transition: transform 0.3s; }
-        .btn-icon.is-open .icon-gear { transform: rotate(180deg); }
+        /* 设置态显示向左箭头，常规态显示齿轮，区分设置态与常规态 */
+        .btn-icon .icon-back { display: none; }
+        .btn-icon.is-open .icon-gear { display: none; }
+        .btn-icon.is-open .icon-back { display: block; }
+
+        /* ================= 面板品牌区（logo + 标题 + 版本号） ================= */
+        .panel-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .app-logo { width: 28px; height: 28px; flex: 0 0 auto; }
+        .panel-title-wrap { min-width: 0; }
+        .panel-title-wrap h2 { line-height: 1.2; white-space: nowrap; }
+        .app-version { font-size: 11px; color: #999; line-height: 1.3; letter-spacing: 0.5px; }
 
         .panel-content { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
         
@@ -130,7 +144,7 @@
 
         /* ================= 嘉宾管理表格 (Settings) ================= */
         .guest-management-list {
-            border: 1px solid #ddd; border-radius: 6px; background: #fff; max-height: 200px; overflow-y: auto;
+            border: 1px solid #ddd; border-radius: 6px; background: #fff;
         }
         .guest-table-row {
             display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; gap: 10px;
@@ -144,11 +158,25 @@
         .guest-table-name, .guest-table-title, .guest-table-avatar { cursor: pointer; }
         .guest-table-name:hover, .guest-table-title:hover { color: var(--color-primary); }
         .guest-table-info input.guest-edit-input { margin: 0; padding: 2px 6px; font-size: 13px; width: 100%; min-width: 0; border: 1px solid var(--color-primary); border-radius: 4px; }
-        .btn-delete-small {
-            background: #ff4d4f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s;
-        }
-        .btn-delete-small:hover { background: #ff7875; }
         .empty-guest-hint { padding: 15px; text-align: center; color: #999; font-size: 13px; }
+        /* 绿色新增按钮（替代原红色删除按钮位置） */
+        .btn-add-small {
+            background: #52c41a; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s; flex: 0 0 auto;
+        }
+        .btn-add-small:hover { background: #73d13d; }
+        /* 拖拽排序手柄：头像左侧竖条，按住上下拖拽换位 */
+        .guest-drag-handle { width: 14px; height: 32px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; cursor: grab; touch-action: none; user-select: none; }
+        .guest-drag-handle:active { cursor: grabbing; }
+        .guest-drag-handle::before { content: ''; display: block; width: 4px; height: 24px; border-radius: 2px; background: #d0d0d0; transition: background 0.2s; }
+        .guest-drag-handle:hover::before { background: #aaaaaa; }
+        .guest-table-row.dragging { opacity: 0.55; background: #fafafa; }
+        /* 底部常设的灰色新增示意行 */
+        .guest-table-row.guest-table-ghost .guest-table-name,
+        .guest-table-row.guest-table-ghost .guest-table-title { color: #bbb; }
+        .guest-table-row.guest-table-ghost .guest-table-avatar { opacity: 0.75; }
+        /* 数据管理按钮横排（不放 control-group 内） */
+        .data-btn-row { display: flex; gap: 10px; margin: 5px 0 15px; }
+        .data-btn-row button { flex: 1; margin-top: 0; padding: 10px 8px; font-size: 14px; }
 
         /* ================= 高光词汇 Tag Input ================= */
         .tag-input-container {
@@ -181,7 +209,7 @@
         .profile-title { margin-top: 30px; font-family: 'Alibaba PuHuiTi', sans-serif; font-size: 45px; font-weight: 500; color: var(--color-primary); letter-spacing: 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.8); white-space: nowrap; max-width: 980px; overflow: hidden; }
 
         .quote-box { position: absolute; top: 950px; left: 50%; transform: translateX(-50%) translateZ(0); width: 920px; background-color: var(--color-quote-bg); border-radius: 60px; padding: 60px 50px; z-index: 10; }
-        .quote-text { font-size: 50px; color: var(--color-text-main); line-height: 1.6; text-align: left; display: block; max-height: 400px; overflow: hidden; position: relative; z-index: 1; }
+        .quote-text { font-size: 50px; color: var(--color-quote-text); line-height: 1.6; text-align: left; display: block; max-height: 400px; overflow: hidden; position: relative; z-index: 1; }
         .quote-text .highlight { color: var(--color-primary); }
         .quote-text-rendered { display: block; width: 100%; }
 
@@ -195,8 +223,16 @@
         .qr-desc { margin-top: 25px; font-size: 32px; color: var(--color-primary); letter-spacing: 2px; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.8); white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
 
         /* 工具类与遮罩 */
-        .color-picker-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .color-picker-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: nowrap; }
         .color-picker-row input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; border-radius: 4px; }
+        .color-picker-row label { margin-bottom: 0; white-space: nowrap; }
+        /* 底色二选一（黑底/白底）：金句框底色均约 10% alpha */
+        .bg-mode-switch { display: flex; }
+        .bg-opt { padding: 5px 12px; font-size: 12px; border: 1px solid #ddd; background: #fff; color: #999; cursor: pointer; transition: all 0.2s; }
+        .bg-opt:first-child { border-radius: 6px 0 0 6px; }
+        .bg-opt:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+        .bg-opt.bg-opt-dark.active { background: #2b2b2b; color: #fff; border-color: #2b2b2b; }
+        .bg-opt.bg-opt-light.active { background: #fff; color: #333; border-color: #999; font-weight: bold; position: relative; z-index: 1; }
         
         #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); color: white; display: none; flex-direction: column; justify-content: center; align-items: center; font-size: 24px; z-index: 9999; }
         .loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
@@ -209,9 +245,16 @@
     <!-- ================= 控制面板 ================= -->
     <div class="controls-panel">
         <div class="panel-header">
-            <h2 id="panelTitle">编辑海报</h2>
+            <div class="panel-brand">
+                <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#F3B64A" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="13.3" r="4.4"/><path d="M8 8.9 Q8 5.7 12 4"/><circle cx="18.5" cy="13.3" r="4.4"/><path d="M18.5 8.9 Q18.5 5.7 22.5 4"/><circle cx="21" cy="22.5" r="2.2"/><path d="M21 24.7 Q21 26.8 17.5 28.5"/><circle cx="27" cy="22.5" r="2.2"/><path d="M27 24.7 Q27 26.8 23.5 28.5"/></g></svg>
+                <div class="panel-title-wrap">
+                    <h2 id="panelTitle">金句生成器</h2>
+                    <div class="app-version" id="appVersion">v2.0</div>
+                </div>
+            </div>
             <button class="btn-icon" id="btnSettingsToggle" title="设置" aria-label="设置">
                 <svg class="icon-gear" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+                <svg class="icon-back" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
         </div>
 
@@ -219,25 +262,16 @@
             <!-- ===== 主视图 (作图时所需) ===== -->
             <div id="viewMain" class="view-section active">
                 <div class="control-group">
-                    <h3>嘉宾选择</h3>
                     <div class="guest-selector" id="guestListUI">
                         <!-- 动态渲染嘉宾列表 -->
                     </div>
-                    <label style="margin-top:5px;">姓名字体</label>
-                    <select id="nameFontSelect" style="margin-bottom:0;">
-                        <option value="smiley">得意黑（默认）</option>
-                        <option value="dongfang">阿里妈妈东方大楷</option>
-                    </select>
                 </div>
 
                 <div class="control-group">
-                    <h3>金句内容</h3>
-                    <textarea id="inputQuote" rows="4" placeholder="输入金句..."></textarea>
-                    
-                    <label style="margin-top:10px;">高光词汇 (输入词语后按空格添加)</label>
+                    <textarea id="inputQuote" rows="4" placeholder="输入金句..." style="margin-top:0;"></textarea>
                     <div class="tag-input-container" id="tagInputWrapper">
                         <div id="tagList" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
-                        <input type="text" id="tagInput" class="tag-input" placeholder="输入高光词...">
+                        <input type="text" id="tagInput" class="tag-input" placeholder="插入高光词，空格分隔">
                     </div>
                 </div>
                 
@@ -249,57 +283,53 @@
                 
                 <div class="control-group">
                     <h3>嘉宾管理</h3>
-                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #ddd; margin-bottom:15px;">
-                        <label>添加新嘉宾</label>
-                        <input type="text" id="newGuestName" placeholder="姓名" maxlength="8">
-                        <input type="text" id="newGuestTitle" placeholder="头衔" maxlength="30">
-                        <label>上传头像</label>
-                        <input type="file" id="newGuestAvatar" accept="image/*">
-                        <button class="btn-primary" id="btnAddGuest" style="padding: 8px; font-size:14px; margin-top:5px;">确认添加嘉宾</button>
-                    </div>
-                    
-                    <h4>现有嘉宾</h4>
+                    <h4>可点击姓名、职位、头像修改，改完自动保存</h4>
                     <div id="guestManagementList" class="guest-management-list">
-                        <!-- 动态渲染管理表格 -->
+                        <!-- 动态渲染管理列表（底部常设灰色新增示意行） -->
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <h3>主题与色调</h3>
+                    <h3>主题</h3>
                     <select id="themeSelect">
                         <option value="preset1">黑金商务 (默认)</option>
                         <option value="preset2">科技蓝调</option>
                         <option value="preset3">中国红韵</option>
                     </select>
+                    <label>姓名字体</label>
+                    <select id="nameFontSelect">
+                        <option value="smiley">得意黑（默认）</option>
+                        <option value="dongfang">阿里妈妈东方大楷</option>
+                    </select>
                     <div class="color-picker-row">
-                        <label>主色调(Primary):</label>
+                        <label>强调色</label>
                         <input type="color" id="colorPrimary">
-                    </div>
-                    <div class="color-picker-row">
-                        <label>底色(Background):</label>
-                        <input type="color" id="colorBgBase">
+                        <label style="margin-left:6px;">底色</label>
+                        <div class="bg-mode-switch" id="bgModeSwitch">
+                            <button type="button" class="bg-opt bg-opt-dark" data-mode="dark">黑底</button>
+                            <button type="button" class="bg-opt bg-opt-light" data-mode="light">白底</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <h3>全局图片配置</h3>
-                    <label>背景图 (bg.png)</label>
+                    <label>背景图</label>
                     <input type="file" id="inputBg" accept="image/*">
-                    <label>顶部赞助商 Logo (sponsor.png)</label>
+                    <label>顶部赞助商 Logo</label>
                     <input type="file" id="inputTopLogo" accept="image/*">
-                    <label>左下角活动 Logo (logo.png)</label>
+                    <label>左下角活动 Logo</label>
                     <input type="file" id="inputEventLogo" accept="image/*">
-                    <label>二维码图 (qr.png)</label>
+                    <label>二维码图</label>
                     <input type="file" id="inputQR" accept="image/*">
                     <label>二维码下方说明</label>
                     <input type="text" id="inputQRDesc" maxlength="15">
                 </div>
 
-                <div class="control-group">
-                    <h3>数据管理 (JSON)</h3>
-                    <button class="btn-primary" id="btnExportData" style="background:#607d8b; padding:8px; font-size:14px;">导出配置 (备份)</button>
+                <div class="data-btn-row">
+                    <button class="btn-primary" id="btnExportData" style="background:#607d8b;">导出配置（备份）</button>
                     <input type="file" id="inputImportData" accept=".json" style="display:none;">
-                    <button class="btn-primary btn-outline" id="btnImportData" style="padding:8px; font-size:14px;">导入配置</button>
+                    <button class="btn-primary btn-outline" id="btnImportData">导入配置（JSON）</button>
                 </div>
             </div>
         </div>
@@ -353,7 +383,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // ================= 状态管理 (State) =================
     let state = {
-        theme: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteBg: 'rgba(50, 52, 45, 0.85)' },
+        theme: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteDark: true },
         images: { bg: '', topLogo: '', eventLogo: '', qr: '' },
         guests: [], // 初始为空配置
         currentGuestId: null,
@@ -393,7 +423,10 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--color-primary', state.theme.primary);
         root.style.setProperty('--color-bg-base', state.theme.bgBase);
         root.style.setProperty('--color-text-main', state.theme.textMain);
-        root.style.setProperty('--color-quote-bg', state.theme.quoteBg);
+        // 底色二选一：黑底白字（默认）/ 白底黑字，金句框底色均约 10% alpha
+        const quoteDark = state.theme.quoteDark !== false;
+        root.style.setProperty('--color-quote-bg', quoteDark ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)');
+        root.style.setProperty('--color-quote-text', quoteDark ? state.theme.textMain : '#1A1813');
 
         // 渲染嘉宾信息
         const guest = state.guests.find(g => g.id === state.currentGuestId);
@@ -475,7 +508,8 @@ document.addEventListener("DOMContentLoaded", () => {
         views.settings.classList.toggle('active', isSettingsOpen);
         btnToggle.classList.toggle('is-open', isSettingsOpen);
         btnToggle.title = isSettingsOpen ? '返回' : '设置';
-        panelTitle.textContent = isSettingsOpen ? '系统设置' : '编辑海报';
+        panelTitle.textContent = isSettingsOpen ? '系统设置' : '金句生成器';
+        document.getElementById('appVersion').style.display = isSettingsOpen ? 'none' : '';
         if(isSettingsOpen) syncFormsFromState();
     });
 
@@ -488,7 +522,9 @@ document.addEventListener("DOMContentLoaded", () => {
         elQRDesc.value = state.qrDesc;
         elNameFont.value = state.nameFont === 'dongfang' ? 'dongfang' : 'smiley';
         document.getElementById('colorPrimary').value = state.theme.primary;
-        document.getElementById('colorBgBase').value = state.theme.bgBase;
+        document.querySelectorAll('#bgModeSwitch .bg-opt').forEach(b => {
+            b.classList.toggle('active', (b.dataset.mode === 'dark') === (state.theme.quoteDark !== false));
+        });
         renderGuestSelector();
         renderGuestManagementList();
         renderTagsUI();
@@ -626,32 +662,28 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         addBtn.addEventListener('click', () => {
             if(!isSettingsOpen) btnToggle.click();
-            // 稍作延迟以确保动画展示完成后能够滚动/focus
-            setTimeout(() => {
-                document.getElementById('newGuestName').focus();
-            }, 300);
         });
         guestListUI.appendChild(addBtn);
     }
 
-    // 2. 渲染设置页的管理表格
+    // 2. 渲染设置页的管理列表（行内编辑 + 拖拽排序 + 底部灰色新增示意行）
     function renderGuestManagementList() {
         guestManagementList.innerHTML = '';
         if (state.guests.length === 0) {
-            guestManagementList.innerHTML = '<div class="empty-guest-hint">暂无嘉宾，请在上方添加</div>';
-            return;
+            guestManagementList.innerHTML = '<div class="empty-guest-hint">暂无嘉宾，点击下方「新增」创建</div>';
         }
 
         state.guests.forEach(guest => {
             const row = document.createElement('div');
             row.className = 'guest-table-row';
+            row.dataset.id = guest.id;
             row.innerHTML = `
+                <div class="guest-drag-handle" title="按住拖动调整顺序"></div>
                 <img class="guest-table-avatar" src="${guest.avatar || SVG_AVATAR_PLACEHOLDER}" title="点击更换头像" />
                 <div class="guest-table-info">
                     <span class="guest-table-name" title="点击修改姓名">${guest.name}</span>
-                    <span class="guest-table-title" title="点击修改头衔">${guest.title || '<span style="color:#ccc;">无头衔</span>'}</span>
+                    <span class="guest-table-title" title="点击修改职位">${guest.title || '<span style="color:#ccc;">无职位</span>'}</span>
                 </div>
-                <button class="btn-delete-small" data-id="${guest.id}">删除</button>
             `;
 
             // 点击头像 → 弹出上传图片对话框，选定后即时保存
@@ -661,7 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 avatarEditInput.click();
             });
 
-            // 点击姓名/头衔 → 原地变为文本框，焦点离开即保存到本地存储
+            // 点击姓名/职位 → 原地变为文本框，焦点离开即保存到本地存储
             const nameSpan = row.querySelector('.guest-table-name');
             const titleSpan = row.querySelector('.guest-table-title');
             nameSpan.addEventListener('click', () => startInlineEdit(nameSpan, guest, 'name'));
@@ -670,26 +702,66 @@ document.addEventListener("DOMContentLoaded", () => {
             guestManagementList.appendChild(row);
         });
 
-        // 绑定表格内每一行的删除事件
-        guestManagementList.querySelectorAll('.btn-delete-small').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const targetId = e.target.getAttribute('data-id');
-                const guestName = state.guests.find(g => g.id === targetId)?.name;
-                
-                if(confirm(`确定要彻底删除嘉宾【${guestName}】的配置吗？`)) {
-                    state.guests = state.guests.filter(g => g.id !== targetId);
-                    
-                    // 如果删除的是当前正在显示的嘉宾，则自动切换到下一个可用的
-                    if (state.currentGuestId === targetId) {
-                        state.currentGuestId = state.guests.length > 0 ? state.guests[0].id : null;
-                    }
-                    
-                    persistGuests();
-                    syncFormsFromState();
-                    updateCanvas();
-                }
+        // 底部常设灰色示意行（空白头像 + 姓名 + 职位 + 绿色新增按钮）
+        const ghost = document.createElement('div');
+        ghost.className = 'guest-table-row guest-table-ghost';
+        ghost.innerHTML = `
+            <div class="guest-drag-handle" style="visibility:hidden;"></div>
+            <img class="guest-table-avatar" src="${SVG_AVATAR_PLACEHOLDER}" alt="新增嘉宾示意" />
+            <div class="guest-table-info">
+                <span class="guest-table-name">姓名</span>
+                <span class="guest-table-title">职位</span>
+            </div>
+            <button type="button" class="btn-add-small" id="btnAddGuest">新增</button>
+        `;
+        ghost.querySelector('#btnAddGuest').addEventListener('click', addGuest);
+        guestManagementList.appendChild(ghost);
+
+        bindGuestDragEvents();
+    }
+
+    // ================= 嘉宾拖拽排序（按住头像左侧竖条上下拖拽换位） =================
+    function bindGuestDragEvents() {
+        let draggedRow = null;
+        guestManagementList.querySelectorAll('.guest-table-row:not(.guest-table-ghost)').forEach(row => {
+            const handle = row.querySelector('.guest-drag-handle');
+            // 仅允许通过手柄发起拖拽，避免干扰行内文本编辑
+            handle.addEventListener('mousedown', () => { row.draggable = true; });
+            handle.addEventListener('mouseup', () => { setTimeout(() => { row.draggable = false; }, 0); });
+            row.addEventListener('dragstart', (e) => {
+                draggedRow = row;
+                row.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                try { e.dataTransfer.setData('text/plain', row.dataset.id); } catch (err) { /* IE 兼容忽略 */ }
+            });
+            row.addEventListener('dragend', () => {
+                row.classList.remove('dragging');
+                row.draggable = false;
+                draggedRow = null;
+                commitGuestOrderFromDOM();
             });
         });
+        // 拖动经过其他行时实时交换位置预览（灰色示意行不参与，始终常驻末尾）
+        guestManagementList.addEventListener('dragover', (e) => {
+            if (!draggedRow) return;
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const targetRow = e.target.closest('.guest-table-row:not(.guest-table-ghost)');
+            if (!targetRow || targetRow === draggedRow) return;
+            const rect = targetRow.getBoundingClientRect();
+            const isUpperHalf = e.clientY < rect.top + rect.height / 2;
+            guestManagementList.insertBefore(draggedRow, isUpperHalf ? targetRow : targetRow.nextSibling);
+        });
+    }
+
+    // 拖拽结束：按 DOM 顺序写回 state 并同步主面板选择器
+    function commitGuestOrderFromDOM() {
+        const orderedIds = Array.from(guestManagementList.querySelectorAll('.guest-table-row:not(.guest-table-ghost)'))
+            .map(r => r.dataset.id);
+        state.guests.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+        persistGuests();
+        renderGuestSelector();
+        updateCanvas();
     }
 
     // ================= 嘉宾行内编辑（设置 → 现有嘉宾） =================
@@ -749,44 +821,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (field === 'name') {
             span.textContent = guest.name;
         } else {
-            span.innerHTML = guest.title ? guest.title : '<span style="color:#ccc;">无头衔</span>';
+            span.innerHTML = guest.title ? guest.title : '<span style="color:#ccc;">无职位</span>';
         }
     }
 
-    // 新增嘉宾动作
-    let tempNewAvatar = '';
-    document.getElementById('newGuestAvatar').addEventListener('change', (e) => {
-        fileToBase64(e.target.files[0], base64 => tempNewAvatar = base64);
-    });
-    
-    document.getElementById('btnAddGuest').addEventListener('click', () => {
-        const nameInput = document.getElementById('newGuestName');
-        const titleInput = document.getElementById('newGuestTitle');
-        const avatarInput = document.getElementById('newGuestAvatar');
-        
-        const name = nameInput.value.trim();
-        const title = titleInput.value.trim();
-        
-        if(!name) return alert('请输入嘉宾姓名');
-        
+    // 新增嘉宾：基于底部灰色示意行创建（姓名/职位先为示意占位，变黑后点击即可修改）
+    function addGuest() {
         const newId = 'g_' + Date.now();
-        state.guests.push({ id: newId, name, title, avatar: tempNewAvatar });
-        
+        state.guests.push({ id: newId, name: '姓名', title: '职位', avatar: '' });
         // 如果是添加的第一个嘉宾，自动选中
         if (state.guests.length === 1) {
             state.currentGuestId = newId;
         }
-        
-        // 重置表单
-        nameInput.value = '';
-        titleInput.value = '';
-        avatarInput.value = '';
-        tempNewAvatar = '';
-        
         persistGuests();
         syncFormsFromState();
         updateCanvas();
-    });
+    }
 
     // ================= 图片上传与转换 =================
     function fileToBase64(file, callback) {
@@ -811,16 +861,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ================= 主题色处理 =================
     const presets = {
-        preset1: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteBg: 'rgba(50, 52, 45, 0.85)' },
-        preset2: { primary: '#00D2FF', bgBase: '#0B132B', textMain: '#F0F4F8', quoteBg: 'rgba(28, 37, 65, 0.85)' },
-        preset3: { primary: '#E63946', bgBase: '#1D0A0A', textMain: '#F1FAEE', quoteBg: 'rgba(69, 12, 12, 0.85)' }
+        preset1: { primary: '#F3B64A', bgBase: '#1A1813', textMain: '#FFFFFF', quoteDark: true },
+        preset2: { primary: '#00D2FF', bgBase: '#0B132B', textMain: '#F0F4F8', quoteDark: true },
+        preset3: { primary: '#E63946', bgBase: '#1D0A0A', textMain: '#F1FAEE', quoteDark: true }
     };
     document.getElementById('themeSelect').addEventListener('change', (e) => {
         const p = presets[e.target.value];
         if(p) { state.theme = {...p}; syncFormsFromState(); updateCanvas(); }
     });
     document.getElementById('colorPrimary').addEventListener('input', e => { state.theme.primary = e.target.value; updateCanvas(); });
-    document.getElementById('colorBgBase').addEventListener('input', e => { state.theme.bgBase = e.target.value; updateCanvas(); });
+    document.querySelectorAll('#bgModeSwitch .bg-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            state.theme.quoteDark = btn.dataset.mode !== 'light';
+            syncFormsFromState();
+            updateCanvas();
+        });
+    });
 
     // ================= JSON 导入导出 =================
     document.getElementById('btnExportData').addEventListener('click', () => {
@@ -851,23 +907,6 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.readAsText(file);
     });
 
-    // ================= 本地同名文件自动加载策略 =================
-    async function autoLoadLocalAsset(filename, stateImageKey) {
-        try {
-            const res = await fetch('./' + filename, { cache: "no-store" });
-            if (!res.ok) return;
-            const blob = await res.blob();
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                state.images[stateImageKey] = reader.result;
-                updateCanvas();
-            };
-            reader.readAsDataURL(blob);
-        } catch (e) {
-            console.log(`[自动加载提示] 文件 ${filename} 未找到或受限于浏览器 file:// 安全策略。可手动上传。`);
-        }
-    }
-
     // ================= 画布自适应与截图导出 =================
     const previewContainer = document.getElementById('previewContainer');
     const posterWrapper = document.getElementById('posterWrapper');
@@ -888,6 +927,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const lineHeight = fontSize * 1.6; // 80px, 与CSS line-height:1.6一致
         const maxLines = 5; // 最多5行, 5*80=400 <= max-height:400px
         const fontFamily = '"Alibaba PuHuiTi", "PingFang SC", "Microsoft YaHei", sans-serif';
+        // 金句文字颜色：黑底白字（跟随主题）/ 白底黑字，与 updateCanvas 保持一致
+        const quoteTextColor = state.theme.quoteDark !== false ? state.theme.textMain : '#1A1813';
 
         const canvas = document.createElement('canvas');
         canvas.width = canvasW;
@@ -944,7 +985,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (curY >= canvas.height) break; // 超出最大行数
             }
 
-            ctx.fillStyle = ch.isHighlight ? state.theme.primary : state.theme.textMain;
+            ctx.fillStyle = ch.isHighlight ? state.theme.primary : quoteTextColor;
             ctx.fillText(ch.char, curX, curY);
             curX += charW;
             lineChars++;
@@ -1010,11 +1051,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.fonts.addEventListener('loadingdone', () => fitNameAndTitle());
     }
 
-    // 触发自动加载同名环境配置文件
-    autoLoadLocalAsset('bg.png', 'bg');
-    autoLoadLocalAsset('sponsor.png', 'topLogo');
-    autoLoadLocalAsset('logo.png', 'eventLogo');
-    autoLoadLocalAsset('qr.png', 'qr');
+    // ================= PWA Service Worker 注册 =================
+    // file:// 本地直接打开时静默跳过；http(s) 部署（本地服务器/GitHub Pages 等）均可安装，
+    // 安装实例指向当前部署地址（start_url: ./），无需复制到用户电脑
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+        navigator.serviceWorker.register('./sw.js').catch((e) => console.warn('[PWA] Service Worker 注册失败:', e));
+    }
 });
 </script>
 </body>
