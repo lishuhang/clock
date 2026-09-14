@@ -1,7 +1,7 @@
 {
   "name": "金句生成器 - 娱乐资本论",
   "short_name": "金句生成器",
-  "description": "金句海报生成工具 - 娱乐资本论 v2.0",
+  "description": "金句海报生成工具 - 娱乐资本论 v2.1",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

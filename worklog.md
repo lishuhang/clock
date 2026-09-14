@@ -266,3 +266,31 @@ Stage Summary:
 
 ### 部署
 - index.html + 本日志，单次 commit 推送（覆盖式更新）
+
+## 2026-09-14 10:27 UTC+8 — golden-quote v2.1：嘉宾拖拽排序改 Pointer Events（触屏手指 + 鼠标统一），移除 HTML5 DnD
+
+### 背景
+用户要求：手指能按住竖条上下拖动调整嘉宾顺序（原 HTML5 DnD 在触屏上完全不触发），鼠标逻辑保持一致；替换后清理旧拖拽代码；版本升至 v2.1。
+
+### 变更清单
+1. **拖拽重写（index.html bindGuestDragEvents，35 行 → 30 行）**：HTML5 DnD 全套（mousedown/draggable 开关、dragstart、dragover 半区预览、dragend、dataTransfer）删除，改为单条 `pointerdown` 监听 + Pointer Events：
+   - 手柄按下 → `setPointerCapture`（try/catch 容错）→ move/up/cancel 挂 **document 捕获阶段**（其它代码 stopPropagation 也拦不住；拖动中 DOM 挪动导致捕获被释放也不影响跟踪），按 `pointerId` 过滤防多点干扰；
+   - `elementFromPoint` 命中行 + 上/下半区 `insertBefore` 实时预览（与原交互一致）；**已在目标位置时跳过挪动**（避免无谓 DOM 变动打断捕获——实测同位置空挪动曾导致后续指针事件改派他处）；灰色示意行排除、常驻末尾；
+   - 松手/cancel → 按 DOM 顺序写回 state + persistGuests + 选择器同步（commitGuestOrderFromDOM 原样保留）；
+   - 竖条 CSS 已有 `touch-action: none` + `user-select: none`，手指拖动不滚屏、不选字；鼠标仍限左键。
+   - 净效果：每行 4 个监听 + 列表 1 个 → 每行 1 个；`draggedRow` 模块级状态、`draggable` 属性开关全部清除。
+2. **版本 v2.1**：index.html `<title>` 与常规态 `#appVersion` 小字 → v2.1；sw.js 注释与 `CACHE_NAME` → `golden-quote-v2.1`（强制 PWA 老客户端重新预缓存新 index.html）；manifest.json description → v2.1。
+
+### 踩坑记录（拖拽调试）
+- CDP 真实鼠标注入下，同位置 `insertBefore(node, node)` 空挪动 + 后续 move 改派曾造成「拖一下就断」假象；同一页面实例上多次拖拽序列的泄漏监听器互相干扰放大了现象。干净环境（清 LS + 刷新）单手势全流程无问题；捕获阶段挂 document + 跳过空挪动后，污染环境下也稳定。
+- 无头环境 `mouse move --steps N` 实际每命令只派发 1 次 pointermove（合并到帧），验证拖拽需用多段 move 命令模拟轨迹。
+
+### 验证（无头 Chromium E2E，干净环境）
+- 真实鼠标（受信任事件）：末行两段上移直达顶部 [A,B,C]→[C,A,B]，两次 insertBefore 均正确
+- 模拟触屏（pointerType='touch' PointerEvent 序列）：首行拖至底部，顺序精确还原，LS 同步
+- 灰色示意行常驻末尾不参与；`.dragging` 无残留；行内编辑（点击改名→blur 保存）回归通过
+- 刷新后顺序与改名持久化；主面板选择器顺序同步（曹睿/姓名/姓名/添加嘉宾）
+- title「金句生成器 v2.1 - 娱乐资本论」、常规态小字 v2.1、SW 缓存名 golden-quote-v2.1、SW 注册 scope 正常；控制台零报错
+
+### 部署
+- index.html + sw.js + manifest.json + 本日志，单次 commit 推送

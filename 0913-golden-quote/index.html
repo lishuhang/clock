@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金句生成器 v2.0 - 娱乐资本论</title>
+    <title>金句生成器 v2.1 - 娱乐资本论</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23F3B64A' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='8' cy='13.3' r='4.4'/%3E%3Cpath d='M8 8.9 Q8 5.7 12 4'/%3E%3Ccircle cx='18.5' cy='13.3' r='4.4'/%3E%3Cpath d='M18.5 8.9 Q18.5 5.7 22.5 4'/%3E%3Ccircle cx='21' cy='22.5' r='2.2'/%3E%3Cpath d='M21 24.7 Q21 26.8 17.5 28.5'/%3E%3Ccircle cx='27' cy='22.5' r='2.2'/%3E%3Cpath d='M27 24.7 Q27 26.8 23.5 28.5'/%3E%3C/g%3E%3C/svg%3E">
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#1A1813">
@@ -249,7 +249,7 @@
                 <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#F3B64A" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="13.3" r="4.4"/><path d="M8 8.9 Q8 5.7 12 4"/><circle cx="18.5" cy="13.3" r="4.4"/><path d="M18.5 8.9 Q18.5 5.7 22.5 4"/><circle cx="21" cy="22.5" r="2.2"/><path d="M21 24.7 Q21 26.8 17.5 28.5"/><circle cx="27" cy="22.5" r="2.2"/><path d="M27 24.7 Q27 26.8 23.5 28.5"/></g></svg>
                 <div class="panel-title-wrap">
                     <h2 id="panelTitle">金句生成器</h2>
-                    <div class="app-version" id="appVersion">v2.0</div>
+                    <div class="app-version" id="appVersion">v2.1</div>
                 </div>
             </div>
             <button class="btn-icon" id="btnSettingsToggle" title="设置" aria-label="设置">
@@ -720,37 +720,40 @@ document.addEventListener("DOMContentLoaded", () => {
         bindGuestDragEvents();
     }
 
-    // ================= 嘉宾拖拽排序（按住头像左侧竖条上下拖拽换位） =================
+    // ================= 嘉宾拖拽排序（按住竖条上下拖拽换位，Pointer Events 统一支持触屏手指与鼠标） =================
     function bindGuestDragEvents() {
-        let draggedRow = null;
         guestManagementList.querySelectorAll('.guest-table-row:not(.guest-table-ghost)').forEach(row => {
             const handle = row.querySelector('.guest-drag-handle');
-            // 仅允许通过手柄发起拖拽，避免干扰行内文本编辑
-            handle.addEventListener('mousedown', () => { row.draggable = true; });
-            handle.addEventListener('mouseup', () => { setTimeout(() => { row.draggable = false; }, 0); });
-            row.addEventListener('dragstart', (e) => {
-                draggedRow = row;
+            handle.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return; // 鼠标仅左键发起拖拽
+                e.preventDefault(); // 防止拖动时选中文字；竖条已设 touch-action:none，手指拖动不会滚动页面
+                const pointerId = e.pointerId;
+                try { handle.setPointerCapture(pointerId); } catch (err) { /* 指针已失效时忽略 */ }
                 row.classList.add('dragging');
-                e.dataTransfer.effectAllowed = 'move';
-                try { e.dataTransfer.setData('text/plain', row.dataset.id); } catch (err) { /* IE 兼容忽略 */ }
+                const onMove = (ev) => {
+                    if (ev.pointerId !== pointerId) return;
+                    const hit = document.elementFromPoint(ev.clientX, ev.clientY);
+                    const targetRow = hit && hit.closest('.guest-table-row:not(.guest-table-ghost)');
+                    if (!targetRow || targetRow === row) return;
+                    const rect = targetRow.getBoundingClientRect();
+                    const isUpperHalf = ev.clientY < rect.top + rect.height / 2;
+                    const ref = isUpperHalf ? targetRow : targetRow.nextElementSibling;
+                    if (ref === row || row.nextElementSibling === ref) return; // 已在目标位置，跳过无谓挪动以免打断指针捕获
+                    guestManagementList.insertBefore(row, ref);
+                };
+                const onEnd = (ev) => {
+                    if (ev && ev.pointerId !== pointerId) return;
+                    document.removeEventListener('pointermove', onMove, true);
+                    document.removeEventListener('pointerup', onEnd, true);
+                    document.removeEventListener('pointercancel', onEnd, true);
+                    row.classList.remove('dragging');
+                    commitGuestOrderFromDOM();
+                };
+                // move/up 挂在 document 捕获阶段：即使页面其它代码阻断传播或指针捕获被释放，也能持续跟踪到松手
+                document.addEventListener('pointermove', onMove, true);
+                document.addEventListener('pointerup', onEnd, true);
+                document.addEventListener('pointercancel', onEnd, true);
             });
-            row.addEventListener('dragend', () => {
-                row.classList.remove('dragging');
-                row.draggable = false;
-                draggedRow = null;
-                commitGuestOrderFromDOM();
-            });
-        });
-        // 拖动经过其他行时实时交换位置预览（灰色示意行不参与，始终常驻末尾）
-        guestManagementList.addEventListener('dragover', (e) => {
-            if (!draggedRow) return;
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            const targetRow = e.target.closest('.guest-table-row:not(.guest-table-ghost)');
-            if (!targetRow || targetRow === draggedRow) return;
-            const rect = targetRow.getBoundingClientRect();
-            const isUpperHalf = e.clientY < rect.top + rect.height / 2;
-            guestManagementList.insertBefore(draggedRow, isUpperHalf ? targetRow : targetRow.nextSibling);
         });
     }
 

@@ -1,7 +1,7 @@
-/* 金句生成器 Service Worker - v2.0
+/* 金句生成器 Service Worker - v2.1
    适用本地部署与 GitHub Pages 等静态托管：全部使用相对路径，
    安装即指向当前部署实例（start_url: ./），无需复制到本机。 */
-const CACHE_NAME = 'golden-quote-v2.0';
+const CACHE_NAME = 'golden-quote-v2.1';
 const PRECACHE_URLS = [
   './',
   './index.html',
