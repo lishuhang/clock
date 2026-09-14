@@ -314,3 +314,20 @@ Stage Summary:
 - 完整文件夹：title/小字 v2.2；html2canvas=本地加载；manifest data URI 注入且 start_url/scope 指向当前实例；图标 PNG 512×512 解码成功（导出目检：白圆角底金引号，形态正确）；三字体 check=true（普惠体实为 CDN 兜底加载，证明 fallback 生效）；头部 logo 放大目检为实心 serif 引号
 - 最小套装（临时目录仅 index.html，:8078）：html2canvas 从 cdnjs 加载、得意黑/东方大楷从 jsDelivr@main、普惠体从冻结 SHA 加载全部成功；海报截图姓名得意黑/头衔普惠体渲染正常；控制台零 JS 错误
 - 回归：触屏拖拽重排、行内编辑改名均通过
+
+---
+Task ID: 7
+Agent: Super Z (main)
+Task: golden-quote 嘉宾管理小修（不升版本）：恢复红色删除按钮 + 文案更新 + 导入JSON定义驱动 + alert改toast
+
+Work Log:
+- 从 git 历史(59e82ed)找回原删除按钮实现：.btn-delete-small #ff4d4f + confirm 确认，按原样恢复到每行嘉宾行末
+- removeGuest：确认后删除；删当前展示嘉宾自动切第一个可用；persistGuests+双列表刷新
+- 文案改「拖动排序，可点击姓名、职位、头像修改，自动保存」
+- 导入逻辑重写：JSON 定义哪项就覆盖哪项（guests/nameFont/highlights 合法性校验后整体覆盖，theme/images 字段级合并）；未定义/非法项不覆盖自然回退浏览器存储；定义了的项同步写回 localStorage（刷新后一致）；选中嘉宾无效回落首个
+- alert 全部改右下角 toast（.toast-tip fixed right20/bottom24，成功深色/失败红色，2.6s 自动消失）
+- E2E：删按钮渲染+删除流程+当前嘉宾切换；完整 JSON 导入全字段按文件生效+刷新持久化；部分 JSON fallback 本地存储；无效 JSON/非法 guests 防御不崩；拖拽回归（真实鼠标轨迹，注意 2 人时行高 62px 需拖过中线 y<193）；控制台零错误；截图目检
+- 版本号未动（保持 v2.2），单次 commit push
+
+Stage Summary:
+- bb8f7d9 已推送；嘉宾管理回到「新增+删除+拖拽+行内编辑」完整形态；导入语义改为文件优先、存储兜底
