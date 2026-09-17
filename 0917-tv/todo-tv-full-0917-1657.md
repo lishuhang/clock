@@ -57,7 +57,7 @@
 - 用户"经常收到 345 actions 执行失败通知"集中在 **2026-07-23 之前**，根因是 `deploy_worker.py` 硬编码了本地 `.secrets` 路径，GitHub Actions 环境不存在该文件 → 部署步骤必败 → **CF API token 在那之前确实从未被调用过**。2026-07-23 改为环境变量优先后修复。
 - 2026-08-15 审计再次确认链路真实有效（当时最近 100 次运行全部成功）。2026-09-17 复查：最近 30 次运行全部成功，仅 09-09 有一次失败。
 - 注意：workflow 成功 ≠ 频道可用。抓取步骤有 `|| true` 容错，且动态 token 会自然过期；必须把"workflow 成功 / 状态页成功 / HLS 传输成功"三层分开判断。
-- cron 表达式为 `*/10`，但 GitHub 实际调度约每 4-5 小时才执行一次（GitHub 侧节流）；xuexi auth_key 实测有效期约 4 小时，两者勉强衔接，空窗期由 worker 端 403 → `triggerRefresh()`（GH_TOKEN secret 已配置）自动补触发。
+- cron 表达式为 `*/10`，但 GitHub 实际调度约每 4-5 小时才执行一次（GitHub 侧节流）；xuexi auth_key 实测有效期仅约 20-30 分钟（历史记录 10-30 分钟，auth_key 的 start_time 回退 20 分钟），因此 xuexi 仅在每次部署后的短窗口内可用，过期后由 worker 端 403 → `triggerRefresh()`（GH_TOKEN secret 已配置）自动补触发刷新，形成"过期→自动重刷→恢复"的自愈闭环（本次已实测验证两轮）。
 
 ---
 
@@ -381,7 +381,7 @@ GitHub 上未出现任何明文频道名↔m3u8 映射（映射只在加密包�
 ### 10.4 自动化与流水线
 18. **GitHub Actions 部署脚本不得硬编码本地路径**——345 actions 曾因此连续失败 12+ 次、CF token 从未被调用（07-23 修复，环境变量优先）。
 19. workflow 成功 ≠ 源可用 ≠ 状态页成功；三层信号必须分开判断。
-20. 动态 token 有效期与 workflow 周期要匹配：xuexi auth_key 从抓取时刻起只剩约 10 分钟（07-23 数据）/实测约 4 小时（09-17 数据，上游策略已变化），dual refresh + worker 端 403 自动触发双保险。
+20. 动态 token 有效期与 workflow 周期要匹配：xuexi auth_key 从抓取时刻起只剩约 10 分钟（07-23 数据）/实测约 20-30 分钟（09-17 数据）；GitHub 会把 */10 cron 实际节流到约 4-5 小时一次，因此必须有 worker 端 403 自动触发刷新兑底，形成自愈闭环。
 21. GitHub 定时 workflow 实际执行频率远低于 cron 表达式（`*/10` 实际约 4-5 小时一次，GitHub 节流）；关键刷新不要只依赖 schedule，要有 on-demand 触发兜底。
 22. 手动部署会被自动流水线覆盖 → 任何生产改动必须同步更新 `lishuhang/345` 的模板与构建脚本。
 23. build 脚本输出文件名必须匹配 workflow 期望；构建注入的路由必须放在通用 `/<tid><id>.m3u8` 正则**之前**（xuexi 十六进制 key 教训）。
@@ -420,7 +420,7 @@ GitHub 上未出现任何明文频道名↔m3u8 映射（映射只在加密包�
 1. **直接回答用户核心疑问**：与 GitHub Actions"345"的联动并非没用上过——线上 blind 的 xuexi catalog 全由它构建注入（至今 1300+ 次运行，近期全绿）；"经常失败"是 2026-07-23 之前 deploy 脚本硬编码本地 secrets 路径所致，修复后链路真实有效。本次还实测了 worker→Actions 的 dispatch 链路（HTTP 204）并全链路跑通两次（run 1378/1379）。
 2. **ysp 判定与处理**：新鲜 token 也 403（海外出口被央视频 CDN 拒绝），架构性不可用 → 生产移除 yspc/yspw 全部 46 路由，Actions 停止 ysp 刷新，恢复方法写入 bad-channels 文档（大陆出口中转/客户端直连/等上游放开后从 git 历史找回）。
 3. **核心修复**：上游 345 源把 gt/ys 默认改成 FLV 传输导致请求挂死；v2.12 的 normalizeHlsUrl + 12s 超时让 gt/ys 线路整体恢复（42+18 条正常），且坏上游不再能拖死 worker。
-4. **xuexi 保住**：auth_key 约 4 小时有效期 + Actions 实际每 4-5 小时运行一次（GitHub 对 */10 cron 节流）勉强衔接；worker 端 403 自动触发刷新（GH_TOKEN 已配置）兜底。本次手动 dispatch 后 xuexi 全部恢复。
+4. **xuexi 保住（含自愈验证）**：auth_key 实测有效期仅约 20-30 分钟，且 Actions 实际每 4-5 小时才运行一次（GitHub 对 */10 cron 节流）→ 平时大部分时间 xuexi 路由会返回 403 并自动触发刷新；本次实测完整闭环两轮（403 → run 1378/1380 → 恢复 200，状态页全绿）。若需进一步缩短空窗，可考虑给 workflow 加 Playwright 缓存缩短部署时长，或在 worker 侧加定时健康检查（需开启 Cloudflare Cron Trigger）。
 5. **LNC 保活成功**：10/10 路由正常（lnc3 一度 404 系上游暂时下线，已自行恢复）。
 6. **清单交付**：113 个可中转频道（欧美 10 / 香港 27 / 台湾 11 / 大陆 65），全部逐条实测 200。
 7. **生产删除项**（大陆海外均不可用）：yspc/yspw 全系。**保留但不入清单**（结构性大陆-only 或上游损坏）：fjitv/hlitv/migu/ws/movie/ty、坏 gt/ys 路由、坏 wso。
