@@ -1,0 +1,9 @@
+{
+ "map": {
+  "https://static-cdn-ap.flova.tv/078a3f2ef77e46b7436112ecf3a394193c35d5d3dca9761d5507ac25d7ce1729": "video_1.mp4",
+  "https://static-cdn-ap.flova.tv/3c9f4996b215718e0cb61ab16f6d831064c412a0e2336a98259daf95d2e76c21": "video_2.mp4",
+  "https://static-cdn-ap.flova.tv/838645fa61ac5c8c7a42bdfe5a84dc37bb7f6aa750a40287e936eec3aef3048b": "video_3.mp4",
+  "https://static-cdn-ap.flova.tv/76515adfd6500a0e0105467dd8ea16f32c4c29c46617b2123663c53a860cdc3e": "video_4.mp4"
+ },
+ "fails": []
+}
