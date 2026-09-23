@@ -1,0 +1,23 @@
+{
+ "stats": {
+  "ok": 13,
+  "cached": 0,
+  "fail": 0
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/3a49ec3b_686426fcac2f4ca1b092d4e8ba8d045d.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/803e5426_0ee759d46750ead15e5e47dd59988a0a.png": "image_2.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/87940080_0d69df028fc290ea14ff94f7ea1b335c.png": "image_3.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/6bb6e7a6_42ac9cd61676fc817c32f973ac7a08d0.png": "image_4.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/a55a08eb_8e57fe9469960717786e25738c05e5f6.png": "image_5.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/71cb4487_424a2aeaa9f507b7e5e8efea3f06151f.png": "image_6.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/92efb8a4_7352d7a5ce18ff033be9e8fead770b4e.png": "image_7.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/c579edd2_d1ccbea9feb336508aed8d84d8b174b3.png": "image_8.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/beaa0b16_96d73a5f660f51232b812961b8e51ab2.png": "image_9.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f06afe46_2feda37d9225d142014ce1b8ffed8a88.png": "image_10.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/ed69a5fd_d2f531442e6da8a0c571e532983291bd.png": "image_11.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/d3e7cfa1_92eaf527df9aa3f15ee8c73d80fe2042.png": "image_12.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/06540c32_f3fd9e3f5538dfb01d3b73a08fc8136e.png": "image_13.png"
+ },
+ "fails": []
+}

@@ -1,0 +1,18 @@
+{
+ "stats": {
+  "ok": 8,
+  "cached": 0,
+  "fail": 0
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/c62991fa_687ec55b931ac34ac99f174f67a031b5.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b15c2130_22a36b92b31c61d1fd0ea9523c4c63c3.png": "image_2.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/e96375a7_89d987d4a802bf212fbbb76c462bfed4.png": "image_3.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/faf132d9_4ec9cb766d94e90def2ab49581db4bba.png": "image_4.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/24803d3b_2819354edb92c1561891358aec865f13.png": "image_5.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/076ff4ab_5e88919ef86f8ce6d5a5eb12cd6f3a08.png": "image_6.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/a84f38a0_a114dc6dd8e0cdfecbf54d51b0a18429.png": "image_7.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/1f8fc2ab_c7c8e235927b7167844af6f4ac4ce77f.png": "image_8.png"
+ },
+ "fails": []
+}

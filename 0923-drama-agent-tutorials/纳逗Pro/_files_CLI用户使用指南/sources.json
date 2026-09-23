@@ -1,0 +1,12 @@
+{
+ "stats": {
+  "ok": 2,
+  "cached": 0,
+  "fail": 0
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/2b9ef8c2_892589eb21f99139c5ec1d48e7b50751.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/d6922664_7621379e66f74c3f067b458ce24a874e.png": "image_2.png"
+ },
+ "fails": []
+}

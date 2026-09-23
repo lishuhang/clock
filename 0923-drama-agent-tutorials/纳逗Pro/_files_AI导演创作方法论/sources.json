@@ -1,0 +1,17 @@
+{
+ "stats": {
+  "ok": 7,
+  "cached": 0,
+  "fail": 0
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/4ac81bc0_56123aac2e9a625f2c28b4f9535a1842.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/8d10a3b9_7b8e4609d9b3c3f35e930249d2fc0cde.png": "image_2.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/53699825_c37888fa448b72e0267c957284e2f1a1.png": "image_3.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/41699795_4f4baf8381779d9bccc321ce2a78cd1c.png": "image_4.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/76a1bc92_ca42762612853795db89c67eb9b2a883.png": "image_5.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/2b5ad1b0_4c876aca5da1124ccaa8a6d52ba3ee17.png": "image_6.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/c7ef8742_846334e9941784b29f100b8416656d17.png": "image_7.png"
+ },
+ "fails": []
+}

@@ -1,0 +1,44 @@
+{
+ "stats": {
+  "ok": 30,
+  "cached": 0,
+  "fail": 3
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/5e0aebd4_72be6aa6d40c6a75cf49b04f0c119a45.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/9e6453b5_550ad0d83d45d153886ccb62fdd92019.png": "image_2.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/3c1c29d6_658585933ac42673b3a277442e6aa8b3.png": "image_3.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/bb605301_668d2d9ebb3977641472070b7136d821.png": "image_4.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b7212722_d0c45098c5b8a533fde6a3a7d1a772b8.png": "image_5.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/1a121b1c_44a14f90fff659c57cad149a6245a916.png": "image_6.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b6170fea_6a0a19516bf54427ac601e385997ce36.png": "image_7.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/24d0b696_1cad413e94a7fef17dd843e4da6590f1.png": "image_8.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/9a98143f_86b2831f7c1e13daaee151a07d4b2d8e.png": "image_9.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/d1a99147_1b0ba1601f2fca273d359910432ed044.png": "image_10.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/33054747_eb39920917ea639d2fc1d35ea7e9163b.png": "image_11.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/c25e84c0_7fd7e60ef36509579295ec6769ad58fa.png": "image_12.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/96b8565f_1e565c9f7449760d3376826458872968.png": "image_13.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/517eb8e3_257c6f52959e007e7709be7865100c25.png": "image_14.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/415ffcaf_f77deb71577b35469c96271d0694d39c.png": "image_15.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/6f6d0211_6ac11b2a2858ad6f9d5c3276f1464488.png": "image_16.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/5d8e5aea_9fac2945bbc5ddd917e4a618f766fa42.png": "image_17.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/95b59e56_f24abbcc2a751a6ffdc3de204a9c2cd6.png": "image_18.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/00ed710d_a19961cfec737480e66cea44929953e1.png": "image_19.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/93fb27c7_c9364d51c3b19ef4910c3d43d2c96195.png": "image_20.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/e3b20fe7_68e97b259079610e60e65f2352ee4d6d.png": "image_21.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/7e4e50e3_c4cfb86f32ab94b0cb58e8eb17c10269.mp4": "video_1.mp4",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/377f1f24_01cb1907314e86a05e5a0f93133e9a9a.png": "image_22.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/2a9286e8_388417ea59fa312750e41998702ce625.png": "image_23.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/59cf4852_78609258d0183096b3ba0ffd775dcba2.mp4": "video_2.mp4",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f22d4e07_51d818f939a9d85a00b28e5e7fbedd02.mp4": "video_3.mp4",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/975a7d18_cb25550c1871c808bbcc7a0df4fbd83e.png": "image_24.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/9c16bc68_654e9ebeca960643fe10dc5c161194e6.png": "image_25.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f72868ce_78bf8a5030516974967bd44195de76ec.png": "image_26.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/a70b99d0_3313c1450f5ddd2686600f9da7be9ae1.png": "image_27.png"
+ },
+ "fails": [
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/7e4e50e3\\_c4cfb86f32ab94b0cb58e8eb17c10269.mp4 -> media failed https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/7e4e50e3\\_c4cfb86f32ab94b0cb58e8eb17c10269.mp4: HTTP Error 400: Bad Request",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/59cf4852\\_78609258d0183096b3ba0ffd775dcba2.mp4 -> media failed https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/59cf4852\\_78609258d0183096b3ba0ffd775dcba2.mp4: HTTP Error 400: Bad Request",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f22d4e07\\_51d818f939a9d85a00b28e5e7fbedd02.mp4 -> media failed https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f22d4e07\\_51d818f939a9d85a00b28e5e7fbedd02.mp4: HTTP Error 400: Bad Request"
+ ]
+}

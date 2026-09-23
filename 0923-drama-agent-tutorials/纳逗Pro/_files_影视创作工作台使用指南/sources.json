@@ -1,0 +1,27 @@
+{
+ "stats": {
+  "ok": 17,
+  "cached": 0,
+  "fail": 0
+ },
+ "map": {
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/9c7168c7_34185857b92d9b53f73431b0acc0184c.png": "image_1.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/569a1763_71e0b251b47b277660633dcee247f3a9.png": "image_2.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/e829279e_146980e7edbf039ab1a8b874b1d35332.png": "image_3.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/4c5b443e_7a4e9abbb191c1e1e76d3c2a88924155.png": "image_4.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b3efa3e1_e56d3cb9fbebaba793db69cd76f57f15.png": "image_5.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/f00f95d2_1778649ca88701ff0e52232527e1c0f6.png": "image_6.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/157d30f3_b383753db5c6f9d4cd21fa1072c054cf.png": "image_7.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/d7f4804c_cab8e7dafda26845dc37fbfcb98d4ccb.png": "image_8.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/415cb6da_55c3fb72405068e44ae8a2966b3cdf7b.png": "image_9.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/4d356b6a_3e2200cd0be9e62a51ed1657af022077.png": "image_10.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/ed6b665b_8c538e4257bfc499ae6cf6ce00326a04.png": "image_11.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b5c569ea_5860188ebfc1d9b940e0a5ac3727dea9.png": "image_12.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/5777a525_fabd505e8901c201c503689b8e80f86a.png": "image_13.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/051f3ccf_243be42cc25c417ee14acc47dcb0833d.png": "image_14.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/3a40a908_da0394a1f9c3dc37ced2c1718099dedc.png": "image_15.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/b27853fb_6bee0fc1b94a2ca815d2dfd4bc8acb09.png": "image_16.png",
+  "https://nadou.inter.71edge.com/cdn/oss/bj/ifilm/701a88c3_3fe8fff494d19e42c2f24a7eba5a25ce.png": "image_17.png"
+ },
+ "fails": []
+}
