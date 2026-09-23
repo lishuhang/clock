@@ -1,0 +1,9 @@
+{
+ "map": {
+  "https://files.tapnow.media/api/conversation/storage/uploads/3fd69c57-c2de-4067-9121-a37c85efa6f1?variant_name=high": "image_1.gif",
+  "https://files.tapnow.media/api/conversation/storage/uploads/ee5ecee2-a31b-4000-8eff-4079bd0669fd?variant_name=high": "image_2.gif",
+  "https://files.tapnow.media/api/conversation/storage/uploads/76b46148-2817-4bc8-add4-4fa1477d92ae?variant_name=high": "image_3.gif",
+  "https://files.tapnow.media/api/conversation/storage/uploads/d20e64d7-ff32-4963-9b5b-2e6b35a9404b?variant_name=high": "image_4.gif"
+ },
+ "fails": []
+}

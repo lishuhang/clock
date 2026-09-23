@@ -1,0 +1,10 @@
+{
+ "map": {
+  "https://docs.tapnow.ai/gitbook-assets/image (3).png": "image_1.png",
+  "https://docs.tapnow.ai/gitbook-assets/image (5).png": "image_2.png",
+  "https://docs.tapnow.ai/gitbook-assets/image (6).png": "image_3.png"
+ },
+ "fails": [
+  "https://w5kwpt2jqnb.sg.larksuite.com/space/api/box/stream/download/asynccode/?code=MzIzM2QzMTRlZWQ1MDJmMjg3NTc2MDlhYTA0ZWJmZTNfQUxsT1dkdGU1blhQUWZmUEFLMTQ0a3hPYlNFM3JMUzRfVG9rZW46Vk5ONGJlSmozb1pLbHN4TTVBRGxoVXVsZ3FnXzE3NzkyNTE4MzA6MTc3OTI1NTQzMF9WNA"
+ ]
+}
