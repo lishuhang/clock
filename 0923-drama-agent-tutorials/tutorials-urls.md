@@ -1,0 +1,13 @@
+| 平台     | 官方登录/注册入口                                            | 教程                                                         |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 小云雀   | https://xyq.jianying.com/                                    | https://xyq.jianying.com/tutorials                           |
+| 纳逗Pro  | https://nadoupro.iqiyi.com/                                  | https://nadoupro.iqiyi.com/docs/getting-started（可下载pdf） |
+| ShotLab  | https://aigc.xinpianchang.com/                               | https://xinpianchang.feishu.cn/wiki/GjSzwUef7iRNCwkfOeicgJLNnse |
+| 万兴剧厂 | https://www.reelmate.cn/                                     | https://www.reelmate.cn/create-guide.html（飞书）            |
+| LibTV    | [https://www.libtv.org/](https://www.liblib.tv/)             | （不登陆看不见链接）https://resonate.feishu.cn/wiki/Loxfw6XHziYRk0kKzdjcFfp9nhb |
+| TapNow   | [https://app.tapnow.ai/](https://app.tapnow.ai/?utm_source=chatgpt.com) | https://docs.tapnow.ai/zh/docs                               |
+| OiiOii   | https://www.oiioii.ai/                                       | https://ecncw7du1qtr.feishu.cn/wiki/R6m5w5RILiS35lkM7PycEUhHnfc |
+| 巨日禄   | https://video.jurilu.com/                                    | https://my.feishu.cn/docx/LmixdG7EhoQ813xexeNc8ALMnDg        |
+| flova    | [https://www.flova.ai](https://www.flova.ai/)                | https://www.flova.ai/zh-CN/docs/tutorials/quick-guide/（全视频教程） |
+| AniShort | https://anishort.ai/                                         | (全视频教程)https://anishort.ai/academy                      |
+| Seko     | https://seko.sensetime.com/                                  | https://sensetime.feishu.cn/wiki/U3TOw2Mpbid2BrkkeTBc80xPnih |
