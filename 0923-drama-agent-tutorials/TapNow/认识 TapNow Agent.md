@@ -36,7 +36,7 @@ Agent 生成或整理的内容会进入画布，后续对话可以继续引用�
 
 ### 开发创意
 
-在生成前阶段，Agent 可以通过[头脑风暴](/zh/docs/agent/find-ideas-with-brainstorm)发展脚本、角色、世界观、广告方案和视觉方向，并将确认的信息整理到画布。
+在生成前阶段，Agent 可以通过[头脑风暴](https://docs.tapnow.ai/zh/docs/agent/find-ideas-with-brainstorm)发展脚本、角色、世界观、广告方案和视觉方向，并将确认的信息整理到画布。
 
 ### 执行制作任务
 
@@ -62,7 +62,7 @@ Agent 生成或整理的内容会进入画布，后续对话可以继续引用�
 
 | 当前状态 | 建议 |
 | --- | --- |
-| 只有主题或模糊想法 | 使用[头脑风暴](/zh/docs/agent/find-ideas-with-brainstorm)开发方向 |
+| 只有主题或模糊想法 | 使用[头脑风暴](https://docs.tapnow.ai/zh/docs/agent/find-ideas-with-brainstorm)开发方向 |
 | 目标、参考和规格明确 | 直接发送任务指令 |
 | 只需调整一个结果 | 选中对应节点并说明修改范围 |
 | 需要比较模型或参数 | 在画布创建生成节点并手动设置 |
@@ -134,8 +134,8 @@ Agent 生成或整理的内容会进入画布，后续对话可以继续引用�
 - 修改范围与验收标准明确；
 - 下一步需要你确认的内容明确。
 
-下一步：[和 Agent 对话](/zh/docs/agent/chat-with-agent)
+下一步：[和 Agent 对话](https://docs.tapnow.ai/zh/docs/agent/chat-with-agent)
 
-[上一页认识 TapNow Creative OS](/zh/docs/start/what-is-tapnow-creative-os)
+[上一页认识 TapNow Creative OS](https://docs.tapnow.ai/zh/docs/start/what-is-tapnow-creative-os)
 
-[下一页和 Agent 对话](/zh/docs/agent/chat-with-agent)
+[下一页和 Agent 对话](https://docs.tapnow.ai/zh/docs/agent/chat-with-agent)

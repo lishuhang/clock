@@ -9,7 +9,7 @@
 
 # 小云雀营销 Agent 产品使用手册
 
-> **Web入口🏆：****[https://xyq.jianying.com/marketing-agent](/marketing-agent)**
+> **Web入口🏆：****[https://xyq.jianying.com/marketing-agent](https://xyq.jianying.com/marketing-agent)**
 
 ## 一、你可以用它做什么
 
@@ -27,7 +27,7 @@
 
 ## 二、快速上手
 
-[![营销创作流程：添加素材和商品卖点后，按是否已有创意方向选择浏览创意库或直接描述想法，再设置风格、模型和画布并生成](image_1.png)](image_1.png)
+[![营销创作流程：添加素材和商品卖点后，按是否已有创意方向选择浏览创意库或直接描述想法，再设置风格、模型和画布并生成](_files_小云雀营销 Agent 产品使用手册/image_1.png)](_files_小云雀营销 Agent 产品使用手册/image_1.png)
 
 营销创作流程图
 
@@ -43,17 +43,17 @@
 
 ## 三、首页 Showcase：看案例找灵感，再开始复刻/创作
 
-[![hover视频即可播放](image_2.png)](image_2.png)
+[![hover视频即可播放](_files_小云雀营销 Agent 产品使用手册/image_2.png)](_files_小云雀营销 Agent 产品使用手册/image_2.png)
 
 hover视频即可播放
 
-[![这张图片是小云雀营销Agent首页的Showcase案例展示区，展示了四类不同方向的营销创意案例卡片。左上角是“甜宠短剧带资”案例，搭配情侣互动人物画面；右上角是“ASMR解压”案例，配有香薰精油、香薰蜡片及键盘操作的画面；左下角是“巨物奇观大片”案例，以多张海滨风景画面呈现；右下角是“韦斯·安德森式美学片”案例，展示了复古风格的美妆产品与场景。每个案例卡片下方配有简短创意说明，右侧设有“使用”按钮，对应文档中首页Showcase区的功能，即通过真实创意案例为营销创作提供灵感或直接作为起点。](image_3.png)](image_3.png)
+[![这张图片是小云雀营销Agent首页的Showcase案例展示区，展示了四类不同方向的营销创意案例卡片。左上角是“甜宠短剧带资”案例，搭配情侣互动人物画面；右上角是“ASMR解压”案例，配有香薰精油、香薰蜡片及键盘操作的画面；左下角是“巨物奇观大片”案例，以多张海滨风景画面呈现；右下角是“韦斯·安德森式美学片”案例，展示了复古风格的美妆产品与场景。每个案例卡片下方配有简短创意说明，右侧设有“使用”按钮，对应文档中首页Showcase区的功能，即通过真实创意案例为营销创作提供灵感或直接作为起点。](_files_小云雀营销 Agent 产品使用手册/image_3.png)](_files_小云雀营销 Agent 产品使用手册/image_3.png)
 
-[![点击“使用”, 即可用同款创意](image_4.png)](image_4.png)
+[![点击“使用”, 即可用同款创意](_files_小云雀营销 Agent 产品使用手册/image_4.png)](_files_小云雀营销 Agent 产品使用手册/image_4.png)
 
 点击“使用”, 即可用同款创意
 
-[![点击“复刻”, showcase提示词到输入框, 修改使用](image_5.png)](image_5.png)
+[![点击“复刻”, showcase提示词到输入框, 修改使用](_files_小云雀营销 Agent 产品使用手册/image_5.png)](_files_小云雀营销 Agent 产品使用手册/image_5.png)
 
 点击“复刻”, showcase提示词到输入框, 修改使用
 
@@ -71,9 +71,9 @@ hover视频即可播放
 
 ## 四、创意库：广告用什么形式展开
 
-[![图片展示的是小云雀营销Agent创意库界面。上方紫色背景区域有“创意”标题及“全网最火创意都在这，热门创意一网打尽，挑一套符合产品和受众的创意吧！”字样。下方有“全部”“抖音爆款”“达人种草”等分类标签，以及搜索框。画面中呈现了多个创意示例视频缩略图，如“水果人短剧广告”“达人种草种草”“甜蜜短剧零食”等，每张图片下方配有对应创意名称及简短描述。该图与上下文介绍的创意库功能相契合，直观呈现了其展示创意示例的功能。](image_6.png)](image_6.png)
+[![图片展示的是小云雀营销Agent创意库界面。上方紫色背景区域有“创意”标题及“全网最火创意都在这，热门创意一网打尽，挑一套符合产品和受众的创意吧！”字样。下方有“全部”“抖音爆款”“达人种草”等分类标签，以及搜索框。画面中呈现了多个创意示例视频缩略图，如“水果人短剧广告”“达人种草种草”“甜蜜短剧零食”等，每张图片下方配有对应创意名称及简短描述。该图与上下文介绍的创意库功能相契合，直观呈现了其展示创意示例的功能。](_files_小云雀营销 Agent 产品使用手册/image_6.png)](_files_小云雀营销 Agent 产品使用手册/image_6.png)
 
-[![图片展示的是小云雀营销Agent的创意库界面，呈现了多种广告创意形式。包括巨仙奇观大片、韦斯·安德森式美学片、节奏卡点安装、名画动起来、修仙神剧短剧、一衣多穿、FOOH户外、产品高光展示等。每种创意形式配有示例图片，如巨仙奇观大片展示的是可口可乐瓶子，韦斯·安德森式美学片呈现的是冻干零食等。该图片与上下文介绍的创意库功能相契合，直观呈现了其可选择的创意类型。](image_7.png)](image_7.png)
+[![图片展示的是小云雀营销Agent的创意库界面，呈现了多种广告创意形式。包括巨仙奇观大片、韦斯·安德森式美学片、节奏卡点安装、名画动起来、修仙神剧短剧、一衣多穿、FOOH户外、产品高光展示等。每种创意形式配有示例图片，如巨仙奇观大片展示的是可口可乐瓶子，韦斯·安德森式美学片呈现的是冻干零食等。该图片与上下文介绍的创意库功能相契合，直观呈现了其可选择的创意类型。](_files_小云雀营销 Agent 产品使用手册/image_7.png)](_files_小云雀营销 Agent 产品使用手册/image_7.png)
 
 创意库回答的是：这条广告用什么内容结构和表达机制，把卖点讲得更好懂、更愿意看。
 
@@ -86,43 +86,43 @@ hover视频即可播放
 
 Case
 
-[[VIDEO](video_1.mp4)](video_1.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_1.mp4)](_files_小云雀营销 Agent 产品使用手册/video_1.mp4)
 
 抖音热点水果人短剧
 
-[[VIDEO](video_2.mp4)](video_2.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_2.mp4)](_files_小云雀营销 Agent 产品使用手册/video_2.mp4)
 
 甜宠剧情广告带货
 
-[[VIDEO](video_3.mp4)](video_3.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_3.mp4)](_files_小云雀营销 Agent 产品使用手册/video_3.mp4)
 
 品牌大片
 
-[[VIDEO](video_4.mp4)](video_4.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_4.mp4)](_files_小云雀营销 Agent 产品使用手册/video_4.mp4)
 
 口播种草
 
-[[VIDEO](video_5.mp4)](video_5.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_5.mp4)](_files_小云雀营销 Agent 产品使用手册/video_5.mp4)
 
 跨境电商口播
 
-[[VIDEO](video_6.mp4)](video_6.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_6.mp4)](_files_小云雀营销 Agent 产品使用手册/video_6.mp4)
 
 文物复活反差带货
 
-[[VIDEO](video_7.mp4)](video_7.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_7.mp4)](_files_小云雀营销 Agent 产品使用手册/video_7.mp4)
 
 卡点穿搭
 
-[[VIDEO](video_8.mp4)](video_8.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_8.mp4)](_files_小云雀营销 Agent 产品使用手册/video_8.mp4)
 
 口播教程讲解
 
-[[VIDEO](video_9.mp4)](video_9.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_9.mp4)](_files_小云雀营销 Agent 产品使用手册/video_9.mp4)
 
 效果实测
 
-[[VIDEO](video_10.mp4)](video_10.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_10.mp4)](_files_小云雀营销 Agent 产品使用手册/video_10.mp4)
 
 跨境电商多语言族裔
 
@@ -130,7 +130,7 @@ Case
 
 ## 五、Hook 库：抓住前 3 秒
 
-[![Hook 库：选择能抓住前 3 秒的开场](image_1.jpg)](image_1.jpg)
+[![Hook 库：选择能抓住前 3 秒的开场](_files_小云雀营销 Agent 产品使用手册/image_1.jpg)](_files_小云雀营销 Agent 产品使用手册/image_1.jpg)
 
 Hook 库：选择能抓住前 3 秒的开场
 
@@ -146,23 +146,23 @@ Hook 库专门解决广告开场问题：前 3 秒先让用户停下来，再把
 
 当前库中示例包括「巨物产品飞入」「巨物产品互动」「高空机翼奇观」「火车车顶视角」「火山岩浆奇观」「高楼边缘场景」「沙漠车顶自拍」「产品飞溅特效」等；每张卡片可预览视频，也可查看对应 Prompt。
 
-[[VIDEO](video_11.mp4)](video_11.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_11.mp4)](_files_小云雀营销 Agent 产品使用手册/video_11.mp4)
 
 产品飞入
 
-[[VIDEO](video_12.mp4)](video_12.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_12.mp4)](_files_小云雀营销 Agent 产品使用手册/video_12.mp4)
 
 飞机机翼
 
-[[VIDEO](video_13.mp4)](video_13.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_13.mp4)](_files_小云雀营销 Agent 产品使用手册/video_13.mp4)
 
 音效开场
 
-[[VIDEO](video_14.mp4)](video_14.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_14.mp4)](_files_小云雀营销 Agent 产品使用手册/video_14.mp4)
 
 动效开场
 
-[[VIDEO](video_15.mp4)](video_15.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_15.mp4)](_files_小云雀营销 Agent 产品使用手册/video_15.mp4)
 
 撞人开场
 
@@ -170,7 +170,7 @@ Hook 库专门解决广告开场问题：前 3 秒先让用户停下来，再把
 
 ## 六、风格库：统一整条广告的视觉记忆
 
-[![风格库：统一整条广告的视觉语言](image_2.jpg)](image_2.jpg)
+[![风格库：统一整条广告的视觉语言](_files_小云雀营销 Agent 产品使用手册/image_2.jpg)](_files_小云雀营销 Agent 产品使用手册/image_2.jpg)
 
 风格库：统一整条广告的视觉语言
 
@@ -186,19 +186,19 @@ Hook 库专门解决广告开场问题：前 3 秒先让用户停下来，再把
 
 Case展示
 
-[[VIDEO](video_16.mp4)](video_16.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_16.mp4)](_files_小云雀营销 Agent 产品使用手册/video_16.mp4)
 
-[[VIDEO](video_17.mp4)](video_17.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_17.mp4)](_files_小云雀营销 Agent 产品使用手册/video_17.mp4)
 
-[[VIDEO](video_18.mp4)](video_18.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_18.mp4)](_files_小云雀营销 Agent 产品使用手册/video_18.mp4)
 
-[[VIDEO](video_19.mp4)](video_19.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_19.mp4)](_files_小云雀营销 Agent 产品使用手册/video_19.mp4)
 
-[[VIDEO](video_20.mp4)](video_20.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_20.mp4)](_files_小云雀营销 Agent 产品使用手册/video_20.mp4)
 
-[[VIDEO](video_21.mp4)](video_21.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_21.mp4)](_files_小云雀营销 Agent 产品使用手册/video_21.mp4)
 
-[[VIDEO](video_22.mp4)](video_22.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_22.mp4)](_files_小云雀营销 Agent 产品使用手册/video_22.mp4)
 
 ---
 
@@ -206,7 +206,7 @@ Case展示
 
 营销 Agent 已接入小云雀现有的画布能力。生成的图片和视频可同步到画布，继续整理、编辑和复用。
 
-[![图片展示了小云雀营销Agent生成的图片和视频内容。左侧是营销视频的内嵌营销脑图，包含品牌故事、产品介绍、品牌理念等板块。右侧是视频画面，有多个视频片段，画面中人物穿着白色T恤，背景为深色。该图片与文档中“在营销Agent中使用画布”部分内容相关，直观呈现了营销Agent生成的图片和视频素材，可在此基础上进行裁剪、旋转、超分等操作，继续整理、编辑和复用。](image_8.png)](image_8.png)
+[![图片展示了小云雀营销Agent生成的图片和视频内容。左侧是营销视频的内嵌营销脑图，包含品牌故事、产品介绍、品牌理念等板块。右侧是视频画面，有多个视频片段，画面中人物穿着白色T恤，背景为深色。该图片与文档中“在营销Agent中使用画布”部分内容相关，直观呈现了营销Agent生成的图片和视频素材，可在此基础上进行裁剪、旋转、超分等操作，继续整理、编辑和复用。](_files_小云雀营销 Agent 产品使用手册/image_8.png)](_files_小云雀营销 Agent 产品使用手册/image_8.png)
 
 ## 八、营销Skill使用
 
@@ -218,82 +218,82 @@ Case展示
 >
 > 图片模型建议选Seedream 5.0或者旗舰生图模型V2-Pro，生成的人物形象更真实。
 >
-> [![这张图片是小云雀营销Agent产品使用手册中关于模型偏好的界面内容，界面顶部显示“模型偏好”，右侧有“自动”开关。界面提供视频、图片、文本三类选择，当前选中“视频”选项，下方展示了“Seedance 2.5”的限时优惠内容：上传参考720P成片的积分消耗为限时4.7折，无参考720P的积分消耗为7.7折，该条目被勾选选中。](image_9.png)](image_9.png)
+> [![这张图片是小云雀营销Agent产品使用手册中关于模型偏好的界面内容，界面顶部显示“模型偏好”，右侧有“自动”开关。界面提供视频、图片、文本三类选择，当前选中“视频”选项，下方展示了“Seedance 2.5”的限时优惠内容：上传参考720P成片的积分消耗为限时4.7折，无参考720P的积分消耗为7.7折，该条目被勾选选中。](_files_小云雀营销 Agent 产品使用手册/image_9.png)](_files_小云雀营销 Agent 产品使用手册/image_9.png)
 >
-> [![图片展示的是营销Agent中“模型偏好”设置界面，处于“图片”选项卡下。界面中显示了两款模型，分别是“Seedream 5.0 Pro”和“旗舰生图模型 V2-Pro”。前者标注“NEW”，支持交互式编辑，精准改图更可控；后者擅长图片编辑，还原复杂场景。两款模型均带有“NEW”标识，下方还有对应图标。该图片与文档中介绍营销Agent中使用画布相关内容相呼应，展示了在图片模式下可选择的模型。](image_10.png)](image_10.png)
+> [![图片展示的是营销Agent中“模型偏好”设置界面，处于“图片”选项卡下。界面中显示了两款模型，分别是“Seedream 5.0 Pro”和“旗舰生图模型 V2-Pro”。前者标注“NEW”，支持交互式编辑，精准改图更可控；后者擅长图片编辑，还原复杂场景。两款模型均带有“NEW”标识，下方还有对应图标。该图片与文档中介绍营销Agent中使用画布相关内容相呼应，展示了在图片模式下可选择的模型。](_files_小云雀营销 Agent 产品使用手册/image_10.png)](_files_小云雀营销 Agent 产品使用手册/image_10.png)
 
 #### Agent模式
 
-[![营销Agent首页推荐技能进入](image_11.png)](image_11.png)
+[![营销Agent首页推荐技能进入](_files_小云雀营销 Agent 产品使用手册/image_11.png)](_files_小云雀营销 Agent 产品使用手册/image_11.png)
 
 营销Agent首页推荐技能进入
 
-[![上传视频输入需要转化的地区/语言](image_12.png)](image_12.png)
+[![上传视频输入需要转化的地区/语言](_files_小云雀营销 Agent 产品使用手册/image_12.png)](_files_小云雀营销 Agent 产品使用手册/image_12.png)
 
 上传视频输入需要转化的地区/语言
 
-[![视频解析：画面/口播/人物形象](image_13.png)](image_13.png)
+[![视频解析：画面/口播/人物形象](_files_小云雀营销 Agent 产品使用手册/image_13.png)](_files_小云雀营销 Agent 产品使用手册/image_13.png)
 
 视频解析：画面/口播/人物形象
 
-[![对应地区人物形象生成](image_14.png)](image_14.png)
+[![对应地区人物形象生成](_files_小云雀营销 Agent 产品使用手册/image_14.png)](_files_小云雀营销 Agent 产品使用手册/image_14.png)
 
 对应地区人物形象生成
 
-[![视频编辑：口播/口音/人物形象进行地区适配](image_15.png)](image_15.png)
+[![视频编辑：口播/口音/人物形象进行地区适配](_files_小云雀营销 Agent 产品使用手册/image_15.png)](_files_小云雀营销 Agent 产品使用手册/image_15.png)
 
 视频编辑：口播/口音/人物形象进行地区适配
 
 #### Case
 
-[[VIDEO](video_23.mp4)](video_23.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_23.mp4)](_files_小云雀营销 Agent 产品使用手册/video_23.mp4)
 
 原版视频
 
-[[VIDEO](video_24.mp4)](video_24.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_24.mp4)](_files_小云雀营销 Agent 产品使用手册/video_24.mp4)
 
 英国本地化版本
 
-[[VIDEO](video_25.mp4)](video_25.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_25.mp4)](_files_小云雀营销 Agent 产品使用手册/video_25.mp4)
 
 泰国本地化版本
 
 ### 批量生成
 
-[![营销Agent技能下拉框选择或者推荐技能进入](image_16.png)](image_16.png)
+[![营销Agent技能下拉框选择或者推荐技能进入](_files_小云雀营销 Agent 产品使用手册/image_16.png)](_files_小云雀营销 Agent 产品使用手册/image_16.png)
 
 营销Agent技能下拉框选择或者推荐技能进入
 
-[![上传商品/品牌图片和信息即可批量生成](image_17.png)](image_17.png)
+[![上传商品/品牌图片和信息即可批量生成](_files_小云雀营销 Agent 产品使用手册/image_17.png)](_files_小云雀营销 Agent 产品使用手册/image_17.png)
 
 上传商品/品牌图片和信息即可批量生成
 
-[![素材数量和投放目标确定](image_18.png)](image_18.png)
+[![素材数量和投放目标确定](_files_小云雀营销 Agent 产品使用手册/image_18.png)](_files_小云雀营销 Agent 产品使用手册/image_18.png)
 
 素材数量和投放目标确定
 
-[![素材测试方向确定](image_19.png)](image_19.png)
+[![素材测试方向确定](_files_小云雀营销 Agent 产品使用手册/image_19.png)](_files_小云雀营销 Agent 产品使用手册/image_19.png)
 
 素材测试方向确定
 
-[![测试思路确定（hook方法 X 场景）](image_20.png)](image_20.png)
+[![测试思路确定（hook方法 X 场景）](_files_小云雀营销 Agent 产品使用手册/image_20.png)](_files_小云雀营销 Agent 产品使用手册/image_20.png)
 
 测试思路确定（hook方法 X 场景）
 
-[![测试脚本输出&视频批量产出](image_21.png)](image_21.png)
+[![测试脚本输出&视频批量产出](_files_小云雀营销 Agent 产品使用手册/image_21.png)](_files_小云雀营销 Agent 产品使用手册/image_21.png)
 
 测试脚本输出&视频批量产出
 
 #### Case
 
-[[VIDEO](video_26.mp4)](video_26.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_26.mp4)](_files_小云雀营销 Agent 产品使用手册/video_26.mp4)
 
 对比反差hook × 办公室场景
 
-[[VIDEO](video_27.mp4)](video_27.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_27.mp4)](_files_小云雀营销 Agent 产品使用手册/video_27.mp4)
 
 悬念提问hook × 追剧场景
 
-[[VIDEO](video_28.mp4)](video_28.mp4)
+[[VIDEO](_files_小云雀营销 Agent 产品使用手册/video_28.mp4)](_files_小云雀营销 Agent 产品使用手册/video_28.mp4)
 
 情绪共鸣 × 健身人群

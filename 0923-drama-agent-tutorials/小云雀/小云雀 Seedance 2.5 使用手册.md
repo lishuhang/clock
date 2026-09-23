@@ -11,7 +11,7 @@
 
 小云雀 Web + App 均可体验
 
-- Web：[https://xyq.jianying.com/novel/list?enter\_from=small\_tool](/novel/list?enter_from=small_tool)
+- Web：[https://xyq.jianying.com/novel/list?enter\_from=small\_tool](https://xyq.jianying.com/novel/list?enter_from=small_tool)
 - App：下载“小云雀”APP 体验
 
 ## 小云雀 Seedance 2.5 关键更新速览
@@ -52,13 +52,13 @@ Seedance 2.5 核心能力
 
 结果输出
 
-[[VIDEO](video_1.mp4)](video_1.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_1.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_1.mp4)
 
 **结果输出**
 
 参考图
 
-[![Seedance 2.5 参考素材](image_1.png)](image_1.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_1.png)](_files_小云雀 Seedance 2.5 使用手册/image_1.png)
 
 Prompt
 
@@ -76,15 +76,15 @@ Prompt
 
 结果输出
 
-[[VIDEO](video_2.mp4)](video_2.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_2.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_2.mp4)
 
 **结果输出**
 
 参考图
 
-[![Seedance 2.5 参考素材](image_2.png)](image_2.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_2.png)](_files_小云雀 Seedance 2.5 使用手册/image_2.png)
 
-[![Seedance 2.5 参考素材](image_3.png)](image_3.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_3.png)](_files_小云雀 Seedance 2.5 使用手册/image_3.png)
 
 Prompt
 
@@ -106,13 +106,13 @@ Seedance 2.5 在真实感上做了进一步优化，重点减少 AI 视频常见
 
 2.5 结果输出
 
-[[VIDEO](video_3.mp4)](video_3.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_3.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_3.mp4)
 
 **2.5 结果输出**
 
 2.0 结果输出
 
-[[VIDEO](video_4.mp4)](video_4.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_4.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_4.mp4)
 
 **2.0 结果输出**
 
@@ -133,13 +133,13 @@ Prompt
 
 2.5 结果输出
 
-[[VIDEO](video_5.mp4)](video_5.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_5.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_5.mp4)
 
 **2.5 结果输出**
 
 2.0 结果输出
 
-[[VIDEO](video_6.mp4)](video_6.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_6.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_6.mp4)
 
 **2.0 结果输出**
 
@@ -161,13 +161,13 @@ Prompt
 
 2.5 结果输出
 
-[[VIDEO](video_7.mp4)](video_7.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_7.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_7.mp4)
 
 **2.5 结果输出**
 
 2.0 结果输出
 
-[[VIDEO](video_8.mp4)](video_8.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_8.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_8.mp4)
 
 **2.0 结果输出**
 
@@ -206,19 +206,19 @@ Ana，年轻葡萄牙面包师，穿着沾有面粉的围裙。
 
 结果输出
 
-[[VIDEO](video_9.mp4)](video_9.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_9.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_9.mp4)
 
 **结果输出**
 
 参考图
 
-[![Seedance 2.5 参考素材](image_4.png)](image_4.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_4.png)](_files_小云雀 Seedance 2.5 使用手册/image_4.png)
 
-[![Seedance 2.5 参考素材](image_5.png)](image_5.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_5.png)](_files_小云雀 Seedance 2.5 使用手册/image_5.png)
 
-[![Seedance 2.5 参考素材](image_6.png)](image_6.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_6.png)](_files_小云雀 Seedance 2.5 使用手册/image_6.png)
 
-[![Seedance 2.5 参考素材](image_7.png)](image_7.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_7.png)](_files_小云雀 Seedance 2.5 使用手册/image_7.png)
 
 Prompt
 
@@ -232,19 +232,19 @@ Prompt
 
 结果输出
 
-[[VIDEO](video_10.mp4)](video_10.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_10.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_10.mp4)
 
 **结果输出**
 
 参考图
 
-[![Seedance 2.5 参考素材](image_8.png)](image_8.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_8.png)](_files_小云雀 Seedance 2.5 使用手册/image_8.png)
 
-[![Seedance 2.5 参考素材](image_9.png)](image_9.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_9.png)](_files_小云雀 Seedance 2.5 使用手册/image_9.png)
 
-[![Seedance 2.5 参考素材](image_9.png)](image_9.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_9.png)](_files_小云雀 Seedance 2.5 使用手册/image_9.png)
 
-[![Seedance 2.5 参考素材](image_10.png)](image_10.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_10.png)](_files_小云雀 Seedance 2.5 使用手册/image_10.png)
 
 Prompt
 
@@ -258,41 +258,41 @@ Prompt
 
 结果输出
 
-[[VIDEO](video_11.mp4)](video_11.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_11.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_11.mp4)
 
 **结果输出**
 
 参考图
 
-[![Seedance 2.5 参考素材](image_11.png)](image_11.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_11.png)](_files_小云雀 Seedance 2.5 使用手册/image_11.png)
 
-[![Seedance 2.5 参考素材](image_12.png)](image_12.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_12.png)](_files_小云雀 Seedance 2.5 使用手册/image_12.png)
 
-[![Seedance 2.5 参考素材](image_13.png)](image_13.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_13.png)](_files_小云雀 Seedance 2.5 使用手册/image_13.png)
 
-[![Seedance 2.5 参考素材](image_14.png)](image_14.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_14.png)](_files_小云雀 Seedance 2.5 使用手册/image_14.png)
 
-[![Seedance 2.5 参考素材](image_15.png)](image_15.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_15.png)](_files_小云雀 Seedance 2.5 使用手册/image_15.png)
 
-[![Seedance 2.5 参考素材](image_16.png)](image_16.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_16.png)](_files_小云雀 Seedance 2.5 使用手册/image_16.png)
 
-[![Seedance 2.5 参考素材](image_17.png)](image_17.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_17.png)](_files_小云雀 Seedance 2.5 使用手册/image_17.png)
 
-[![Seedance 2.5 参考素材](image_18.png)](image_18.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_18.png)](_files_小云雀 Seedance 2.5 使用手册/image_18.png)
 
-[![Seedance 2.5 参考素材](image_19.png)](image_19.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_19.png)](_files_小云雀 Seedance 2.5 使用手册/image_19.png)
 
-[![Seedance 2.5 参考素材](image_20.png)](image_20.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_20.png)](_files_小云雀 Seedance 2.5 使用手册/image_20.png)
 
-[![Seedance 2.5 参考素材](image_21.png)](image_21.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_21.png)](_files_小云雀 Seedance 2.5 使用手册/image_21.png)
 
-[![Seedance 2.5 参考素材](image_22.png)](image_22.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_22.png)](_files_小云雀 Seedance 2.5 使用手册/image_22.png)
 
-[![Seedance 2.5 参考素材](image_23.png)](image_23.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_23.png)](_files_小云雀 Seedance 2.5 使用手册/image_23.png)
 
-[![Seedance 2.5 参考素材](image_24.png)](image_24.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_24.png)](_files_小云雀 Seedance 2.5 使用手册/image_24.png)
 
-[![Seedance 2.5 参考素材](image_25.png)](image_25.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_25.png)](_files_小云雀 Seedance 2.5 使用手册/image_25.png)
 
 Prompt
 
@@ -356,7 +356,7 @@ Prompt
 
 结果输出
 
-[[VIDEO](video_12.mp4)](video_12.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_12.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_12.mp4)
 
 **结果输出**
 
@@ -372,7 +372,7 @@ prompt
 
 结果输出
 
-[[VIDEO](video_13.mp4)](video_13.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_13.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_13.mp4)
 
 **结果输出**
 
@@ -470,19 +470,19 @@ image4: 主体 2 (老奶奶) 角色外观参考。
 
 Seedance2.5 输出
 
-[[VIDEO](video_14.mp4)](video_14.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_14.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_14.mp4)
 
 **Seedance2.5 输出**
 
 参考 ref
 
-[![Seedance 2.5 参考素材](image_26.png)](image_26.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_26.png)](_files_小云雀 Seedance 2.5 使用手册/image_26.png)
 
-[![Seedance 2.5 参考素材](image_27.png)](image_27.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_27.png)](_files_小云雀 Seedance 2.5 使用手册/image_27.png)
 
-[![Seedance 2.5 参考素材](image_28.png)](image_28.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_28.png)](_files_小云雀 Seedance 2.5 使用手册/image_28.png)
 
-[![Seedance 2.5 参考素材](image_29.png)](image_29.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_29.png)](_files_小云雀 Seedance 2.5 使用手册/image_29.png)
 
 #### 深夜教室：悬疑叙事
 
@@ -519,27 +519,27 @@ image5 为主体3(小猫)角色外观参考。
 
 Seedance2.5 输出
 
-[[VIDEO](video_15.mp4)](video_15.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_15.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_15.mp4)
 
 **Seedance2.5 输出**
 
 参考 ref
 
-[![Seedance 2.5 参考素材](image_30.png)](image_30.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_30.png)](_files_小云雀 Seedance 2.5 使用手册/image_30.png)
 
-[![Seedance 2.5 参考素材](image_31.png)](image_31.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_31.png)](_files_小云雀 Seedance 2.5 使用手册/image_31.png)
 
-[![Seedance 2.5 参考素材](image_32.png)](image_32.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_32.png)](_files_小云雀 Seedance 2.5 使用手册/image_32.png)
 
-[![Seedance 2.5 参考素材](image_33.png)](image_33.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_33.png)](_files_小云雀 Seedance 2.5 使用手册/image_33.png)
 
-[![Seedance 2.5 参考素材](image_34.png)](image_34.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_34.png)](_files_小云雀 Seedance 2.5 使用手册/image_34.png)
 
 #### 概念分镜：按顺序构建故事
 
 输入
 
-[![ref](image_35.png)](image_35.png)
+[![ref](_files_小云雀 Seedance 2.5 使用手册/image_35.png)](_files_小云雀 Seedance 2.5 使用手册/image_35.png)
 
 完整提示词
 
@@ -549,7 +549,7 @@ Seedance2.5 输出
 
 Seedance2.5 输出
 
-[[VIDEO](video_16.mp4)](video_16.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_16.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_16.mp4)
 
 **Seedance2.5 输出**
 
@@ -567,11 +567,11 @@ Seedance2.5 输出
 
 | 3D 导演台新能力 | 用来做什么 | 示意图 |
 | --- | --- | --- |
-| 时间轴 | 以帧为单位插入/移动关键帧，播放预览动作与运镜，编排节奏 | [![Seedance 2.5 参考素材](image_36.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/8c4cb4dff5de4f3d9dc48b5dd380f99e~tplv-e844mpvzdi-compress:q90.image)  [![Seedance 2.5 参考素材](image_37.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/4800c6b67b4f4c8eb9c6c63fc7f2802b~tplv-e844mpvzdi-compress:q90.image)  [![Seedance 2.5 参考素材](image_38.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/947b78a03365497996cdab1d25358668~tplv-e844mpvzdi-compress:q90.image) |
+| 时间轴 | 以帧为单位插入/移动关键帧，播放预览动作与运镜，编排节奏 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_36.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/8c4cb4dff5de4f3d9dc48b5dd380f99e~tplv-e844mpvzdi-compress:q90.image)  [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_37.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/4800c6b67b4f4c8eb9c6c63fc7f2802b~tplv-e844mpvzdi-compress:q90.image)  [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_38.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/947b78a03365497996cdab1d25358668~tplv-e844mpvzdi-compress:q90.image) |
 | 角色动作库 | 选中角色后点击快速套动作，再在时间轴通过多次添加进行角色动作编排 |  |
 | 机位运镜库 | 用预设机位或当前视角建机位，通过相机位置、FOV、注视点关键帧组织推拉摇移、环绕、跟拍 |  |
 | 绘制轨迹 | 通过绘制轨迹快速的控制角色/道具/机位的位置变换，可以绘制 3D 轨迹 |  |
-| 构图复刻 | 上传一张图片，直接得到对应的白模，再进行二次微调视角，可用于不同角度的站位参考 | [![Seedance 2.5 参考素材](image_39.png)](image_39.png)  [![Seedance 2.5 参考素材](image_40.png)](image_40.png) |
+| 构图复刻 | 上传一张图片，直接得到对应的白模，再进行二次微调视角，可用于不同角度的站位参考 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_39.png)](_files_小云雀 Seedance 2.5 使用手册/image_39.png)  [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_40.png)](_files_小云雀 Seedance 2.5 使用手册/image_40.png) |
 
 #### 交互界面与使用案例
 
@@ -586,28 +586,28 @@ Seedance2.5 输出
 - **时间轴：**管理各对象的关键帧动画，可控制播放、定位当前帧、设置起止帧、调整帧和时间范围，并对变换、动作等轨道进行关键帧编辑。
 - **中间-3D 视窗：**用于摆放元素、调整视角、查看整体空间关系。
 
-[![Seedance 2.5 参考素材](image_41.png)](image_41.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_41.png)](_files_小云雀 Seedance 2.5 使用手册/image_41.png)
 
 使用 case
 
-[[VIDEO](video_17.mp4)](video_17.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_17.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_17.mp4)
 
 **使用 case**
 
-[[VIDEO](video_18.mp4)](video_18.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_18.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_18.mp4)
 
 **使用 case**
 
-[![Seedance 2.5 参考素材](image_1.jpg)](image_1.jpg)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_1.jpg)](_files_小云雀 Seedance 2.5 使用手册/image_1.jpg)
 
-以上仅为白模控制相关要点。完整的操作步骤、推荐工作流和注意事项，详见 [短剧 Agent 3D 导演台使用手册](/tutorials/short-drama-agent-3d-director)。
+以上仅为白模控制相关要点。完整的操作步骤、推荐工作流和注意事项，详见 [短剧 Agent 3D 导演台使用手册](https://xyq.jianying.com/tutorials/short-drama-agent-3d-director)。
 
 ### 爆款复刻：粘贴抖音链接一键做同款
 
 - 具体使用方式：直接在输入框贴一个抖音链接，补充你的复刻诉求即可进行复刻。
 - App 和 Web 均可直接在输入框贴链接复刻！
 
-[![Seedance 2.5 参考素材](image_42.png)](image_42.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_42.png)](_files_小云雀 Seedance 2.5 使用手册/image_42.png)
 
 #### 舞蹈类
 
@@ -615,17 +615,17 @@ Seedance2.5 输出
 
 结果输出
 
-[[VIDEO](video_19.mp4)](video_19.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_19.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_19.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_43.png)](image_43.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_43.png)](_files_小云雀 Seedance 2.5 使用手册/image_43.png)
 
 复刻参考视频
 
-[[VIDEO](video_20.mp4)](video_20.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_20.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_20.mp4)
 
 **复刻参考视频**
 
@@ -641,21 +641,21 @@ prompt
 
 结果输出
 
-[[VIDEO](video_21.mp4)](video_21.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_21.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_21.mp4)
 
 **爆款视频主体元素替换**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_44.png)](image_44.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_44.png)](_files_小云雀 Seedance 2.5 使用手册/image_44.png)
 
-[![Seedance 2.5 参考素材](image_45.png)](image_45.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_45.png)](_files_小云雀 Seedance 2.5 使用手册/image_45.png)
 
-[![Seedance 2.5 参考素材](image_46.png)](image_46.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_46.png)](_files_小云雀 Seedance 2.5 使用手册/image_46.png)
 
 复刻参考视频
 
-[[VIDEO](video_22.mp4)](video_22.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_22.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_22.mp4)
 
 **复刻参考视频**
 
@@ -671,17 +671,17 @@ prompt
 
 结果输出
 
-[[VIDEO](video_23.mp4)](video_23.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_23.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_23.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_47.png)](image_47.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_47.png)](_files_小云雀 Seedance 2.5 使用手册/image_47.png)
 
 复刻参考视频
 
-[[VIDEO](video_24.mp4)](video_24.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_24.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_24.mp4)
 
 **复刻参考视频**
 
@@ -697,17 +697,17 @@ prompt
 
 结果输出
 
-[[VIDEO](video_25.mp4)](video_25.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_25.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_25.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_48.png)](image_48.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_48.png)](_files_小云雀 Seedance 2.5 使用手册/image_48.png)
 
 复刻参考视频
 
-[[VIDEO](video_26.mp4)](video_26.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_26.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_26.mp4)
 
 **复刻参考视频**
 
@@ -723,25 +723,25 @@ prompt
 
 结果输出
 
-[[VIDEO](video_27.mp4)](video_27.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_27.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_27.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_49.png)](image_49.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_49.png)](_files_小云雀 Seedance 2.5 使用手册/image_49.png)
 
-[![Seedance 2.5 参考素材](image_50.png)](image_50.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_50.png)](_files_小云雀 Seedance 2.5 使用手册/image_50.png)
 
-[![Seedance 2.5 参考素材](image_51.png)](image_51.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_51.png)](_files_小云雀 Seedance 2.5 使用手册/image_51.png)
 
-[![Seedance 2.5 参考素材](image_52.png)](image_52.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_52.png)](_files_小云雀 Seedance 2.5 使用手册/image_52.png)
 
-[![Seedance 2.5 参考素材](image_53.png)](image_53.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_53.png)](_files_小云雀 Seedance 2.5 使用手册/image_53.png)
 
 复刻参考视频
 
-[[VIDEO](video_28.mp4)](video_28.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_28.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_28.mp4)
 
 **复刻参考视频**
 
@@ -761,19 +761,19 @@ prompt
 
 结果输出
 
-[[VIDEO](video_29.mp4)](video_29.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_29.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_29.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_54.png)](image_54.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_54.png)](_files_小云雀 Seedance 2.5 使用手册/image_54.png)
 
-[![Seedance 2.5 参考素材](image_55.png)](image_55.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_55.png)](_files_小云雀 Seedance 2.5 使用手册/image_55.png)
 
 复刻参考视频
 
-[[VIDEO](video_30.mp4)](video_30.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_30.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_30.mp4)
 
 **复刻参考视频**
 
@@ -789,17 +789,17 @@ prompt
 
 结果输出
 
-[[VIDEO](video_31.mp4)](video_31.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_31.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_31.mp4)
 
 **爆款视频主体元素替换**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_56.png)](image_56.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_56.png)](_files_小云雀 Seedance 2.5 使用手册/image_56.png)
 
 复刻参考视频
 
-[[VIDEO](video_32.mp4)](video_32.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_32.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_32.mp4)
 
 **复刻参考视频**
 
@@ -815,17 +815,17 @@ prompt
 
 结果输出
 
-[[VIDEO](video_33.mp4)](video_33.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_33.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_33.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_57.png)](image_57.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_57.png)](_files_小云雀 Seedance 2.5 使用手册/image_57.png)
 
 复刻参考视频
 
-[[VIDEO](video_34.mp4)](video_34.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_34.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_34.mp4)
 
 **复刻参考视频**
 
@@ -841,17 +841,17 @@ S2的首帧图参考图1【@图1】，保持人物角色形象、位置和布局
 
 结果输出
 
-[[VIDEO](video_35.mp4)](video_35.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_35.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_35.mp4)
 
 **结果输出**
 
 图片输入
 
-[![Seedance 2.5 参考素材](image_58.png)](image_58.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_58.png)](_files_小云雀 Seedance 2.5 使用手册/image_58.png)
 
 复刻参考视频
 
-[[VIDEO](video_36.mp4)](video_36.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_36.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_36.mp4)
 
 **复刻参考视频**
 
@@ -867,13 +867,13 @@ prompt
 
 结果输出
 
-[[VIDEO](video_37.mp4)](video_37.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_37.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_37.mp4)
 
 **结果输出**
 
 复刻参考视频
 
-[[VIDEO](video_38.mp4)](video_38.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_38.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_38.mp4)
 
 **复刻参考视频**
 
@@ -891,13 +891,13 @@ prompt
 
 结果输出
 
-[[VIDEO](video_39.mp4)](video_39.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_39.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_39.mp4)
 
 **结果输出**
 
 复刻参考视频
 
-[[VIDEO](video_40.mp4)](video_40.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_40.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_40.mp4)
 
 **复刻参考视频**
 
@@ -913,7 +913,7 @@ prompt
 
 结果输出
 
-[[VIDEO](video_41.mp4)](video_41.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_41.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_41.mp4)
 
 **结果输出**
 
@@ -933,7 +933,7 @@ prompt
 
 Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「片段重拍」。它让用户通过自然语言指令精准修改片段，并且只按截取片段计费，更适合低成本、高效率地打磨关键镜头。
 
-[![Seedance 2.5 参考素材](image_2.jpg)](image_2.jpg)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_2.jpg)](_files_小云雀 Seedance 2.5 使用手册/image_2.jpg)
 
 #### 适合什么时候用
 
@@ -950,17 +950,17 @@ Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「�
 
 短剧Agent-画布
 
-[![Seedance 2.5 参考素材](image_59.png)](image_59.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_59.png)](_files_小云雀 Seedance 2.5 使用手册/image_59.png)
 
 短剧Agent-故事板
 
-[![Seedance 2.5 参考素材](image_60.png)](image_60.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_60.png)](_files_小云雀 Seedance 2.5 使用手册/image_60.png)
 
 创作Agent-对话结构
 
-[![Seedance 2.5 参考素材](image_61.png)](image_61.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_61.png)](_files_小云雀 Seedance 2.5 使用手册/image_61.png)
 
-[![Seedance 2.5 参考素材](image_62.png)](image_62.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_62.png)](_files_小云雀 Seedance 2.5 使用手册/image_62.png)
 
 ##### 截取片段与精准注释
 
@@ -970,23 +970,23 @@ Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「�
 
 短剧Agent-画布 / 短剧Agent-故事板
 
-[![选取片段](image_63.png)](image_63.png)
+[![选取片段](_files_小云雀 Seedance 2.5 使用手册/image_63.png)](_files_小云雀 Seedance 2.5 使用手册/image_63.png)
 
 选取片段
 
-[![开启注释模式](image_64.png)](image_64.png)
+[![开启注释模式](_files_小云雀 Seedance 2.5 使用手册/image_64.png)](_files_小云雀 Seedance 2.5 使用手册/image_64.png)
 
 开启注释模式
 
-[![精准注释](image_65.png)](image_65.png)
+[![精准注释](_files_小云雀 Seedance 2.5 使用手册/image_65.png)](_files_小云雀 Seedance 2.5 使用手册/image_65.png)
 
 精准注释
 
 创作Agent-对话结构
 
-[![Seedance 2.5 参考素材](image_66.png)](image_66.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_66.png)](_files_小云雀 Seedance 2.5 使用手册/image_66.png)
 
-[![Seedance 2.5 参考素材](image_67.png)](image_67.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_67.png)](_files_小云雀 Seedance 2.5 使用手册/image_67.png)
 
 ##### 智能切割分镜
 
@@ -994,9 +994,9 @@ Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「�
 
 短剧Agent-画布 / 短剧Agent-故事板
 
-[![Seedance 2.5 参考素材](image_68.png)](image_68.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_68.png)](_files_小云雀 Seedance 2.5 使用手册/image_68.png)
 
-[![Seedance 2.5 参考素材](image_69.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/ec2d8b1e2d7646879b6949388102fe7b~tplv-e844mpvzdi-compress:q90.image)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_69.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/ec2d8b1e2d7646879b6949388102fe7b~tplv-e844mpvzdi-compress:q90.image)
 
 ##### 完善指令并提交
 
@@ -1004,7 +1004,7 @@ Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「�
 
 短剧Agent-画布 / 短剧Agent-故事板
 
-[![Seedance 2.5 参考素材](image_70.png)](image_70.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_70.png)](_files_小云雀 Seedance 2.5 使用手册/image_70.png)
 
 #### 修改指令与使用建议
 
@@ -1030,31 +1030,31 @@ Seedance 2.5 升级了视频编辑能力，小云雀基于这项能力推出「�
 
 Case
 
-[[VIDEO](video_42.mp4)](video_42.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_42.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_42.mp4)
 
 **口播**
 
-[[VIDEO](video_43.mp4)](video_43.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_43.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_43.mp4)
 
 **剧情**
 
-[[VIDEO](video_44.mp4)](video_44.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_44.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_44.mp4)
 
 **跨境电商-口播**
 
-[[VIDEO](video_45.mp4)](video_45.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_45.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_45.mp4)
 
 **跨境电商-小语种口播**
 
-[[VIDEO](video_46.mp4)](video_46.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_46.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_46.mp4)
 
 **品牌**
 
-[[VIDEO](video_47.mp4)](video_47.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_47.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_47.mp4)
 
 **品牌**
 
-[[VIDEO](video_48.mp4)](video_48.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_48.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_48.mp4)
 
 **品牌**
 
@@ -1066,19 +1066,19 @@ Case
 
 Case
 
-[[VIDEO](video_49.mp4)](video_49.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_49.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_49.mp4)
 
 **2.0-剧情广告**
 
-[[VIDEO](video_43.mp4)](video_43.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_43.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_43.mp4)
 
 **2.5-剧情广告**
 
-[[VIDEO](video_50.mp4)](video_50.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_50.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_50.mp4)
 
 **2.0-口播**
 
-[[VIDEO](video_51.mp4)](video_51.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_51.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_51.mp4)
 
 **2.5-口播**
 
@@ -1090,11 +1090,11 @@ Case
 
 Case
 
-[[VIDEO](video_52.mp4)](video_52.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_52.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_52.mp4)
 
 **原视频**
 
-[[VIDEO](video_53.mp4)](video_53.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_53.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_53.mp4)
 
 **复刻-替换产品**
 
@@ -1102,11 +1102,11 @@ Case
 
 - 使用方法：输入框选中 2.5 模型，时长选择你想达到的时长。
 
-[![Seedance 2.5 参考素材](image_71.png)](image_71.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_71.png)](_files_小云雀 Seedance 2.5 使用手册/image_71.png)
 
 case
 
-[[VIDEO](video_54.mp4)](video_54.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_54.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_54.mp4)
 
 **case**
 
@@ -1122,13 +1122,13 @@ prompt
 
 在使用小云雀的创作 Agent 时，可以开启画布模式，一边对话寻找创作灵感，一边在画布上调整效果。
 
-详细版：[创作 Agent 画布使用手册](/tutorials/creation-agent-canvas)。
+详细版：[创作 Agent 画布使用手册](https://xyq.jianying.com/tutorials/creation-agent-canvas)。
 
-[![画布入口](image_72.png)](image_72.png)
+[![画布入口](_files_小云雀 Seedance 2.5 使用手册/image_72.png)](_files_小云雀 Seedance 2.5 使用手册/image_72.png)
 
 画布入口
 
-[![画布功能](image_73.png)](image_73.png)
+[![画布功能](_files_小云雀 Seedance 2.5 使用手册/image_73.png)](_files_小云雀 Seedance 2.5 使用手册/image_73.png)
 
 画布功能
 
@@ -1146,11 +1146,11 @@ prompt
 
 | 功能模块 | 能力描述 | 输出内容 | 图示 |
 | --- | --- | --- | --- |
-| 热点搜索 | 抖音热点聚合，爆款指数排序，7 天内时效性窗口 | 热点卡片列表，含话题、热度、AI 可做性评估 | [![Seedance 2.5 参考素材](image_74.png)](image_74.png) |
+| 热点搜索 | 抖音热点聚合，爆款指数排序，7 天内时效性窗口 | 热点卡片列表，含话题、热度、AI 可做性评估 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_74.png)](_files_小云雀 Seedance 2.5 使用手册/image_74.png) |
 | 爆点解析 | 对参考视频/话题进行结构化拆解（内容主题、叙事结构、视觉风格、文案策略等） | 爆点总结 + 可复制要素 + 二创方向建议 |  |
-| 选题推荐 | 基于热点 + 记忆 + 参考视频，生成有爆款潜力的差异化选题 | 多个可落地选题方向 + 参考视频链接 | [![Seedance 2.5 参考素材](image_75.png)](image_75.png) |
-| 创意方案 | 将模糊选题打磨为方案骨架，输出视频 Prompt + 标题方向 | 完整创意方案 + 可用 Prompt + 发布建议 | [![Seedance 2.5 参考素材](image_3.jpg)](image_3.jpg) |
-| 账号分析 | 输入账号的几条视频，即可获得账号分析建议和选题优化 | 适合你的选题建议 | [![Seedance 2.5 参考素材](image_76.png)](image_76.png) |
+| 选题推荐 | 基于热点 + 记忆 + 参考视频，生成有爆款潜力的差异化选题 | 多个可落地选题方向 + 参考视频链接 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_75.png)](_files_小云雀 Seedance 2.5 使用手册/image_75.png) |
+| 创意方案 | 将模糊选题打磨为方案骨架，输出视频 Prompt + 标题方向 | 完整创意方案 + 可用 Prompt + 发布建议 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_3.jpg)](_files_小云雀 Seedance 2.5 使用手册/image_3.jpg) |
+| 账号分析 | 输入账号的几条视频，即可获得账号分析建议和选题优化 | 适合你的选题建议 | [![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_76.png)](_files_小云雀 Seedance 2.5 使用手册/image_76.png) |
 
 #### 从热点到生成视频
 
@@ -1159,19 +1159,19 @@ prompt
 3. 创意助手会搜索热点，选择想要的方向出片。
 4. 生成视频。
 
-[![打开小云雀web，点击创意助手](image_77.png)](image_77.png)
+[![打开小云雀web，点击创意助手](_files_小云雀 Seedance 2.5 使用手册/image_77.png)](_files_小云雀 Seedance 2.5 使用手册/image_77.png)
 
 打开小云雀web，点击创意助手
 
-[![输入诉求](image_78.png)](image_78.png)
+[![输入诉求](_files_小云雀 Seedance 2.5 使用手册/image_78.png)](_files_小云雀 Seedance 2.5 使用手册/image_78.png)
 
 输入诉求
 
-[![创意助手会搜索热点，选择想要的方向出片](image_79.png)](image_79.png)
+[![创意助手会搜索热点，选择想要的方向出片](_files_小云雀 Seedance 2.5 使用手册/image_79.png)](_files_小云雀 Seedance 2.5 使用手册/image_79.png)
 
 创意助手会搜索热点，选择想要的方向出片
 
-[![生成视频](image_80.png)](image_80.png)
+[![生成视频](_files_小云雀 Seedance 2.5 使用手册/image_80.png)](_files_小云雀 Seedance 2.5 使用手册/image_80.png)
 
 生成视频
 
@@ -1181,31 +1181,31 @@ prompt
 2. **在线捏脸：**打造独一无二的专属角色形象。
 3. **一次定义，全剧调用：**结合 Seedance 2.5 的 50 个多模态参考，三视图、特写、动态视频、音色打包成「角色包」，几十集一个 @ 直接调用。
 
-[![海量高质量角色任选，避免AI脸](image_81.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/2d24ee3f033744d2b68b05287958e261~tplv-e844mpvzdi-compress:q90.image)
+[![海量高质量角色任选，避免AI脸](_files_小云雀 Seedance 2.5 使用手册/image_81.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/2d24ee3f033744d2b68b05287958e261~tplv-e844mpvzdi-compress:q90.image)
 
 海量高质量角色任选，避免AI脸
 
-[![AI捏脸-角色设计](image_82.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/360ae8a6df214ddcbc6dcd1ddfd106d3~tplv-e844mpvzdi-compress:q90.image)
+[![AI捏脸-角色设计](_files_小云雀 Seedance 2.5 使用手册/image_82.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/360ae8a6df214ddcbc6dcd1ddfd106d3~tplv-e844mpvzdi-compress:q90.image)
 
 AI捏脸-角色设计
 
-[![妆容调节](image_83.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/587dced27b5a465296611227db5af825~tplv-e844mpvzdi-compress:q90.image)
+[![妆容调节](_files_小云雀 Seedance 2.5 使用手册/image_83.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/587dced27b5a465296611227db5af825~tplv-e844mpvzdi-compress:q90.image)
 
 妆容调节
 
-[![表情调节](image_84.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/e138bb7987be48e8876e1772d1c70334~tplv-e844mpvzdi-compress:q90.image)
+[![表情调节](_files_小云雀 Seedance 2.5 使用手册/image_84.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/e138bb7987be48e8876e1772d1c70334~tplv-e844mpvzdi-compress:q90.image)
 
 表情调节
 
-[![人像质感调节](image_85.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/2e257e5225dc4509ab59729fd71e91da~tplv-e844mpvzdi-compress:q90.image)
+[![人像质感调节](_files_小云雀 Seedance 2.5 使用手册/image_85.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/2e257e5225dc4509ab59729fd71e91da~tplv-e844mpvzdi-compress:q90.image)
 
 人像质感调节
 
-[[VIDEO](video_55.mp4)](video_55.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_55.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_55.mp4)
 
 **视频**
 
-[[VIDEO](video_56.mp4)](video_56.mp4)
+[[VIDEO](_files_小云雀 Seedance 2.5 使用手册/video_56.mp4)](_files_小云雀 Seedance 2.5 使用手册/video_56.mp4)
 
 **视频**
 
@@ -1225,23 +1225,23 @@ AI捏脸-角色设计
 
 最高支持 4K
 
-[![1）选择分辨率480p](image_86.png)](image_86.png)
+[![1）选择分辨率480p](_files_小云雀 Seedance 2.5 使用手册/image_86.png)](_files_小云雀 Seedance 2.5 使用手册/image_86.png)
 
 1）选择分辨率480p
 
-[![画布](image_87.png)](image_87.png)
+[![画布](_files_小云雀 Seedance 2.5 使用手册/image_87.png)](_files_小云雀 Seedance 2.5 使用手册/image_87.png)
 
 画布
 
-[![沉浸式短片](image_88.png)](image_88.png)
+[![沉浸式短片](_files_小云雀 Seedance 2.5 使用手册/image_88.png)](_files_小云雀 Seedance 2.5 使用手册/image_88.png)
 
 沉浸式短片
 
-[![综合agent](image_89.png)](image_89.png)
+[![综合agent](_files_小云雀 Seedance 2.5 使用手册/image_89.png)](_files_小云雀 Seedance 2.5 使用手册/image_89.png)
 
 综合agent
 
-[![3）选择你想要的分辨率，最高支持4k](image_90.png)](image_90.png)
+[![3）选择你想要的分辨率，最高支持4k](_files_小云雀 Seedance 2.5 使用手册/image_90.png)](_files_小云雀 Seedance 2.5 使用手册/image_90.png)
 
 3）选择你想要的分辨率，最高支持4k
 
@@ -1251,13 +1251,13 @@ AI捏脸-角色设计
 
 选择 2.5，选中 480p 分辨率，生成视频后选择提升画质功能，即可超分到最高 4K。
 
-[![Seedance 2.5 参考素材](image_91.png)](image_91.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_91.png)](_files_小云雀 Seedance 2.5 使用手册/image_91.png)
 
-[![Seedance 2.5 参考素材](image_92.png)](image_92.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_92.png)](_files_小云雀 Seedance 2.5 使用手册/image_92.png)
 
-[![Seedance 2.5 参考素材](image_93.png)](image_93.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_93.png)](_files_小云雀 Seedance 2.5 使用手册/image_93.png)
 
-[![Seedance 2.5 参考素材](image_94.png)](image_94.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_94.png)](_files_小云雀 Seedance 2.5 使用手册/image_94.png)
 
 ## 如何在小云雀中快速使用 Seedance 2.5
 
@@ -1267,11 +1267,11 @@ AI捏脸-角色设计
 
 **App 路径：**选择「沉浸式短片」➡️ 输入框内模型选择「Seedance 2.5」➡️ 创作模式支持「参考生成」、「视频编辑」、「视频续写」，可结合自己的创作目标选择适合的的创作模式。
 
-[![web](image_95.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/91c204e41d8743d5aea37b14e1d5bb3f~tplv-e844mpvzdi-compress:q90.image)
+[![web](_files_小云雀 Seedance 2.5 使用手册/image_95.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/91c204e41d8743d5aea37b14e1d5bb3f~tplv-e844mpvzdi-compress:q90.image)
 
 web
 
-[![app](image_96.png)](image_96.png)
+[![app](_files_小云雀 Seedance 2.5 使用手册/image_96.png)](_files_小云雀 Seedance 2.5 使用手册/image_96.png)
 
 app
 
@@ -1283,17 +1283,17 @@ Web端
 
 使用说明
 
-登录小云雀官网：[https://xyq.jianying.com/](/)，点击上方 Tab 进入「短剧 Agent」。
+登录小云雀官网：[https://xyq.jianying.com/](https://xyq.jianying.com/)，点击上方 Tab 进入「短剧 Agent」。
 
 1. 路径一：直接点击「自由画布」进入，跳过剧本上传。
 2. 路径二：用「上传剧本」或「AI 生剧本」来创建，自动进入画布。
 3. 路径三：在「分集视频」中进入单集故事板，选择 Seedance 2.5 进行生成。
 
-[![Seedance 2.5 参考素材](image_97.png)](image_97.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_97.png)](_files_小云雀 Seedance 2.5 使用手册/image_97.png)
 
-[![Seedance 2.5 参考素材](image_98.png)](image_98.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_98.png)](_files_小云雀 Seedance 2.5 使用手册/image_98.png)
 
-[![Seedance 2.5 参考素材](image_99.png)](image_99.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_99.png)](_files_小云雀 Seedance 2.5 使用手册/image_99.png)
 
 #### 3D 导演台与分镜规划
 
@@ -1303,33 +1303,33 @@ Web端
 - 机位运镜库
 - 构图复刻
 
-[![3D导演台：进入画布直接创建 / 右键「添加节点」进入](image_100.png)](image_100.png)
+[![3D导演台：进入画布直接创建 / 右键「添加节点」进入](_files_小云雀 Seedance 2.5 使用手册/image_100.png)](_files_小云雀 Seedance 2.5 使用手册/image_100.png)
 
 3D导演台：进入画布直接创建 / 右键「添加节点」进入
 
-[![时间轴演示](image_36.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/8c4cb4dff5de4f3d9dc48b5dd380f99e~tplv-e844mpvzdi-compress:q90.image)
+[![时间轴演示](_files_小云雀 Seedance 2.5 使用手册/image_36.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/8c4cb4dff5de4f3d9dc48b5dd380f99e~tplv-e844mpvzdi-compress:q90.image)
 
 时间轴演示
 
-[![角色动作库](image_37.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/4800c6b67b4f4c8eb9c6c63fc7f2802b~tplv-e844mpvzdi-compress:q90.image)
+[![角色动作库](_files_小云雀 Seedance 2.5 使用手册/image_37.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/4800c6b67b4f4c8eb9c6c63fc7f2802b~tplv-e844mpvzdi-compress:q90.image)
 
 角色动作库
 
-[![机位运镜库](image_38.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/947b78a03365497996cdab1d25358668~tplv-e844mpvzdi-compress:q90.image)
+[![机位运镜库](_files_小云雀 Seedance 2.5 使用手册/image_38.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/947b78a03365497996cdab1d25358668~tplv-e844mpvzdi-compress:q90.image)
 
 机位运镜库
 
-[![构图复刻](image_39.png)](image_39.png)
+[![构图复刻](_files_小云雀 Seedance 2.5 使用手册/image_39.png)](_files_小云雀 Seedance 2.5 使用手册/image_39.png)
 
 构图复刻
 
-[![上传图片→白模，可用于不同角度的站位参考](image_40.png)](image_40.png)
+[![上传图片→白模，可用于不同角度的站位参考](_files_小云雀 Seedance 2.5 使用手册/image_40.png)](_files_小云雀 Seedance 2.5 使用手册/image_40.png)
 
 上传图片→白模，可用于不同角度的站位参考
 
 **分镜脚本规划：**「分集视频」页面生成脚本时，选择基于 30s 上限的片段规划，更好的适配 Seedance 2.5 效果。
 
-[![Seedance 2.5 参考素材](image_101.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/c0876fdd58bc4cddb3b2e80371259f1c~tplv-e844mpvzdi-compress:q90.image)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_101.png)](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/c0876fdd58bc4cddb3b2e80371259f1c~tplv-e844mpvzdi-compress:q90.image)
 
 ## 素材输入建议
 
@@ -1425,15 +1425,15 @@ Web端
 
 **避免脏/锐化的分镜图：**不推荐过度锐化、杂乱的 AI 直出分镜图；不推荐在分镜图上写过多文字；
 
-[![❌ badcase](image_102.png)](image_102.png)
+[![❌ badcase](_files_小云雀 Seedance 2.5 使用手册/image_102.png)](_files_小云雀 Seedance 2.5 使用手册/image_102.png)
 
 ❌ badcase
 
-[![❌ badcase](image_103.png)](image_103.png)
+[![❌ badcase](_files_小云雀 Seedance 2.5 使用手册/image_103.png)](_files_小云雀 Seedance 2.5 使用手册/image_103.png)
 
 ❌ badcase
 
-[![❌ badcase](image_104.png)](image_104.png)
+[![❌ badcase](_files_小云雀 Seedance 2.5 使用手册/image_104.png)](_files_小云雀 Seedance 2.5 使用手册/image_104.png)
 
 ❌ badcase
 
@@ -1447,11 +1447,11 @@ Web端
 2. step2：写整体故事梗概
 3. step3：按照分镜完整描述情节内容，至少补齐分镜图中没有的信息，可以考虑组合时间戳明确剧情逻辑，以右侧 case 为例，需要有场景、材质、运镜、动作、风格等全部基础信息；
 
-[![线稿分镜图](image_105.png)](image_105.png)
+[![线稿分镜图](_files_小云雀 Seedance 2.5 使用手册/image_105.png)](_files_小云雀 Seedance 2.5 使用手册/image_105.png)
 
 线稿分镜图
 
-[![其他参考图](image_106.png)](image_106.png)
+[![其他参考图](_files_小云雀 Seedance 2.5 使用手册/image_106.png)](_files_小云雀 Seedance 2.5 使用手册/image_106.png)
 
 其他参考图
 
@@ -1465,7 +1465,7 @@ Web端
 
 **概念分镜使用：**推荐简写 Prompt：如果分镜是概念分镜或关键帧设计，可以直接简写 Prompt，例如“按照分镜图的顺序，构建一个完整的故事剧情，运镜合理连贯”。
 
-[![概念分镜参考图](image_107.png)](image_107.png)
+[![概念分镜参考图](_files_小云雀 Seedance 2.5 使用手册/image_107.png)](_files_小云雀 Seedance 2.5 使用手册/image_107.png)
 
 概念分镜参考图
 
@@ -1481,19 +1481,19 @@ Web端
 以图片 1 至图片 7 的顺序作为关键帧，用图片 1 中粉色飞鱼的第一人称视角，生成一个粉色飞鱼在图片 1-图片 7 中沉浸式穿梭的新视频，一镜到底，奇幻国风插画风格。
 ```
 
-[![Seedance 2.5 参考素材](image_108.png)](image_108.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_108.png)](_files_小云雀 Seedance 2.5 使用手册/image_108.png)
 
-[![Seedance 2.5 参考素材](image_109.png)](image_109.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_109.png)](_files_小云雀 Seedance 2.5 使用手册/image_109.png)
 
-[![Seedance 2.5 参考素材](image_110.png)](image_110.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_110.png)](_files_小云雀 Seedance 2.5 使用手册/image_110.png)
 
-[![Seedance 2.5 参考素材](image_111.png)](image_111.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_111.png)](_files_小云雀 Seedance 2.5 使用手册/image_111.png)
 
-[![Seedance 2.5 参考素材](image_112.png)](image_112.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_112.png)](_files_小云雀 Seedance 2.5 使用手册/image_112.png)
 
-[![Seedance 2.5 参考素材](image_113.png)](image_113.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_113.png)](_files_小云雀 Seedance 2.5 使用手册/image_113.png)
 
-[![Seedance 2.5 参考素材](image_114.png)](image_114.png)
+[![Seedance 2.5 参考素材](_files_小云雀 Seedance 2.5 使用手册/image_114.png)](_files_小云雀 Seedance 2.5 使用手册/image_114.png)
 
 期待各位的创意大爆发，与我们一同见证 AI 如何让好故事闪闪发光✨
 

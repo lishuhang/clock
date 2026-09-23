@@ -38,19 +38,19 @@
 
 剧本资产拆解后进入资产库页面，可点击右上角「在画布中编辑」进入画布，也可直接点击角色/场景卡片，定位至画布对应位置
 
-[![角色](image_1.png)](image_1.png)
+[![角色](_files_小云雀短剧 Agent 画布使用手册/image_1.png)](_files_小云雀短剧 Agent 画布使用手册/image_1.png)
 
 角色
 
-[![场景](image_2.png)](image_2.png)
+[![场景](_files_小云雀短剧 Agent 画布使用手册/image_2.png)](_files_小云雀短剧 Agent 画布使用手册/image_2.png)
 
 场景
 
-[![道具](image_3.png)](image_3.png)
+[![道具](_files_小云雀短剧 Agent 画布使用手册/image_3.png)](_files_小云雀短剧 Agent 画布使用手册/image_3.png)
 
 道具
 
-[![素材](image_4.png)](image_4.png)
+[![素材](_files_小云雀短剧 Agent 画布使用手册/image_4.png)](_files_小云雀短剧 Agent 画布使用手册/image_4.png)
 
 素材
 
@@ -61,13 +61,13 @@
 1. 在列表视图全选**批量生成**
 2. 在画布中**整组执行**
 
-[![批量生成](image_5.png)](image_5.png)
+[![批量生成](_files_小云雀短剧 Agent 画布使用手册/image_5.png)](_files_小云雀短剧 Agent 画布使用手册/image_5.png)
 
 批量生成
 
-[![图片展示的是小云雀短剧Agent - 画布界面。左侧有“角色”“场景”“动作”“对话”“音频”“视频”“图片”“文件”等分类标签，各分类下有不同节点。右侧是“角色”分类下的角色节点，每个节点包含角色头像、名称、角色类型、角色状态等信息，部分节点有“更多”图标。该图与文档中“如何进入画布”及“补充角色/场景图可通过以下两种途径”内容相关，直观呈现了画布中角色节点的布局与信息展示情况。](image_6.png)](image_6.png)
+[![图片展示的是小云雀短剧Agent - 画布界面。左侧有“角色”“场景”“动作”“对话”“音频”“视频”“图片”“文件”等分类标签，各分类下有不同节点。右侧是“角色”分类下的角色节点，每个节点包含角色头像、名称、角色类型、角色状态等信息，部分节点有“更多”图标。该图与文档中“如何进入画布”及“补充角色/场景图可通过以下两种途径”内容相关，直观呈现了画布中角色节点的布局与信息展示情况。](_files_小云雀短剧 Agent 画布使用手册/image_6.png)](_files_小云雀短剧 Agent 画布使用手册/image_6.png)
 
-[![整组执行](image_7.png)](image_7.png)
+[![整组执行](_files_小云雀短剧 Agent 画布使用手册/image_7.png)](_files_小云雀短剧 Agent 画布使用手册/image_7.png)
 
 整组执行
 
@@ -79,25 +79,25 @@
 2. 画布空白处右键新建/上传
 3. 已有节点左右侧新建节点，不同节点可引用/被引用的节点有区别
 
-[![左侧菜单栏新建](image_8.png)](image_8.png)
+[![左侧菜单栏新建](_files_小云雀短剧 Agent 画布使用手册/image_8.png)](_files_小云雀短剧 Agent 画布使用手册/image_8.png)
 
 左侧菜单栏新建
 
-[![画布空白处右键新建/上传](image_9.png)](image_9.png)
+[![画布空白处右键新建/上传](_files_小云雀短剧 Agent 画布使用手册/image_9.png)](_files_小云雀短剧 Agent 画布使用手册/image_9.png)
 
 画布空白处右键新建/上传
 
-[![已有节点左右侧新建节点](image_10.png)](image_10.png)
+[![已有节点左右侧新建节点](_files_小云雀短剧 Agent 画布使用手册/image_10.png)](_files_小云雀短剧 Agent 画布使用手册/image_10.png)
 
 已有节点左右侧新建节点
 
 新建角色/场景节点，可以填充相关信息，可以选择已有角色/场景作为其子形象；再次整理画布时即可将同一角色形象整理至同一位置
 
-[![可以选择已有角色/场景](image_11.png)](image_11.png)
+[![可以选择已有角色/场景](_files_小云雀短剧 Agent 画布使用手册/image_11.png)](_files_小云雀短剧 Agent 画布使用手册/image_11.png)
 
 可以选择已有角色/场景
 
-[![再次整理](image_12.png)](image_12.png)
+[![再次整理](_files_小云雀短剧 Agent 画布使用手册/image_12.png)](_files_小云雀短剧 Agent 画布使用手册/image_12.png)
 
 再次整理
 
@@ -105,19 +105,19 @@
 
 不同节点有对应的不同工具，欢迎体验效果～
 
-[![角色（角色三视图、打光、镜头控制）](image_13.png)](image_13.png)
+[![角色（角色三视图、打光、镜头控制）](_files_小云雀短剧 Agent 画布使用手册/image_13.png)](_files_小云雀短剧 Agent 画布使用手册/image_13.png)
 
 角色（角色三视图、打光、镜头控制）
 
-[![场景（全景图）](image_14.png)](image_14.png)
+[![场景（全景图）](_files_小云雀短剧 Agent 画布使用手册/image_14.png)](_files_小云雀短剧 Agent 画布使用手册/image_14.png)
 
 场景（全景图）
 
-[![光影控制](image_15.png)](image_15.png)
+[![光影控制](_files_小云雀短剧 Agent 画布使用手册/image_15.png)](_files_小云雀短剧 Agent 画布使用手册/image_15.png)
 
 光影控制
 
-[![镜头控制](image_16.png)](image_16.png)
+[![镜头控制](_files_小云雀短剧 Agent 画布使用手册/image_16.png)](_files_小云雀短剧 Agent 画布使用手册/image_16.png)
 
 镜头控制
 
@@ -125,7 +125,7 @@
 
 点击角色节点的「更多」图标，将打开信息配置弹窗。剧本解析出的角色节点将自动附带文本音色，同时支持上传参考音频文件，自定义角色的音频音色参考
 
-[![角色节点信息配置弹窗](image_17.png)](image_17.png)
+[![角色节点信息配置弹窗](_files_小云雀短剧 Agent 画布使用手册/image_17.png)](_files_小云雀短剧 Agent 画布使用手册/image_17.png)
 
 角色节点信息配置弹窗
 
@@ -134,15 +134,15 @@
 1. 在图片节点可以右键选择「应用到角色」「应用到场景」对已有进行角色/场景节点进行主图替换
 2. 在想要替换的图片节点点击“复制图片”，选中对应节点ctrl+v复制
 
-[![「应用到角色」「应用到场景」](image_18.png)](image_18.png)
+[![「应用到角色」「应用到场景」](_files_小云雀短剧 Agent 画布使用手册/image_18.png)](_files_小云雀短剧 Agent 画布使用手册/image_18.png)
 
 「应用到角色」「应用到场景」
 
-[![step1:点击复制图片（注意不是ctrl+c）](image_19.png)](image_19.png)
+[![step1:点击复制图片（注意不是ctrl+c）](_files_小云雀短剧 Agent 画布使用手册/image_19.png)](_files_小云雀短剧 Agent 画布使用手册/image_19.png)
 
 step1:点击复制图片（注意不是ctrl+c）
 
-[![step2:在对应节点ctrl+v粘贴](image_20.png)](image_20.png)
+[![step2:在对应节点ctrl+v粘贴](_files_小云雀短剧 Agent 画布使用手册/image_20.png)](_files_小云雀短剧 Agent 画布使用手册/image_20.png)
 
 step2:在对应节点ctrl+v粘贴
 
@@ -150,27 +150,27 @@ step2:在对应节点ctrl+v粘贴
 
 引用连线后即可通过@进行素材引用，便于精准描述
 
-[![@进行素材引用](image_21.png)](image_21.png)
+[![@进行素材引用](_files_小云雀短剧 Agent 画布使用手册/image_21.png)](_files_小云雀短剧 Agent 画布使用手册/image_21.png)
 
 @进行素材引用
 
 在画布里创作好素材后，可以在**节点工具栏**或**右键菜单栏**里选择保存为道具/素材，便于在后续分镜故事板页面使用
 
-[![节点工具栏](image_22.png)](image_22.png)
+[![节点工具栏](_files_小云雀短剧 Agent 画布使用手册/image_22.png)](_files_小云雀短剧 Agent 画布使用手册/image_22.png)
 
 节点工具栏
 
-[![右键菜单栏](image_23.png)](image_23.png)
+[![右键菜单栏](_files_小云雀短剧 Agent 画布使用手册/image_23.png)](_files_小云雀短剧 Agent 画布使用手册/image_23.png)
 
 右键菜单栏
 
 可以双击节点标题修改节点名称，加入资产库中的素材名称也会同步更改
 
-[![双击节点标题修改节点名称](image_24.png)](image_24.png)
+[![双击节点标题修改节点名称](_files_小云雀短剧 Agent 画布使用手册/image_24.png)](_files_小云雀短剧 Agent 画布使用手册/image_24.png)
 
 双击节点标题修改节点名称
 
-[![资产库素材名称同步更改](image_25.png)](image_25.png)
+[![资产库素材名称同步更改](_files_小云雀短剧 Agent 画布使用手册/image_25.png)](_files_小云雀短剧 Agent 画布使用手册/image_25.png)
 
 资产库素材名称同步更改
 
@@ -183,17 +183,17 @@ step2:在对应节点ctrl+v粘贴
 1. 在列表视图点击对应卡片
 2. 在画布左侧菜单栏资产库点击定位
 
-[![列表视图点击对应卡片定位](image_26.png)](image_26.png)
+[![列表视图点击对应卡片定位](_files_小云雀短剧 Agent 画布使用手册/image_26.png)](_files_小云雀短剧 Agent 画布使用手册/image_26.png)
 
 列表视图点击对应卡片定位
 
-[![画布左侧菜单栏资产库点击定位](image_27.png)](image_27.png)
+[![画布左侧菜单栏资产库点击定位](_files_小云雀短剧 Agent 画布使用手册/image_27.png)](_files_小云雀短剧 Agent 画布使用手册/image_27.png)
 
 画布左侧菜单栏资产库点击定位
 
 ### 左下角菜单栏
 
-[![左下角菜单栏](image_28.png)](image_28.png)
+[![左下角菜单栏](_files_小云雀短剧 Agent 画布使用手册/image_28.png)](_files_小云雀短剧 Agent 画布使用手册/image_28.png)
 
 左下角菜单栏
 
@@ -206,11 +206,11 @@ step2:在对应节点ctrl+v粘贴
 5. 网格吸附：开启后节点排列将吸附网格
 6. 调整画布缩放比例
 
-[![只展示角色/场景](image_29.png)](image_29.png)
+[![只展示角色/场景](_files_小云雀短剧 Agent 画布使用手册/image_29.png)](_files_小云雀短剧 Agent 画布使用手册/image_29.png)
 
 只展示角色/场景
 
-[![网格吸附](image_30.png)](image_30.png)
+[![网格吸附](_files_小云雀短剧 Agent 画布使用手册/image_30.png)](_files_小云雀短剧 Agent 画布使用手册/image_30.png)
 
 网格吸附
 
@@ -218,6 +218,6 @@ step2:在对应节点ctrl+v粘贴
 
 以下展示为Mac版本快捷键，Windows版本可将`cmd`替换为`ctrl`，整理画布为`shift` + `option` + `F`
 
-[![画布快捷键](image_31.png)](image_31.png)
+[![画布快捷键](_files_小云雀短剧 Agent 画布使用手册/image_31.png)](_files_小云雀短剧 Agent 画布使用手册/image_31.png)
 
 画布快捷键

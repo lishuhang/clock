@@ -156,8 +156,8 @@ Brainstorm
 - 必须保持的产品、角色和风格规则已经写清；
 - 下一步要生成的内容和验收方式明确。
 
-下一步：[网络搜索](/zh/docs/agent/web-search)
+下一步：[网络搜索](https://docs.tapnow.ai/zh/docs/agent/web-search)
 
-[上一页Apps](/zh/docs/agent/apps)
+[上一页Apps](https://docs.tapnow.ai/zh/docs/agent/apps)
 
-[下一页网络搜索](/zh/docs/agent/web-search)
+[下一页网络搜索](https://docs.tapnow.ai/zh/docs/agent/web-search)

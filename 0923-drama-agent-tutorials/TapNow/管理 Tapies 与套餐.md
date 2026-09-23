@@ -94,8 +94,8 @@ Tapies 不是“点击一次扣固定数量”。模型、输出规格、时长�
 
 不要连续重复支付。等待几分钟后再次查看订单和余额；仍有问题时，保留订单号、交易时间、金额和支付状态，再联系支持。
 
-下一步：[续订与优惠](/zh/docs/help-center/renewal-and-discounts)
+下一步：[续订与优惠](https://docs.tapnow.ai/zh/docs/help-center/renewal-and-discounts)
 
-[上一页通过官方插件添加](/zh/docs/mcp/add-through-an-official-plugin)
+[上一页通过官方插件添加](https://docs.tapnow.ai/zh/docs/mcp/add-through-an-official-plugin)
 
-[下一页续订与优惠](/zh/docs/help-center/renewal-and-discounts)
+[下一页续订与优惠](https://docs.tapnow.ai/zh/docs/help-center/renewal-and-discounts)

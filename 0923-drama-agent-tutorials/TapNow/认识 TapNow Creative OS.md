@@ -62,6 +62,6 @@ Creative OS 提供稳定的 Agent、画布和权限体系，再通过 Apps 扩�
 
 Creative OS 将创作工具、团队协作、工作资料和 AI 能力放进同一个系统，让创作者把时间留给方向判断和作品本身。
 
-[上一页更新日志](/zh/docs/changelog)
+[上一页更新日志](https://docs.tapnow.ai/zh/docs/changelog)
 
-[下一页认识 TapNow Agent](/zh/docs/agent/tapnow-agent)
+[下一页认识 TapNow Agent](https://docs.tapnow.ai/zh/docs/agent/tapnow-agent)

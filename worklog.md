@@ -331,3 +331,35 @@ Work Log:
 
 Stage Summary:
 - bb8f7d9 已推送；嘉宾管理回到「新增+删除+拖拽+行内编辑」完整形态；导入语义改为文件优先、存储兜底
+
+## 2026-09-23 12:00-13:30 UTC+8 — 0923 教程离线抓取收尾：小云雀补齐 / TapNow 45页 / flova 7页 / 纳逗Pro PDF / AniShort 全课程 / 断链修复归零
+
+### 背景
+接续 0923-drama-agent-tutorials 交接任务（TODO.md）。本轮会话脚本目录 `/home/z/my-project/scripts/` 已丢失，全部抓取库按交接描述重建（web_scrape_lib.py：MediaPool 断点续传+pre_urls+魔数嗅探、Next.js 图片代理解码、markdownify 兼容签名；run_web_scrape.py 三站配置；另建 nadou_pdf.py、anishort_meta2.js、anishort_singles.js、anishort_download.py、anishort_mds.js 等）。
+
+### 完成清单
+1. **小云雀 11/11**：补 `短剧重制转绘使用手册`（13 媒体，断点续用既有 8 项）+ `小云雀短剧 Agent 智能预演体验指南`（5 图）。关键修复：prepare_article 只洗 DOM 不下载的 bug，新增 localize_dom（下载+改链一体）。
+2. **TapNow 45/45**：h1 作标题（og:title 是站点名）；修复 join_base 对 `/` 根相对路径误拼到文档路径下的 bug（gitbook-assets 图片因此从 404 变 200）；发票页 1 张 larksuite asynccode 图源站 400（需登录），md 用占位符注明。
+3. **flova 7/7**：无扩展名 CDN 视频按魔数嗅探为 .mp4；quick-guide 5 段 + in-depth 4 段全部本地化。
+4. **纳逗Pro 官方 PDF**：按钮为浏览器端实时生成，Playwright expect_download 捕获 → `纳逗Pro 使用手册.pdf`（1.9MB，文件名中的零宽字符已清理）。
+5. **AniShort 11/11 课程**：
+   - 结构判定：3 多集课程（77 全流程 6 集 / 119 3D导演台 14 集 / 104 全环节 11 集）+ 8 单集课程（速转整部剧 43:17 / 3D世界新玩法 27:51 等）。判定依据：面包屑 nav 含 `.text-cyan-400` 集名标记；部分课程页 16 行侧栏实为「全目录推荐位」，点击即跳转其它课程（URL 变化已实测）。
+   - 视频捕获：监听 `bdbcdn.../propertyvideo/*.mp4` 响应 + 等 video.src 变化，修复「点击后取到旧 src」竞态。
+   - 159 集去重 = 48 唯一视频，HEAD 测得合计 5.53GB。**受 GitHub 100MB 单文件硬限制**：29 个 ≤99MB（约 1.07G）入共享池 `_anishort_videos/`（文件名=CDN UUID 原名，sources.json 清单）；17 个大视频在 md 保留在线链接并注明原因（磁盘 2× 成本 + 100MB 限制双约束）。
+6. **历史断链修复**：小云雀/纳逗Pro 旧 md 的 1958 个裸 `](image_N.png)` → `](_files_<文档名>/image_N.png)`；228 个 `/xxx` 站根相对链接改完整 URL；TapNow 文内 `.md` 相对链接映射在线页。**全仓 md 相对链接 0 断链**（2366 个可解析）。
+
+### Git 手术记录（磁盘危机处理，值得留档）
+- 沙箱盘 9.9G，AniShort 阶段仅剩 ~2.5G；媒体入库成本≈2×（工作树+pack）。
+- 尝试 `git repack -a -d --filter=blob:none` 释放旧 pack：需要临时双倍空间 → 磁盘 100% 满，删除 tmp_pack 恢复。
+- 改用「blobless 浅克隆 + no-checkout + 工作树 mv 搬迁 + reset --mixed」换血 .git（3.2G→596K），腾出 ~3.2G。
+- 换血后 porcelain `git commit` 的 diff-stat 触发旧 blob 懒加载回填 → 二次撑爆磁盘 + index 缓存树被杀进程污染。清理后改纯 plumbing（write-tree/commit-tree/update-ref），但 write-tree 仍逐个索要全部索引 blob（无 stat 缓存时 git 逐项存在性检查触发 promisor 拉取）。
+- 终解：`git fetch --no-filter origin main` 全量回填 3.3G blob（删除 pack + 清空 refs 强制重协商，`--no-filter` 是关键，config 里 unset partialclonefilter 不生效）→ plumbing 提交 4f3627c → push 成功。
+
+### 安全与收尾
+- token 仅在 `.git/config` remote url；本轮所有日志/文档未含 token。
+- `/home/z/my-project/.secrets/feishu_cookies.txt`：本轮会话中该路径已不存在（cookie 早前已销毁），无需再删，记录在案。
+- TODO.md 已改写为「完成总账」：11 平台全部 ✅，验收清单全勾。
+
+Stage Summary:
+- origin/main = 4f3627c：AniShort 11 课程 md + 1.07G 共享媒体池已上库
+- 11 平台教程全部离线可读；全仓 0 断链；保留在线的 17 个大视频均有注明

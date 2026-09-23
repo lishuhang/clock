@@ -46,12 +46,12 @@ Agent 可以连续提交多个生成任务。如果你不确定这次要花多�
 
 ## 下一步
 
-如果你用的是 Claude 或 ChatGPT，从[添加自定义连接器](custom-connector.md) 开始。如果你在 WorkBuddy、千问办公或豆包工作里工作，从[通过官方插件添加](official-plugins.md) 开始。
+如果你用的是 Claude 或 ChatGPT，从[添加自定义连接器](https://docs.tapnow.ai/zh/docs/mcp/add-a-custom-connector) 开始。如果你在 WorkBuddy、千问办公或豆包工作里工作，从[通过官方插件添加](https://docs.tapnow.ai/zh/docs/mcp/add-through-an-official-plugin) 开始。
 
 其他支持 MCP 的客户端也可以用同样的地址连接，步骤与 Claude 一致。
 
-如果你的 Agent 支持自己填写 MCP 连接器，从[添加自定义连接器](custom-connector.md) 开始。如果你在 WorkBuddy、千问办公或豆包工作里工作，从[通过官方插件添加](official-plugins.md) 开始。
+如果你的 Agent 支持自己填写 MCP 连接器，从[添加自定义连接器](https://docs.tapnow.ai/zh/docs/mcp/add-a-custom-connector) 开始。如果你在 WorkBuddy、千问办公或豆包工作里工作，从[通过官方插件添加](https://docs.tapnow.ai/zh/docs/mcp/add-through-an-official-plugin) 开始。
 
-[上一页参加 Arena 比赛](/zh/docs/publish/join-an-arena-event)
+[上一页参加 Arena 比赛](https://docs.tapnow.ai/zh/docs/publish/join-an-arena-event)
 
-[下一页添加自定义连接器](/zh/docs/mcp/add-a-custom-connector)
+[下一页添加自定义连接器](https://docs.tapnow.ai/zh/docs/mcp/add-a-custom-connector)

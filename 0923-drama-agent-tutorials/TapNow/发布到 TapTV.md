@@ -84,8 +84,8 @@ TapTV 是全球首个开源 AI 视频创作社区。
 
 作品发布到 TapTV 后，不会自动参加所有 Arena 活动。要参加活动，还需要进入对应的 Arena 页面，按该活动的章程完成报名或投稿。
 
-下一步：[参加 Arena 比赛](/zh/docs/publish/join-an-arena-event)
+下一步：[参加 Arena 比赛](https://docs.tapnow.ai/zh/docs/publish/join-an-arena-event)
 
-[上一页评论并反馈问题](/zh/docs/projects/comment-and-send-feedback)
+[上一页评论并反馈问题](https://docs.tapnow.ai/zh/docs/projects/comment-and-send-feedback)
 
-[下一页参加 Arena 比赛](/zh/docs/publish/join-an-arena-event)
+[下一页参加 Arena 比赛](https://docs.tapnow.ai/zh/docs/publish/join-an-arena-event)

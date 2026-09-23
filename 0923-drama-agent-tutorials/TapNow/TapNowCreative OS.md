@@ -9,4 +9,4 @@
 
 全球首个AI原生创作系统
 
-[快速开始](/zh/docs/agent/chat-with-agent)[认识 Creative OS](/zh/docs/start/what-is-tapnow-creative-os)
+[快速开始](https://docs.tapnow.ai/zh/docs/agent/chat-with-agent)[认识 Creative OS](https://docs.tapnow.ai/zh/docs/start/what-is-tapnow-creative-os)

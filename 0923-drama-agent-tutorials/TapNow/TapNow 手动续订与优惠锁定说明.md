@@ -101,6 +101,6 @@
 
 ![](_files_TapNow 手动续订与优惠锁定说明/image_6.png)
 
-[上一页管理 Tapies 与套餐](/zh/docs/account/manage-tapies-and-plans)
+[上一页管理 Tapies 与套餐](https://docs.tapnow.ai/zh/docs/account/manage-tapies-and-plans)
 
-[下一页本地货币预估价格](/zh/docs/local-currency-price-estimates)
+[下一页本地货币预估价格](https://docs.tapnow.ai/zh/docs/local-currency-price-estimates)

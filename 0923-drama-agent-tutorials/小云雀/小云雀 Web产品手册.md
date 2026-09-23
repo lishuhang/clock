@@ -15,7 +15,7 @@
 
 **😆 本文档有什么？**了解小云雀Web端的全部能力和最新更新！🚀
 
-💕 小云雀Web直达：[xiaoyunque.jianying.com ↗](/)
+💕 小云雀Web直达：[xiaoyunque.jianying.com ↗](https://xyq.jianying.com/)
 
 点击直达详细的功能介绍：
 
@@ -70,53 +70,53 @@
 
    一站式对话共创，把创意变成好剧本，支持从0到1生成、小说改编、系列剧连载、解说剧改写、出海本土化。
 
-   [查看剧本助手教程](/tutorials/short-drama-agent-script-assistant)
+   [查看剧本助手教程](https://xyq.jianying.com/tutorials/short-drama-agent-script-assistant)
 2. **短剧出海升级 *新***
 
    重制转绘一次搞定海外市场适配，单集5min、总100min，配合白模参考 + 7000+角色库 + 出海剧本本土化。
 
-   [查看重制转绘使用手册](/tutorials/short-drama-remake)
+   [查看重制转绘使用手册](https://xyq.jianying.com/tutorials/short-drama-remake)
 3. **故事场景专属无限画布**
 
    面向故事创作的可视化工作区，用来集中整理和生成角色、场景及相关参考素材。
 
-   [查看无限画布教程](/tutorials/short-drama-agent-canvas)
+   [查看无限画布教程](https://xyq.jianying.com/tutorials/short-drama-agent-canvas)
 4. **3D导演台**
 
    面向短剧创作的3D构图参考工具。在3D空间中放置角色 / 道具模型，调整其站位、姿势，放置机位进行截图，把截图发送回画布，作为分镜图或视频生成的构图参考。
 
-   [查看3D导演台教程](/tutorials/short-drama-agent-3d-director)
+   [查看3D导演台教程](https://xyq.jianying.com/tutorials/short-drama-agent-3d-director)
 5. **智能预演**
 
    你的导演助理，帮你预演整组镜头，统一规划分镜，自动把分镜关键帧插入对应片段，大幅降低抽卡率。
 
-   [查看智能预演教程](/tutorials/short-drama-agent-smart-preview)
+   [查看智能预演教程](https://xyq.jianying.com/tutorials/short-drama-agent-smart-preview)
 
 #### 1.2 小云雀短剧获奖作品
 
-[![短剧获奖作品海报一](image_1.png)](image_1.png)
+[![短剧获奖作品海报一](_files_小云雀 Web产品手册/image_1.png)](_files_小云雀 Web产品手册/image_1.png)
 
 短剧获奖作品海报一
 
-[![短剧获奖作品海报二](image_2.png)](image_2.png)
+[![短剧获奖作品海报二](_files_小云雀 Web产品手册/image_2.png)](_files_小云雀 Web产品手册/image_2.png)
 
 短剧获奖作品海报二
 
-[![短剧获奖作品海报三](image_3.png)](image_3.png)
+[![短剧获奖作品海报三](_files_小云雀 Web产品手册/image_3.png)](_files_小云雀 Web产品手册/image_3.png)
 
 短剧获奖作品海报三
 
 ##### 👍 其他优质案例
 
-[[VIDEO](video_1.mp4)](video_1.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_1.mp4)](_files_小云雀 Web产品手册/video_1.mp4)
 
 **与倭一战：仿真人历史大片**
 
-[[VIDEO](video_2.mp4)](video_2.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_2.mp4)](_files_小云雀 Web产品手册/video_2.mp4)
 
 **饽饽的神：搞笑奇幻爱情短剧**
 
-[[VIDEO](video_3.mp4)](video_3.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_3.mp4)](_files_小云雀 Web产品手册/video_3.mp4)
 
 **错焦：复古日漫风剧情片**
 
@@ -124,31 +124,31 @@
 
 ###### 3D穿越
 
-[[VIDEO](video_4.mp4)](video_4.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_4.mp4)](_files_小云雀 Web产品手册/video_4.mp4)
 
 **3D穿越 · 案例一**
 
-[[VIDEO](video_5.mp4)](video_5.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_5.mp4)](_files_小云雀 Web产品手册/video_5.mp4)
 
 **3D穿越 · 案例二**
 
 ###### 3D游戏打斗
 
-[[VIDEO](video_6.mp4)](video_6.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_6.mp4)](_files_小云雀 Web产品手册/video_6.mp4)
 
 **3D游戏打斗 · 案例一**
 
-[[VIDEO](video_7.mp4)](video_7.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_7.mp4)](_files_小云雀 Web产品手册/video_7.mp4)
 
 **3D游戏打斗 · 案例二**
 
 ###### 仿真人 · 海外
 
-[[VIDEO](video_8.mp4)](video_8.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_8.mp4)](_files_小云雀 Web产品手册/video_8.mp4)
 
 **仿真人海外 · 案例一**
 
-[[VIDEO](video_9.mp4)](video_9.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_9.mp4)](_files_小云雀 Web产品手册/video_9.mp4)
 
 **仿真人海外 · 案例二**
 
@@ -163,19 +163,19 @@
 1. **上传准备好的剧本**（支持txt / docx格式）或直接粘贴文本，最长支持**10万字**超长剧本！
 2. **通过AI生成剧本**，只需输入你构想的故事内容。可以尝试输入故事设定、主角特征、剧情脉络、最终结局等要素。
 
-[![进入短剧Agent工具](image_4.png)](image_4.png)
+[![进入短剧Agent工具](_files_小云雀 Web产品手册/image_4.png)](_files_小云雀 Web产品手册/image_4.png)
 
 进入短剧Agent工具
 
-[![选择短剧Agent](image_5.png)](image_5.png)
+[![选择短剧Agent](_files_小云雀 Web产品手册/image_5.png)](_files_小云雀 Web产品手册/image_5.png)
 
 选择短剧Agent
 
-[![上传或粘贴剧本](image_6.png)](image_6.png)
+[![上传或粘贴剧本](_files_小云雀 Web产品手册/image_6.png)](_files_小云雀 Web产品手册/image_6.png)
 
 上传或粘贴剧本
 
-[![AI生成剧本](image_7.png)](image_7.png)
+[![AI生成剧本](_files_小云雀 Web产品手册/image_7.png)](_files_小云雀 Web产品手册/image_7.png)
 
 AI生成剧本
 
@@ -189,19 +189,19 @@ AI生成剧本
 
 手里只有传统短剧剧本，想做成以旁白为主的解说剧？不用自己苦哈哈地重新写，把原剧本丢给Agent，一键自动转换为旁白解说体～
 
-[![剧本概要确认](image_8.png)](image_8.png)
+[![剧本概要确认](_files_小云雀 Web产品手册/image_8.png)](_files_小云雀 Web产品手册/image_8.png)
 
 剧本概要确认
 
-[![剧本编辑](image_9.png)](image_9.png)
+[![剧本编辑](_files_小云雀 Web产品手册/image_9.png)](_files_小云雀 Web产品手册/image_9.png)
 
 剧本编辑
 
-[![项目名称、风格与比例](image_10.png)](image_10.png)
+[![项目名称、风格与比例](_files_小云雀 Web产品手册/image_10.png)](_files_小云雀 Web产品手册/image_10.png)
 
 项目名称、风格与比例
 
-[![旁白型剧本改编](image_11.png)](image_11.png)
+[![旁白型剧本改编](_files_小云雀 Web产品手册/image_11.png)](_files_小云雀 Web产品手册/image_11.png)
 
 旁白型剧本改编
 
@@ -217,23 +217,23 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 点击“新建角色”即可轻松搞定。更棒的是，后续的角色会自动参考你刚建好的角色形象，保证人物前后长相一致。
 
-[![自动生成故事中全部角色](image_12.png)](image_12.png)
+[![自动生成故事中全部角色](_files_小云雀 Web产品手册/image_12.png)](_files_小云雀 Web产品手册/image_12.png)
 
 自动生成故事中全部角色
 
-[![角色全局生命周期](image_13.png)](image_13.png)
+[![角色全局生命周期](_files_小云雀 Web产品手册/image_13.png)](_files_小云雀 Web产品手册/image_13.png)
 
 角色全局生命周期
 
-[![根据故事设计角色形象](image_14.png)](image_14.png)
+[![根据故事设计角色形象](_files_小云雀 Web产品手册/image_14.png)](_files_小云雀 Web产品手册/image_14.png)
 
 根据故事设计角色形象
 
-[![编辑角色与音色](image_15.png)](image_15.png)
+[![编辑角色与音色](_files_小云雀 Web产品手册/image_15.png)](_files_小云雀 Web产品手册/image_15.png)
 
 编辑角色与音色
 
-[![新建角色形象](image_16.png)](image_16.png)
+[![新建角色形象](_files_小云雀 Web产品手册/image_16.png)](_files_小云雀 Web产品手册/image_16.png)
 
 新建角色形象
 
@@ -245,11 +245,11 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 >
 > 同角色图，直接在资料库修改场景描述，重新生成即可～
 
-[![全剧场景库](image_17.png)](image_17.png)
+[![全剧场景库](_files_小云雀 Web产品手册/image_17.png)](_files_小云雀 Web产品手册/image_17.png)
 
 全剧场景库
 
-[![修改场景描述](image_18.png)](image_18.png)
+[![修改场景描述](_files_小云雀 Web产品手册/image_18.png)](_files_小云雀 Web产品手册/image_18.png)
 
 修改场景描述
 
@@ -263,19 +263,19 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 都完成之后，就可以点击底部生成分镜视频啦！不想逐次点击？短剧Agent也灵活支持**批量生成多集、多分镜**。
 
-[![全集列表](image_19.png)](image_19.png)
+[![全集列表](_files_小云雀 Web产品手册/image_19.png)](_files_小云雀 Web产品手册/image_19.png)
 
 全集列表
 
-[![自动拆分镜、生成分镜脚本](image_20.png)](image_20.png)
+[![自动拆分镜、生成分镜脚本](_files_小云雀 Web产品手册/image_20.png)](_files_小云雀 Web产品手册/image_20.png)
 
 自动拆分镜、生成分镜脚本
 
-[![生成分集视频](image_21.png)](image_21.png)
+[![生成分集视频](_files_小云雀 Web产品手册/image_21.png)](_files_小云雀 Web产品手册/image_21.png)
 
 生成分集视频
 
-[![增删分镜](image_22.png)](image_22.png)
+[![增删分镜](_files_小云雀 Web产品手册/image_22.png)](_files_小云雀 Web产品手册/image_22.png)
 
 增删分镜
 
@@ -285,11 +285,11 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 镜头衔接不自然？善用故事板功能，快速截取上一镜头的尾帧作为下一镜头的首帧参考，轻松实现视频连贯转场。
 
-[![截取当前帧、首帧或尾帧](image_23.png)](image_23.png)
+[![截取当前帧、首帧或尾帧](_files_小云雀 Web产品手册/image_23.png)](_files_小云雀 Web产品手册/image_23.png)
 
 截取当前帧、首帧或尾帧
 
-[![在资产库中引用截帧素材](image_24.png)](image_24.png)
+[![在资产库中引用截帧素材](_files_小云雀 Web产品手册/image_24.png)](_files_小云雀 Web产品手册/image_24.png)
 
 在资产库中引用截帧素材
 
@@ -297,23 +297,23 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 无论是画面中需要的特定道具、想要的特定氛围光影，还是角色之间特定的站位关系，都可以通过上传参考素材给Agent垫图，让最终生成的画面完美贴合你的想象。
 
-[![氛围光影参考素材](image_25.png)](image_25.png)
+[![氛围光影参考素材](_files_小云雀 Web产品手册/image_25.png)](_files_小云雀 Web产品手册/image_25.png)
 
 氛围光影参考素材
 
-[![道具参考素材](image_26.png)](image_26.png)
+[![道具参考素材](_files_小云雀 Web产品手册/image_26.png)](_files_小云雀 Web产品手册/image_26.png)
 
 道具参考素材
 
-[![人物关系与站位参考](image_27.png)](image_27.png)
+[![人物关系与站位参考](_files_小云雀 Web产品手册/image_27.png)](_files_小云雀 Web产品手册/image_27.png)
 
 人物关系与站位参考
 
-[![在资产库中选择参考素材](image_28.png)](image_28.png)
+[![在资产库中选择参考素材](_files_小云雀 Web产品手册/image_28.png)](_files_小云雀 Web产品手册/image_28.png)
 
 在资产库中选择参考素材
 
-[![角色形象与分镜内容关联](image_29.png)](image_29.png)
+[![角色形象与分镜内容关联](_files_小云雀 Web产品手册/image_29.png)](_files_小云雀 Web产品手册/image_29.png)
 
 角色形象与分镜内容关联
 
@@ -323,11 +323,11 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 🎉 当当当当，短剧制作好啦。😜 快去小云雀短剧Agent制作属于你的短剧吧！
 
-[![右上角点击合成](image_30.png)](image_30.png)
+[![右上角点击合成](_files_小云雀 Web产品手册/image_30.png)](_files_小云雀 Web产品手册/image_30.png)
 
 右上角点击合成
 
-[![导出全集](image_31.png)](image_31.png)
+[![导出全集](_files_小云雀 Web产品手册/image_31.png)](_files_小云雀 Web产品手册/image_31.png)
 
 导出全集
 
@@ -380,7 +380,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 帮我生成一段15秒的三国赤壁之战经典场面短视频。
 
-[[VIDEO](video_10.mp4)](video_10.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_10.mp4)](_files_小云雀 Web产品手册/video_10.mp4)
 
 **模糊意图 / 一句话创作 · 案例1**
 
@@ -388,7 +388,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 生成一段黑马球队逆袭成功的励志短视频，展现从弱队到冠军的热血历程，画面要有运动感和激情
 
-[[VIDEO](video_11.mp4)](video_11.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_11.mp4)](_files_小云雀 Web产品手册/video_11.mp4)
 
 **模糊意图 / 一句话创作 · 案例2**
 
@@ -402,7 +402,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 帮我生成以下视频： 第1段（0-15秒） 中式3D仙侠动画电影风格，金红暖色调高燃战斗开场。 0-4秒：云海翻涌的仙山之巅，镜头从高空急速俯冲穿过云层，男修者一袭白衣立于悬崖边缘，长发随风猎猎飘，手中紧握一柄泛着青色剑芒的仙剑，目光凌厉望向远方涌来的魔气，低喝"来了"。 5-9秒：魔气中冲出数十只暗影魔兽，嘶吼着扑向男修者。男修者脚踏虚空，脚下浮现金色八卦法阵，整个人如星般冲天而起，仙剑在空中划出数道青色剑气，将前排魔兽斩成灰烬粒子。 10-15秒：镜头环绕快切，男修者在空中与魔兽群激战，剑气纵横交错，每剑挥出都带出青色光轨。一只巨型魔从魔气深处现身，张开血盆大口。 定格画面：男修者背对镜头持剑而立，面前是漫天魔兽与那道庞大的黑影。 第2段（15-30秒） 将@视频1延长15秒。 0-5秒：接上段，巨型魔兽猛然挥动利爪拍向男修者。千钧一发之际，一道红衣身影从侧方御剑飞来，女修者手持赤焰法杖，周身火焰翻涌，大喝"退！"一杖击退魔兽利爪，红白双芒在空中碰撞爆发冲击波。 6-10秒：双人激战镜头。女修者脚踏赤色莲花法阵悬浮空中，双手结印，身后浮现一尊巨大的火焰法相——九尾凤凰虚影展开双翼，遮天蔽日。凤凰虚影发出清越凤鸣，喷吐烈焰焚烧魔兽群。 11-15秒：男修者与女修者背靠背悬浮空中，两人相视一眼，默契点头。男修者剑指苍穹，女修者法杖点地，两人同时大喊"法相天地！"青色巨龙与赤焰凤凰两尊法相在他们身后冲天而起，金龙盘旋、凤凰展翅。 定格画面：双法相对决魔兽大军的壮观场面。 第3段（30-45秒） 将@视频2延长15秒。 0-4秒：双法相同时俯冲攻击，青龙盘绕扑向魔兽群，凤凰喷吐烈焰席卷战场。镜头跟随青龙穿行于魔兽之间，道道龙爪挥过斩落数只魔兽，龙鳞在战斗中闪烁青光。 5-9秒：双人御剑空战特写。男修者御剑穿梭于魔兽群中，剑光如雨，每一剑都精准刺穿魔兽要害。女修者脚踏莲花法阵，双手连续结印，火焰化作数十朵火莲飞向敌群，绽放时炸开漫天火星。镜头在两人之间快速切换，配合激昂音效。 10-15秒：巨型魔兽首领愤怒咆哮，全身魔气暴涨，化作数百道黑色触手同时袭向二人。男修者与女修者同时转身面对攻击，男修者横剑格挡，女修者法杖撑起火焰护盾。 定格画面：黑白红三色光芒在空中剧烈碰撞，两人神情坚毅，咬牙支撑。 第4段（45-60秒） 将@视频3延长15秒。 0-4秒：僵持中，男修者大喝"合力一击！"两人同时收回防御，转身背靠背。男修者仙剑高举，剑身凝聚耀眼的青色剑芒。女修者法杖指向苍穹，杖顶凝聚炽烈的赤色火球。两人法相也同时向天咆哮，青龙与凤凰的力量涌入二人体内。 5-10秒：慢动作升格镜头。男修者挥剑斩下，一道贯穿天地的青色剑气劈出。女修者法杖前指，一颗巨型火球如陨石般轰出。青龙凤皇双法相也同时俯冲，四道攻击在空中汇聚成一道毁天灭地的青红双色光柱，笔直冲向巨型魔兽首领。 11-15秒：光柱击中魔兽首领，爆炸的金色与红色粒子漫天炸开。镜头缓推穿过爆炸光芒，废墟中，男修者与女修者并肩而立，各自收起武器。男修者轻声"结束了"，女修者微微一笑。镜头缓缓拉远，朝阳从云海尽头升起，金色晨光洒满仙山。音效渐弱，只剩下悠远的晨风声与鸟鸣。
 ```
 
-[[VIDEO](video_12.mp4)](video_12.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_12.mp4)](_files_小云雀 Web产品手册/video_12.mp4)
 
 **完整剧本 / 长逻辑创作 · 案例1**
 
@@ -414,7 +414,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 帮我制作一条美短猫一家的日常视频。主角公美短猫是一只直立行走的拟人化猫，它穿着工装连体裤在工地上工作，有一天它太想念在乡下的妻女，所以就打电话让它的妻女也一起搬到工地上和它一起生活，妻子母美短猫是一只直立行走的拟人化猫，它穿着做饭的围裙，孩子美短猫是一只拟人化小小美短猫。母美短猫和小小猫一起坐上长途大巴去找工地上的公美短猫，一家子虽然住在拥挤的工地宿舍，但是也幸福快乐。新的一天开始了，天还没亮公美短猫就在工地上开起了挖掘机，猫妈妈却在工地上给共友做起了饭，后续故事可以发散。整体视频每个镜头均采用3d写通风格生成，保持生成画面中每个美短猫主角的一致性，隐藏数字人，隐藏贴纸，但需要旁白文案。
 ```
 
-[[VIDEO](video_13.mp4)](video_13.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_13.mp4)](_files_小云雀 Web产品手册/video_13.mp4)
 
 **完整剧本 / 长逻辑创作 · 案例2**
 
@@ -424,7 +424,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 提取图片中文字内容口语化一些，并润色生成一段苹果干的原创视频，吸引人购买欲望
 
-[[VIDEO](video_14.mp4)](video_14.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_14.mp4)](_files_小云雀 Web产品手册/video_14.mp4)
 
 **模仿创作 / 风格参考 · 案例1**
 
@@ -441,7 +441,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 - [参考素材5（预览）](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/05a7b014ccd94841ac81dbed39d5da86~tplv-e844mpvzdi-compress:q90.image)
 - [参考素材6（预览）](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/7b8329b437dc422aa3bb78ed587280c6~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_15.mp4)](video_15.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_15.mp4)](_files_小云雀 Web产品手册/video_15.mp4)
 
 **模仿创作 / 风格参考 · 案例2**
 
@@ -457,7 +457,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 第一人称POV跟拍视角，低角度拍摄，雾蒙蒙的红杉林林间小路，一位银发少女手持长剑向前奔跑，动态模糊效果，强烈的速度感与沉浸感，写实风格，电影级画面
 ```
 
-[[VIDEO](video_16.mp4)](video_16.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_16.mp4)](_files_小云雀 Web产品手册/video_16.mp4)
 
 **风格 / 运镜 / 大片感 · 案例1**
 
@@ -471,7 +471,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 - [参考素材1](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/839bd09d98324f029dd62b004a030b36~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_17.mp4)](video_17.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_17.mp4)](_files_小云雀 Web产品手册/video_17.mp4)
 
 **风格 / 运镜 / 大片感 · 案例2**
 
@@ -485,7 +485,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 - [参考素材1](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/c697457b395c47a18ece2518f8169797~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_18.mp4)](video_18.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_18.mp4)](_files_小云雀 Web产品手册/video_18.mp4)
 
 **风格 / 运镜 / 大片感 · 案例3**
 
@@ -499,7 +499,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 生成一段机器猫（哆啦A梦）大战哥斯拉的视频，画面写实震撼，展现两个经典角色的精彩对决。
 ```
 
-[[VIDEO](video_19.mp4)](video_19.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_19.mp4)](_files_小云雀 Web产品手册/video_19.mp4)
 
 **萌宠 / 脑洞 / 搞笑 · 案例1**
 
@@ -511,7 +511,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 帮我生成一个视频：小豆包穿着白色衣服，头大大的，身体小小的，和普通豆包一样。有一个人把那个小豆包的帽子给给摘走，扔到了熔岩里。那个小豆包说，你为什么要把我的帽子扔进熔岩里，回头那个人说，我是我是我是CS，回头小豆包哭了。模型 2.0，比例 9:16，时长 10s。
 ```
 
-[[VIDEO](video_20.mp4)](video_20.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_20.mp4)](_files_小云雀 Web产品手册/video_20.mp4)
 
 **萌宠 / 脑洞 / 搞笑 · 案例2**
 
@@ -525,7 +525,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 - [参考素材1](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/6e93bbb6f7bd4db6acdd32850baca9a0~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_21.mp4)](video_21.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_21.mp4)](_files_小云雀 Web产品手册/video_21.mp4)
 
 **萌宠 / 脑洞 / 搞笑 · 案例3**
 
@@ -541,7 +541,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 - [参考素材1](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/3277d34ed0cd4a66a4d7ffbffe09cd57~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_22.mp4)](video_22.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_22.mp4)](_files_小云雀 Web产品手册/video_22.mp4)
 
 **剧情 / 推文 / 短剧 · 案例1**
 
@@ -555,7 +555,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 - [参考素材1](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/56f0c091b39246bfb440e44292db50f7~tplv-e844mpvzdi-compress:q90.image)[参考素材2](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/d3c369608cf245979583efdc8ac213a6~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_23.mp4)](video_23.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_23.mp4)](_files_小云雀 Web产品手册/video_23.mp4)
 
 **剧情 / 推文 / 短剧 · 案例2**
 
@@ -569,7 +569,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 我是丁老师，请为我生成语文中关于“村居”里春天情境的教学视频，要能结合教材进行设计，时间一分钟以内。 视频开头使用以下话术：“同学们好，我是你们的语文老师丁老师，下面我们一起来看看春天的美景”，使用3D动画的画面风格生成素材，使用猴哥风格的音色，不要数字人出镜，使用温馨的视频情绪生成素材
 ```
 
-[[VIDEO](video_24.mp4)](video_24.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_24.mp4)](_files_小云雀 Web产品手册/video_24.mp4)
 
 **知识科普 / 教育培训 · 案例1**
 
@@ -581,7 +581,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 - 标题：孩子学习动力不足原因 - 创意要点： - 视频主题：儿童教育心理学 - 认知需求与学习动力 - 核心内容： 1. 尊重需求的重要性 2. 孩子天生的认知需求（对世界的好奇） 3. 马斯洛需求层次理论第五层：自我实现需求在孩子身上的表现 4. 刷题和只看分数会磨灭好奇心 5. 学习变成任务而非探索导致动力不足 6. 认知需求被压抑的结果 7. 下期预告：审美需求对学习动力的影响 - 视频风格：教育科普、动画风格、温馨亲切 - 目标受众：家长、教育工作者 - 视频设置：竖屏9:16，系统推荐时长，中文配音，需要字幕。 剧情梗概：视频以孩子拆解玩具的探索行为开场，引出“认知需求”概念。接着，通过对比蒙太奇，展现孩子在大自然中观察昆虫（满足认知需求）与在书桌前面对堆积试卷、表情麻木（压抑认知需求）两种截然不同的状态。旁白阐述马斯洛需求层次理论，解释不当教育方式（如刷题）如何磨灭好奇心，导致学习动力不足。最后，主持人出镜，预告下期“审美需求”主题，并引导观众关注。 镜头1： - 画面内容：AI生成 - 温馨家庭客厅，特写镜头。一双小手正在专注地拆解机械玩具，试图看清内部的齿轮结构。背景传来玩具零件碰撞的轻微声响。主持人（旁白）说：“孩子天生就有‘认识需求’——对世界的好奇。” 镜头2： - 画面内容：AI生成 - 阳光公园草地，中景。阳光洒在草地上，孩子趴在地上，手持放大镜，正聚精会神地观察一只爬行的甲虫，脸上带着好奇的微笑。环境中有鸟鸣和风吹草叶的沙沙声。叠化转场至下一个镜头。 镜头3 - 画面内容:AI生成 - 压抑的书桌，中景。光线昏暗，孩子坐在书桌前，面无表情，眼神空洞地看着前方。他面前堆着高高的堆叠的试卷。背景是单调的翻页声和笔尖划过纸张的声音。主持人（旁白）说：“但如果只是没完没了地刷题、只看分数，就会慢慢磨掉这份好奇。” 镜头4 - 画面内容:AI生成 - 压抑的书桌，特写镜头。镜头从堆叠的试卷上密密麻麻的红叉和分数，缓慢上摇至孩子沮丧低垂的侧脸。他叹了口气。主持人（旁白）说：“而当学习变成不得不做的任务，而不是有意思的探索…” 镜头5 - 画面内容:AI生成 - 压抑的书桌，中景。孩子推开面前的试卷，身体后仰靠在椅背上，双手抱头，显得疲惫且抗拒。他看了一眼时钟，又厌恶地移开目光。主持人（旁白）说：“孩子可能就会出现学习动力不足的情况。这就是认知需求被压抑的结果。” 镜头6：压抑的书桌，中景。孩子推开面前的试卷， - 身体后仰靠在椅背上，双手抱头，显得疲惫 - 且抗拒。他看了一眼时钟，又厌恶地移开目光。 主持人（旁白）说：“孩子可能就会出现 - 学习动力不足的情况。这就是认知需求被压 - 抑的结果。” 镜头7 - 画面内容: AI生成 - 主持人书房，中近景。主持人（旁白）坐在书桌前，身体微微前倾，面向镜头，表情真诚。她背后是摆满书的书架。主持人（旁白）说：“下期我们聊：审美需求，居然也会影响 - 孩子的学习动力。”她停顿了一下，露出微笑。“关注我，帮你读懂孩子心。”，使用3D动画的画面风格生成素材
 ```
 
-[[VIDEO](video_25.mp4)](video_25.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_25.mp4)](_files_小云雀 Web产品手册/video_25.mp4)
 
 **知识科普 / 教育培训 · 案例2**
 
@@ -593,7 +593,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 生成一个科普短片，采用程序化3D动画的反思，以积木式解构与重建的视觉效果，展现西安大雁塔自唐代始建至明代定型的千年演变历程，搭配磅礴动感的现代中式摇滚配乐与流畅运镜，全程无旁白，仅以字幕传递历史信息。
 ```
 
-[[VIDEO](video_26.mp4)](video_26.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_26.mp4)](_files_小云雀 Web产品手册/video_26.mp4)
 
 **知识科普 / 教育培训 · 案例3**
 
@@ -607,7 +607,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 帮我生成一个视频：干净整洁的办公室内，身穿白色衬衫，黑色裤子，绑着高马尾，画着淡妆的小美告诉大家3月3号，4，5，6号靖佳量子科技第三十一届华南展倒计时，十五秒
 ```
 
-[[VIDEO](video_27.mp4)](video_27.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_27.mp4)](_files_小云雀 Web产品手册/video_27.mp4)
 
 **本地生活 / 活动宣传 · 案例1**
 
@@ -619,7 +619,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 为宜川邮政制作一个元宵节活动宣传视频，展示节日氛围和活动内容，画面喜庆温馨。
 ```
 
-[[VIDEO](video_28.mp4)](video_28.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_28.mp4)](_files_小云雀 Web产品手册/video_28.mp4)
 
 **本地生活 / 活动宣传 · 案例2**
 
@@ -638,7 +638,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 - [参考素材5](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/5e23a47b461e4c5194a735326ee281a3~tplv-e844mpvzdi-compress:q90.image)
 - [参考素材6](https://p11-seeyou-cn.byteimg.com/tos-cn-i-e844mpvzdi/ac48dbd86f784219ad04798f4ab87962~tplv-e844mpvzdi-compress:q90.image)
 
-[[VIDEO](video_29.mp4)](video_29.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_29.mp4)](_files_小云雀 Web产品手册/video_29.mp4)
 
 **本地生活 / 活动宣传 · 案例3**
 
@@ -652,7 +652,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 这是我要带货的产品【桑鹤】宠物剃毛器低噪音剃脚毛狗狗电剪毛电推子清洁不卡毛器用品 你结合这个产品然后帮我写个脚本，搞笑的脚本，真实哦，剔猫咪的毛
 ```
 
-[[VIDEO](video_30.mp4)](video_30.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_30.mp4)](_files_小云雀 Web产品手册/video_30.mp4)
 
 **电商带货 / 营销转化 · 案例1**
 
@@ -664,7 +664,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 为斧头牌家用除菌洁厕液生成一个产品介绍视频。
 ```
 
-[[VIDEO](video_31.mp4)](video_31.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_31.mp4)](_files_小云雀 Web产品手册/video_31.mp4)
 
 **电商带货 / 营销转化 · 案例2**
 
@@ -676,7 +676,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 我是一名保险销售员，请帮我生成一段保险产品的营销推广视频，要求专业、可信、有说服力。
 ```
 
-[[VIDEO](video_32.mp4)](video_32.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_32.mp4)](_files_小云雀 Web产品手册/video_32.mp4)
 
 **电商带货 / 营销转化 · 案例3**
 
@@ -731,35 +731,35 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 进入Agent模式
 
-[![进入Agent模式](image_32.png)](image_32.png)
+[![进入Agent模式](_files_小云雀 Web产品手册/image_32.png)](_files_小云雀 Web产品手册/image_32.png)
 
 进入Agent模式
 
 输入指令
 
-[![输入指令](image_33.png)](image_33.png)
+[![输入指令](_files_小云雀 Web产品手册/image_33.png)](_files_小云雀 Web产品手册/image_33.png)
 
 输入指令
 
 比例/模型选择
 
-[![图片展示了小云雀Web平台Agent模式界面](image_34.png)](image_34.png)
+[![图片展示了小云雀Web平台Agent模式界面](_files_小云雀 Web产品手册/image_34.png)](_files_小云雀 Web产品手册/image_34.png)
 
 图片展示了小云雀Web平台Agent模式界面
 
-[![这张图片展示的是小云雀Web平台的操作界面，当前正处于Agent模式的相关区域，界面右上方的红色框内是可选择的视频模型列表，清晰呈现了Sentisense 2.0 Gen VI](image_35.png)](image_35.png)
+[![这张图片展示的是小云雀Web平台的操作界面，当前正处于Agent模式的相关区域，界面右上方的红色框内是可选择的视频模型列表，清晰呈现了Sentisense 2.0 Gen VI](_files_小云雀 Web产品手册/image_35.png)](_files_小云雀 Web产品手册/image_35.png)
 
 这张图片展示的是小云雀Web平台的操作界面，当前正处于Agent模式的相关区域，界面右上方的红色框内是可选择的视频模型列表，清晰呈现了Sentisense 2.0 Gen VI
 
 一键优化提示词
 
-[![一键优化提示词](image_36.png)](image_36.png)
+[![一键优化提示词](_files_小云雀 Web产品手册/image_36.png)](_files_小云雀 Web产品手册/image_36.png)
 
 一键优化提示词
 
 确认创作需求
 
-[![确认创作需求](image_37.png)](image_37.png)
+[![确认创作需求](_files_小云雀 Web产品手册/image_37.png)](_files_小云雀 Web产品手册/image_37.png)
 
 确认创作需求
 
@@ -773,19 +773,19 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ##### 生成案例
 
-[[VIDEO](video_33.mp4)](video_33.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_33.mp4)](_files_小云雀 Web产品手册/video_33.mp4)
 
 **莫名其妙的广告**
 
-[[VIDEO](video_34.mp4)](video_34.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_34.mp4)](_files_小云雀 Web产品手册/video_34.mp4)
 
 **桃花渡：古风意境沉浸式短片**
 
-[[VIDEO](video_35.mp4)](video_35.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_35.mp4)](_files_小云雀 Web产品手册/video_35.mp4)
 
 **向年而归：温情归乡情感短片**
 
-[[VIDEO](video_36.mp4)](video_36.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_36.mp4)](_files_小云雀 Web产品手册/video_36.mp4)
 
 **窗台里的张桂美：纪实情感短片**
 
@@ -810,13 +810,13 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 进入工具
 
-[![进入工具](image_38.png)](image_38.png)
+[![进入工具](_files_小云雀 Web产品手册/image_38.png)](_files_小云雀 Web产品手册/image_38.png)
 
 进入工具
 
 模型选择
 
-[![模型选择](image_39.png)](image_39.png)
+[![模型选择](_files_小云雀 Web产品手册/image_39.png)](_files_小云雀 Web产品手册/image_39.png)
 
 模型选择
 
@@ -824,17 +824,17 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 选择时长
 
-[![图片展示了小云雀Web平台的沉浸式短片创作界面](image_40.png)](image_40.png)
+[![图片展示了小云雀Web平台的沉浸式短片创作界面](_files_小云雀 Web产品手册/image_40.png)](_files_小云雀 Web产品手册/image_40.png)
 
 图片展示了小云雀Web平台的沉浸式短片创作界面
 
-[![图片展示了小云雀Web平台的沉浸式短片创作界面](image_41.png)](image_41.png)
+[![图片展示了小云雀Web平台的沉浸式短片创作界面](_files_小云雀 Web产品手册/image_41.png)](_files_小云雀 Web产品手册/image_41.png)
 
 图片展示了小云雀Web平台的沉浸式短片创作界面
 
 可上传参考内容
 
-[![可上传参考内容](image_42.png)](image_42.png)
+[![可上传参考内容](_files_小云雀 Web产品手册/image_42.png)](_files_小云雀 Web产品手册/image_42.png)
 
 可上传参考内容
 
@@ -850,11 +850,11 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ###### 广告大片
 
-[![图片展示了宫保鸡丁的制作材料及成品](image_43.png)](image_43.png)
+[![图片展示了宫保鸡丁的制作材料及成品](_files_小云雀 Web产品手册/image_43.png)](_files_小云雀 Web产品手册/image_43.png)
 
 图片展示了宫保鸡丁的制作材料及成品
 
-[![图片展示了制作麻婆豆腐的食材及成品](image_44.png)](image_44.png)
+[![图片展示了制作麻婆豆腐的食材及成品](_files_小云雀 Web产品手册/image_44.png)](_files_小云雀 Web产品手册/image_44.png)
 
 图片展示了制作麻婆豆腐的食材及成品
 
@@ -874,15 +874,15 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ###### IP与电商应用
 
-[![图片展示了一款名为“轻态{疏云沙发}”的产品广告图](image_45.png)](image_45.png)
+[![图片展示了一款名为“轻态{疏云沙发}”的产品广告图](_files_小云雀 Web产品手册/image_45.png)](_files_小云雀 Web产品手册/image_45.png)
 
 图片展示了一款名为“轻态{疏云沙发}”的产品广告图
 
-[![图片展示的是小云雀Web创作平台中“IP与电商应用”分类下的图片创作示例](image_46.png)](image_46.png)
+[![图片展示的是小云雀Web创作平台中“IP与电商应用”分类下的图片创作示例](_files_小云雀 Web产品手册/image_46.png)](_files_小云雀 Web产品手册/image_46.png)
 
 图片展示的是小云雀Web创作平台中“IP与电商应用”分类下的图片创作示例
 
-[![图片展示了小云雀Web创作平台中“日常分享”分类下的产品](image_47.png)](image_47.png)
+[![图片展示了小云雀Web创作平台中“日常分享”分类下的产品](_files_小云雀 Web产品手册/image_47.png)](_files_小云雀 Web产品手册/image_47.png)
 
 图片展示了小云雀Web创作平台中“日常分享”分类下的产品
 
@@ -908,19 +908,19 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ###### 知识动起来
 
-[![图片以“生机循环：图解有机农业全景”为标题，展示有机农业的循环过程](image_48.png)](image_48.png)
+[![图片以“生机循环：图解有机农业全景”为标题，展示有机农业的循环过程](_files_小云雀 Web产品手册/image_48.png)](_files_小云雀 Web产品手册/image_48.png)
 
 图片以“生机循环：图解有机农业全景”为标题，展示有机农业的循环过程
 
-[![图片展示了人体消化系统中食物的旅行过程](image_49.png)](image_49.png)
+[![图片展示了人体消化系统中食物的旅行过程](_files_小云雀 Web产品手册/image_49.png)](_files_小云雀 Web产品手册/image_49.png)
 
 图片展示了人体消化系统中食物的旅行过程
 
-[![图片展示了水的净化——简易过滤装置制作过程](image_50.png)](image_50.png)
+[![图片展示了水的净化——简易过滤装置制作过程](_files_小云雀 Web产品手册/image_50.png)](_files_小云雀 Web产品手册/image_50.png)
 
 图片展示了水的净化——简易过滤装置制作过程
 
-[![图片以卡通形式呈现植物向光性从种子到幼苗的生长变化过程](image_51.png)](image_51.png)
+[![图片以卡通形式呈现植物向光性从种子到幼苗的生长变化过程](_files_小云雀 Web产品手册/image_51.png)](_files_小云雀 Web产品手册/image_51.png)
 
 图片以卡通形式呈现植物向光性从种子到幼苗的生长变化过程
 
@@ -940,23 +940,23 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ###### AI漫剧
 
-[![图片展示了一位身穿蓝色长袍、手持发光武器的男子，背景是巨大的宫殿建筑和众多手持武器的士兵，天空中布满云雾，地面上有熔岩流淌](image_52.png)](image_52.png)
+[![图片展示了一位身穿蓝色长袍、手持发光武器的男子，背景是巨大的宫殿建筑和众多手持武器的士兵，天空中布满云雾，地面上有熔岩流淌](_files_小云雀 Web产品手册/image_52.png)](_files_小云雀 Web产品手册/image_52.png)
 
 图片展示了一位身穿蓝色长袍、手持发光武器的男子，背景是巨大的宫殿建筑和众多手持武器的士兵，天空中布满云雾，地面上有熔岩流淌
 
-[![图片展示了一幅充满动感的战斗场景](image_53.png)](image_53.png)
+[![图片展示了一幅充满动感的战斗场景](_files_小云雀 Web产品手册/image_53.png)](_files_小云雀 Web产品手册/image_53.png)
 
 图片展示了一幅充满动感的战斗场景
 
-[![图片展示了一幅充满动感的战斗场景](image_54.png)](image_54.png)
+[![图片展示了一幅充满动感的战斗场景](_files_小云雀 Web产品手册/image_54.png)](_files_小云雀 Web产品手册/image_54.png)
 
 图片展示了一幅充满动感的战斗场景
 
-[![图片展示了一位身穿浅蓝色长袍的男子手持武器，背景是破败的建筑和战场场景](image_55.png)](image_55.png)
+[![图片展示了一位身穿浅蓝色长袍的男子手持武器，背景是破败的建筑和战场场景](_files_小云雀 Web产品手册/image_55.png)](_files_小云雀 Web产品手册/image_55.png)
 
 图片展示了一位身穿浅蓝色长袍的男子手持武器，背景是破败的建筑和战场场景
 
-[![图片展示了一位身穿白色长袍、手持红色武器的男子背影，他站在熔岩与烟雾环绕的废墟中，前方是一座古色古香的牌坊，牌坊后方有光芒透出](image_56.png)](image_56.png)
+[![图片展示了一位身穿白色长袍、手持红色武器的男子背影，他站在熔岩与烟雾环绕的废墟中，前方是一座古色古香的牌坊，牌坊后方有光芒透出](_files_小云雀 Web产品手册/image_56.png)](_files_小云雀 Web产品手册/image_56.png)
 
 图片展示了一位身穿白色长袍、手持红色武器的男子背影，他站在熔岩与烟雾环绕的废墟中，前方是一座古色古香的牌坊，牌坊后方有光芒透出
 
@@ -970,11 +970,11 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 ###### 日常分享
 
-[![图片展示了一位背着背包、穿着蓝色上衣和红色裤子的男子，正走在一条小路上，周围是高大树木和色彩鲜艳的花朵，如紫色、黄色、粉色的花朵](image_57.png)](image_57.png)
+[![图片展示了一位背着背包、穿着蓝色上衣和红色裤子的男子，正走在一条小路上，周围是高大树木和色彩鲜艳的花朵，如紫色、黄色、粉色的花朵](_files_小云雀 Web产品手册/image_57.png)](_files_小云雀 Web产品手册/image_57.png)
 
 图片展示了一位背着背包、穿着蓝色上衣和红色裤子的男子，正走在一条小路上，周围是高大树木和色彩鲜艳的花朵，如紫色、黄色、粉色的花朵
 
-[![图片展示了一家五口人穿着红色上衣的温馨场景](image_58.png)](image_58.png)
+[![图片展示了一家五口人穿着红色上衣的温馨场景](_files_小云雀 Web产品手册/image_58.png)](_files_小云雀 Web产品手册/image_58.png)
 
 图片展示了一家五口人穿着红色上衣的温馨场景
 
@@ -1007,19 +1007,19 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 进入工具
 
-[![进入工具](image_59.png)](image_59.png)
+[![进入工具](_files_小云雀 Web产品手册/image_59.png)](_files_小云雀 Web产品手册/image_59.png)
 
 进入工具
 
 模型选择
 
-[![模型选择](image_60.png)](image_60.png)
+[![模型选择](_files_小云雀 Web产品手册/image_60.png)](_files_小云雀 Web产品手册/image_60.png)
 
 模型选择
 
 连续创作
 
-[![连续创作](image_61.png)](image_61.png)
+[![连续创作](_files_小云雀 Web产品手册/image_61.png)](_files_小云雀 Web产品手册/image_61.png)
 
 连续创作
 
@@ -1027,19 +1027,19 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 在使用小云雀的创作Agent时，可以开启画布模式，一边对话寻找创作灵感，一边在画布上调整效果
 
-画布模式完整操作手册详见：[小云雀创作Agent-画布使用手册](/tutorials/creation-agent-canvas)
+画布模式完整操作手册详见：[小云雀创作Agent-画布使用手册](https://xyq.jianying.com/tutorials/creation-agent-canvas)
 
-[![画布入口](image_62.png)](image_62.png)
+[![画布入口](_files_小云雀 Web产品手册/image_62.png)](_files_小云雀 Web产品手册/image_62.png)
 
 画布入口
 
-[![画布功能](image_63.png)](image_63.png)
+[![画布功能](_files_小云雀 Web产品手册/image_63.png)](_files_小云雀 Web产品手册/image_63.png)
 
 画布功能
 
 ### 3. 营销Agent
 
-**入口🏆：**[https://xyq.jianying.com/marketing-agent](/marketing-agent)
+**入口🏆：**[https://xyq.jianying.com/marketing-agent](https://xyq.jianying.com/marketing-agent)
 
 **小云雀营销Agent能力说明：**
 
@@ -1060,7 +1060,7 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 #### 3.1 快速上手
 
-[![营销创作流程：添加素材和商品卖点后，按是否已有创意方向选择浏览创意库或直接描述想法，再设置风格、模型和画布并生成](image_64.png)](image_64.png)
+[![营销创作流程：添加素材和商品卖点后，按是否已有创意方向选择浏览创意库或直接描述想法，再设置风格、模型和画布并生成](_files_小云雀 Web产品手册/image_64.png)](_files_小云雀 Web产品手册/image_64.png)
 
 营销创作流程图
 
@@ -1082,85 +1082,85 @@ Agent会自动捕获剧本中**所有角色**，实现角色设计，提取角�
 
 已有需求时，也可以快速找到接近的表达并继续修改。
 
-[![已有需求时，也可以快速找到接近的表达并继续修改。](image_65.png)](image_65.png)
+[![已有需求时，也可以快速找到接近的表达并继续修改。](_files_小云雀 Web产品手册/image_65.png)](_files_小云雀 Web产品手册/image_65.png)
 
 已有需求时，也可以快速找到接近的表达并继续修改。
 
 操作界面
 
-[![hover视频即可播放](image_66.png)](image_66.png)
+[![hover视频即可播放](_files_小云雀 Web产品手册/image_66.png)](_files_小云雀 Web产品手册/image_66.png)
 
 hover视频即可播放
 
-[![多种创意方向](image_67.png)](image_67.png)
+[![多种创意方向](_files_小云雀 Web产品手册/image_67.png)](_files_小云雀 Web产品手册/image_67.png)
 
 多种创意方向
 
-[![点击“使用”, 即可用同款创意](image_68.png)](image_68.png)
+[![点击“使用”, 即可用同款创意](_files_小云雀 Web产品手册/image_68.png)](_files_小云雀 Web产品手册/image_68.png)
 
 点击“使用”, 即可用同款创意
 
-[![点击“复刻”, showcase提示词到输入框, 修改使用](image_69.png)](image_69.png)
+[![点击“复刻”, showcase提示词到输入框, 修改使用](_files_小云雀 Web产品手册/image_69.png)](_files_小云雀 Web产品手册/image_69.png)
 
 点击“复刻”, showcase提示词到输入框, 修改使用
 
 示例演示
 
-[[VIDEO](video_37.mp4)](video_37.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_37.mp4)](_files_小云雀 Web产品手册/video_37.mp4)
 
 **抖音热点水果人短剧**
 
 抖音热点水果人短剧
 
-[[VIDEO](video_38.mp4)](video_38.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_38.mp4)](_files_小云雀 Web产品手册/video_38.mp4)
 
 **甜宠剧情广告带货**
 
 甜宠剧情广告带货
 
-[[VIDEO](video_39.mp4)](video_39.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_39.mp4)](_files_小云雀 Web产品手册/video_39.mp4)
 
 **品牌大片**
 
 品牌大片
 
-[[VIDEO](video_40.mp4)](video_40.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_40.mp4)](_files_小云雀 Web产品手册/video_40.mp4)
 
 **口播种草**
 
 口播种草
 
-[[VIDEO](video_41.mp4)](video_41.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_41.mp4)](_files_小云雀 Web产品手册/video_41.mp4)
 
 **跨境电商口播**
 
 跨境电商口播
 
-[[VIDEO](video_42.mp4)](video_42.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_42.mp4)](_files_小云雀 Web产品手册/video_42.mp4)
 
 **文物复活反差带货**
 
 文物复活反差带货
 
-[[VIDEO](video_43.mp4)](video_43.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_43.mp4)](_files_小云雀 Web产品手册/video_43.mp4)
 
 **卡点穿搭**
 
 卡点穿搭
 
-[[VIDEO](video_44.mp4)](video_44.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_44.mp4)](_files_小云雀 Web产品手册/video_44.mp4)
 
 **口播教程讲解**
 
 口播教程讲解
 
-[[VIDEO](video_45.mp4)](video_45.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_45.mp4)](_files_小云雀 Web产品手册/video_45.mp4)
 
 **效果实测**
 
 效果实测
 
-[[VIDEO](video_46.mp4)](video_46.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_46.mp4)](_files_小云雀 Web产品手册/video_46.mp4)
 
 **跨境电商多语言族裔**
 
@@ -1170,17 +1170,17 @@ hover视频即可播放
 
 创意库回答的是：这条广告用什么**内容结构和表达机制**，把卖点讲得更好懂、更愿意看。
 
-[![创意库回答的是：这条广告用什么内容结构和表达机制，把卖点讲得更好懂、更愿意看。](image_70.png)](image_70.png)
+[![创意库回答的是：这条广告用什么内容结构和表达机制，把卖点讲得更好懂、更愿意看。](_files_小云雀 Web产品手册/image_70.png)](_files_小云雀 Web产品手册/image_70.png)
 
 创意库回答的是：这条广告用什么内容结构和表达机制，把卖点讲得更好懂、更愿意看。
 
 操作界面
 
-[![对话框选择/搜索创意](image_71.png)](image_71.png)
+[![对话框选择/搜索创意](_files_小云雀 Web产品手册/image_71.png)](_files_小云雀 Web产品手册/image_71.png)
 
 对话框选择/搜索创意
 
-[![支持剧情广告等多种创意](image_72.png)](image_72.png)
+[![支持剧情广告等多种创意](_files_小云雀 Web产品手册/image_72.png)](_files_小云雀 Web产品手册/image_72.png)
 
 支持剧情广告等多种创意
 
@@ -1188,47 +1188,47 @@ hover视频即可播放
 
 为你解决广告开场问题：**前3秒先让用户停下来**，再把注意力交给卖点和剧情。
 
-[![为你解决广告开场问题：前3秒先让用户停下来，再把注意力交给卖点和剧情。](image_73.png)](image_73.png)
+[![为你解决广告开场问题：前3秒先让用户停下来，再把注意力交给卖点和剧情。](_files_小云雀 Web产品手册/image_73.png)](_files_小云雀 Web产品手册/image_73.png)
 
 为你解决广告开场问题：前3秒先让用户停下来，再把注意力交给卖点和剧情。
 
 操作界面
 
-[![对话框选择/搜索hook](image_74.png)](image_74.png)
+[![对话框选择/搜索hook](_files_小云雀 Web产品手册/image_74.png)](_files_小云雀 Web产品手册/image_74.png)
 
 对话框选择/搜索hook
 
-[![支持画面/音效等多种hook方式](image_75.png)](image_75.png)
+[![支持画面/音效等多种hook方式](_files_小云雀 Web产品手册/image_75.png)](_files_小云雀 Web产品手册/image_75.png)
 
 支持画面/音效等多种hook方式
 
 示例演示
 
-[[VIDEO](video_47.mp4)](video_47.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_47.mp4)](_files_小云雀 Web产品手册/video_47.mp4)
 
 **产品飞入**
 
 产品飞入
 
-[[VIDEO](video_48.mp4)](video_48.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_48.mp4)](_files_小云雀 Web产品手册/video_48.mp4)
 
 **飞机机翼**
 
 飞机机翼
 
-[[VIDEO](video_49.mp4)](video_49.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_49.mp4)](_files_小云雀 Web产品手册/video_49.mp4)
 
 **音效开场**
 
 音效开场
 
-[[VIDEO](video_50.mp4)](video_50.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_50.mp4)](_files_小云雀 Web产品手册/video_50.mp4)
 
 **动效开场**
 
 动效开场
 
-[[VIDEO](video_51.mp4)](video_51.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_51.mp4)](_files_小云雀 Web产品手册/video_51.mp4)
 
 **撞人开场**
 
@@ -1238,47 +1238,47 @@ hover视频即可播放
 
 风格库为整条广告提供**统一的视觉语言**，让画面从色彩、光线、场景到人物气质保持一致，形成**品牌记忆**。
 
-[![风格库为整条广告提供统一的视觉语言，让画面从色彩、光线、场景到人物气质保持一致，形成品牌记忆。](image_76.png)](image_76.png)
+[![风格库为整条广告提供统一的视觉语言，让画面从色彩、光线、场景到人物气质保持一致，形成品牌记忆。](_files_小云雀 Web产品手册/image_76.png)](_files_小云雀 Web产品手册/image_76.png)
 
 风格库为整条广告提供统一的视觉语言，让画面从色彩、光线、场景到人物气质保持一致，形成品牌记忆。
 
 操作界面
 
-[![对话框选择/搜索风格](image_77.png)](image_77.png)
+[![对话框选择/搜索风格](_files_小云雀 Web产品手册/image_77.png)](_files_小云雀 Web产品手册/image_77.png)
 
 对话框选择/搜索风格
 
-[![支持多种风格分类](image_78.png)](image_78.png)
+[![支持多种风格分类](_files_小云雀 Web产品手册/image_78.png)](_files_小云雀 Web产品手册/image_78.png)
 
 支持多种风格分类
 
 示例演示
 
-[[VIDEO](video_52.mp4)](video_52.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_52.mp4)](_files_小云雀 Web产品手册/video_52.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例1**
 
-[[VIDEO](video_53.mp4)](video_53.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_53.mp4)](_files_小云雀 Web产品手册/video_53.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例2**
 
-[[VIDEO](video_54.mp4)](video_54.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_54.mp4)](_files_小云雀 Web产品手册/video_54.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例3**
 
-[[VIDEO](video_55.mp4)](video_55.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_55.mp4)](_files_小云雀 Web产品手册/video_55.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例4**
 
-[[VIDEO](video_56.mp4)](video_56.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_56.mp4)](_files_小云雀 Web产品手册/video_56.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例5**
 
-[[VIDEO](video_57.mp4)](video_57.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_57.mp4)](_files_小云雀 Web产品手册/video_57.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例6**
 
-[[VIDEO](video_58.mp4)](video_58.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_58.mp4)](_files_小云雀 Web产品手册/video_58.mp4)
 
 **风格库统一整条广告的视觉记忆 · 示例7**
 
@@ -1292,7 +1292,7 @@ hover视频即可播放
 - 裁剪、旋转、超分，并在会话中引用素材继续生成。
 - 组合、预览和导出最终结果。
 
-[![营销 Agent 已接入小云雀现有的画布能力。生成的图片和视频可同步到画布，继续整理、编辑和复用。](image_79.png)](image_79.png)
+[![营销 Agent 已接入小云雀现有的画布能力。生成的图片和视频可同步到画布，继续整理、编辑和复用。](_files_小云雀 Web产品手册/image_79.png)](_files_小云雀 Web产品手册/image_79.png)
 
 营销 Agent 已接入小云雀现有的画布能力。生成的图片和视频可同步到画布，继续整理、编辑和复用。
 
@@ -1310,51 +1310,51 @@ hover视频即可播放
 >
 > 图片模型建议选Seedream 5.0或者旗舰生图模型V2-Pro，生成的人物形象更真实。
 >
-> [![这张图片是小云雀Web创作工具里的模型偏好设置界面，选中了“视频”分类选项，当前使用的模型是Seedance 2.5，界面标注了该模型有限时优惠活动，上传参考720P视频成片的](image_80.png)](image_80.png)
+> [![这张图片是小云雀Web创作工具里的模型偏好设置界面，选中了“视频”分类选项，当前使用的模型是Seedance 2.5，界面标注了该模型有限时优惠活动，上传参考720P视频成片的](_files_小云雀 Web产品手册/image_80.png)](_files_小云雀 Web产品手册/image_80.png)
 >
 > 这张图片是小云雀Web创作工具里的模型偏好设置界面，选中了“视频”分类选项，当前使用的模型是Seedance 2.5，界面标注了该模型有限时优惠活动，上传参考720P视频成片的
 >
-> [![图片展示的是小云雀Web中“模型偏好”设置界面](image_81.png)](image_81.png)
+> [![图片展示的是小云雀Web中“模型偏好”设置界面](_files_小云雀 Web产品手册/image_81.png)](_files_小云雀 Web产品手册/image_81.png)
 >
 > 图片展示的是小云雀Web中“模型偏好”设置界面
 
 操作界面
 
-[![营销Agent首页推荐技能进入](image_82.png)](image_82.png)
+[![营销Agent首页推荐技能进入](_files_小云雀 Web产品手册/image_82.png)](_files_小云雀 Web产品手册/image_82.png)
 
 营销Agent首页推荐技能进入
 
-[![上传视频&需要转化的地区/语言](image_83.png)](image_83.png)
+[![上传视频&需要转化的地区/语言](_files_小云雀 Web产品手册/image_83.png)](_files_小云雀 Web产品手册/image_83.png)
 
 上传视频&需要转化的地区/语言
 
-[![视频画面/口播/人物解析](image_84.png)](image_84.png)
+[![视频画面/口播/人物解析](_files_小云雀 Web产品手册/image_84.png)](_files_小云雀 Web产品手册/image_84.png)
 
 视频画面/口播/人物解析
 
-[![对应地区人物形象生成](image_85.png)](image_85.png)
+[![对应地区人物形象生成](_files_小云雀 Web产品手册/image_85.png)](_files_小云雀 Web产品手册/image_85.png)
 
 对应地区人物形象生成
 
-[![口播/口音/人物形象编辑](image_86.png)](image_86.png)
+[![口播/口音/人物形象编辑](_files_小云雀 Web产品手册/image_86.png)](_files_小云雀 Web产品手册/image_86.png)
 
 口播/口音/人物形象编辑
 
 示例演示
 
-[[VIDEO](video_59.mp4)](video_59.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_59.mp4)](_files_小云雀 Web产品手册/video_59.mp4)
 
 **原版视频**
 
 原版视频
 
-[[VIDEO](video_60.mp4)](video_60.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_60.mp4)](_files_小云雀 Web产品手册/video_60.mp4)
 
 **英国本地化版本**
 
 英国本地化版本
 
-[[VIDEO](video_61.mp4)](video_61.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_61.mp4)](_files_小云雀 Web产品手册/video_61.mp4)
 
 **泰国本地化版本**
 
@@ -1368,41 +1368,41 @@ hover视频即可播放
 
 操作界面
 
-[![技能下拉框选择或者推荐技能进入](image_87.png)](image_87.png)
+[![技能下拉框选择或者推荐技能进入](_files_小云雀 Web产品手册/image_87.png)](_files_小云雀 Web产品手册/image_87.png)
 
 技能下拉框选择或者推荐技能进入
 
-[![上传参考视频&需要更改裂变的信息](image_88.png)](image_88.png)
+[![上传参考视频&需要更改裂变的信息](_files_小云雀 Web产品手册/image_88.png)](_files_小云雀 Web产品手册/image_88.png)
 
 上传参考视频&需要更改裂变的信息
 
-[![参考视频解析](image_89.png)](image_89.png)
+[![参考视频解析](_files_小云雀 Web产品手册/image_89.png)](_files_小云雀 Web产品手册/image_89.png)
 
 参考视频解析
 
-[![裂变方向](image_90.png)](image_90.png)
+[![裂变方向](_files_小云雀 Web产品手册/image_90.png)](_files_小云雀 Web产品手册/image_90.png)
 
 裂变方向
 
-[![裂变产物交付](image_91.png)](image_91.png)
+[![裂变产物交付](_files_小云雀 Web产品手册/image_91.png)](_files_小云雀 Web产品手册/image_91.png)
 
 裂变产物交付
 
 示例演示
 
-[[VIDEO](video_62.mp4)](video_62.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_62.mp4)](_files_小云雀 Web产品手册/video_62.mp4)
 
 **原视频**
 
 原视频
 
-[[VIDEO](video_63.mp4)](video_63.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_63.mp4)](_files_小云雀 Web产品手册/video_63.mp4)
 
 **换商品+价格39.9**
 
 换商品+价格39.9
 
-[[VIDEO](video_64.mp4)](video_64.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_64.mp4)](_files_小云雀 Web产品手册/video_64.mp4)
 
 **换商品+换角色+价格39.9**
 
@@ -1416,45 +1416,45 @@ hover视频即可播放
 
 操作界面
 
-[![技能下拉框选择或者推荐技能进入](image_92.png)](image_92.png)
+[![技能下拉框选择或者推荐技能进入](_files_小云雀 Web产品手册/image_92.png)](_files_小云雀 Web产品手册/image_92.png)
 
 技能下拉框选择或者推荐技能进入
 
-[![上传商品/品牌图片和信息即可批量生成](image_93.png)](image_93.png)
+[![上传商品/品牌图片和信息即可批量生成](_files_小云雀 Web产品手册/image_93.png)](_files_小云雀 Web产品手册/image_93.png)
 
 上传商品/品牌图片和信息即可批量生成
 
-[![素材数量和投放目标确定](image_94.png)](image_94.png)
+[![素材数量和投放目标确定](_files_小云雀 Web产品手册/image_94.png)](_files_小云雀 Web产品手册/image_94.png)
 
 素材数量和投放目标确定
 
-[![素材测试方向确定](image_95.png)](image_95.png)
+[![素材测试方向确定](_files_小云雀 Web产品手册/image_95.png)](_files_小云雀 Web产品手册/image_95.png)
 
 素材测试方向确定
 
-[![测试思路确定（hook方法 X 场景）](image_96.png)](image_96.png)
+[![测试思路确定（hook方法 X 场景）](_files_小云雀 Web产品手册/image_96.png)](_files_小云雀 Web产品手册/image_96.png)
 
 测试思路确定（hook方法 X 场景）
 
-[![测试脚本输出&视频批量产出](image_97.png)](image_97.png)
+[![测试脚本输出&视频批量产出](_files_小云雀 Web产品手册/image_97.png)](_files_小云雀 Web产品手册/image_97.png)
 
 测试脚本输出&视频批量产出
 
 示例演示
 
-[[VIDEO](video_65.mp4)](video_65.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_65.mp4)](_files_小云雀 Web产品手册/video_65.mp4)
 
 **对比反差hook × 办公室场景**
 
 对比反差hook × 办公室场景
 
-[[VIDEO](video_66.mp4)](video_66.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_66.mp4)](_files_小云雀 Web产品手册/video_66.mp4)
 
 **悬念提问hook × 追剧场景**
 
 悬念提问hook × 追剧场景
 
-[[VIDEO](video_67.mp4)](video_67.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_67.mp4)](_files_小云雀 Web产品手册/video_67.mp4)
 
 **情绪共鸣 × 健身人群**
 
@@ -1472,7 +1472,7 @@ hover视频即可播放
 
 视频效果
 
-[[VIDEO](video_68.mp4)](video_68.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_68.mp4)](_files_小云雀 Web产品手册/video_68.mp4)
 
 **一镜到底 · 广告营销**
 
@@ -1486,27 +1486,27 @@ hover视频即可播放
 
 参考素材
 
-[![图片展示的是“长安场景”中AI生成的镜头效果](image_1.jpg)](image_1.jpg)
+[![图片展示的是“长安场景”中AI生成的镜头效果](_files_小云雀 Web产品手册/image_1.jpg)](_files_小云雀 Web产品手册/image_1.jpg)
 
 图片展示的是“长安场景”中AI生成的镜头效果
 
-[![图片展示了一瓶装香水，瓶身呈透明玻璃材质，内装棕色液体](image_98.png)](image_98.png)
+[![图片展示了一瓶装香水，瓶身呈透明玻璃材质，内装棕色液体](_files_小云雀 Web产品手册/image_98.png)](_files_小云雀 Web产品手册/image_98.png)
 
 图片展示了一瓶装香水，瓶身呈透明玻璃材质，内装棕色液体
 
-[![图片展示了一座天使雕像，背景为黑白的城市景观](image_2.jpg)](image_2.jpg)
+[![图片展示了一座天使雕像，背景为黑白的城市景观](_files_小云雀 Web产品手册/image_2.jpg)](_files_小云雀 Web产品手册/image_2.jpg)
 
 图片展示了一座天使雕像，背景为黑白的城市景观
 
-[![图片展示的是香奈儿No.5香水瓶](image_3.jpg)](image_3.jpg)
+[![图片展示的是香奈儿No.5香水瓶](_files_小云雀 Web产品手册/image_3.jpg)](_files_小云雀 Web产品手册/image_3.jpg)
 
 图片展示的是香奈儿No.5香水瓶
 
-[![图片展示的是小云雀Web创作的“一镜到底”场景](image_99.png)](image_99.png)
+[![图片展示的是小云雀Web创作的“一镜到底”场景](_files_小云雀 Web产品手册/image_99.png)](_files_小云雀 Web产品手册/image_99.png)
 
 图片展示的是小云雀Web创作的“一镜到底”场景
 
-[![图片展示了一瓶香奈儿No.5香水，瓶身呈透明方柱形，内装黄色液体，瓶盖为银色](image_100.png)](image_100.png)
+[![图片展示了一瓶香奈儿No.5香水，瓶身呈透明方柱形，内装黄色液体，瓶盖为银色](_files_小云雀 Web产品手册/image_100.png)](_files_小云雀 Web产品手册/image_100.png)
 
 图片展示了一瓶香奈儿No.5香水，瓶身呈透明方柱形，内装黄色液体，瓶盖为银色
 
@@ -1514,7 +1514,7 @@ hover视频即可播放
 
 视频效果
 
-[[VIDEO](video_69.mp4)](video_69.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_69.mp4)](_files_小云雀 Web产品手册/video_69.mp4)
 
 **一镜到底 · 长安场景**
 
@@ -1524,35 +1524,35 @@ hover视频即可播放
 
 参考素材
 
-[![图片为长安场景的示例，画面以水彩画风呈现，描绘了一条古色古香的街道](image_4.jpg)](image_4.jpg)
+[![图片为长安场景的示例，画面以水彩画风呈现，描绘了一条古色古香的街道](_files_小云雀 Web产品手册/image_4.jpg)](_files_小云雀 Web产品手册/image_4.jpg)
 
 图片为长安场景的示例，画面以水彩画风呈现，描绘了一条古色古香的街道
 
-[![图片展示了一幅古色古香的市井场景](image_5.jpg)](image_5.jpg)
+[![图片展示了一幅古色古香的市井场景](_files_小云雀 Web产品手册/image_5.jpg)](_files_小云雀 Web产品手册/image_5.jpg)
 
 图片展示了一幅古色古香的市井场景
 
-[![图片为文档内容是“长安场景”，展示了一幅水彩画](image_6.jpg)](image_6.jpg)
+[![图片为文档内容是“长安场景”，展示了一幅水彩画](_files_小云雀 Web产品手册/image_6.jpg)](_files_小云雀 Web产品手册/image_6.jpg)
 
 图片为文档内容是“长安场景”，展示了一幅水彩画
 
-[![图片展示了一位卖胡饼的老人，他身着棕色上衣，头戴花色头巾，面带微笑，右手持托盘，托盘上摆放着几个金黄色的胡饼，左手指向胡饼](image_7.jpg)](image_7.jpg)
+[![图片展示了一位卖胡饼的老人，他身着棕色上衣，头戴花色头巾，面带微笑，右手持托盘，托盘上摆放着几个金黄色的胡饼，左手指向胡饼](_files_小云雀 Web产品手册/image_7.jpg)](_files_小云雀 Web产品手册/image_7.jpg)
 
 图片展示了一位卖胡饼的老人，他身着棕色上衣，头戴花色头巾，面带微笑，右手持托盘，托盘上摆放着几个金黄色的胡饼，左手指向胡饼
 
-[![图片展示了一幅水彩画风格的场景，画面中有两头骆驼，它们身上驮着彩色的包裹，骆驼的脖子上挂着铃铛](image_8.jpg)](image_8.jpg)
+[![图片展示了一幅水彩画风格的场景，画面中有两头骆驼，它们身上驮着彩色的包裹，骆驼的脖子上挂着铃铛](_files_小云雀 Web产品手册/image_8.jpg)](_files_小云雀 Web产品手册/image_8.jpg)
 
 图片展示了一幅水彩画风格的场景，画面中有两头骆驼，它们身上驮着彩色的包裹，骆驼的脖子上挂着铃铛
 
-[![图片展示了一位身穿传统服饰的老人正在制作糖画](image_9.jpg)](image_9.jpg)
+[![图片展示了一位身穿传统服饰的老人正在制作糖画](_files_小云雀 Web产品手册/image_9.jpg)](_files_小云雀 Web产品手册/image_9.jpg)
 
 图片展示了一位身穿传统服饰的老人正在制作糖画
 
-[![图片为一幅古风插画，画面中一位身着淡蓝色长裙的女子坐在窗边，手持针线正在绣花](image_10.jpg)](image_10.jpg)
+[![图片为一幅古风插画，画面中一位身着淡蓝色长裙的女子坐在窗边，手持针线正在绣花](_files_小云雀 Web产品手册/image_10.jpg)](_files_小云雀 Web产品手册/image_10.jpg)
 
 图片为一幅古风插画，画面中一位身着淡蓝色长裙的女子坐在窗边，手持针线正在绣花
 
-[![图片展示的是长安场景，画面中一座古色古香的城楼，城楼上方悬挂着写有“长安”二字的红色横幅，横幅背景为橙色](image_11.jpg)](image_11.jpg)
+[![图片展示的是长安场景，画面中一座古色古香的城楼，城楼上方悬挂着写有“长安”二字的红色横幅，横幅背景为橙色](_files_小云雀 Web产品手册/image_11.jpg)](_files_小云雀 Web产品手册/image_11.jpg)
 
 图片展示的是长安场景，画面中一座古色古香的城楼，城楼上方悬挂着写有“长安”二字的红色横幅，横幅背景为橙色
 
@@ -1560,7 +1560,7 @@ hover视频即可播放
 
 视频效果
 
-[[VIDEO](video_70.mp4)](video_70.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_70.mp4)](_files_小云雀 Web产品手册/video_70.mp4)
 
 **一镜到底 · 特效转场**
 
@@ -1570,11 +1570,11 @@ hover视频即可播放
 
 参考素材
 
-[![图片展示了一位男子在夕阳下依偎在树旁的场景](image_12.jpg)](image_12.jpg)
+[![图片展示了一位男子在夕阳下依偎在树旁的场景](_files_小云雀 Web产品手册/image_12.jpg)](_files_小云雀 Web产品手册/image_12.jpg)
 
 图片展示了一位男子在夕阳下依偎在树旁的场景
 
-[![图片展示了一位年轻男子的剪影，他靠在一棵大树旁，手持一朵玫瑰花](image_13.jpg)](image_13.jpg)
+[![图片展示了一位年轻男子的剪影，他靠在一棵大树旁，手持一朵玫瑰花](_files_小云雀 Web产品手册/image_13.jpg)](_files_小云雀 Web产品手册/image_13.jpg)
 
 图片展示了一位年轻男子的剪影，他靠在一棵大树旁，手持一朵玫瑰花
 
@@ -1582,7 +1582,7 @@ hover视频即可播放
 
 视频效果
 
-[[VIDEO](video_71.mp4)](video_71.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_71.mp4)](_files_小云雀 Web产品手册/video_71.mp4)
 
 **一镜到底 · 地球缩小**
 
@@ -1596,11 +1596,11 @@ hover视频即可播放
 
 参考素材
 
-[![图片展示的是地球的俯瞰视角，画面中地球呈现出蓝色和绿色相间的色彩，地表有云层覆盖，背景是深邃的宇宙空间，远处可见月球](image_14.jpg)](image_14.jpg)
+[![图片展示的是地球的俯瞰视角，画面中地球呈现出蓝色和绿色相间的色彩，地表有云层覆盖，背景是深邃的宇宙空间，远处可见月球](_files_小云雀 Web产品手册/image_14.jpg)](_files_小云雀 Web产品手册/image_14.jpg)
 
 图片展示的是地球的俯瞰视角，画面中地球呈现出蓝色和绿色相间的色彩，地表有云层覆盖，背景是深邃的宇宙空间，远处可见月球
 
-[![图片展示的是电影《疯狂动物城2》的观影场景](image_15.jpg)](image_15.jpg)
+[![图片展示的是电影《疯狂动物城2》的观影场景](_files_小云雀 Web产品手册/image_15.jpg)](_files_小云雀 Web产品手册/image_15.jpg)
 
 图片展示的是电影《疯狂动物城2》的观影场景
 
@@ -1621,19 +1621,19 @@ hover视频即可播放
 
 进入工具
 
-[![进入工具](image_101.png)](image_101.png)
+[![进入工具](_files_小云雀 Web产品手册/image_101.png)](_files_小云雀 Web产品手册/image_101.png)
 
 进入工具
 
 上传素材
 
-[![上传素材](image_102.png)](image_102.png)
+[![上传素材](_files_小云雀 Web产品手册/image_102.png)](_files_小云雀 Web产品手册/image_102.png)
 
 上传素材
 
 转场设置
 
-[![转场设置](image_103.png)](image_103.png)
+[![转场设置](_files_小云雀 Web产品手册/image_103.png)](_files_小云雀 Web产品手册/image_103.png)
 
 转场设置
 
@@ -1655,13 +1655,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_72.mp4)](video_72.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_72.mp4)](_files_小云雀 Web产品手册/video_72.mp4)
 
 **创意拍摄 · 参考视频1**
 
 复刻结果
 
-[[VIDEO](video_73.mp4)](video_73.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_73.mp4)](_files_小云雀 Web产品手册/video_73.mp4)
 
 **创意拍摄 · 复刻结果1**
 
@@ -1671,13 +1671,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_74.mp4)](video_74.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_74.mp4)](_files_小云雀 Web产品手册/video_74.mp4)
 
 **创意拍摄 · 参考视频2**
 
 复刻结果
 
-[[VIDEO](video_75.mp4)](video_75.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_75.mp4)](_files_小云雀 Web产品手册/video_75.mp4)
 
 **创意拍摄 · 复刻结果2**
 
@@ -1689,13 +1689,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_76.mp4)](video_76.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_76.mp4)](_files_小云雀 Web产品手册/video_76.mp4)
 
 **经典影视还原 · 参考视频1**
 
 复刻结果
 
-[[VIDEO](video_77.mp4)](video_77.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_77.mp4)](_files_小云雀 Web产品手册/video_77.mp4)
 
 **经典影视还原 · 复刻结果1**
 
@@ -1705,13 +1705,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_78.mp4)](video_78.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_78.mp4)](_files_小云雀 Web产品手册/video_78.mp4)
 
 **经典影视还原 · 参考视频2**
 
 复刻结果
 
-[[VIDEO](video_79.mp4)](video_79.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_79.mp4)](_files_小云雀 Web产品手册/video_79.mp4)
 
 **经典影视还原 · 复刻结果2**
 
@@ -1723,13 +1723,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_80.mp4)](video_80.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_80.mp4)](_files_小云雀 Web产品手册/video_80.mp4)
 
 **抽象搞笑视频 · 参考视频1**
 
 复刻结果
 
-[[VIDEO](video_81.mp4)](video_81.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_81.mp4)](_files_小云雀 Web产品手册/video_81.mp4)
 
 **抽象搞笑视频 · 复刻结果1**
 
@@ -1743,7 +1743,7 @@ hover视频即可播放
 
 复刻结果
 
-[[VIDEO](video_82.mp4)](video_82.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_82.mp4)](_files_小云雀 Web产品手册/video_82.mp4)
 
 **抽象搞笑视频 · 复刻结果2**
 
@@ -1759,7 +1759,7 @@ hover视频即可播放
 
 复刻结果
 
-[[VIDEO](video_83.mp4)](video_83.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_83.mp4)](_files_小云雀 Web产品手册/video_83.mp4)
 
 **宠物拟人 · 复刻结果1**
 
@@ -1769,13 +1769,13 @@ hover视频即可播放
 
 参考视频
 
-[[VIDEO](video_84.mp4)](video_84.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_84.mp4)](_files_小云雀 Web产品手册/video_84.mp4)
 
 **宠物拟人 · 参考视频2**
 
 复刻结果
 
-[[VIDEO](video_85.mp4)](video_85.mp4)
+[[VIDEO](_files_小云雀 Web产品手册/video_85.mp4)](_files_小云雀 Web产品手册/video_85.mp4)
 
 **宠物拟人 · 复刻结果2**
 
@@ -1791,13 +1791,13 @@ hover视频即可播放
 
 进入工具
 
-[![进入工具](image_104.png)](image_104.png)
+[![进入工具](_files_小云雀 Web产品手册/image_104.png)](_files_小云雀 Web产品手册/image_104.png)
 
 进入工具
 
 输入参考内容
 
-[![输入参考内容](image_105.png)](image_105.png)
+[![输入参考内容](_files_小云雀 Web产品手册/image_105.png)](_files_小云雀 Web产品手册/image_105.png)
 
 输入参考内容
 

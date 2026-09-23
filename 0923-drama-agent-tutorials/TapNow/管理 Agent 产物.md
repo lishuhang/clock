@@ -96,8 +96,8 @@ Agent 提示保存完成后，回到侧边栏面板查看。如果一次生成�
 5. 如果任务失败，先保存错误信息，再修正任务后重新发送；
 6. 仍然找不到时，保留画布链接和任务信息并联系支持。
 
-下一步：[认识画布](/zh/docs/canvas/explore-the-canvas)
+下一步：[认识画布](https://docs.tapnow.ai/zh/docs/canvas/explore-the-canvas)
 
-[上一页网络搜索](/zh/docs/agent/web-search)
+[上一页网络搜索](https://docs.tapnow.ai/zh/docs/agent/web-search)
 
-[下一页认识画布](/zh/docs/canvas/explore-the-canvas)
+[下一页认识画布](https://docs.tapnow.ai/zh/docs/canvas/explore-the-canvas)

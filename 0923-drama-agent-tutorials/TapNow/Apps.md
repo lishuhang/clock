@@ -159,8 +159,8 @@ App 只能在你允许的范围内访问内容。每次任务仍应说明资料�
 
 发送、发布、删除和覆盖属于重要动作。即使 App 已经获得相应权限，也建议保留人工确认，并在执行后检查真实目标位置。
 
-下一步：[用 Brainstorm 找方向](/zh/docs/agent/find-ideas-with-brainstorm)
+下一步：[用 Brainstorm 找方向](https://docs.tapnow.ai/zh/docs/agent/find-ideas-with-brainstorm)
 
-[上一页管理对话](/zh/docs/agent/manage-conversations)
+[上一页管理对话](https://docs.tapnow.ai/zh/docs/agent/manage-conversations)
 
-[下一页用 Brainstorm 找方向](/zh/docs/agent/find-ideas-with-brainstorm)
+[下一页用 Brainstorm 找方向](https://docs.tapnow.ai/zh/docs/agent/find-ideas-with-brainstorm)

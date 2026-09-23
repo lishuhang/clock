@@ -69,6 +69,6 @@ TapNow 可提供正式商业发票。发票根据真实订单和支付记录生�
 
 如在开具过程中遇到问题，可联系 TapNow 支持团队：[contact@tamaredge.ai](mailto:contact@tamaredge.ai)
 
-[上一页本地货币预估价格](/zh/docs/local-currency-price-estimates)
+[上一页本地货币预估价格](https://docs.tapnow.ai/zh/docs/local-currency-price-estimates)
 
-[下一页增值税发票](/zh/docs/help-center/mainland-china-vat-invoices)
+[下一页增值税发票](https://docs.tapnow.ai/zh/docs/help-center/mainland-china-vat-invoices)

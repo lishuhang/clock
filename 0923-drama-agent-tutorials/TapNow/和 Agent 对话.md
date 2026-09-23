@@ -143,8 +143,8 @@
 - 数量、比例、时长等输出要求已经写清；
 - 必须保留的内容和确认节点没有歧义。
 
-下一步：[选择生成模式](/zh/docs/agent/choose-a-generation-mode)
+下一步：[选择生成模式](https://docs.tapnow.ai/zh/docs/agent/choose-a-generation-mode)
 
-[上一页认识 TapNow Agent](/zh/docs/agent/tapnow-agent)
+[上一页认识 TapNow Agent](https://docs.tapnow.ai/zh/docs/agent/tapnow-agent)
 
-[下一页选择生成模式](/zh/docs/agent/choose-a-generation-mode)
+[下一页选择生成模式](https://docs.tapnow.ai/zh/docs/agent/choose-a-generation-mode)

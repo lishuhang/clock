@@ -62,8 +62,8 @@ Arena 活动通常有两种参加方式：
 
 如果页面提示视频时长或作品信息不符合要求，按照当前活动章程调整后再提交。报名未通过时，可以在活动仍允许报名的情况下修改资料并重新报名。
 
-下一步：[Tapies 与套餐](/zh/docs/account/manage-tapies-and-plans)
+下一步：[Tapies 与套餐](https://docs.tapnow.ai/zh/docs/account/manage-tapies-and-plans)
 
-[上一页发布到 TapTV](/zh/docs/publish/publish-to-taptv)
+[上一页发布到 TapTV](https://docs.tapnow.ai/zh/docs/publish/publish-to-taptv)
 
-[下一页在其他 Agent 中使用 TapNow](/zh/docs/mcp/use-tapnow-in-other-agents)
+[下一页在其他 Agent 中使用 TapNow](https://docs.tapnow.ai/zh/docs/mcp/use-tapnow-in-other-agents)

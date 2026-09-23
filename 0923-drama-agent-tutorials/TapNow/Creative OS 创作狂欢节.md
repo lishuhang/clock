@@ -209,6 +209,6 @@ Unlimited 的使用范围有以下边界：
 
 购买模型卡不会改变订阅的续订、升级或退款规则。续订后，系统仍会按照续订套餐发放对应的 Unlimited 权益；订阅升级和退款仍按上方“Unlimited 与订阅政策”处理。模型卡的购买资格、订单状态和最终权益以积分超市购买页面为准。
 
-[上一页无限狂欢节](/zh/docs/account/the-infinite-fest)
+[上一页无限狂欢节](https://docs.tapnow.ai/zh/docs/account/the-infinite-fest)
 
-[下一页使用快捷键](/zh/docs/account/use-shortcuts)
+[下一页使用快捷键](https://docs.tapnow.ai/zh/docs/account/use-shortcuts)
