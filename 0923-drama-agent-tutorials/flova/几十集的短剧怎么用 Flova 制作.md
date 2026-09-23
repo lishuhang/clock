@@ -96,8 +96,8 @@
 
 相关功能
 
-[Agent 对话](/zh-CN/docs/features/agent/)[评论生成](/zh-CN/docs/features/comment-generation/)[Skill](/zh-CN/docs/features/skills/)
+[Agent 对话](https://www.flova.ai/zh-CN/docs/features/agent/)[评论生成](https://www.flova.ai/zh-CN/docs/features/comment-generation/)[Skill](https://www.flova.ai/zh-CN/docs/features/skills/)
 
 [Flova CLI 本地资料创作
 
-Next Page](/zh-CN/docs/video-guides/local-files-with-flova-cli/)
+Next Page](https://www.flova.ai/zh-CN/docs/video-guides/local-files-with-flova-cli/)

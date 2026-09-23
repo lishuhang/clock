@@ -39,4 +39,4 @@ Skill 是给 Agent 的一套可复用的创作流程：把你的工作习惯、�
 
 [Skill 深度教程
 
-Next Page](/zh-CN/docs/tutorials/in-depth/)
+Next Page](https://www.flova.ai/zh-CN/docs/tutorials/in-depth/)

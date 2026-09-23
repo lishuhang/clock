@@ -33,4 +33,4 @@
 
 [快速指南
 
-Previous Page](/zh-CN/docs/tutorials/quick-guide/)
+Previous Page](https://www.flova.ai/zh-CN/docs/tutorials/quick-guide/)

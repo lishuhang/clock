@@ -117,4 +117,4 @@ Agent 和手动编辑可以一起使用。
 
 [Skill
 
-Next Page](/zh-CN/docs/features/skills/)
+Next Page](https://www.flova.ai/zh-CN/docs/features/skills/)

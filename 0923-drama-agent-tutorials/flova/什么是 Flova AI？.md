@@ -70,4 +70,4 @@ Flova 支持多种 AI 视频与影像内容创作，从早期灵感探索到完�
 
 [快速入门
 
-Next Page](/zh-CN/docs/introduction/quick-start/)
+Next Page](https://www.flova.ai/zh-CN/docs/introduction/quick-start/)
