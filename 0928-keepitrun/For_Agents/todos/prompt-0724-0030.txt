@@ -1,0 +1,46 @@
+
+
+使用下列GitHub repo作为您的工作文件夹：
+lishuhang/clock 下的 0724-keepitrun
+
+时区为GMT+8
+因为你非常容易崩溃，请在我输入“继续”二字时马上回到刚才记录的准确工作状态。
+token等请自行存储避免上下文丢失，切勿将凭据上传到GitHub repo。
+你需要想办法在避免上下文丢失和避免过多的commit之间取得平衡。
+
+---
+
+首先阅读两个todo.md了解事态进展。
+
+v1.14的blog爬取，出现了在1.13已经被修复的一个错误，即daily（每日aigc早报）文章错误合并入主站 lishuhang.me 而不是单独抓取于 lishuhang.me/daily 。blog抓取脚本必须排除daily文章，也即微信公众平台中合集名称为 AI早报 的贴图。
+
+https://lishuhang.me/2026/05/28/mei-ri-aigc-zao-bao-2026528/01.png
+
+等一系列url都是错误的，因为正确的是
+
+https://lishuhang.me/img/2026/06/25/zhong-guo-ban-mythos-bi-de/01.jpg
+
+图片路径已经在此前的版本，在blog（lishuhang/lishuhang.github.io）的config.yml中有所声明。图片抓取脚本的设计经过了之前版本的完整的修改。
+
+---
+
+很显然1.14因为修改rss翻译，错误回退了之前改动过的blog和daily抓取脚本，导致已被修复的问题重现。
+
+请对比各个版本，找到正确的子脚本拼合且保证：
+blog中不出现daily内容
+所有图片url正常显示
+图片上传到repo的时候已经经过妥善压缩
+删除在1.14脚本于23日北京时间23：00前后的一次运行，导致错误同步的blog内容。同步删除这次运行带来的冗余的图片库图片。
+同步最新发布的一篇讲世界杯的文章，你应该可以在修复的脚本运行时自主发现它。
+---
+使用脚本运行来验证上述改动，而不是只使用模型能力。使用模型能力验证改动准确性并自行debug直到不再出错。然后做一个不属于脚本功能的改动，即让世界杯文章和中国版mythos文章进入featured tag以在首页banner显示。
+
+---
+
+输出：
+v1.15脚本打包（全部替换keepitrun文件夹内容，仅保留.env之后运行，即可正常运作）
+正确的lishuhang.me 和 lishuhang.me/daily 两个网站
+
+将你截至目前的所有工作经历汇总整理到 todo-0724-mmdd.md 文件名按gmt+8你完成所有工作的时间制定。目标是让新的agent阅读后可以快速明白目前进度和注意事项，并注意到你在工作过程中遇到的问题，避免重复踩坑。
+不包含此前todo已经覆盖的内容。
+请将md保存到GitHub 工作文件夹，【注意严禁将任何token和apikey内容保存或commit到GitHub上】。
