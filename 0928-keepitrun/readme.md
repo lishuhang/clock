@@ -1,10 +1,10 @@
 # keepitrun — 全天候定时任务调度系统
 
-**当前版本：1.24（2026-09-03）**
+**当前版本：1.25（2026-09-28）**
 
 keepitrun 是一个以 Python 实现的常驻定时任务调度器。它按 **GMT+8** 执行 RSS 抓取、摘要合并翻译、微信公众号内容处理和 Photos 同步。所有用户使用、配置、排障和版本信息均以本文件为准。
 
-> **v1.24 发布重点：** 子脚本输出实时进入总屏显日志；01 只负责真 URL 提取与规范化，02 统一跨批次去重并保留最长描述；Photos 正确跳过尚不存在的月份目录，失败时不再误记完成。
+> **v1.25 发布重点：** 02 新增 24 小时已提取记忆，摘要被取走后 24 小时内重复条目不再重现；移除随包 oxipng.exe，03/04/91 图片压缩全部改用纯 Pillow（无损优化 PNG、有损压缩 JPEG/GIF），后缀名转换规则不变。
 
 ## 阅读与求助
 
@@ -27,7 +27,7 @@ python keepitrun.py
 | 04 | `04_convert-blog.py` | 10:10 | 抓取并同步微信公众号博客文章；上传图片前读取主站 `_config.yml`，自动选择图床。 |
 | 05 | `05_photos-update.py` | 15:00 | 同步 Photos 图片库；每个待同步月份读取 photos 的 `_config.yml`，自动扫描对应图床并写入展示 URL。 |
 | 90 | `90_cleanup-daily-from-blog.py` | 首次启动时的维护步骤 | 检查并清理历史误入主博客的 daily 内容；先预览再执行。 |
-| 91 | `91_compress-images.py` | 手动 | 图片压缩维护工具；优先使用随包 oxipng/系统工具，JPEG 与 GIF 可回退 Pillow。 |
+| 91 | `91_compress-images.py` | 手动 | 图片压缩维护工具；优先使用系统工具（oxipng/jpegoptim/gifsicle），任一格式缺失时回退纯 Pillow（随包 exe 已移除）。 |
 | 92 | `92_model-process.py` | 手动 | 可选的模型后处理工具。 |
 
 **Unsplash 与马良注册已从自动任务、主调度器、环境变量模板和发行包中移除。** 相关历史版本说明仅保留在下方更新日志中，不再代表可用功能。
@@ -43,6 +43,8 @@ python keepitrun.py
 根目录中的 `YYYYMMDD-HHMMSS.md` 是**尚未被用户取走的 RSS 摘要**。如果运行合并器时发现两个或以上此类文件，或发现历史误后缀 `YYYYMMDD-HHMMSS.py`，它会将它们与新 RSS 文件一起去重、翻译并生成一个新的 `.md`。新文件以原子方式写入成功后，旧摘要才会删除。因此，不论积压多少天，目录最终只保留一个最新摘要；其内容覆盖用户上次取走摘要后至今的全部不重复条目。
 
 用户取走摘要后，应将根目录中的该 `YYYYMMDD-HHMMSS.md` 移出或删除。若保留，下一次合并会把它视为待领取内容而继续累计。
+
+自 v1.25 起，合并器还会把本次写入摘要的每个条目（按最终 URL，无链接项按标题文本）记入根目录 `rss_issue_memory.json`。该记忆保留 **24 小时**：即使摘要已被用户取走，过去 24 小时内已提取过的条目再次出现时也会被跳过，不会重复进入新摘要；超过 24 小时的记录在每次运行时自动修剪。因此同一条新闻在早晨与下午两批 RSS 中重复时，下午摘要不会再包含它。
 
 ## 翻译与保底策略
 
@@ -68,6 +70,7 @@ keepitrun/
 ├── .env.example                    环境变量模板；不含实际凭据
 ├── keywords.json                   RSS 关键词配置
 ├── rss_feeds.json                  RSS 订阅源配置
+├── rss_issue_memory.json           02 的 24 小时已提取条目记忆（运行时生成）
 ├── tmp/                            RSS 中间文件
 ├── logs/                           日志与任务完成记录
 └── archived/                       已处理内容归档
@@ -134,6 +137,7 @@ Photos 当前配置为：2026-07-31 及此前读取 `modem-56k/img@main`，2026-
 | `archived/` | 超过 30 天自动删除 | 已处理的本地副本。 |
 | 根目录 `YYYYMMDD-HHMMSS.md` | 不自动删除 | 用户未取走的 RSS 摘要；会在下一次合并时继续累计。 |
 | `last_blog_crawl.txt` | 不应手动删除 | 删除会扩大下一次博客抓取范围。 |
+| `rss_issue_memory.json` | 不应手动删除 | 24 小时已提取记忆；02 每次运行自动修剪过期记录，删除会短暂失去跨批去重能力。 |
 | `logs/task_completion.json` | 不应手动删除 | 保存版本感知任务状态。 |
 
 ## 故障排查
@@ -164,9 +168,16 @@ Photos 当前配置为：2026-07-31 及此前读取 `modem-56k/img@main`，2026-
 
 ## 版本感知任务完成追踪
 
-主程序将任务名、日期和完成版本保存到 `logs/task_completion.json`。同日升级后，只有被 `VERSION_TASK_CHANGES` 标记为受影响的任务会重新运行。v1.24 将 `rss`、`combine`、`photos_update` 标记为受影响任务；不会触发 blog 或 daily 重跑。
+主程序将任务名、日期和完成版本保存到 `logs/task_completion.json`。同日升级后，只有被 `VERSION_TASK_CHANGES` 标记为受影响的任务会重新运行。v1.25 将 `combine`、`daily`、`blog` 标记为受影响任务；不会触发 rss 或 photos_update 重跑。
 
 ## 更新日志
+
+### v1.25（2026-09-28）— RSS 24 小时已提取记忆与纯 Pillow 图片压缩
+
+- `02_combine-gemini.py` 新增滑动窗口已提取记忆 `rss_issue_memory.json`：摘要成功写出后记录本次全部条目（按最终 URL，无链接项按标题文本），过去 24 小时内已提取的条目在后续合并中被跳过并明确计数；超过 24 小时的记录每次运行自动修剪。记忆文件写入失败仅警告，不阻断主流程。
+- 移除 `piczip/oxipng.exe`：该 Windows 专用 exe 无法在非 Windows 环境验证、被杀软/SmartScreen 拦截时静默失效，且 1.1MB 二进制随仓库发行。03/04 的透明 PNG 与 91 的 PNG 压缩改用 Pillow 无损优化（`optimize=True`，仅在结果更小时替换）；JPEG/GIF 原有 Pillow 链路不变，91 在无系统工具时现在对全部格式有 Pillow 兜底。
+- 后缀名转换规则（不透明 PNG→JPG、静态 GIF→PNG、透明 PNG/动图 GIF 保留原格式）与转换后 URL 回写逻辑（v1.22）保持不变。
+- 版本感知任务映射：`combine`、`daily`、`blog`；`rss`、`photos_update` 不受影响。
 
 ### v1.24（2026-09-03）— 实时子脚本日志、RSS 去重边界与 Photos 空月份修复
 
@@ -241,4 +252,4 @@ Photos 当前配置为：2026-07-31 及此前读取 `modem-56k/img@main`，2026-
 
 ---
 
-文档版本：**1.24**。本文是 keepitrun 的唯一用户说明与更新日志。
+文档版本：**1.25**。本文是 keepitrun 的唯一用户说明与更新日志。

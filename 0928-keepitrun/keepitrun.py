@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
-版本: 1.24 (2026-09-03)
+版本: 1.25 (2026-09-28)
 基于: keepitrun-260424.py (v1.0)
 
 每日定时任务（GMT+8）:
@@ -12,6 +12,12 @@ keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
   14:00  01_getrss.py 抓取第 2 次 RSS
   14:05  02_combine-gemini.py 合并、去重并翻译 RSS
   15:00  05_photos-update.py 自动同步（脚本存在时启用）
+
+v1.25 变更:
+  - 02 新增 24 小时已提取记忆（rss_issue_memory.json）：摘要发出后即使被取走，
+    过去 24 小时内出现过的条目也不会再次进入新摘要。
+  - 移除 piczip/oxipng.exe：03/04/91 的 PNG 压缩改用 Pillow 无损优化，
+    全流程纯 Python（Pillow 已是既有依赖），后缀名转换规则不变。
 
 v1.24 变更:
   - 子脚本 stdout/stderr 实时写入主控制台与总日志，便于定位 02 翻译超时点。
@@ -151,8 +157,8 @@ if sys.stdout.encoding != 'utf-8':
 # 版本信息
 # ═══════════════════════════════════════════════════════════════
 
-VERSION = "1.24"
-VERSION_DATE = "2026-09-03"
+VERSION = "1.25"
+VERSION_DATE = "2026-09-28"
 
 # ═══════════════════════════════════════════════════════════════
 # 配置区域
@@ -258,6 +264,7 @@ VERSION_TASK_CHANGES = {
     "1.22": {"blog"},  # 博客图片格式转换后回写正文与题图 URL
     "1.23": {"rss"},  # Techmeme RSS 从摘要提取原始报道 URL
     "1.24": {"rss", "combine", "photos_update"},  # 实时子进程日志、02 统一去重、Photos 空月份修复
+    "1.25": {"combine", "daily", "blog"},  # 02 新增 24h 已提取记忆；03/04 图片压缩改纯 Pillow
 }
 
 TASK_COMPLETION_FILE = os.path.join(LOG_DIR, "task_completion.json")

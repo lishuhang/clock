@@ -558,14 +558,14 @@ def download_image_bytes(url, referer="https://mp.weixin.qq.com/"):
 
 
 def compress_image_file(filepath, logger=None):
-    """v1.13: 压缩并转换图片（与 04_convert-blog.py 一致，内置工具 + Pillow）
+    """v1.25: 压缩并转换图片（与 04_convert-blog.py 一致，纯 Pillow，无外部 exe）
 
-    使用内置 oxipng.exe（piczip/ 目录）+ Pillow（JPEG/GIF 压缩）。
-    无需安装任何系统级工具。
+    使用 Pillow 完成全部压缩：PNG 无损优化（optimize），JPEG/GIF 有损/无损压缩。
+    无需安装任何系统级工具，也不再依赖 piczip/ 目录。
 
     规则（IE6 兼容，仅 jpg/png/gif）:
       - 不透明 PNG → 转为 JPG
-      - 透明 PNG → 保留 PNG，oxipng 压缩
+      - 透明 PNG → 保留 PNG，Pillow 无损优化
       - 动图 GIF → 保留 GIF，Pillow 压缩
       - 静态 GIF → 转为 PNG
       - JPEG → Pillow 压缩 (quality=88, progressive)
@@ -573,17 +573,24 @@ def compress_image_file(filepath, logger=None):
 
     返回: (new_filepath, saved_bytes)
     """
-    import shutil
     if not os.path.exists(filepath):
         return (filepath, 0)
 
-    # v1.13: 内置工具路径
-    _piczip_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "piczip")
-    def _get_tool(name):
-        local = os.path.join(_piczip_dir, name + (".exe" if sys.platform == "win32" else ""))
-        if os.path.isfile(local):
-            return local
-        return shutil.which(name)
+    # v1.25: 移除 piczip/oxipng.exe 依赖，PNG 改用 Pillow 无损优化
+    def _optimize_png(fp):
+        """Pillow 无损 PNG 优化：仅在结果更小时替换，失败时保留原文件。"""
+        tmp = fp + '.tmp.png'
+        try:
+            from PIL import Image
+            with Image.open(fp) as img:
+                img.save(tmp, 'PNG', optimize=True)
+            if os.path.getsize(tmp) < os.path.getsize(fp):
+                os.replace(tmp, fp)
+            else:
+                os.remove(tmp)
+        except Exception:
+            if os.path.exists(tmp):
+                os.remove(tmp)
 
     size_before = os.path.getsize(filepath)
     ext = filepath.rsplit('.', 1)[-1].lower() if '.' in filepath else ''
@@ -675,9 +682,7 @@ def compress_image_file(filepath, logger=None):
                 except Exception:
                     pass
             else:
-                oxipng = _get_tool('oxipng')
-                if oxipng:
-                    subprocess.run([oxipng, '-o', '4', '--strip', 'safe', '--force', new_path], capture_output=True, timeout=120)
+                _optimize_png(new_path)
 
         # Static GIF → PNG
         if ext == 'gif' and not _is_animated(new_path):
@@ -696,9 +701,7 @@ def compress_image_file(filepath, logger=None):
                     new_path = jpg_path
                     ext = 'jpg'
                 else:
-                    oxipng = _get_tool('oxipng')
-                    if oxipng:
-                        subprocess.run([oxipng, '-o', '4', '--strip', 'safe', '--force', new_path], capture_output=True, timeout=120)
+                    _optimize_png(new_path)
             except Exception:
                 pass
         elif ext == 'gif':

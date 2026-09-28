@@ -53,6 +53,10 @@ CONTENT_PARAM_PATTERN = re.compile(
     re.IGNORECASE,
 )
 SUMMARY_OUTPUT_PATTERN = re.compile(r"^\d{8}-\d{6}\.(?:md|py)$")
+# v1.25: 已提取条目的滑动窗口记忆。条目写入摘要后记录其最终 URL（无链接项按标题文本），
+# 未来 24 小时内再次出现的新条目将被跳过；超过 24 小时的记录在每次运行时修剪。
+ISSUED_MEMORY_PATH = os.path.join(SCRIPT_DIR, "rss_issue_memory.json")
+ISSUED_MEMORY_TTL_HOURS = 24
 GLM_REFUSAL_MARKERS = (
     "很抱歉，我还未学习到如何回答这个问题的内容",
     "暂时无法提供相关信息",
@@ -241,6 +245,62 @@ def deduplicate_content_lines(lines):
         if existing is None or title_score(title) > title_score(existing["title"]):
             best_by_key[key] = {"line": reconstructed, "title": title}
     return [entry["line"] for entry in best_by_key.values()]
+
+
+def load_issue_memory():
+    """v1.25: 读取已提取条目记忆，丢弃超过 TTL 的记录；文件缺失或损坏时返回空记忆。"""
+    try:
+        with open(ISSUED_MEMORY_PATH, encoding="utf-8") as fh:
+            raw = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    cutoff = time.time() - ISSUED_MEMORY_TTL_HOURS * 3600
+    memory = {}
+    for key, ts in raw.items():
+        if isinstance(key, str) and isinstance(ts, (int, float)) and ts >= cutoff:
+            memory[key] = ts
+    return memory
+
+
+def issue_memory_key(title, url):
+    """v1.25: 与去重规则一致的记忆键：优先最终 URL，无链接项退回标题文本。"""
+    normalized_url = canonicalize_url(url)
+    if normalized_url:
+        return "u|" + normalized_url
+    return "t|" + re.sub(r"\s+", " ", title or "").strip().lower()
+
+
+def filter_recently_issued(lines, memory):
+    """v1.25: 丢弃过去 24 小时内已提取过的条目，返回 (保留行, 跳过数)。"""
+    kept, dropped = [], 0
+    for line in lines:
+        _, title, url, _ = parse_markdown_link(line)
+        if issue_memory_key(title, url) in memory:
+            dropped += 1
+            continue
+        kept.append(line)
+    return kept, dropped
+
+
+def record_issued_lines(lines, memory):
+    """v1.25: 将本次进入摘要的条目记入记忆（以提取时的原始标题为文本键）。"""
+    now = time.time()
+    for line in lines:
+        _, title, url, _ = parse_markdown_link(line)
+        memory[issue_memory_key(title, url)] = now
+
+
+def save_issue_memory(memory):
+    """v1.25: 原子写入记忆文件；写入失败不阻断主流程。"""
+    try:
+        tmp_path = ISSUED_MEMORY_PATH + ".tmp"
+        with open(tmp_path, "w", encoding="utf-8") as fh:
+            json.dump(memory, fh, ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp_path, ISSUED_MEMORY_PATH)
+    except OSError as exc:
+        print(f"Warning: failed to update issue memory file: {exc}")
 
 
 def is_primarily_english(text):
@@ -559,6 +619,14 @@ def main():
     print(f"Total content lines loaded across all inputs: {len(all_lines)}")
     unique_lines = deduplicate_content_lines(all_lines)
     print(f"Total unique lines loaded: {len(unique_lines)}")
+    issue_memory = load_issue_memory()
+    unique_lines, issued_dropped = filter_recently_issued(unique_lines, issue_memory)
+    if issued_dropped:
+        print(f"Past-{ISSUED_MEMORY_TTL_HOURS}h already-issued duplicates removed: {issued_dropped}")
+    if not unique_lines:
+        print("All entries were already issued within the past 24 hours; no new summary needed.")
+        save_issue_memory(issue_memory)
+        return
     chinese_lines, english_lines = [], []
     for line in unique_lines:
         if is_primarily_english(line):
@@ -585,6 +653,9 @@ def main():
     output_lines = classify_and_sort_items(chinese_lines + translated_lines)
     output_path = next_output_path()
     write_summary_atomically(output_path, first_header, output_lines, first_footer)
+    record_issued_lines(unique_lines, issue_memory)
+    save_issue_memory(issue_memory)
+    print(f"Issue memory now holds {len(issue_memory)} key(s) within the past {ISSUED_MEMORY_TTL_HOURS}h.")
     removed = remove_superseded_summaries(pending_summaries, output_path)
 
     if degraded:

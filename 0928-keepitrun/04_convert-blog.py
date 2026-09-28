@@ -170,17 +170,7 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 REPO_POSTS = "lishuhang/lishuhang.github.io"   # 文章仓库
 POSTS_PATH = "_posts"                            # 文章在仓库中的路径
 
-# v1.13: 内置压缩工具路径（piczip/ 目录下的 Windows exe）
-_PICZIP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "piczip")
-def _get_tool(name):
-    """获取压缩工具路径：优先 piczip/ 目录，其次系统 PATH"""
-    # piczip 目录下的 exe
-    local = os.path.join(_PICZIP_DIR, name + (".exe" if sys.platform == "win32" else ""))
-    if os.path.isfile(local):
-        return local
-    # 系统 PATH
-    import shutil
-    return shutil.which(name)
+# v1.25: 移除 piczip/ 内置 exe；压缩全部由 Pillow 完成（见 _optimize_png_with_pillow 等）
 GITHUB_IMAGE_BASE = ""   # v2.0: 相对路径，由 _config.yml + image_prefix.rb 插件在构建时解析为完整 URL
 
 # 长文/短篇自动识别阈值
@@ -563,7 +553,7 @@ def download_image(url, filepath, referer="https://mp.weixin.qq.com/"):
         return False
 
 
-# ─── 图片压缩与格式转换 (v1.13 重构：内置工具 + Pillow) ─────
+# ─── 图片压缩与格式转换 (v1.25：纯 Pillow，无外部 exe) ─────
 
 def _detect_transparency(filepath):
     """检测图片是否有透明通道（需要 Pillow）"""
@@ -632,6 +622,22 @@ def _compress_gif_with_pillow(filepath):
         pass
 
 
+def _optimize_png_with_pillow(filepath):
+    """v1.25: Pillow 无损 PNG 优化（替代 oxipng）：仅在更小时替换，失败保留原文件。"""
+    tmp = filepath + '.tmp.png'
+    try:
+        from PIL import Image
+        with Image.open(filepath) as img:
+            img.save(tmp, 'PNG', optimize=True)
+        if os.path.getsize(tmp) < os.path.getsize(filepath):
+            os.replace(tmp, filepath)
+        else:
+            os.remove(tmp)
+    except Exception:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+
+
 def rewrite_converted_image_urls(content, cover_github_url, replacements):
     """将图片格式转换后的 URL 回写至已生成的正文和题图字段。"""
     for original_url, converted_url in replacements.items():
@@ -642,14 +648,14 @@ def rewrite_converted_image_urls(content, cover_github_url, replacements):
 
 
 def compress_and_convert_image(filepath, logger=None):
-    """v1.13: 压缩并转换图片为合规格式
+    """v1.25: 压缩并转换图片为合规格式
 
-    使用内置 oxipng.exe（piczip/ 目录）+ Pillow（JPEG/GIF 压缩）。
+    使用纯 Pillow（v1.25 起不再依赖 piczip/oxipng.exe）。
     无需安装任何系统级工具。
 
     规则（IE6 兼容，仅 jpg/png/gif）:
       - 不透明 PNG → 转为 JPG（体积更小）
-      - 透明 PNG → 保留 PNG，oxipng 压缩
+      - 透明 PNG → 保留 PNG，Pillow 无损优化
       - 动图 GIF → 保留 GIF，Pillow 压缩
       - 静态 GIF → 转为 PNG（再按 PNG 规则处理）
       - JPEG → Pillow 压缩 (quality=88, progressive)
@@ -706,13 +712,8 @@ def compress_and_convert_image(filepath, logger=None):
                 except Exception:
                     pass
             else:
-                # 透明 PNG → oxipng 压缩（内置或系统）
-                oxipng = _get_tool('oxipng')
-                if oxipng:
-                    subprocess.run(
-                        [oxipng, '-o', '4', '--strip', 'safe', '--force', new_path],
-                        capture_output=True, timeout=120
-                    )
+                # 透明 PNG → Pillow 无损优化
+                _optimize_png_with_pillow(new_path)
 
         # 静态 GIF → PNG
         if ext == 'gif' and not _is_animated_gif(new_path):
@@ -732,12 +733,7 @@ def compress_and_convert_image(filepath, logger=None):
                     new_path = jpg_path
                     ext = 'jpg'
                 else:
-                    oxipng = _get_tool('oxipng')
-                    if oxipng:
-                        subprocess.run(
-                            [oxipng, '-o', '4', '--strip', 'safe', '--force', new_path],
-                            capture_output=True, timeout=120
-                        )
+                    _optimize_png_with_pillow(new_path)
             except Exception:
                 pass
         elif ext == 'gif':

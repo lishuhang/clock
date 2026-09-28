@@ -9,10 +9,15 @@ open-source tools. Designed to be run:
   2. Via GitHub Actions: see .github/workflows/compress-images.yml
 
 Tools used (all open-source, no AI):
-  - PNG:  oxipng (lossless, multi-threaded, opt level 4)
-  - JPEG: jpegoptim --max=90 --strip-all --all-progressive (near-lossless)
-  - GIF:  gifsicle --optimize=3 (lossless)
+  - PNG:  oxipng (lossless, multi-threaded, opt level 4) if on PATH;
+         otherwise Pillow lossless re-save (optimize=True)
+  - JPEG: jpegoptim --max=90 --strip-all --all-progressive if on PATH;
+         otherwise Pillow (quality=90, optimize, progressive)
+  - GIF:  gifsicle --optimize=3 (lossless) if on PATH; otherwise Pillow (optimize)
   - WebP conversion (optional, --webp): cwebp -q 88 for images >500KB
+
+v1.25: the bundled piczip/oxipng.exe has been removed; every format now has a
+pure-Pillow fallback so the CLI works on any OS without installing anything.
 
 Typical savings: 15-40% with zero visible quality loss.
 
@@ -57,14 +62,9 @@ if sys.stdout.encoding != 'utf-8':
         sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
 
 
-PICZIP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "piczip")
-
-
 def find_tool(name):
-    """Find a bundled Windows executable first, then fall back to PATH."""
-    suffix = ".exe" if sys.platform == "win32" else ""
-    bundled = os.path.join(PICZIP_DIR, name + suffix)
-    return bundled if os.path.isfile(bundled) else shutil.which(name)
+    """v1.25: locate an external helper on PATH; bundled exe no longer used."""
+    return shutil.which(name)
 
 
 def check_tools():
@@ -90,10 +90,28 @@ def check_tools():
 
 
 def compress_png(path, dry_run=False):
-    """Lossless PNG compression with oxipng (level 4, strip metadata)."""
+    """Lossless PNG compression: oxipng (level 4) if available, else Pillow."""
     size_before = os.path.getsize(path)
     if dry_run:
         return (path, 'png', size_before, size_before, 'dry-run')
+    executable = find_tool("oxipng")
+    if not executable:
+        tmp = path + '.tmp.png'
+        try:
+            from PIL import Image
+            with Image.open(path) as image:
+                image.save(tmp, 'PNG', optimize=True)
+            size_after = os.path.getsize(tmp)
+            if size_after < size_before:
+                os.replace(tmp, path)
+            else:
+                os.remove(tmp)
+                size_after = size_before
+            return (path, 'png', size_before, size_after, 'ok-pillow')
+        except Exception as e:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            return (path, 'png', size_before, size_before, f'error:{e}')
     try:
         # -o 4: optimization level 4 (good balance, 0-6)
         # --strip safe: remove metadata but keep color profile
@@ -318,7 +336,7 @@ def main():
     # Categorize
     by_type = {'png': [], 'jpeg': [], 'gif': []}
     for path, ext in images:
-        if ext == 'png' and not args.no_png and tools.get('oxipng'):
+        if ext == 'png' and not args.no_png and (tools.get('oxipng') or tools.get('pillow')):
             by_type['png'].append(path)
         elif ext in ('jpg', 'jpeg') and not args.no_jpeg and (tools.get('jpegoptim') or tools.get('pillow')):
             by_type['jpeg'].append(path)

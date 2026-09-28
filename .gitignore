@@ -1,3 +1,6 @@
 0722-gpt2/.deploy/
 .secrets
 .state
+
+__pycache__/
+*.pyc
