@@ -44,7 +44,7 @@
 Worker 部署命令:
 curl -X PUT \
   
-  -H "Authorization: Bearer cfat_neyR5qerEFYKtkpKZ0zuL6r0TVyDXH5YrOfLAOMI26d2f730" \
+  -H "Authorization: Bearer [CF-TOKEN-已脱敏-2026-09-28-需轮换]" \
   -F 'metadata={"main_module":"gpt2-worker-v28.js","compatibility_date":"2024-09-01"};type=application/json' \
   -F 'gpt2-worker-v28.js=@gpt2-worker-v28.js;type=application/javascript+module'
 ```
@@ -232,7 +232,7 @@ UNSPLASH_ACCESS_KEY=your_access_key
 UNSPLASH_SECRET_KEY=your_secret_key
 UNSPLASH_BEARER_TOKEN=your_bearer_token
 UNSPLASH_REDIRECT_URI=urn:ietf:wg:oauth:2.0:oob
-MALIANG_DEFAULT_PASSWORD=Ml@2026Proxy
+MALIANG_DEFAULT_PASSWORD=[PASSWORD-已脱敏-2026-09-28-需轮换]
 MALIANG_REGISTER_MIN=2
 MALIANG_REGISTER_MAX=5
 ```
