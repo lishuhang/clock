@@ -17,6 +17,7 @@
 | https://lishuhang.me/skill.md | agent 使用说明卡（三步用法 + 纪律 + 工具一览） | 200 |
 | https://lishuhang.me/assets/js/webmcp.js | 浏览器端 WebMCP 工具注册（blog_list_posts / blog_search_posts / blog_read_post），已随全站页面引入 | 200，5.4KB |
 | **https://mcp.lishuhang.com/mcp** | **航通社官网 MCP Server**（Cloudflare Workers 免费档，Streamable HTTP，免鉴权，无状态） | 200，六工具全通 |
+| 官方 MCP Registry | 已收录 `io.github.lishuhang/site-mcp` v1.0.0（active，2026-09-29 15:36），remote 指向上行端点；PulseMCP 等目录宣称自动同步 | registry.modelcontextprotocol.io 实测返回 |
 
 首页 `<head>` 已带 `<link rel="describedby" href="/llms.txt">`（llms.txt v2 建议的发现方式），页面已引入 webmcp.js。
 
@@ -54,6 +55,7 @@ curl -sS -X POST https://mcp.lishuhang.com/mcp -H 'Content-Type: application/jso
 ```
 
 - 在 Claude 等客户端挂载：远程 MCP，URL 填 `https://mcp.lishuhang.com/mcp`，选 Streamable HTTP，无需认证。
+- 官方 Registry 收录页：`https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.lishuhang/site-mcp`（名称为 GitHub 命名空间，见 §4/§5 的取舍说明）。
 
 ## 3. 与已有资产的整合（本轮零重复建设）
 
@@ -67,6 +69,13 @@ curl -sS -X POST https://mcp.lishuhang.com/mcp -H 'Content-Type: application/jso
 | 调研 v1 | 本 README 是其 P0+P1+P2 的落地版 |
 
 ## 4. Changelog
+
+### 2026-09-29 v1.0.1（官方 Registry 收录）
+
+- **官方 MCP Registry 收录完成**：`io.github.lishuhang/site-mcp` v1.0.0，status=active（publishedAt 2026-09-29T07:36:57Z 即 GMT+8 15:36），remote=streamable-http `https://mcp.lishuhang.com/mcp`。收录后 PulseMCP 等目录按其同步机制自动跟进，无需逐家提交。
+- `server.json` name 从 `com.lishuhang/site-mcp` 改为 `io.github.lishuhang/site-mcp`：域名式名称要求 DNS/HTTP 域名鉴权，两者当时均不可用（见 §5.1），GitHub 设备流要求 `io.github.<用户名>/` 前缀。
+- 新增备用资产（零成本保留）：lishuhang.com apex TXT 所有权记录（ed25519 公钥）；`lishuhang-mcp-registry-proof` Worker + 精确路径路由 `lishuhang.com/.well-known/mcp-registry-auth`（现被根域跳转规则遮蔽，跳转规则一旦排除该路径即恢复 HTTP 鉴权通道可用）。
+- 经验记录：Registry DNS 鉴权查的是 **apex 裸域 TXT**（`_mcp-registry-auth.` 前缀是源码里点名的常见错放）；Registry 自有解析器（34.118.224.10）当日对 lishuhang.com 返回 NXDOMAIN，属其基础设施侧问题。
 
 ### 2026-09-29 v1.0.0（首发上线）
 
@@ -86,15 +95,12 @@ curl -sS -X POST https://mcp.lishuhang.com/mcp -H 'Content-Type: application/jso
 
 ## 5. 待办（需要用户动作或额外权限，均为免费）
 
-1. **官方 MCP Registry 收录**（agent 发现的主通道，注册后 PulseMCP 自动同步）：
-   - 途径 A（推荐）：给 CF token 加上 lishuhang.com 的 **DNS Edit** 权限后告知，可全自动完成；
-   - 途径 B：用户本机执行 `mcp-publisher login github`（设备流）后 `publish`；
-   - 途径 C（DNS 手动）：在 lishuhang.com 的 DNS 里加 TXT 记录，主机名 `_mcp-registry-auth.mcp.lishuhang.com`，值为
-     `v=MCPv1; k=ed25519; p=<公钥>`（CLI 按标准 base64 输出，需按其提示原样填写），随后 `mcp-publisher login dns --domain mcp.lishuhang.com --private-key <hex>`。
-   - `site-mcp/server.json` 已备好并通过 `mcp-publisher validate`（name: `com.lishuhang/site-mcp`，remote: streamable-http）。
-   - 本轮未能自动完成的两个硬事实：① 当前 CF token 对 DNS 记录**只读**（创建 TXT 返回 10000 Authentication error）；② Registry v0.1 匿名发布端点已下线（404）。
+1. ~~官方 MCP Registry 收录~~ **已完成（2026-09-29 v1.0.1，见 §4）**。三条通道的实测结论存档：
+   - DNS 鉴权：TXT 须建在 **apex 裸域**（服务端源码 dns.go `LookupTXT(ctx, domain)`，`_mcp-registry-auth.` 前缀是常见错放）；TXT 资产已在 apex 就位且全球可见，但 Registry 自有解析器当日对 lishuhang.com 返回 NXDOMAIN（其基础设施问题），通道暂不可用——日后可在 `mcp-publisher login dns --domain lishuhang.com --private-key <hex>` 上重试，恢复后可再发布域名式名称 `com.lishuhang/site-mcp`。
+   - HTTP 鉴权：要求 `https://lishuhang.com/.well-known/mcp-registry-auth` 200 直出且不跟随重定向；proof Worker 已部署在该精确路径，但被根域跳转规则先于 Worker 拦截（301）。**若在 CF 里把该路径从跳转规则中排除（需 Rulesets 编辑权限，当前 token 没有），通道即自动恢复。**
+   - GitHub 设备流：`mcp-publisher login github` → 浏览器打开 github.com/login/device 输码授权 → `publish`（本轮即经此通道完成）。
 2. **webmcp.com 收录**：浏览器打开 webmcp.com → "Add your site" 提交 `lishuhang.me`（免费，扫描器验证工具在线即收录）。
-3. **CF token 权限现状备忘**：可部署 Workers（含自定义域）、可读 zone/DNS；`/user/tokens/verify` 对该类 token 返回 Invalid 属正常现象（账户级 token 不支持 user 端点）。
+3. **CF token 权限现状备忘**：可部署 Workers（含自定义域）、DNS/Zone 可读写（v1.0.1 轮已验证 TXT 创建与删除）；仍无 Rulesets 写权限；`/user/tokens/verify` 对该类 token 返回 Invalid 属正常现象（账户级 token 不支持 user 端点）。
 4. **P3 前端路线**（见调研 v1 §4/§5，未实施）：Fuse.js 全站搜索 → CF Worker + glm-4.7-flash 免费档 AI 搜索 → 聊天机器人。
 
 ## 6. 维护与回滚

@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "com.lishuhang/site-mcp",
+  "name": "io.github.lishuhang/site-mcp",
   "description": "航通社官网（lishuhang.me，书航博客 + 每日 AIGC 早报）只读检索：文章与早报列表、关键词搜索、单篇全文 markdown。Streamable HTTP，免鉴权，无状态。",
   "version": "1.0.0",
   "homepage": "https://lishuhang.me",

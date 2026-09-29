@@ -15,4 +15,10 @@ cd site-mcp
 CLOUDFLARE_API_TOKEN=<token> npx wrangler deploy
 ```
 
-token 只放环境变量；仓库内不含任何凭据。`server.json` 用于未来向官方 MCP Registry 发布（`mcp-publisher publish`，需 DNS/GitHub 鉴权，见主 README 待办）。
+token 只放环境变量；仓库内不含任何凭据。
+
+## 官方 Registry 发布（已完成）
+
+- `server.json`（name: `io.github.lishuhang/site-mcp`）已于 2026-09-29 发布至官方 Registry 并处于 active 状态（发布记录见主 README §4 changelog v1.0.1）。
+- 更新版本流程：改 `server.json` 的 `version` → `mcp-publisher login github`（浏览器设备流授权）→ `mcp-publisher publish`。
+- 备用通道（域名式名称 `com.lishuhang/site-mcp`）：DNS 鉴权 TXT 已在 apex 就位、HTTP 鉴权 proof Worker 已部署，启用条件见主 README §5.1。
