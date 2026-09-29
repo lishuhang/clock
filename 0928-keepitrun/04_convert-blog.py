@@ -57,7 +57,9 @@ v3.0 变更 (2026-06-11)：
    - 文章 → lishuhang/lishuhang.github.io  _posts/
    - 配图 → 按主站 _config.yml 的 image_prefixes 和文章日期选择仓库/分支
 7. 覆盖保护：已有文件先备份为 _bak；批量模式下支持 a(ll) 全部覆盖
-8. 合集来源自动分配 Jekyll categories 和 tags
+8. 合集来源自动分配 Jekyll categories 和 tags，并自动追加 featured 标签（v1.28）
+9. v1.28: URL 级已同步记忆（blog_sync_memory.json）：同步过一次的文章
+   永远不再抓取处理，配合调度器 30 天窗口封顶实现纯增量同步
 
 用法：
   python 04_convert-blog.py <url>                          # 抓取指定URL
@@ -209,6 +211,61 @@ ALBUMS = [
 
 # 自动模式：最多检查每个合集前几页（每页20篇）
 AUTO_MAX_PAGES = 3
+
+# v1.28: 已同步文章记忆（URL → 同步时间戳）。
+# 目的：合集增量同步只需「找出最近新增、尚未同步的文章」，同步过一次的 URL
+# 永远不再抓取处理（不随合集变大而遍历历史全量；换新电脑时仓库本身即真相源，
+# 仅最近窗口内的文章会做一次存在性确认）。文件为运行时状态，不入库不打包。
+BLOG_SYNC_MEMORY_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "blog_sync_memory.json"
+)
+
+
+def _build_tags_with_featured(tags):
+    """v1.28: 每篇同步文章自动追加 featured 标签（首页大图滚动区域数据源）。
+
+    tags 可为单个标签或逗号分隔多标签；已含 featured 时去重，避免重复。
+    """
+    tag_items = [t.strip() for t in str(tags).split(",") if t.strip()]
+    if "featured" not in tag_items:
+        tag_items.append("featured")
+    return ",".join(tag_items)
+
+
+def load_sync_memory(logger=None):
+    """v1.28: 读取已同步文章记忆；文件缺失或损坏时返回空记忆（首次运行为冷启动）。"""
+    try:
+        with open(BLOG_SYNC_MEMORY_PATH, encoding="utf-8") as fh:
+            raw = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    memory = {}
+    for key, ts in raw.items():
+        if isinstance(key, str) and isinstance(ts, (int, float)):
+            memory[key] = ts
+    return memory
+
+
+def save_sync_memory(memory, logger=None):
+    """v1.28: 原子写入记忆文件；写入失败仅警告，不阻断主流程。"""
+    try:
+        tmp_path = BLOG_SYNC_MEMORY_PATH + ".tmp"
+        with open(tmp_path, "w", encoding="utf-8") as fh:
+            json.dump(memory, fh, ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp_path, BLOG_SYNC_MEMORY_PATH)
+    except OSError as exc:
+        if logger:
+            logger.warning(f"同步记忆文件写入失败（不影响本次发布）: {exc}")
+
+
+def mark_article_synced(memory, url, logger=None):
+    """v1.28: 记录一个 URL 为已同步（含「仓库已存在」与「本次上传成功」两种情形）。"""
+    if not url:
+        return
+    memory[url] = time.time()
+    save_sync_memory(memory, logger=logger)
 
 
 # ─── 日志 ────────────────────────────────────────────────────
@@ -920,9 +977,11 @@ def extract_date(soup, html_content, fallback_name="", logger=None):
     """
     # 0. 从正文提取"文 / 书航 YYYY.MM.DD"格式的日期（最高优先级）
     # 匹配多种变体：文 / 书航 2025.12.11 / 文/书航 2025.12.11 / 文 / 书航 2025.12.11
-    # 日期分隔符支持 . 和 -
+    # v1.28: 允许「书航」与日期之间无空格（文/书航2025.12.11），
+    # 月份/日期允许一位数（2026.9.5）；分隔符支持 . 和 -
+    # 转载稿（如公司稿件）公众号发布时间晚于实际首发，blog 日期以正文标注为准。
     m = re.search(
-        r'文\s*/\s*书航\s+(\d{4})[.\-](\d{1,2})[.\-](\d{1,2})',
+        r'文\s*/\s*书航\s*(\d{4})[.\-](\d{1,2})[.\-](\d{1,2})',
         html_content,
     )
     if m:
@@ -2261,7 +2320,8 @@ def github_verify_file(repo, path, logger, branch=None):
 # ─── 核心处理流程 ────────────────────────────────────────────
 
 def process_article(raw_html, output_dir, logger, source_url=None, source_path=None,
-                    overwrite_all=False, categories="文章", tags="科技", non_interactive=False):
+                    overwrite_all=False, categories="文章", tags="科技", non_interactive=False,
+                    sync_memory=None):
     """
     核心处理流程：原始HTML → Markdown + 图片下载 + GitHub上传。
 
@@ -2387,7 +2447,8 @@ def process_article(raw_html, output_dir, logger, source_url=None, source_path=N
         logger.info(f"  ✓ 已回写 {len(converted_url_replacements)} 个转换后图片 URL 到文章内容")
 
     # 8. 生成Markdown文件
-    tags_str = tags
+    # v1.28: featured 标签自动化（见 _build_tags_with_featured）
+    tags_str = _build_tags_with_featured(tags)
     categories_str = categories
 
     front_matter = (
@@ -2440,19 +2501,30 @@ def process_article(raw_html, output_dir, logger, source_url=None, source_path=N
             else:
                 overwrite_this = True
 
+        upload_ok = None  # None=仓库已有且未覆盖
         if exists and overwrite_this:
             # 备份旧版本
             bak_path = md_path + "_bak"
             github_download_file(REPO_POSTS, posts_repo_path, bak_path, logger)
-            github_upload_file(
+            upload_ok = github_upload_file(
                 REPO_POSTS, posts_repo_path, md_path,
                 f"Update: {md_name}", logger, overwrite=True
             )
         elif not exists:
-            github_upload_file(
+            upload_ok = github_upload_file(
                 REPO_POSTS, posts_repo_path, md_path,
                 f"Add: {md_name}", logger
             )
+
+        # v1.28: 同步记忆 —— 仓库已有或本次上传成功均记为已同步；
+        # 上传失败不记录，保留下次增量运行重试的机会。
+        if source_url and sync_memory is not None:
+            if exists:
+                mark_article_synced(sync_memory, source_url, logger)
+                logger.info("已记入同步记忆（仓库已有此文章，不再重复同步）")
+            elif upload_ok:
+                mark_article_synced(sync_memory, source_url, logger)
+                logger.info("已记入同步记忆（本次发布成功）")
 
         # ── 图片库：批量提交（每篇文章一次 commit） ──
         # 图片路径前缀由当前日期匹配的 _config.yml 规则决定。
@@ -2731,10 +2803,22 @@ def main():
     logger.info(f"共 {len(urls_with_meta)} 个URL待处理")
 
     # ── 处理每篇文章 ──
+    # v1.28: 增量同步 —— 载入已同步记忆，同步过的 URL 不再抓取处理；
+    # 合集窗口由调度器 30 天封顶，历史文章永不重跑（新电脑冷启动亦然）。
+    sync_memory = load_sync_memory(logger)
+    if sync_memory:
+        logger.info(f"已同步记忆: {len(sync_memory)} 篇（blog_sync_memory.json）")
+
     overwrite_all = False
     ok, fail, skip = 0, 0, 0
 
     for i, (url, categories, tags) in enumerate(urls_with_meta, 1):
+        if url in sync_memory:
+            logger.info(
+                f"[{i}/{len(urls_with_meta)}] 已同步过（记忆命中，跳过）: {url[:80]}")
+            skip += 1
+            continue
+
         logger.info(f"[{i}/{len(urls_with_meta)}] {url[:80]}...")
 
         raw_html = fetch_wechat_html(url, logger)
@@ -2750,6 +2834,7 @@ def main():
             categories=categories,
             tags=tags,
             non_interactive=non_interactive,
+            sync_memory=sync_memory,
         )
 
         if result is not None:

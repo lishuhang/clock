@@ -11,6 +11,14 @@
 6. 上传后验证文件已在仓库中
 7. 完整对比专辑与仓库差异（album:diff）
 
+v1.28 变更 (2026-09-29, keepitrun v1.28)：
+  - 同日早报首同步版本为准：目标日期文章已存在于 daily 仓库时，
+    抓取元数据后立即跳过（不下载题图、不覆盖 md/图片）。背景：同日期
+    重发的早报可能因审查删改内容，首同步版本才是准确版本，无需覆盖。
+  - 题图 1:1 比例校正：下载后用 Pillow 检查宽高比，非 1:1（如 2:3）
+    按原始分辨率中心裁切为 1:1（JPEG q95 单次重编码/PNG 无损），
+    避免展示端再缩放裁切导致整体比原图小一圈；已是 1:1 则原样保留。
+
 用法：
   python convert_daily_2.py                    # 自动检测并抓取缺失文章
   python convert_daily_2.py album:20260103     # 抓取指定日期起至最新
@@ -538,6 +546,58 @@ def extract_date_from_title(title):
     return None
 
 
+def ensure_square_cover(filepath, logger=None):
+    """v1.28: 检查题图是否为 1:1；非 1:1 时按原始分辨率中心裁切为最大正方形。
+
+    背景：daily 题图槽位按 1:1 展示，若原图为 2:3 等比例，由展示端缩放
+    裁切会造成整体比原图小一圈的观感（内容缩水/边缘丢失）。这里在同步时
+    用 Pillow 一次性高保真裁切为 1:1，展示端无需再做缩放裁切。
+
+    规则：
+      - 已是 1:1（宽=高）→ 原样保留
+      - 非 1:1 → 中心裁切 max 正方形（竖图保全宽、横图保全高）
+      - PNG 无损保存；其他光栅格式 JPEG quality=95 单次重编码
+      - GIF/动图不裁切（避免丢帧）
+      - 仅在裁切成功时替换原文件，失败保留原图
+
+    返回: (filepath, cropped_bool)
+    """
+    try:
+        from PIL import Image
+        with Image.open(filepath) as img:
+            w, h = img.size
+            if w == h:
+                if logger:
+                    logger.info(f"题图已是 1:1（{w}x{h}），无需裁切")
+                return (filepath, False)
+            fmt = (img.format or "").upper()
+            if (fmt == "GIF" or getattr(img, "is_animated", False)
+                    or getattr(img, "n_frames", 1) > 1):
+                if logger:
+                    logger.info(f"题图 {w}x{h} 为 GIF/动图，跳过 1:1 裁切")
+                return (filepath, False)
+            side = min(w, h)
+            left = (w - side) // 2
+            top = (h - side) // 2
+            square = img.crop((left, top, left + side, top + side))
+            tmp = filepath + ".tmp.square"
+            if fmt == "PNG":
+                square.save(tmp, "PNG", optimize=True)
+            else:
+                square.convert("RGB").save(
+                    tmp, "JPEG", quality=95, optimize=True)
+            os.replace(tmp, filepath)
+            if logger:
+                logger.info(
+                    f"题图比例校正: {w}x{h} → 1:1（{side}x{side}，"
+                    f"中心裁切，高保真）")
+            return (filepath, True)
+    except Exception as exc:
+        if logger:
+            logger.debug(f"题图 1:1 校验/裁切失败（保留原图）: {exc}")
+        return (filepath, False)
+
+
 def download_image_bytes(url, referer="https://mp.weixin.qq.com/"):
     """下载图片，返回bytes或None"""
     headers = {
@@ -891,6 +951,20 @@ class DailyWorkflow:
             return False
         year, month, day = post_date.split("-")
 
+        # v1.28: 同日早报首同步版本为准 —— 该日期文章已存在于 daily 仓库时，
+        # 立即跳过（不下载题图、不覆盖 md/图片）。后续同日期重发的早报可能
+        # 因审查删改内容（替换/删除条目），首同步版本才是准确版本。
+        md_name = f"{post_date}-daily.md"
+        md_repo_path = f"_posts/{md_name}"
+        md_exists, _ = self.gh.file_exists(
+            DAILY_REPO["owner"], DAILY_REPO["repo"],
+            md_repo_path, branch=DAILY_REPO["branch"])
+        if md_exists:
+            self.logger.info(
+                f"早报 {post_date} 已存在于仓库（首同步版本为准），"
+                f"跳过不覆盖: {md_repo_path}")
+            return True
+
         # 4. 提取封面图
         first_img = extract_first_image_url(raw_html)
         og_img = meta.get("og:image", "")
@@ -948,6 +1022,9 @@ class DailyWorkflow:
             with open(img_local, "wb") as f:
                 f.write(img_bytes)
             self.logger.info(f"本地保存图片: {img_local}")
+            # v1.28: 题图 1:1 比例校正 —— 非 1:1（如 2:3）先按原始分辨率
+            # 中心裁切为 1:1，再做常规压缩/格式转换。
+            ensure_square_cover(img_local, self.logger)
             # v1.12: 上传前压缩并转换格式（不透明PNG→JPG, WebP→JPG/PNG, 静态GIF→PNG）
             try:
                 new_img_local, saved = compress_image_file(img_local, self.logger)

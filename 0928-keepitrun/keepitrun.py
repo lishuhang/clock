@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
-版本: 1.27 (2026-09-29)
+版本: 1.28 (2026-09-29)
 基于: keepitrun-260424.py (v1.0)
 
 每日定时任务（GMT+8）:
@@ -12,6 +12,17 @@ keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
   14:00  01_getrss.py 抓取第 2 次 RSS
   14:05  02_combine-gemini.py 合并、去重并翻译 RSS
   15:00  05_photos-update.py 自动同步（脚本存在时启用）
+
+v1.28 变更:
+  - blog 同步改纯增量：04 新增 URL 级已同步记忆（blog_sync_memory.json），
+    同步过一次的文章永远不再抓取处理；调度侧合集窗口封顶 30 天
+    （last_blog_crawl 过旧/新电脑冷启动时只回溯最近 30 天，历史全量永不重跑）。
+  - blog 发布日期以正文标注「文/书航 yyyy.mm.dd」为准（转载稿公众号
+    时间戳晚于实际首发）；正则放宽到无空格与一位数月/日。
+  - 04 每篇同步文章自动追加 featured 标签（首页大图滚动区域数据源）。
+  - 03 同日早报首同步版本为准：同日期重发（可能因审查删改）不覆盖已同步版本。
+  - 03 题图 1:1 比例校正：非 1:1（如 2:3）按原始分辨率中心裁切为 1:1，
+    避免展示端再缩放裁切导致整体比原图小一圈。
 
 v1.27 变更:
   - 冷启动提速：90_cleanup 从「逐文件 API 拉全文」重建为 Git Trees 一次列全量
@@ -173,7 +184,7 @@ if sys.stdout.encoding != 'utf-8':
 # 版本信息
 # ═══════════════════════════════════════════════════════════════
 
-VERSION = "1.27"
+VERSION = "1.28"
 VERSION_DATE = "2026-09-29"
 
 # ═══════════════════════════════════════════════════════════════
@@ -211,6 +222,33 @@ ARCHIVED_RETENTION_DAYS = 30 # archived/ 中文件保留 30 天
 
 # 上次成功 blog 爬取日期记录文件 (v1.2 重新启用)
 BLOG_LAST_CRAWL_FILE = os.path.join(SCRIPT_DIR, "last_blog_crawl.txt")
+
+# v1.28: blog 合集增量窗口封顶天数。同步目的＝「找出最近新增且未同步的文章」
+# 并对已同步文章去重，无需遍历历史全量（当前约万篇，随年份增长）；
+# last_blog_crawl 过旧（长期停跑/换新电脑）时也只回溯最近 N 天，
+# 已同步文章由 04 的 blog_sync_memory.json 记忆跳过。
+BLOG_SYNC_WINDOW_DAYS = 30
+
+
+def resolve_blog_since_date(last_date, today, logger=None, prefix=""):
+    """v1.28: 将上次爬取日期收敛到最近 N 天窗口内（N=BLOG_SYNC_WINDOW_DAYS）。
+
+    last_date 距今超过窗口天数时截断为窗口下界，避免合集随年份增长后
+    每次增量都从陈旧位置重扫历史。
+    """
+    try:
+        last_dt = datetime.strptime(last_date, "%Y%m%d")
+    except (TypeError, ValueError):
+        return last_date
+    floor_dt = today - timedelta(days=BLOG_SYNC_WINDOW_DAYS)
+    if last_dt < floor_dt:
+        floor_str = floor_dt.strftime("%Y%m%d")
+        if logger:
+            logger.info(
+                f"{prefix}上次爬取日期 {last_date} 超过 {BLOG_SYNC_WINDOW_DAYS} 天窗口，"
+                f"按 {floor_str} 起增量（历史全量不重跑，已同步文章由记忆跳过）")
+        return floor_str
+    return last_date
 
 # Photos 同步脚本与调度器同目录发布，避免依赖机器特定的绝对路径。
 
@@ -964,10 +1002,13 @@ def run_first_boot_tasks():
             except OSError:
                 pass
         # 构建参数
-        # 如果没有上次爬取日期记录，默认抓取最近30天（而非 album:diff，避免8合集全量遍历超时）
+        # 如果没有上次爬取日期记录，默认抓取最近30天（而非 album:diff，避免全量遍历超时）
+        # v1.28: 有记录时也封顶 30 天窗口，历史全量永不重跑
         args = []
         if last_date and re.match(r'\d{8}$', last_date):
-            args.append(f"album:{last_date}")
+            since_date = resolve_blog_since_date(
+                last_date, schedule_today(), logger, prefix="[首次启动] ")
+            args.append(f"album:{since_date}")
         else:
             fallback_date = (schedule_today() - timedelta(days=30)).strftime("%Y%m%d")
             args.append(f"album:{fallback_date}")
@@ -1165,9 +1206,12 @@ def main_loop():
                             pass
                     # 构建参数
                     # 如果没有上次爬取日期记录，默认抓取最近30天
+                    # v1.28: 有记录时也封顶 30 天窗口，历史全量永不重跑
                     args = []
                     if last_date and re.match(r'\d{8}$', last_date):
-                        args.append(f"album:{last_date}")
+                        since_date = resolve_blog_since_date(
+                            last_date, schedule_today(), logger, prefix=">>> ")
+                        args.append(f"album:{since_date}")
                     else:
                         fallback_date = (schedule_today() - timedelta(days=30)).strftime("%Y%m%d")
                         args.append(f"album:{fallback_date}")
