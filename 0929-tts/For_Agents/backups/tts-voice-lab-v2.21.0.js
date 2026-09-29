@@ -1,13 +1,26 @@
 // ============================================================
-// TTS Voice Lab v2.17 — Cloudflare Worker
-// NiceVoice (primary) + IndexTTS + KikiVoice (backup)
+// TTS Voice Lab v2.21 — Cloudflare Worker
+// NiceVoice single engine (v2.21: IndexTTS & KikiVoice channels removed —
+//   IndexTTS upstream (kozzzq-indextts2api.hf.space) is offline; KikiVoice was
+//   Geetest/credit-gated and unused. Only NiceVoice remains.)
 // Voice cloning TTS with subtitle generation & JianYing export
-// v2.17: fix segment editing not clickable after generation completes
-//        (S.isGenerating=false was set but renderSegmentTable() not re-called).
+// v2.20.2: documentation-only release, behaviour identical to 2.20.1.
+//          Source recovered from production via CF API (2026-09-29):
+//          header comment + README + changelog now reflect the real
+//          v2.18~v2.20.1 hot-update history. Full log: todo-tts-full.
+// v2.21: input-layer overhaul for NiceVoice quality (customer-reported bugs):
+//        (1) numbers: place-value reading for 4+ digits (7000->七千, not 七零零零)
+//        (2) brand terms: 618大促->六一八大促, 双11->双十一
+//        (3) segment joining without ASCII spaces; 150ms inter-segment silence
+//        (4) colon governance: >=2 valid prefixes required for multi-speaker;
+//            full-width colon converted to comma in TTS-bound text
+//        (5) edited segments (previewEdits) no longer bypass preprocessing
+//        (6) SRT: partial-line split across segments + 0.6s min subtitle
+// v2.19: fix NV TTS 400 — TTS/task-status proxied WITHOUT HMAC signing
+// v2.20: drag-drop upload fix, segment editing fixes, alternation dismiss
 // ============================================================
 
-const VERSION = '2.17.0';
-const DEFAULT_INDEX_API = 'https://kozzzq-indextts2api.hf.space';
+const VERSION = '2.21.0';
 
 // NiceVoice API constants
 const NV_API_BASE = 'https://api.turbovoice.online';
@@ -18,8 +31,6 @@ const NV_WAIT_MS = 16000; // 16s between TTS requests
 const NV_MAX_POLL = 60;
 const NV_MAX_CHARS = 150;
 
-// KikiVoice API constants
-const KIKA_BASE = 'https://kikivoice.ai';
 
 // ============================================================
 // README_CONTENT — Single source of truth for in-app README modal.
@@ -35,30 +46,30 @@ const README_CONTENT = `
 
 TTS Voice Lab 是一个基于浏览器的语音克隆 TTS 工具，支持长文本分段合成、字幕生成和剪映工程导出。
 
-v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After 双栏预览、说话人交替校验、BGM 混音（sidechain ducking）、人声音量归一化、片头片尾拼接、标题/Shownotes/Tags 自动生成、设置项变更 toast 提示。README 与 changelog 提至文件头部统一管理。
+v2.21 专注 NiceVoice 唯一渠道的合成质量：数字按数位读（7000→七千）、营销词连读（618大促→六一八大促）、句间不再插入多余空格、段间加入自然停顿、冒号不再误判说话人、字幕与音频对齐优化。此前 v2.19 修复 TTS 400（上游拒绝签名请求）；v2.20 修复拖拽上传与分段编辑；v2.14 引入 GLM 预处理、Before/After 预览、BGM 混音、人声归一化、片头片尾等。
 
 ## 🔧 功能特性
 
-- **三引擎支持**：NiceVoice（推荐）+ IndexTTS + KikiVoice，一键切换
-- **NiceVoice**：免费无限制语音克隆，无需登录，API 代理自动签名
-- **IndexTTS**：基于 kozzzq/indextts2api REST API，支持并发生成
-- **KikiVoice**：备选 TTS 引擎，三种模型（Core/Pro/Multilingual），每周 60,000 免费积分
+- **单引擎专注（v2.21）**：仅保留 NiceVoice 唯一稳定渠道。IndexTTS（上游 HF Space 已下线）与 KikiVoice（Geetest 积分制，未使用）渠道已整体移除
+- **NiceVoice**：免费无限制语音克隆，无需登录，API 代理自动签名（TTS 请求不签名直转，v2.18 增加克隆后验证）
 - **文本优先工作流**：先输入文本，自动检测说话人，再为每人分配音源
 - **音源管理**：新建、重命名、预览、删除、导入/导出音源，音源可关联克隆 ID
-- **数字/符号预处理（v2.14 增强）**：GLM 系统提示词可自定义，默认处理：
-  - 顿号 \`、\` → 逗号 \`，\`
-  - 书名号 \`《》\` → 去除（保留内容）
-  - 破折号 \`——\` → 逗号
-  - 省略号 \`……\` → 等等
-  - 数字 \`409\` → 四百零九；年份 \`2026\` → 二零二六；金额/百分比 → 中文读法
-  - 小数点 \`3.14\` → 三点一四；版本号 \`2.14\` → 二点一四
+- **数字/符号预处理（v2.21 重写）**：正则 + 可选 GLM 双层兜底，默认处理：
+  - 数位读法：\`1000\` → 一千、\`7000\` → 七千、\`4999\` → 四千九百九十九（v2.21 起不再逐字读）
+  - 年份/届级逐字读：\`2026年\` → 二零二六年、\`2026届\` → 二零二六届
+  - 营销词连读：\`618大促\` → 六一八大促、\`双11\` → 双十一、\`双12\` → 双十二
+  - 百分比 \`50%\` → 百分之五十；小数 \`1.2万\` → 一点二万；\`¥1000\` → 1000元
+  - 顿号/书名号/破折号/省略号 → 逗号等；全角冒号 \`：\` → 逗号（防止误判说话人）
+- **段间自然停顿（v2.21 新增）**：拼接时插入 150ms 静音（可通过配置 segGapMs 调整），治"句句粘连"
+- **字幕对齐优化（v2.21 新增）**：跨段行按标点智能切分归属各段（治"半句残留"）；短字幕 0.6 秒最短时长兜底（治"贴得太近"）
+- **说话人检测收紧（v2.21）**：仅当出现 ≥2 个不同有效称呼才进入多人模式；纯数字/时间/元信息前缀（"标题："、"备注："等）不再误判
 - **Before/After 双栏预览（v2.14 新增）**：合成前可看到 GLM 处理结果，并可手动编辑后再提交
 - **说话人交替校验（v2.14 新增）**：检测连续两段同一说话人，高亮告警并提供"自动交替"按钮
 - **BGM 混音（v2.14 新增）**：上传 BGM、人声/BGM 双音量拉杆、5 秒片段实时试听、sidechain ducking（人声段 BGM 自动降 6dB）、配置可保存/导入/导出
 - **片头片尾拼接（v2.14 新增）**：参考 podmerge.html 实现，支持淡入淡出/直接拼接
 - **人声音量归一化（v2.14 新增）**：peak normalize 到 -3dB；按说话人 RMS 分组拉平；可选女声轻量压缩
 - **标题/Shownotes/Tags 生成（v2.14 新增）**：合成完成后调用 GLM 自动生成播客元数据
-- **长文本分段**：NiceVoice 150 字/段（智能合并短句），IndexTTS 250 字/段
+- **长文本分段**：NiceVoice 150 字/段（智能合并短句；v2.21 起句间无空格拼接）
 - **换行保留**：原始换行用于字幕分行
 - **Word 文档导入**：支持拖拽或上传 .docx 文件
 - **SRT 字幕**：按时间比例分配字幕，多人模式自动标注说话人
@@ -69,19 +80,18 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 
 ## 📋 使用方法
 
-1. 选择 TTS 引擎（推荐 NiceVoice）
-2. 输入或导入要合成的文本
-3. 在说话人分配卡片中为每位说话人选择或新建音源
-4. 点击"预览处理"查看 GLM 转换前后的文本，可手动编辑 After 文本
-5. 点击"开始合成"，等待生成完成
-6. （可选）在结果区点击"生成标题/摘要/标签"
-7. 下载 WAV 音频（含/不含 BGM 两个版本）、SRT 字幕或剪映工程
+1. 输入或导入要合成的文本（引擎已固定为 NiceVoice）
+2. 在说话人分配卡片中为每位说话人选择或新建音源
+3. 点击"预览处理"查看转换前后的文本，可手动编辑 After 文本（编辑内容同样会做读音预处理）
+4. 点击"开始合成"，等待生成完成
+5. （可选）在结果区点击"生成标题/摘要/标签"
+6. 下载 WAV 音频（含/不含 BGM 两个版本）、SRT 字幕或剪映工程
 
-## 🔄 引擎对比
+## 🔄 合成渠道说明
 
-- **NiceVoice**：免费无限、无需登录、声音克隆质量好、150 字/段、段间 16 秒间隔
-- **IndexTTS**：需要自建 API 或使用公共 API、250 字/段、支持并发、无间隔限制
-- **KikiVoice**：备选、三种模型、每周 60,000 免费积分、需 Geetest 验证
+- 当前仅提供 NiceVoice 一个渠道：免费无限、无需登录、150 字/段、段间 16 秒限流（上游 API 限制）
+- 长文本按段串行生成，受限流影响总耗时与段数成正比，请参考进度条耐心等待
+- 曾经的 IndexTTS / KikiVoice 渠道因上游不可用或未被使用，已在 v2.21 整体移除
 
 ## 🎤 关于参考音频
 
@@ -110,6 +120,69 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 - **女声轻量压缩（可选）**：阈值 -20dB、比例 2:1、攻击 5ms、释放 50ms，治女声忽大忽小
 
 ## 📝 更新日志
+
+### v2.21.0 (2026-09-29)
+
+**渠道清理**
+- 移除 IndexTTS 渠道：上游 kozzzq-indextts2api.hf.space 已下线（2026-09-29 实测超时）
+- 移除 KikiVoice 渠道：Geetest 积分制、未被使用；连同 CF 验证面板与全部代理端点一并移除
+- 引擎选择器简化：NiceVoice 成为唯一引擎，设置页引擎分组移除
+
+**修复（客户反馈的四大问题，输入层 harness，不改远端模型）**
+- 数字读法：4 位数以上按数位读（7000→七千、1000→一千、4999→四千九百九十九），此前一律逐字读；年份/届级保留逐字读
+- 营销词：618大促→六一八大促、双11→双十一、双12→双十二（上下文锚定，避免"价格618元"误伤）
+- 断句：分段合并不再插入 ASCII 空格（中文 TTS 会把空格读成诡异停顿）
+- 段间粘连：拼接时插入 150ms 静音（默认，可配 segGapMs）
+- 冒号误判说话人：需 ≥2 个不同有效称呼才进多人模式；"标题：/备注：/12:30"等不再误判；TTS 文本中全角冒号转逗号
+- 编辑旁路：手动编辑过的分段（预览 After 文本）此前完全绕过读音预处理，现已统一兜底
+- 字幕：跨段行按标点切分归属各段（治"从'的'开始半句在屏幕上"）；短字幕 0.6s 最短时长（治"贴得特别近"）
+- GLM 默认提示词同步更新（数位读法/营销词/全角冒号规则）
+
+### v2.20.2 (2026-09-29)
+
+**文档修正（行为与 v2.20.1 完全一致）**
+- 源文件通过 Cloudflare API 从生产环境完整取回，结束"在线热更新无存档"状态
+- 修正文件头注释（此前停留在 v2.19）、补记 v2.15~v2.20.1 缺失的 changelog
+- 内嵌 README 用法对齐当前版本
+
+### v2.20.1 (2026-08-04)
+
+- 常规小修与版本递进（热更新，未留变更记录）
+
+### v2.20.0 (2026-08-04)
+
+**新增**
+- 说话人交替警告新增"忽略"按钮（一次性 dismiss，重新生成时自动重置）
+
+**修复**
+- 修复拖拽上传：阻止浏览器默认打开文件的行为（initUploadZoneDragDrop），音频文件可正确落入上传区
+- 修复分段编辑点击丢失：编辑单元格被孤儿化时自动重渲染分段表
+- 修复编辑框 blur 竞态：用 requestAnimationFrame 延迟提交，避免与点击事件冲突
+- 音源下拉不再禁用已被占用的音源，改为显示占用者并允许改选
+
+### v2.18.0 (2026-06-18 后热更新)
+
+**修复**
+- NV 克隆上传 Content-Type 修正：audio/wav → audio/mpeg（匹配实际 MP3 文件）
+
+**新增**
+- 克隆后自动验证：用克隆音色发送测试 TTS 请求，确认音色真正可用（含 16s 限流重试）
+- 克隆成功但 TTS 不可用时，给出明确的上游故障提示
+
+### v2.15 ~ v2.17 (2026-06)
+
+- v2.17（2026-06-18 部署）：修复生成完成后分段编辑不可点击（isGenerating 置 false 后未重渲染分段表）
+
+### v2.19.0 (2026-07-24)
+
+**修复**
+- 修复 NiceVoice TTS 始终返回 400 的根本原因：上游 /clone/tts 端点拒绝 HMAC 签名请求
+- TTS 和 getItemByTaskSn 两个端点改为不签名代理，其余克隆管理端点（getUploadUrl/saveRefAudio2/getSyncRefStatus）保持签名
+
+**调查发现**
+- 上游 NiceVoice 已将存储从 COS 迁移至 R2，训练后端同步有约 20 秒延迟（COS 错误为瞬态，轮询会自动恢复）
+- 上游网站自身对 TTS 请求不使用 HMAC 签名
+- 任务状态查询端点为 getItemByTaskSn（非 getTaskStatus，后者已 404）
 
 ### v2.14.0 (2026-06-17)
 
@@ -145,8 +218,9 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 
 ### v2.13.0 (2026-06-12)
 
-- 修复 nvCloneVoice 音色复用：nvReferenceId 现在正确传递，已有音色无需重复克隆
-- 修复无音频数据时的音色复用：即使 localStorage 中没有 base64 数据，只要 referenceId 有效也能复用
+- 修复 NV 克隆上传 Content-Type 错误：audio/wav -> audio/mpeg（匹配实际 MP3 文件）
+- 新增克隆后 TTS 验证：自动用克隆音色发送测试请求，确认音色真正可用
+- 优化 NV 克隆错误提示：克隆成功但 TTS 不可用时给出明确的上游故障提示
 - GLM 智能预处理：支持 GLM-4-Flash API 进行中文数字、符号、多音字智能预处理
 - GLM API Key 管理：设置中新增 API Key 输入和测试按钮，支持导入导出
 - 预处理模式选择：关闭/回退模式（正则失败时用 GLM）/始终使用 GLM
@@ -246,21 +320,6 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 `;
 
 // v2.14 default GLM system prompt (user-editable in settings)
-const DEFAULT_GLM_PROMPT = '你是一个TTS文本预处理助手。将输入文本转换为适合语音合成朗读的中文。规则：\\n'
-  + '1. 数字转中文读法：403→四百零三，2026→二零二六，3.14→三点一四，2.14→二点一四，126.5→一百二十六点五\\n'
-  + '2. 百分号 → 百分之：80.3%→百分之八十点三，50%→百分之五十\\n'
-  + '3. 标点中转（远端 TTS 无法识别这些标点）：\\n'
-  + '   - 顿号、→ 逗号，\\n'
-  + '   - 书名号《》→ 直接去除（保留书名内容，例如《飞驰人生3》→ 飞驰人生3）\\n'
-  + '   - 破折号——→ 逗号，\\n'
-  + '   - 省略号……→ 等等\\n'
-  + '   - 冒号：保留（用于说话人标记，TTS 可正确识别）\\n'
-  + '4. 符号转文字：≥→大于等于，℃→摄氏度，×→乘以，/→或\\n'
-  + '5. 保持原文意思不变，只调整朗读形式\\n'
-  + '6. 不要添加解释、标注或前缀\\n'
-  + '7. 直接输出转换结果';
-
-const KK_MAX_RETRIES = 3;
 
 function uuidv4() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);}); }
 
@@ -324,32 +383,6 @@ async function nvProxy(path, bodyObj, account) {
 }
 
 
-// ==================== KikiVoice Proxy Helpers ====================
-async function kikiFetch(path, uuid, options={}) {
-  const headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-    'Accept': 'application/json, text/plain, */*',
-    'Origin': 'https://kikivoice.ai',
-    'Referer': 'https://kikivoice.ai/ai-voice-cloning/zh-cn',
-    'Cookie': 'uuid=' + uuid,
-  };
-  if (options.contentType) headers['Content-Type'] = options.contentType;
-  const fetchOpts = { method: options.method||'GET', headers };
-  if (options.body) fetchOpts.body = options.body;
-  console.log('[KIKA] ' + fetchOpts.method + ' ' + path.substring(0,80));
-  const resp = await fetch(KIKA_BASE + path, fetchOpts);
-  const t = await resp.text();
-  console.log('[KIKA] ' + resp.status + ': ' + t.substring(0,300));
-  return { status: resp.status, body: t, headers: resp.headers };
-}
-
-async function kikiProxyResponse(kikiResult) {
-  const h = {'Content-Type':'application/json',...corsHeaders()};
-  const sc = kikiResult.headers.get('Set-Cookie');
-  if (sc) h['X-Set-Cookie'] = sc;
-  return new Response(kikiResult.body, {status:kikiResult.status, headers:h});
-}
-
 // ==================== Worker Handler ====================
 export default {
   async fetch(request) {
@@ -377,7 +410,22 @@ export default {
         if (nvPath === '/clone/tts' && bodyObj.text) {
           console.log('[NV-PROXY] TTS text="' + String(bodyObj.text).substring(0, 100) + '" (len=' + String(bodyObj.text).length + ') refId=' + bodyObj.referenceId);
         }
-        // Always use empty account for anonymous mode
+        // v2.19: TTS and getItemByTaskSn must NOT be HMAC-signed (upstream rejects signed TTS with 400)
+        if (nvPath === '/clone/tts' || nvPath === '/clone/getItemByTaskSn') {
+          const resp = await fetch(NV_API_BASE + nvPath, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyObj),
+          });
+          const text = await resp.text();
+          let data;
+          try { data = JSON.parse(text); } catch(e) { data = { code: resp.status, raw: text }; }
+          return new Response(JSON.stringify(data), {
+            status: resp.status,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders() },
+          });
+        }
+        // All other NV endpoints: use HMAC-signed proxy
         return await nvProxy(nvPath, bodyObj, '');
       } catch (e) {
         return new Response(JSON.stringify({ error: e.message }), {
@@ -393,7 +441,7 @@ export default {
         const audioBytes = Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0));
         const resp = await fetch(uploadUrl, {
           method: 'PUT',
-          headers: { 'Content-Type': 'audio/wav' },
+          headers: { 'Content-Type': 'audio/mpeg' },
           body: audioBytes,
         });
         return new Response(JSON.stringify({ ok: resp.ok, status: resp.status }), {
@@ -438,145 +486,6 @@ export default {
       }
     }
 
-
-    // ==================== KikiVoice API Proxy ====================
-    const kikiUuid = url.searchParams.get('uuid') || request.headers.get('X-Kiki-Uuid') || uuidv4();
-
-    if (path === '/api/kiki/model-capabilities') {
-      const rr = await kikiFetch('/jsapi/model-capabilities', kikiUuid);
-      return kikiProxyResponse(rr);
-    }
-    if (path === '/api/kiki/get-sig') {
-      const rr = await kikiFetch('/jsapi/get-cloning-file-sig', kikiUuid);
-      return kikiProxyResponse(rr);
-    }
-    if (path === '/api/kiki/detect-language') {
-      try {
-        const body = await request.json();
-        const rr = await kikiFetch('/jsapi/detect-language', kikiUuid, { method: 'POST', contentType: 'application/json', body: JSON.stringify(body) });
-        return kikiProxyResponse(rr);
-      } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      }
-    }
-    if (path === '/api/kiki/create-clone-task') {
-      try {
-        const body = await request.json();
-        const fd = new FormData();
-        fd.append('text', body.text);
-        fd.append('clone_source_voice_custom_voice_id', body.voice_id);
-        fd.append('lang_name_code', body.lang_code);
-        fd.append('emotion', body.emotion || 'normal');
-        fd.append('intensity', body.intensity || 'normal');
-        fd.append('clone_source_voice_gender', String(body.gender || 0));
-        fd.append('model_type', body.model_type);
-        if (body.region) fd.append('region', body.region);
-        fd.append('speed', String(body.speed || 1.0));
-        fd.append('volume', String(body.volume || 100));
-        fd.append('audio_format', body.format || 'mp3');
-        fd.append('audio_high_quality', String(body.hq || 0));
-        fd.append('model_version_text', body.mver || 'default');
-        const rr = await kikiFetch('/jsapi/create-new-clone-task', kikiUuid, { method: 'POST', body: fd });
-        return kikiProxyResponse(rr);
-      } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      }
-    }
-    if (path === '/api/kiki/job-status') {
-      const jobId = url.searchParams.get('job_id');
-      const rr = await kikiFetch('/jsapi/get-job-task-status?job_id=' + encodeURIComponent(jobId), kikiUuid);
-      return kikiProxyResponse(rr);
-    }
-    if (path === '/api/kiki/upload-voice') {
-      try {
-        const formData = await request.formData();
-        const voiceFile = formData.get('voice-file');
-        const sig = formData.get('sig');
-        const createUrl = formData.get('create_url');
-        const voiceName = formData.get('voice_name') || 'MyVoice';
-        if (!voiceFile || !sig || !createUrl) {
-          return new Response(JSON.stringify({ errcode: -2, errmsg: 'Missing required fields' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-        }
-        const uploadUrl = createUrl + '?voice_name=' + encodeURIComponent(voiceName) + '&denoise=0&asr=1&sig=' + encodeURIComponent(sig);
-        const upFd = new FormData();
-        upFd.append('voice-file', voiceFile);
-        const headers = {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-          'Origin': 'https://kikivoice.ai',
-          'Referer': 'https://kikivoice.ai/ai-voice-cloning/zh-cn',
-          'Cookie': 'uuid=' + kikiUuid,
-        };
-        const resp = await fetch(uploadUrl, { method: 'POST', headers, body: upFd });
-        const respText = await resp.text();
-        return new Response(respText, { status: resp.status, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      } catch (e) {
-        return new Response(JSON.stringify({ errcode: -1, errmsg: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      }
-    }
-    if (path === '/api/kiki-audio') {
-      try {
-        const audioUrl = url.searchParams.get('url');
-        if (!audioUrl) return new Response('Missing url', { status: 400 });
-        const resp = await fetch(audioUrl, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://kikivoice.ai/' } });
-        const h = new Headers(resp.headers);
-        h.set('Access-Control-Allow-Origin', '*');
-        h.set('Content-Disposition', 'attachment; filename="kiki_audio.mp3"');
-        return new Response(resp.body, { status: resp.status, headers: h });
-      } catch (e) {
-        return new Response(e.message, { status: 500, headers: corsHeaders() });
-      }
-    }
-    // Geetest validation page proxy
-    if (path === '/api/kiki/geetest-page') {
-      try {
-        const vpath = url.searchParams.get('path');
-        if (!vpath) return new Response('Missing path', { status: 400 });
-        const resp = await fetch(KIKA_BASE + vpath, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Referer': 'https://kikivoice.ai/',
-            'Cookie': 'uuid=' + kikiUuid,
-          }
-        });
-        let html = await resp.text();
-        const workerBase = url.origin;
-        html = html.replace(/fetch\(['"]\/jsapi\/auth\/geetest-validation['"]/g, "fetch('" + workerBase + "/api/kiki/geetest-submit?uuid=" + encodeURIComponent(kikiUuid) + "'");
-        if (!html.includes('<base')) {
-          html = html.replace('<head>', '<head><base href="https://kikivoice.ai/">');
-        }
-        html = html.replace(/<script>\s*\(function\(\)\{function c\(\)\{var b=a\.contentDocument[\s\S]*?<\/script>/gi, '');
-        const pm = "<script>(function(){var o=typeof showSuccess==='function'?showSuccess:null;var e2=typeof showError==='function'?showError:null;window.showSuccess=function(){if(o)o();if(window.parent!==window)window.parent.postMessage({type:'geetest-success'},'*');};window.showError=function(){if(e2)e2();if(window.parent!==window)window.parent.postMessage({type:'geetest-error'},'*');};})();</script>";
-        html = html.replace('</body>', pm + '</body>');
-        return new Response(html, { status: resp.status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'X-Frame-Options': '' } });
-      } catch (e) {
-        return new Response('Geetest proxy error: ' + e.message, { status: 500, headers: corsHeaders() });
-      }
-    }
-    // Geetest verification submission proxy
-    if (path === '/api/kiki/geetest-submit') {
-      try {
-        let body;
-        try { body = await request.json(); } catch(e) {
-          return new Response(JSON.stringify({code:400,msg:'Invalid JSON body'}),{status:400,headers:{'Content-Type':'application/json',...corsHeaders()}});
-        }
-        const resp = await fetch(KIKA_BASE + '/jsapi/auth/geetest-validation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-            'Origin': 'https://kikivoice.ai',
-            'Referer': 'https://kikivoice.ai/ai-voice-cloning/zh-cn',
-            'Cookie': 'uuid=' + kikiUuid,
-          },
-          body: JSON.stringify(body),
-        });
-        const respText = await resp.text();
-        return new Response(respText, { status: resp.status, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders() } });
-      }
-    }
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404, headers: { 'Content-Type': 'application/json', ...corsHeaders() },
@@ -836,8 +745,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
   <div style="display:flex;align-items:center;gap:8px">
     <div class="engine-selector">
       <button class="engine-btn active-nv" id="btnNV" onclick="switchEngine('nicevoice')">NiceVoice</button>
-      <button class="engine-btn" id="btnIDX" onclick="switchEngine('indextts')">IndexTTS</button>
-      <button class="engine-btn" id="btnKK" onclick="switchEngine('kikivoice')">KikiVoice</button>
     </div>
     <button class="hdr-btn" onclick="openHistory()">&#x1F4CB; 历史</button>
     <button class="hdr-btn" onclick="toggleSettings()">&#x2699; 设置</button>
@@ -851,115 +758,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
   </div>
   <div class="main-grid">
   <div class="main-content">
-  <!-- KikiVoice Config Card -->
-  <div class="card kk-cfg-card" id="kkCfgCard">
-    <div class="card-title">KikiVoice 配置 <span class="engine-badge kk">KK</span></div>
-    <div class="kk-info-box">
-      <p><b>Cloudflare + Geetest 防护机制：</b></p>
-      <p>1. <b>CF CDN 挑战</b>：Worker 运行在 CF 网络内，自动绕过 CDN 层的 JS 挑战。</p>
-      <p>2. <b>Geetest 人机验证</b>：首次调用 create-clone-task 时需要完成滑块验证。验证页面和提交均通过 Worker 代理，确保 IP 一致。</p>
-      <p>3. <b>积分系统</b>：每 7 天重置 60,000 免费积分。Kiki Core = 2x, Kiki Pro = 3x, Kiki Multilingual = 2x。</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
-      <span id="kkConn" class="kk-conn-status pen"><span class="kk-conn-dot"></span>未检测</span>
-      <button class="clear-btn" onclick="testKK()" style="border-color:var(--kk-color);color:var(--kk-color)">检测连接</button>
-    </div>
-    <div>
-      <label style="display:block;font-weight:500;margin-bottom:6px;font-size:.9rem">选择模型</label>
-      <div class="kk-models">
-        <div class="kk-model sel" id="mCore" onclick="pickKKModel('kiki_core')"><span class="mn">Kiki Core</span><span class="md">基础克隆，稳定易用</span><span class="mc">2x credits</span></div>
-        <div class="kk-model" id="mPro" onclick="pickKKModel('kiki_pro')"><span class="mn">Kiki Pro</span><span class="md">情感控制，高品质</span><span class="mc">3x credits</span></div>
-        <div class="kk-model" id="mMulti" onclick="pickKKModel('kiki_multilingual')"><span class="mn">Kiki Multilingual</span><span class="md">口音转换，多语言</span><span class="mc">2x credits</span></div>
-      </div>
-    </div>
-    <div class="kk-params" id="kkParams">
-      <div class="pt">模型参数</div>
-      <div class="kk-param-row">
-        <label>语速 Speed</label>
-        <input type="range" id="kSpeed" min="0.5" max="2.0" step="0.1" value="1.0" oninput="updKKParam()">
-        <span class="pv" id="kSpeedVal">1.0</span>
-        <span class="kk-param-hint">0.5慢 ~ 2.0快</span>
-      </div>
-      <div class="kk-param-row">
-        <label>音量 Volume</label>
-        <input type="range" id="kVolume" min="50" max="200" step="10" value="100" oninput="updKKParam()">
-        <span class="pv" id="kVolumeVal">100</span>
-        <span class="kk-param-hint">50低 ~ 200高</span>
-      </div>
-      <div class="kk-param-row kk-pro-only" id="emotionRow">
-        <label>情感 Emotion</label>
-        <select id="kEmotion" onchange="updKKParam()">
-          <option value="normal">正常 Normal</option>
-          <option value="happy">开心 Happy</option>
-          <option value="sad">悲伤 Sad</option>
-          <option value="angry">愤怒 Angry</option>
-          <option value="fearful">恐惧 Fearful</option>
-        </select>
-        <span class="kk-param-hint">仅Pro模型</span>
-      </div>
-      <div class="kk-param-row kk-pro-only" id="intensityRow">
-        <label>强度 Intensity</label>
-        <select id="kIntensity" onchange="updKKParam()">
-          <option value="normal">正常 Normal</option>
-          <option value="strong">强烈 Strong</option>
-          <option value="weak">轻柔 Weak</option>
-        </select>
-        <span class="kk-param-hint">仅Pro模型</span>
-      </div>
-      <div class="kk-param-row">
-        <label>性别 Gender</label>
-        <select id="kGender" onchange="updKKParam()">
-          <option value="0">女声 Female</option>
-          <option value="1">男声 Male</option>
-        </select>
-      </div>
-      <div class="kk-param-row">
-        <label>高品质 HQ</label>
-        <select id="kHq" onchange="updKKParam()">
-          <option value="0">标准 Standard</option>
-          <option value="1">高品质 High Quality</option>
-        </select>
-      </div>
-    </div>
-    <div class="kk-quota">
-      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.9rem;font-weight:600">积分用量</span><span style="font-size:.8rem;color:var(--text2)" id="qReset">7天重置</span></div>
-      <div class="kk-qbg"><div class="kk-qb g" id="qBar" style="width:100%"></div></div>
-      <div class="kk-qt"><span>剩余: <b id="qAvail">--</b></span><span>已用: <b id="qUsed">--</b></span></div>
-    </div>
-  </div>
-
-  <!-- CF Verification Panel -->
-  <div class="card cf-panel" id="cfPanel" style="display:none">
-    <div class="card-title" style="color:var(--orange);font-size:1.1rem">需要人机验证 (Geetest 极验)</div>
-    <div class="kk-info-box" style="border-color:var(--orange)">
-      <p>KikiVoice 要求完成 Geetest 人机验证后才能创建语音任务。</p>
-      <p>Worker IP: <b id="cfIP" style="color:var(--orange)">--</b></p>
-      <p>Session UUID: <b id="cfUUID" style="color:var(--text2);font-family:monospace;font-size:.8rem">--</b></p>
-      <p style="font-size:.8rem;margin-top:4px">验证页面已通过 Worker 代理加载，验证提交也走 Worker，确保 IP 和 Session 一致。</p>
-    </div>
-    <div style="margin:8px 0">
-      <p style="font-size:.9rem;font-weight:600;margin-bottom:8px">验证步骤：</p>
-      <div class="cf-step"><div class="cf-num">1</div><div class="cf-body"><p>点击<b>滑块验证按钮</b>完成人机验证</p><p style="color:var(--text2);font-size:.8rem">验证页面已嵌入下方，直接操作即可</p></div></div>
-      <div class="cf-step"><div class="cf-num">2</div><div class="cf-body"><p>看到<b>"Verification Successful"</b>后，点击下方"验证完成，继续生成"</p></div></div>
-    </div>
-    <div class="iframe-wrap" id="cfIframeWrap">
-      <iframe id="cfIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-      <div class="iframe-overlay" id="cfIframeOverlay"><div class="inner"><p>验证页面加载中...</p><p style="font-size:.8rem;color:var(--text2)">如长时间无响应，请点击下方按钮在新标签页打开</p></div></div>
-    </div>
-    <div class="cf-actions">
-      <button class="clear-btn" onclick="cfDone()" style="background:var(--kk-color);color:white;border-color:var(--kk-color)">验证完成，继续生成</button>
-      <button class="clear-btn" onclick="openCFNewTab()" style="background:var(--orange);color:white;border-color:var(--orange)">在新标签页打开</button>
-      <button class="clear-btn" onclick="cfCancel()">取消生成</button>
-    </div>
-    <div style="margin:8px 0">
-      <p style="font-size:.85rem;color:var(--text2);margin-bottom:4px">验证页面 URL（代理版）：</p>
-      <div class="cf-url-box" id="cfUrl">--</div>
-    </div>
-    <div class="log-console" style="margin-top:12px;max-height:150px">
-      <div class="log-entry w" id="cfRaw">等待验证...</div>
-    </div>
-  </div>
-
   <!-- Card 1: Text Input -->
   <div class="card text-card" id="textCard">
     <div class="card-title"><span class="icon">&#x1F4DD;</span> 合成文本</div>
@@ -1004,7 +802,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
   <div class="card" id="alternationWarning" style="display:none;border-color:var(--orange);background:rgba(253,203,110,0.05)">
     <div class="card-title" style="color:var(--orange)"><span class="icon">⚠️</span> 说话人交替异常</div>
     <p style="font-size:12px;color:var(--text2);margin-bottom:10px" id="alternationWarningText"></p>
-    <button class="dl-btn" id="alternationFixBtn" onclick="autoFixAlternation()" style="background:var(--orange);color:#000;border-color:var(--orange)">🔧 自动交替</button>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="dl-btn" id="alternationFixBtn" onclick="autoFixAlternation()" style="background:var(--orange);color:#000;border-color:var(--orange)">🔧 自动交替</button>
+      <button class="dl-btn" id="alternationDismissBtn" onclick="dismissAlternationWarning()" style="background:transparent;color:var(--text2);border:1px solid var(--border);font-size:11px;padding:4px 10px;cursor:pointer;border-radius:4px;opacity:0.7" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">忽略</button>
+    </div>
   </div>
 
   <!-- Card 3: Generate -->
@@ -1068,42 +869,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
     <h2>&#x2699; 设置</h2>
     <button class="close-btn" onclick="toggleSettings()">&#x2715;</button>
   </div>
-  <div class="settings-group">
-    <h3>引擎选择</h3>
-    <div class="s-item"><label>TTS 引擎</label>
-      <select id="cfgEngine" onchange="switchEngine(this.value)">
-        <option value="nicevoice">NiceVoice (推荐)</option>
-        <option value="indextts">IndexTTS</option>
-        <option value="kikivoice">KikiVoice (备选)</option>
-      </select>
-    </div>
-  </div>
   <div class="settings-group" id="nvSettings">
     <h3>NiceVoice 设置</h3>
     <div class="s-item"><label>请求间隔 (秒)</label><input type="number" id="cfgNvWait" min="10" max="30" step="1"></div>
     <div class="s-item"><label>最大字数/段</label><input type="number" id="cfgNvMaxChars" min="50" max="150"></div>
     <div class="s-item"><label>最大轮询次数</label><input type="number" id="cfgNvMaxPoll" min="20" max="120"></div>
-  </div>
-  <div class="settings-group" id="idxSettings" style="display:none">
-    <h3>IndexTTS 设置</h3>
-    <div class="s-item"><label>API 地址</label><input type="text" id="cfgApiBase" class="wide"></div>
-    <div class="s-item"><label>语言</label>
-      <select id="cfgLanguage">
-        <option value="zh">中文</option>
-        <option value="en">English</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-      </select>
-    </div>
-    <div class="s-item"><label>最大字数/段</label><input type="number" id="cfgMaxChars" min="50" max="1000"></div>
-    <div class="s-item"><label>并发数 (1-5)</label><input type="number" id="cfgConcurrency" min="1" max="5"></div>
-    <div class="s-item"><label>重试次数</label><input type="number" id="cfgRetry" min="0" max="5"></div>
-    <div class="s-item"><label>轮询间隔 (ms)</label><input type="number" id="cfgPollInterval" min="500" max="10000" step="500"></div>
-  </div>
-  <div class="settings-group" id="kkSettings" style="display:none">
-    <h3>KikiVoice 设置</h3>
-    <div class="s-item"><label>连接状态</label><span id="kkSettingsConn" style="font-size:13px;color:var(--text2)">未检测</span></div>
-    <div class="s-item"><label>当前模型</label><span id="kkSettingsModel" style="font-size:13px;color:var(--text2)">kiki_core</span></div>
   </div>
   <div class="settings-group">
     <h3>音源管理</h3>
@@ -1271,7 +1041,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
 <script>
 // ==================== Constants & State ====================
 var APP_VERSION = '${VERSION}';
-var DEFAULT_API = '${DEFAULT_INDEX_API}';
 // v2.14: Client-side README_CONTENT (base64-decoded to avoid template literal escaping issues)
 var README_CONTENT = (function() {
   var b64 = 'CgovLyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KLy8gUkVBRE1FX0NPTlRFTlQg4oCUIFNpbmdsZSBzb3VyY2Ugb2YgdHJ1dGggZm9yIGluLWFwcCBSRUFETUUgbW9kYWwuCi8vIFN0b3JlZCBhdCB0aGUgaGVhZCBvZiB0aGUgZmlsZSBzbyBpdCBpcyB0aGUgZmlyc3QgdGhpbmcgcmVhZGVycyBzZWUKLy8gd2hlbiBvcGVuaW5nIHRoZSBzb3VyY2UuIGdldFJlYWRtZUNvbnRlbnQoKSByZW5kZXJzIHRoaXMgdmVyYmF0aW0uCi8vID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQoKIyBUVFMgVm9pY2UgTGFiIHYyLjE3LjAKCj4g5Z+65LqOIENsb3VkZmxhcmUgV29ya2VyIOeahOa1j+iniOWZqOerr+ivremfs+WFi+mahiBUVFMg5bel5YW377yM5LiJ5byV5pOO5YiH5o2iICsg6ZW/5paH5pys5YiG5q615ZCI5oiQICsg5a2X5bmV55Sf5oiQICsg5Ymq5pig5bel56iL5a+85Ye644CCCgojIyDwn5OWIOeugOS7iwoKVFRTIFZvaWNlIExhYiDmmK/kuIDkuKrln7rkuo7mtY/op4jlmajnmoTor63pn7PlhYvpmoYgVFRTIOW3peWFt++8jOaUr+aMgemVv+aWh+acrOWIhuauteWQiOaIkOOAgeWtl+W5leeUn+aIkOWSjOWJquaYoOW3peeoi+WvvOWHuuOAggoKdjIuMTcg5ZyoIHYyLjE2IOWfuuehgOS4iuW8leWFpe+8mkdMTSDns7vnu5/mj5DnpLror43lj6/nvJbovpHjgIFCZWZvcmUvQWZ0ZXIg5Y+M5qCP6aKE6KeI44CB6K+06K+d5Lq65Lqk5pu/5qCh6aqM44CBQkdNIOa3t+mfs++8iHNpZGVjaGFpbiBkdWNraW5n77yJ44CB5Lq65aOw6Z+z6YeP5b2S5LiA5YyW44CB54mH5aS054mH5bC+5ou85o6l44CB5qCH6aKYL1Nob3dub3Rlcy9UYWdzIOiHquWKqOeUn+aIkOOAgeiuvue9rumhueWPmOabtCB0b2FzdCDmj5DnpLrjgIJSRUFETUUg5LiOIGNoYW5nZWxvZyDmj5Doh7Pmlofku7blpLTpg6jnu5/kuIDnrqHnkIbjgIIKCiMjIPCflKcg5Yqf6IO954m55oCnCgotICoq5LiJ5byV5pOO5pSv5oyBKirvvJpOaWNlVm9pY2XvvIjmjqjojZDvvIkrIEluZGV4VFRTICsgS2lraVZvaWNl77yM5LiA6ZSu5YiH5o2iCi0gKipOaWNlVm9pY2UqKu+8muWFjei0ueaXoOmZkOWItuivremfs+WFi+mahu+8jOaXoOmcgOeZu+W9le+8jEFQSSDku6PnkIboh6rliqjnrb7lkI0KLSAqKkluZGV4VFRTKirvvJrln7rkuo4ga296enpxL2luZGV4dHRzMmFwaSBSRVNUIEFQSe+8jOaUr+aMgeW5tuWPkeeUn+aIkAotICoqS2lraVZvaWNlKirvvJrlpIfpgIkgVFRTIOW8leaTju+8jOS4ieenjeaooeWei++8iENvcmUvUHJvL011bHRpbGluZ3VhbO+8ie+8jOavj+WRqCA2MCwwMDAg5YWN6LS556ev5YiGCi0gKirmlofmnKzkvJjlhYjlt6XkvZzmtYEqKu+8muWFiOi+k+WFpeaWh+acrO+8jOiHquWKqOajgOa1i+ivtOivneS6uu+8jOWGjeS4uuavj+S6uuWIhumFjemfs+a6kAotICoq6Z+z5rqQ566h55CGKirvvJrmlrDlu7rjgIHph43lkb3lkI3jgIHpooTop4jjgIHliKDpmaTjgIHlr7zlhaUv5a+85Ye66Z+z5rqQ77yM6Z+z5rqQ5Y+v5YWz6IGU5YWL6ZqGIElECi0gKirmlbDlrZcv56ym5Y+36aKE5aSE55CGKirvvJpHTE0g57O757uf5o+Q56S66K+N5Y+v6Ieq5a6a5LmJ77yM6buY6K6k5aSE55CG77yaCiAgLSDpob/lj7cgXGDjgIFcYCDihpIg6YCX5Y+3IFxg77yMXGAKICAtIOS5puWQjeWPtyBcYOOAiuOAi1xgIOKGkiDljrvpmaTvvIjkv53nlZnlhoXlrrnvvIkKICAtIOegtOaKmOWPtyBcYOKAlOKAlFxgIOKGkiDpgJflj7cKICAtIOecgeeVpeWPtyBcYOKApuKAplxgIOKGkiDnrYnnrYkKICAtIOaVsOWtlyBcYDQwOVxgIOKGkiDlm5vnmb7pm7bkuZ3vvJvlubTku70gXGAyMDI2XGAg4oaSIOS6jOmbtuS6jOWFre+8m+mHkeminS/nmb7liIbmr5Qg4oaSIOS4reaWh+ivu+azlQogIC0g5bCP5pWw54K5IFxgMy4xNFxgIOKGkiDkuInngrnkuIDlm5vvvJvniYjmnKzlj7cgXGAyLjE1XGAg4oaSIOS6jOeCueS4gOS6lAotICoqQmVmb3JlL0FmdGVyIOWPjOagj+mihOiniCoq77ya5ZCI5oiQ5YmN5Y+v55yL5YiwIEdMTSDlpITnkIbnu5PmnpzvvIzlubblj6/miYvliqjnvJbovpHlkI7lho3mj5DkuqQKLSAqKuivtOivneS6uuS6pOabv+agoemqjCoq77ya5qOA5rWL6L+e57ut5Lik5q615ZCM5LiA6K+06K+d5Lq677yM6auY5Lqu5ZGK6K2m5bm25o+Q5L6bIuiHquWKqOS6pOabvyLmjInpkq4KLSAqKkJHTSDmt7fpn7MqKu+8muS4iuS8oCBCR03jgIHkurrlo7AvQkdNIOWPjOmfs+mHj+aLieadhuOAgTUg56eS54mH5q615a6e5pe26K+V5ZCs44CBc2lkZWNoYWluIGR1Y2tpbmfvvIjkurrlo7DmrrUgQkdNIOiHquWKqOmZjSA2ZELvvInjgIHphY3nva7lj6/kv53lrZgv5a+85YWlL+WvvOWHugotICoq54mH5aS054mH5bC+5ou85o6lKirvvJrlj4LogIMgcG9kbWVyZ2UuaHRtbCDlrp7njrDvvIzmlK/mjIHmt6HlhaXmt6Hlh7ov55u05o6l5ou85o6lCi0gKirkurrlo7Dpn7Pph4/lvZLkuIDljJYqKu+8mnBlYWsgbm9ybWFsaXplIOWIsCAtM2RC77yb5oyJ6K+06K+d5Lq6IFJNUyDliIbnu4Tmi4nlubPvvJvlj6/pgInlpbPlo7Dovbvph4/ljovnvKkKLSAqKuagh+mimC9TaG93bm90ZXMvVGFncyDnlJ/miJAqKu+8muWQiOaIkOWujOaIkOWQjuiwg+eUqCBHTE0g6Ieq5Yqo55Sf5oiQ5pKt5a6i5YWD5pWw5o2u77yb5pSv5oyB6L6T5YWl5Y6f5aeL5paw6Ze76KaB54K55L2c5Li65o+Q56S677yM5qCH6aKY5oyJInjmnIh45pel5aix6LWE5q+P5pel5pep5oql77yaeHh4IuagvOW8j+eUn+aIkAotICoq57uf5LiA6K+V5ZCs5YiH5o2i77yIdjIuMTUg5paw5aKe77yJKirvvJrmiYDmnInor5XlkKzmjInpkq7vvIhCR03jgIHpn7PoibLjgIFHTE0g5aSE55CG44CBS2lraVZvaWNlIOauteiQve+8ieaUr+aMgeaSreaUvi/lgZzmraLmgIHliIfmjaIKLSAqKktpa2lWb2ljZSDmrrXokL3or5XlkKzvvIh2Mi4xNSDmlrDlop7vvIkqKu+8muavj+auteeUn+aIkOWujOavleWNs+WPr+ivleWQrO+8jOaXoOmcgOetieW+heWFqOmDqOWujOaIkAotICoq5bem5Y+z5Lik5qCP5ZON5bqU5byP5biD5bGA77yIdjIuMTUg5paw5aKe77yJKirvvJrlrr3lsY/lt6blj7PlubbmjpLvvIjlhoXlrrkgKyBsb2fvvInvvIznqoTlsY8gdGFiIOWIh+aNogotICoq5q616JC957qn5paH5pys57yW6L6R77yIdjIuMTYg5paw5aKe77yJKirvvJrngrnlh7vliIbmrrXooajkuK3nmoTmlofmnKzljbPlj6/nvJbovpHvvIzmlK/mjIEgNCDnp43mmbrog73lnLrmma/vvJoKICAtIOacqueUn+aIkOaute+8mue8lui+keWQjueUqOaWsOaWh+acrOeUn+aIkAogIC0g55Sf5oiQ5Lit5q6177ya6Ieq5Yqo56aB55So57yW6L6R5bm25Zue6YCACiAgLSDlt7LnlJ/miJDkvYblkI7nu63mnKrlrozmiJDvvJrlrozmiJDljp/luo/liJflkI7ph43mlrDnlJ/miJDmlLnliqjmrrUKICAtIOWFqOmDqOWujOaIkOWQjue8lui+ke+8muW8gOWni+aMiemSruWPmCLlupTnlKjmm7TmlLki77yM5Y+q6YeN55Sf5oiQ5pS55Yqo5q61Ci0gKirljoblj7LorrDlvZXnvJbovpHlm57pgIDvvIh2Mi4xNiDmlrDlop7vvIkqKu+8muWOhuWPsuiusOW9leavj+adoeaWsOWinuOAkOe8lui+keOAkeaMiemSru+8jOWPr+i/mOWOn+aJgOacieWIhuaute+8iOWQq+mfs+mike+8ieWIsOS4u+eVjOmdoui/m+ihjOS/ruaUue+8m+mfs+mikeW3suS4ouWkseaXtuaMiemSrue9rueBsAotICoq6ZW/5paH5pys5YiG5q61KirvvJpOaWNlVm9pY2UgMTUwIOWtly/mrrXvvIjmmbrog73lkIjlubbnn63lj6XvvInvvIxJbmRleFRUUyAyNTAg5a2XL+autQotICoq5o2i6KGM5L+d55WZKirvvJrljp/lp4vmjaLooYznlKjkuo7lrZfluZXliIbooYwKLSAqKldvcmQg5paH5qGj5a+85YWlKirvvJrmlK/mjIHmi5bmi73miJbkuIrkvKAgLmRvY3gg5paH5Lu2Ci0gKipTUlQg5a2X5bmVKirvvJrmjInml7bpl7Tmr5TkvovliIbphY3lrZfluZXvvIzlpJrkurrmqKHlvI/oh6rliqjmoIfms6jor7Tor53kuroKLSAqKuWJquaYoOW3peeoi+WvvOWHuioq77ya55Sf5oiQ5Y+v55u05o6l5a+85YWl5Ymq5pig55qE5bel56iLIFpJUAotICoq55Sf5oiQ5Y6G5Y+yKirvvJroh6rliqjkv53lrZjnlJ/miJDorrDlvZXvvIzmoIfms6jkvb/nlKjlvJXmk44KLSAqKumFjee9ruWvvOWFpS/lr7zlh7oqKu+8muWkh+S7veWSjOaBouWkjeaJgOacieiuvue9ruWSjOmfs+a6kAotICoq6K6+572u5Y+Y5pu0IHRvYXN0KirvvJrku7vkvZXorr7nva7pobnlj5jmm7TljbPml7bmj5DnpLoi6K6+572u5bey5L+d5a2YIu+8jOS4jemBruaMoeWKn+iDveWMugoKIyMg8J+TiyDkvb/nlKjmlrnms5UKCjEuIOmAieaLqSBUVFMg5byV5pOO77yI5o6o6I2QIE5pY2VWb2ljZe+8iQoyLiDovpPlhaXmiJblr7zlhaXopoHlkIjmiJDnmoTmlofmnKwKMy4g5Zyo6K+06K+d5Lq65YiG6YWN5Y2h54mH5Lit5Li65q+P5L2N6K+06K+d5Lq66YCJ5oup5oiW5paw5bu66Z+z5rqQCjQuIOeCueWHuyLpooTop4jlpITnkIYi5p+l55yLIEdMTSDovazmjaLliY3lkI7nmoTmlofmnKzvvIzlj6/miYvliqjnvJbovpEgQWZ0ZXIg5paH5pysCjUuIOeCueWHuyLlvIDlp4vlkIjmiJAi77yM562J5b6F55Sf5oiQ5a6M5oiQCjYuIO+8iOWPr+mAie+8ieWcqOe7k+aenOWMuueCueWHuyLnlJ/miJDmoIfpopgv5pGY6KaBL+agh+etviIKNy4g5LiL6L29IFdBViDpn7PpopHvvIjlkKsv5LiN5ZCrIEJHTSDkuKTkuKrniYjmnKzvvInjgIFTUlQg5a2X5bmV5oiW5Ymq5pig5bel56iLCgojIyDwn5SEIOW8leaTjuWvueavlAoKLSAqKk5pY2VWb2ljZSoq77ya5YWN6LS55peg6ZmQ44CB5peg6ZyA55m75b2V44CB5aOw6Z+z5YWL6ZqG6LSo6YeP5aW944CBMTUwIOWtly/mrrXjgIHmrrXpl7QgMTYg56eS6Ze06ZqUCi0gKipJbmRleFRUUyoq77ya6ZyA6KaB6Ieq5bu6IEFQSSDmiJbkvb/nlKjlhazlhbEgQVBJ44CBMjUwIOWtly/mrrXjgIHmlK/mjIHlubblj5HjgIHml6Dpl7TpmpTpmZDliLYKLSAqKktpa2lWb2ljZSoq77ya5aSH6YCJ44CB5LiJ56eN5qih5Z6L44CB5q+P5ZGoIDYwLDAwMCDlhY3otLnnp6/liIbjgIHpnIAgR2VldGVzdCDpqozor4EKCiMjIPCfjqQg5YWz5LqO5Y+C6ICD6Z+z6aKRCgrlj4LogIPpn7PpopHnmoTotKjph4/nm7TmjqXlvbHlk43lhYvpmobmlYjmnpzjgILlu7rorq7vvJoKCi0g5pe26ZW/IDUtMTUg56eS77yM5riF5pmw5peg5Zmq6Z+zCi0g6YG/5YWN6IOM5pmv6Z+z5LmQ5oiW5aSa5Lq66K+06K+dCi0g5Y+v5Lul5L+d5a2Y5aSa5Liq6Z+z5rqQ5bm26ZqP5pe25YiH5o2iCi0g5aaC6ZyA5Y+Y6YCf5pWI5p6c77yM6K+36aKE5YWI5aSE55CG5Y+C6ICD6Z+z6aKR77yM5pys5bel5YW35LiN5YGa5Y+Y6YCfCgojIyDwn46sIOWFs+S6juWJquaYoOW3peeoiwoK5a+85Ye655qEIFpJUCDop6PljovlkI7ljIXlkKvku6Xpobnnm67lkI3lkb3lkI3nmoTmlofku7blpLnvvIzlhoXlkKsgXGBkcmFmdF9jb250ZW50Lmpzb25cYOOAgVxgZHJhZnRfbWV0YV9pbmZvLmpzb25cYOOAgVxgYXVkaW9fbWFpbi53YXZcYCDlkowgXGBhdWRpb19tYWluLnNydFxg44CC5bCG5paH5Lu25aS55aSN5Yi25Yiw5Ymq5pig6I2J56i/55uu5b2VIFxgY29tLmx2ZWRpdG9yLmRyYWZ0XGAg5LiL5Y2z5Y+v5omT5byA44CC55S75biD5q+U5L6L77yaOToxNu+8jOWtl+W5leS9v+eUqOaAnea6kOm7keS9k++8iOeZveWtl+m7kei+ue+8jOWtl+WPtyAxMO+8ie+8jOS9jeS6jueUu+mdouS4i+aWueOAgumfs+mikeS4uuWujOaVtOWNleauteaWh+S7tuOAggoKIyMg8J+OtSDlhbPkuo4gQkdNIOa3t+mfs++8iHYyLjE0IOaWsOWinu+8iQoKLSBCR00g6buY6K6k6Z+z6YePIC0xOGRC77yI57qmIDAuMTI2IOWinuebiu+8ie+8jOWPr+WcqOiuvue9ruS4reiwg+iKggotIOS6uuWjsOauteW8gOWni+aXtiBCR00g6Ieq5YqoIGR1Y2tpbmcg6IezIC0yNGRC77yI5YaN6ZmNIDZkQu+8ie+8jOS6uuWjsOe7k+adnyAwLjMg56eS5ZCO5oGi5aSNCi0gZHVja2luZyDnrpfms5Xkvb/nlKggT2ZmbGluZUF1ZGlvQ29udGV4dCArIEdhaW5Ob2RlIOiHquWKqOWMluabsue6v++8jOWPguiAgyBwb2RtZXJnZS5odG1sIOeahCBzaWRlY2hhaW4g5a6e546wCi0g6L6T5Ye65YyF5ZCrIEJHTSDnmoTmnIDnu4jmt7fpn7MgV0FW77yM5ZCM5pe25L+d55WZ57qv5Lq65aOwIFdBViDkvZzkuLrlpIfku70KCiMjIPCfjpog5YWz5LqO6Z+z6YeP5b2S5LiA5YyW77yIdjIuMTQg5paw5aKe77yJCgotICoqcGVhayBub3JtYWxpemUqKu+8muaJgOacieauteW9kuS4gOWIsCAtM2RC77yI5Y+v6YWN572uIC02IH4gMGRC77yJCi0gKiror7Tor53kurogUk1TIOaLieW5syoq77ya5oyJ6K+06K+d5Lq65YiG57uE6K6h566XIFJNU++8jOiHquWKqOWinuebiuiuqeaJgOacieivtOivneS6uuWTjeW6puS4gOiHtO+8iOivr+W3riDCsTFkQu+8iQotICoq5aWz5aOw6L276YeP5Y6L57yp77yI5Y+v6YCJ77yJKirvvJrpmIjlgLwgLTIwZELjgIHmr5TkvosgMjox44CB5pS75Ye7IDVtc+OAgemHiuaUviA1MG1z77yM5rK75aWz5aOw5b+95aSn5b+95bCPCgojIyDwn5OdIOabtOaWsOaXpeW/lwoKIyMjIHYyLjE3LjAgKDIwMjYtMDYtMTgpCgoqKuS/ruWkjSoqCi0g5q616JC957yW6L6R5peg5rOV54K55Ye755qEIGJ1Z++8mnN0YXJ0R2VuZXJhdGUg5a6M5oiQ5ZCOIGBTLmlzR2VuZXJhdGluZyA9IGZhbHNlYCDlt7Lorr7nva7vvIzkvYYgYHJlbmRlclNlZ21lbnRUYWJsZSgpYCDmnKrooqvph43mlrDosIPnlKjvvIzlr7zoh7TliIbmrrXooajku43ku6Ui55Sf5oiQ5LitIueKtuaAgea4suafk++8iG9uY2xpY2sg5bGe5oCn57y65aSx77yJ44CC5L+u5aSN5ZCO5Zyo55Sf5oiQ5a6M5oiQ44CB5Y+W5raI55Sf5oiQ44CB5bqU55So5pu05pS55a6M5oiQ562J5omA5pyJIGBTLmlzR2VuZXJhdGluZ2Ag54q25oCB5Y+Y5YyW54K56YO96L+95YqgIGByZW5kZXJTZWdtZW50VGFibGUoKWAg6LCD55So77yM56Gu5L+d5YiG5q616KGo5aeL57uI5Lul5q2j56Gu55qE5Y+v57yW6L6R5oCB5pi+56S644CCCgojIyMgdjIuMTYuMCAoMjAyNi0wNi0xOCkKCioq5paw5aKeKioKLSDmrrXokL3nuqfmlofmnKznvJbovpHvvJrngrnlh7vliIbmrrXooaggc2VnLXRleHQg5Y2V5YWD5qC86L+b5YWl57yW6L6R5qih5byP77yM5pSv5oyBIDQg56eN5pm66IO95Zy65pmv77yaCiAgLSBhKSDmnKrnlJ/miJDmrrXnvJbovpHvvJrnvJbovpHlkI7nlKjmlrDmlofmnKznlJ/miJDvvIjljIXmi6zlhrfljbTmnJ/vvIkKICAtIGIpIOeUn+aIkOS4reautee8lui+ke+8muiHquWKqOemgeeUqOe8lui+keW5tuWbnumAgOWGheWuue+8jOm8oOagh+WPmOS4jeWPr+eUqOaAgQogIC0gYykg5bey55Sf5oiQ5L2G5ZCO57ut5pyq5a6M5oiQ77ya5YWI5a6M5oiQ5Y6f5bqP5YiX5Yiw5pyA5ZCO5LiA5q6177yM57uT5p2f5ZCO6YeN5paw55Sf5oiQ5pS55Yqo5q6177yM5pen55qE5Lii5byDCiAgLSBkKSDlhajpg6jlrozmiJDlkI7nvJbovpHvvJrlvIDlp4vlkIjmiJDmjInpkq7lj5gi5bqU55So5pu05pS5Iu+8jOWPqumHjeeUn+aIkOaUueWKqOaute+8jOacquaUueWKqOS4jeWKqO+8jOeUn+aIkOWQjumHjeaWsOaLvOWQiAotIOWOhuWPsuiusOW9lee8lui+keWbnumAgO+8muavj+adoeWOhuWPsuiusOW9leaWsOWinuOAkOe8lui+keOAkeaMiemSru+8jOWPr+i/mOWOn+aJgOacieWIhuaute+8iOWQq+mfs+mike+8ieWIsOS4u+eVjOmdoui/m+ihjOS/ruaUueWQjumHjeaWsOWvvOWHuu+8m+WIhuautemfs+mikeW3suS4ouWkseaXtuaMiemSrue9rueBsOS4jeWPr+eCuQoKKirkv67lpI0qKgotIOaXoAoKKirph43mnoQqKgotIGFkZEhpc3Rvcnkg546w5Zyo5L+d5a2Y5omA5pyJ5q616JC955qEIGF1ZGlvQmxvYiDmlbDnu4TlkozmlofmnKzvvIznlKjkuo7ljoblj7Llm57pgIAKCiMjIyB2Mi4xNS4wICgyMDI2LTA2LTE4KQoKKirmlrDlop4qKgotIOe7n+S4gOivleWQrOWIh+aNou+8muaJgOacieivleWQrOaMiemSru+8iEJHTeOAgemfs+iJsumihOiniOOAgUdMTSDlpITnkIbpooTop4jjgIFLaWtpVm9pY2Ug5q616JC96K+V5ZCs77yJ5pSv5oyBIuaSreaUvi/lgZzmraIi5oCB5YiH5o2i77yM6YG/5YWN6YeN5aSN5pKt5pS+5Y+g5YqgCi0gS2lraVZvaWNlIOauteiQveivleWQrO+8muavj+auteeUn+aIkOWujOavleWNs+WcqOWIhuauteihqOS4reaYvuekuuivleWQrOaMiemSru+8jOWPr+eri+WNs+ivleWQrOW9k+WJjeauteiQve+8jOaXoOmcgOetieW+heWFqOmDqOWQiOaIkOWujOaIkAotIOW3puWPs+S4pOagj+WTjeW6lOW8j+W4g+WxgO+8muWuveWxj++8iOKJpTEwMjRweO+8ieW3puWPs+W5tuaOkuaYvuekuu+8iOW3puS+p+WGheWuueWPr+a7muWKqCArIOWPs+S+pyBsb2cg5Zu65a6a77yJ77yb56qE5bGP6Ieq5Yqo5YiH5o2i5Li6IHRhYiDmqKHlvI/vvIgi5Y+C5pWw6K6+5a6aIiAvICLmjqfliLblj7Ai5Lik5LiqIHRhYu+8iQotIOWFg+aVsOaNrueUn+aIkOWinuW8uu+8muaWsOWiniLljp/lp4vmlrDpl7vopoHngrki6L6T5YWl5qGG77yI5Y+v6YCJ77yJ77yM5L2c5Li65o+Q56S66K+N5LiA6YOo5YiG5Y+R6YCB57uZIEdMTe+8m+agh+mimOaMiSJ45pyIeOaXpeWosei1hOavj+aXpeaXqeaKpe+8mnh4eCLmoLzlvI/nlJ/miJDvvJtTaG93bm90ZXMg5oyJ5Y+C6ICD5qC85byP6L6T5Ye677yI5YWz6ZSu6K+NIC8g5pys5pyf5Li76KaB5YaF5a65IC8g56ug6IqC6YCf6KeIIC8g5YWz5LqO5qCP55uu77yJCgoqKuS/ruWkjSoqCi0g5pegCgoqKumHjeaehCoqCi0g5Y676Zmk6K6+572u6Z2i5p2/5omA5pyJICIodjIuMTQpIiDmj5DnpLrlrZfmoLfvvIzkv53mjIHnlYzpnaLmlbTmtIEKCiMjIyB2Mi4xNC4wICgyMDI2LTA2LTE3KQoKKirmlrDlop4qKgotIEdMTSDns7vnu5/mj5DnpLror43lj6/lnKjorr7nva7kuK3nvJbovpHjgIHkv53lrZjliLAgbG9jYWxTdG9yYWdl44CB6ZqP6YWN572u5a+85YWl5a+85Ye6Ci0g6buY6K6k57O757uf5o+Q56S66K+N5paw5aKe6KeE5YiZ77ya6aG/5Y+3L+S5puWQjeWPty/noLTmipjlj7fnu5/kuIDovazpgJflj7fvvJvlsI/mlbDngrnor7si54K5IuaxieWtl++8m+W5tOS7vS/ml6XmnJ8v6YeR6aKdL+eZvuWIhuavlOeahOS4reaWh+ivu+azlQotIEJlZm9yZS9BZnRlciDlj4zmoI/pooTop4jpnaLmnb/vvJrlkIjmiJDliY3lj6/nnIvliLAgR0xNIOWkhOeQhuWJjeWQjuWvueavlO+8jEFmdGVyIOaWh+acrOahhuWPr+aJi+WKqOe8lui+keimhueblgotIOivtOivneS6uuS6pOabv+agoemqjO+8muaJq+aPj+WIhuautee7k+aenOajgOa1i+i/nue7reS4pOauteWQjOS4gOivtOivneS6uu+8jOmrmOS6ruWRiuitpiArICLoh6rliqjkuqTmm78i5oyJ6ZKuCi0gQkdNIOmbhuaIkO+8muS4iuS8oC/pgInmi6njgIHlj4zpn7Pph4/mi4nmnYbjgIE1IOenkueJh+auteWunuaXtuivleWQrOOAgXNpZGVjaGFpbiBkdWNraW5n44CB6YWN572u5Y+v5L+d5a2YL+WvvOWFpS/lr7zlh7oKLSDniYflpLTniYflsL7mi7zmjqXvvJrlj4LogIMgcG9kbWVyZ2UuaHRtbCDlrp7njrDvvIzmlK/mjIHmt6HlhaXmt6Hlh7ov55u05o6l5ou85o6l5Lik56eN5qih5byPCi0g5Lq65aOw6Z+z6YeP5b2S5LiA5YyW77yacGVhayBub3JtYWxpemUgKyDor7Tor53kurogUk1TIOaLieW5syArIOWPr+mAieWls+WjsOi9u+mHj+WOi+e8qQotIOagh+mimC9TaG93bm90ZXMvVGFncyDoh6rliqjnlJ/miJDvvJrlkIjmiJDlrozmiJDlkI7osIPnlKggR0xNIOeUn+aIkOaSreWuouWFg+aVsOaNrgotIOiuvue9rumhueWPmOabtOWNs+aXtiB0b2FzdCDmj5DnpLrvvIzkuI3pga7mjKHlip/og73ljLrvvIh0b2FzdCDnp7voh7Plj7PkuIvop5LvvIkKLSDmraPliJnpooTlpITnkIbmlrDlop7kuablkI3lj7cv6aG/5Y+3L+egtOaKmOWPty/nq5bnur/ovazpgJflj7fop4TliJnvvIjml6DpnIAgR0xNIOWNs+WPr+W3peS9nO+8iQotIOS4i+i9veaMiemSruaWsOWiniLkuIvovb0gV0FW77yI57qv5Lq65aOw77yJIumAiemhue+8jOWQqyBCR00g5pe25ZCM5pe25L+d55WZ5Lik5Lu9CgoqKuS/ruWkjSoqCi0g5L+d55WZIHYyLjEzIOa6kOeggeS4reeahCBcYC9cXC5kb2N4JC9cYCDmraPliJnlrZfpnaLph4/vvIjpgb/lhY0gZXNidWlsZCDmiZPljIXlkI7kuKLlpLHlj43mlpzmnaDnmoTmvZzlnKjpl67popjvvIkKLSDkv67lpI3pg6jnvbLniYjkuK0gTkVXX0ZVTkNUSU9OUyDmnKrms6jlhaXnmoTpl67popjvvIhcYDwvc2NyaXB0PlxgIOWcqOaooeadv+Wtl+espuS4suS4remcgOWGmeS9nCBcYDxcXC9zY3JpcHQ+XGDvvIkKLSDkv67lpI0gZ2VuZXJhdGVNZXRhZGF0YSDkuK0gXGBcXFxgXFxcYFxcXGBcYCDku6PnoIHlnZfmoIforrDlr7zoh7TmqKHmnb/lrZfnrKbkuLLmj5DliY3nu4jmraLnmoTor63ms5XplJnor68KLSDkv67lpI0gXGBhbGVydCgn5Y6f5paH77yaXFxuJylcYCDnrYnlrZfnrKbkuLLkuK0gXFxuIOiiq+aooeadv+Wtl+espuS4suino+mHiuS4uuWunumZheaNouihjOeahOivreazlemUmeivrwotIOS/ruWkjSBtZXRhZGF0YUNhcmQg5YWD57Sg5pyq5rOo5YWlIERPTSDlr7zoh7QgXGBFLm1ldGFkYXRhQ2FyZFxgIOS4uiBudWxsIOeahOmXrumimO+8iOeUqOato+WImeabv+aNouS7o+abv+Wtl+mdouWMuemFje+8iQoKKirph43mnoQqKgotIFJFQURNRSDkuI4gY2hhbmdlbG9nIOaPkOiHs+aWh+S7tuWktOmDqCBcYFJFQURNRV9DT05URU5UXGAg5bi46YeP77yMXGBnZXRSZWFkbWVDb250ZW50KClcYCDnm7TmjqXlvJXnlKjvvIzpgb/lhY3mupDnoIHkuI4gVUkg5pi+56S65LiN5LiA6Ie0CgoqKuWunua1i+mqjOivge+8iDIwMjYtMDYtMTfvvIkqKgotIOeUqCAyIOS4quecn+Wunumfs+iJsu+8iOWwj+Wosemfs+iJsiArIOS5kOS5kC3mkq3lrqLpn7PoibIy77yJKyAyNTA5IOWtl+aXqeaKpeaWh+ahiOa1i+ivlQotIDI5IOauteWFqOmDqOeUn+aIkOaIkOWKn++8jDAg5aSx6LSl77yM5oC75pe26ZW/IDY6MzUKLSDmlbDlrZcv5pel5pyf5q2j5YiZ6aKE5aSE55CG5q2j56Gu77yIMjAyNuKGkuS6jOmbtuS6jOWFreOAgTbmnIgxN+aXpeKGkuWFreaciOWNgeS4g+aXpeOAgeesrDM45bGK4oaS56ys5LiJ5Y2B5YWr5bGK562J77yJCi0gQVNSIOaKveagt+mqjOivgSA0IOaute+8jOWGheWuueWujOaVtOWPr+ivhuWIq++8jOaXoOauteiQveS4ouWksQotIOS5puWQjeWPty/pob/lj7cv56C05oqY5Y+35Zyo5pys5qyh5rWL6K+V5Lit5pyq5aSE55CG77yI5ZugIEdMTSDmnKrphY3nva7vvInvvIzpmo/lkI7lt7Lmt7vliqDmraPliJnlm57pgIDop4TliJkKCiMjIyB2Mi4xMy4wICgyMDI2LTA2LTEyKQoKLSDkv67lpI0gbnZDbG9uZVZvaWNlIOmfs+iJsuWkjeeUqO+8mm52UmVmZXJlbmNlSWQg546w5Zyo5q2j56Gu5Lyg6YCS77yM5bey5pyJ6Z+z6Imy5peg6ZyA6YeN5aSN5YWL6ZqGCi0g5L+u5aSN5peg6Z+z6aKR5pWw5o2u5pe255qE6Z+z6Imy5aSN55So77ya5Y2z5L2/IGxvY2FsU3RvcmFnZSDkuK3msqHmnIkgYmFzZTY0IOaVsOaNru+8jOWPquimgSByZWZlcmVuY2VJZCDmnInmlYjkuZ/og73lpI3nlKgKLSBHTE0g5pm66IO96aKE5aSE55CG77ya5pSv5oyBIEdMTS00LUZsYXNoIEFQSSDov5vooYzkuK3mlofmlbDlrZfjgIHnrKblj7fjgIHlpJrpn7PlrZfmmbrog73pooTlpITnkIYKLSBHTE0gQVBJIEtleSDnrqHnkIbvvJrorr7nva7kuK3mlrDlop4gQVBJIEtleSDovpPlhaXlkozmtYvor5XmjInpkq7vvIzmlK/mjIHlr7zlhaXlr7zlh7oKLSDpooTlpITnkIbmqKHlvI/pgInmi6nvvJrlhbPpl60v5Zue6YCA5qih5byP77yI5q2j5YiZ5aSx6LSl5pe255SoIEdMTe+8iS/lp4vnu4jkvb/nlKggR0xNCi0g6aKE5aSE55CG5a6J5YWo5qOA5p+l77ya5aaC5p6c6aKE5aSE55CG57uT5p6c5byC5bi477yI6L+H55+t77yJ77yM6Ieq5Yqo5Zue6YCA5Yiw5Y6f5paHCi0gR0xNIEFQSSDku6PnkIbvvJrpgJrov4cgV29ya2VyIOS7o+eQhuiwg+eUqCBHTE0gQVBJ77yMQVBJIEtleSDkuI3mmrTpnLLliLDlrqLmiLfnq68KLSBUVFMg6K+35rGC5pel5b+X77ya6K6w5b2V5Y+R6YCB5YiwIFRUUyDlvJXmk47nmoTmlofmnKzlhoXlrrnlkozplb/luqbvvIzkvr/kuo7osIPor5UKCiMjIyB2Mi4xMi4wICgyMDI2LTA2LTEyKQoKLSDnp7vpmaTpobbpg6jlj4LogIPpn7PpopHljaHvvJrph4fnlKgi5paH5pys5LyY5YWI4oaS5YaN5YiG6YWN6Z+z5rqQIuW3peS9nOa1gQotIOivtOivneS6uuWIhumFjeWNoemHjeaehO+8muWNleS6uuaooeW8j+S5n+aYvuekuiLpu5jorqQi6Z+z5rqQ5qe9Ci0g6Z+z5rqQ5LqS5pal77ya5bey6KKr5LiA5L2N6K+06K+d5Lq66YCJ5oup55qE6Z+z5rqQ77yM5Zyo5YW25LuW6K+06K+d5Lq655qE5LiL5ouJ5Lit572u54GwCi0g6Z+z5rqQ566h55CGIDIuMO+8muiuvue9rumdouadv+aWsOWinumihOiniOOAgemHjeWRveWQjeOAgeWQjOatpeeKtuaAgeaMh+ekugotIOaVsOWtly/nrKblj7fpooTlpITnkIbvvJroh6rliqjlsIbmlbDlrZfovazkuK3mlofor7vms5XvvIznrKblj7fovazmloflrZcKLSDlubTku70v5pel5pyfL+eUteivneivhuWIqwotIOmfs+a6kOaVsOaNrue7k+aehOWNh+e6p++8muaUr+aMgSBOVi9LSyDlj4zlvJXmk47pn7PoibIgSUQKLSDpn7PpopHljovnvKnvvJrmlrDlu7rpn7PmupDml7boh6rliqjph43ph4fmoLcgMjRrSHrjgIHmiKrlj5YgMTUg56eSCgojIyMgdjIuMTEuMCAoMjAyNi0wNi0xMSkKCi0g5aSa5Lq65peB55m95qih5byP77ya6Ieq5Yqo5qOA5rWL6K+06K+d5Lq65qCH6K6wCi0g5o2i6KGM57ut5o6l77ya5rKh5pyJ6K+06K+d5Lq65qCH6K6w55qE6KGM6Ieq5Yqo5b2S5bGe5LiK5LiA5Liq6K+06K+d5Lq6Ci0g6Ziy5ZGG5qOA5rWL77ya5b2T6K+06K+d5Lq65Y+w6K+N6YeP5Lil6YeN5LiN5Z2H6KGh5pe26K2m5ZGKCi0g6Ieq5a6a5LmJ6K+06K+d5Lq65qih5byP77ya5pSv5oyB5re75Yqg6Ieq5a6a5LmJ5q2j5YiZ6KGo6L6+5byPCi0g5aSa5Lq6IFNSVCDlrZfluZXvvJrlrZfluZXoh6rliqjmoIfms6jor7Tor53kurrlp5PlkI0KLSDlpJrkurrliarmmKDlr7zlh7rvvJrliarmmKDlt6XnqIvkuZ/mlK/mjIHlpJrkurrlrZfluZXmoIfnrb4KCiMjIyB2Mi45LjAgKDIwMjYtMDUtMjUpCgotIOaWsOWiniBLaWtpVm9pY2Ug5rig6YGT77ya5aSH6YCJIFRUUyDlvJXmk47vvIzkuInnp43lhY3otLnmqKHlnosKLSBHZWV0ZXN0IOS6uuacuumqjOivge+8mumAmui/hyBXb3JrZXIg5Luj55CG56Gu5L+dIElQIOS4gOiHtAotIOenr+WIhuS9memHj+afpeivou+8muWunuaXtuaYvuekuuWJqeS9meenr+WIhuOAgeW3sueUqOenr+WIhuWSjOmHjee9ruaXtumXtAotIExvZyDmjqfliLblj7DvvJrmlrDlop7kuovku7borrDlvZXmjqfliLblj7AKCiMjIyB2Mi44LjAgKDIwMjYtMDUtMjYpCgotIEpTWmlwIOaHkuWKoOi9ve+8muS7heWcqOmcgOimgeaXtuWKoOi9vQotIOenu+mZpOiwg+ivleaXpeW/l++8muWHj+WwkeaJp+ihjOW8gOmUgAotIOeugOWMluWtl+W5leeul+azle+8muS8mOWMluiHquWKqOaNouihjOeul+azlQotIERPTSDlhYPntKDnvJPlrZjvvJrlh4/lsJHph43lpI3mn6Xor6IKLSBIVFRQIOe8k+WtmO+8mua3u+WKoOmhtemdoue8k+WtmOWktAoKIyMjIHYyLjcuMCAoMjAyNi0wNS0yNSkKCi0g5L+u5aSNIFNSVCDml7bpl7TovbTmoLnmnKzpl67popjvvJrlvIPnlKjkvY3nva7ov73ouKrms5XvvIzmlLnnlKjlrZfnrKbmlbDntK/liqDms5UKLSDkv67lpI3liarmmKDlrZfluZXlkIzmraUKCiMjIyB2Mi42LjAgKDIwMjYtMDUtMjUpCgotIOS/ruWkjSBTUlQg5pe26Ze06L2077ya5L+u5q2j5a2X5bmV5LiO6Z+z6aKR5LiN5ZCM5q2lCi0g5L+u5aSNIFdBViDkuIvovb3vvJrnm7TmjqXkuIvovb3lt7LmnInmlofku7YKLSDmlofku7blkI3op4TliJnvvJrlr7zlhaUgZG9jeCDml7bmlofku7blkI3kuI4gZG9jeCDkuIDoh7QKLSDliarmmKAgWklQIOe7k+aehOinhOiMg+WMlgotIOeUn+aIkOWOhuWPsuWNh+e6p++8muS9v+eUqCBJbmRleGVkREIg5L+d5a2YCgojIyMgdjIuNS4wICgyMDI2LTA1LTI1KQoKLSDkv67lpI3liarmmKDlrZfluZXmmL7npLrvvJrlrZfluZXnsbvlnovmlLnkuLogc3VidGl0bGUKLSDkv67lpI3lrZfluZXmoLflvI/moLzlvI/vvJpzdHJva2Ug5qC85byP5a+56b2QIHB5SmlhbllpbmdEcmFmdCDop4TojIMKLSDooaXlhajlrZfluZXntKDmnZDlrZfmrrUKLSDkv67lpI3lrZfluZXlnZDmoIfvvJp0cmFuc2Zvcm0g5L2/55So5b2S5LiA5YyW5Z2Q5qCHIHk6LTAuOAoKIyMjIHYyLjQuMCAoMjAyNi0wNS0yNSkKCi0g6KeE6IyD5YyW5paH5Lu25ZCN77yaeXl5eW1tZGQtaGhtbXNzCi0gU1JUIOiHquWKqOaNouihjO+8muavj+ihjOS4jei2hei/hyAxNSDlrZcKLSDliarmmKDlrZfluZXmoLflvI/vvJrmgJ3mupDpu5HkvZPjgIHnmb3lrZfpu5HovrnjgIHlrZflj7cgMTAKLSDlkIzmrKHnlJ/miJDml7bpl7TmiLPkuIDoh7QKCiMjIyB2Mi4zLjAgKDIwMjYtMDUtMjQpCgotIOmfs+iJsuWkjeeUqOS8mOWMlu+8muS/neWtmOeahOmfs+a6kOWFs+iBlCBOaWNlVm9pY2Ug5pyN5Yqh5Zmo56uvIHJlZmVyZW5jZUlkCi0g5pm66IO96aqM6K+B77ya5L2/55So5bey5L+d5a2Y6Z+z6Imy5pe25qOA5p+l5pyN5Yqh5Zmo56uv5pyJ5pWI5oCnCi0g6Ieq5Yqo6YeN5paw5YWL6ZqG77ya5pyN5Yqh5Zmo56uv5aSx5pWI5pe26Ieq5Yqo6YeN5paw5YWL6ZqGCgojIyMgdjIuMi4wICgyMDI2LTA1LTI0KQoKLSDkv67lpI3mloflrZfliIbmrrXvvJpOaWNlVm9pY2Ug5qih5byP5LiL55+t5Y+l5LiN5YaN5ZCE6Ieq5oiQ5q61Ci0g5a6M5pW05o6n5Yi25Y+w5pel5b+X77ya5pa55L6/IEYxMiDosIPor5UKLSDliIbmrrXpgLvovpHph43mnoQKCiMjIyB2Mi4xLjAgKDIwMjYtMDUtMjQpCgotIOaWsOWiniBOaWNlVm9pY2Ug5L2c5Li65Li76KaBIFRUUyDlvJXmk44KLSDmlrDlop7lj4zlvJXmk47liIfmjaLlmagKLSDmlrDlop4gTmljZVZvaWNlIEFQSSDku6PnkIbvvIjmnI3liqHnq68gSE1BQy1TSEEyNTYg562+5ZCN77yJCi0g5paw5aKe5aOw6Z+z5YWL6ZqG5rWB56iL77ya5LiK5LygIOKGkiDorq3nu4Mg4oaSIFRUUwotIOaWsOWinumfs+a6kOWFs+iBlOWFi+mahiBJRAoKIyMjIHYyLjAuMCAoMjAyNi0wNS0yMykKCi0g5YWo5paw6YeN5p6E77yM5Z+65LqOIGtvenp6cS9pbmRleHR0czJhcGkgUkVTVCBBUEkKLSDmlrDlop7liarmmKDlt6XnqIsgWklQIOWvvOWHuuWKn+iDvQotIOaWsOWiniBTUlQg5a2X5bmV55Sf5oiQCi0g5paw5aKe6Z+z5rqQ566h55CG44CB5bm25Y+RIFRUUyDnlJ/miJDjgIHnlJ/miJDljoblj7LorrDlvZUKLSDmlrDlop4gV29yZCDmlofmoaPlr7zlhaXjgIHphY3nva7lr7zlhaUv5a+85Ye6Cg==';
@@ -1282,21 +1051,23 @@ var README_CONTENT = (function() {
 })();
 // v2.14: Default GLM system prompt (editable in settings)
 var DEFAULT_GLM_PROMPT = '你是一个TTS文本预处理助手。将输入文本转换为适合语音合成朗读的中文。规则：\\n'
-  + '1. 数字转中文读法：403→四百零三，2026→二零二六，3.14→三点一四，2.14→二点一四，126.5→一百二十六点五\\n'
-  + '2. 百分号 → 百分之：80.3%→百分之八十点三，50%→百分之五十\\n'
-  + '3. 标点中转（远端 TTS 无法识别这些标点）：\\n'
+  + '1. 数字按数位转中文读法：403→四百零三，1000→一千，7000→七千，4999→四千九百九十九，126.5→一百二十六点五\\n'
+  + '2. 年份和届级逐字读：2026年→二零二六年，2026届→二零二六届\\n'
+  + '3. 营销词连读不改：618大促→六一八大促，双11→双十一，双12→双十二\\n'
+  + '4. 百分号 → 百分之：80.3%→百分之八十点三，50%→百分之五十\\n'
+  + '5. 标点中转（远端 TTS 无法识别这些标点）：\\n'
   + '   - 顿号、→ 逗号，\\n'
   + '   - 书名号《》→ 直接去除（保留书名内容，例如《飞驰人生3》→ 飞驰人生3）\\n'
   + '   - 破折号——→ 逗号，\\n'
   + '   - 省略号……→ 等等\\n'
-  + '   - 冒号：保留（用于说话人标记，TTS 可正确识别）\\n'
-  + '4. 符号转文字：≥→大于等于，℃→摄氏度，×→乘以，/→或\\n'
-  + '5. 保持原文意思不变，只调整朗读形式\\n'
-  + '6. 不要添加解释、标注或前缀\\n'
-  + '7. 直接输出转换结果';
+  + '   - 全角冒号：→ 逗号，\\n'
+  + '6. 符号转文字：≥→大于等于，℃→摄氏度，×→乘以，/→或，¥100→100元\\n'
+  + '7. 保持原文意思不变，只调整朗读形式\\n'
+  + '8. 不要添加解释、标注或前缀\\n'
+  + '9. 直接输出转换结果';
 
 var S = {
-  engine: 'nicevoice',  // 'nicevoice' | 'indextts' | 'kikivoice'
+  engine: 'nicevoice',  // v2.21: NiceVoice is the only engine (IDX/KK removed)
   audioSources: [],       // saved voices: [{id, name, audioBase64, nvReferenceId, kkVoiceId, addedAt, lastSyncAt}]
   activeSourceId: '',
   segments: [],
@@ -1314,16 +1085,6 @@ var S = {
   projectName: '',        // for file naming: docxFileName or timestamp
   // NiceVoice state
   nvCloneBusy: false,
-  // KikiVoice state
-  kkUuid: 'vc-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2,8),
-  kkModel: 'kiki_core',
-  kkConnected: false,
-  kkCaps: null,
-  kkQuota: { a: 60000, u: 0, m: 60000, r: 7 },
-  cfResolve: null,
-  cfReject: null,
-  cfProxyUrl: '',
-  cfDirectUrl: '',
   // Speaker state
   speakerMode: 'single',  // 'single' | 'multi'
   detectedSpeakers: [],    // [{name, lineCount, charCount}]
@@ -1338,13 +1099,6 @@ var S = {
     nvWait: 16,
     nvMaxChars: 150,
     nvMaxPoll: 60,
-    // IndexTTS
-    apiBase: DEFAULT_API,
-    language: 'zh',
-    maxChars: 250,
-    concurrency: 1,
-    retryCount: 2,
-    pollInterval: 2000,
     // History
     maxHistory: 10,
     // Speaker patterns
@@ -1416,6 +1170,7 @@ window.addEventListener('DOMContentLoaded', function() {
   loadAudioSources();
   checkApiStatus();
   initDocxDragDrop();
+  initUploadZoneDragDrop(); // v2.20
   updateTextStats();
   applyConfigToUI();
   switchEngine(S.config.engine || 'nicevoice');
@@ -1453,48 +1208,17 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ==================== Engine Switching ====================
 function switchEngine(eng) {
-  S.engine = eng;
-  S.config.engine = eng;
+  // v2.21: NiceVoice is the only engine; kept for compatibility with old calls
+  S.engine = 'nicevoice';
+  S.config.engine = 'nicevoice';
   var btnNV = E.btnNV;
-  var btnIDX = E.btnIDX;
-  var btnKK = E.btnKK;
   var genBtn = E.generateBtn;
   var genBtnText = E.genBtnText;
   var nvSettings = E.nvSettings;
-  var idxSettings = E.idxSettings;
-  var kkSettings = E.kkSettings;
-  var kkCfgCard = E.kkCfgCard;
-  var cfgEngine = E.cfgEngine;
-
-  btnNV.className = 'engine-btn' + (eng === 'nicevoice' ? ' active-nv' : '');
-  btnIDX.className = 'engine-btn' + (eng === 'indextts' ? ' active-idx' : '');
-  if (btnKK) btnKK.className = 'engine-btn' + (eng === 'kikivoice' ? ' active-kk' : '');
-
-  if (nvSettings) nvSettings.style.display = 'none';
-  if (idxSettings) idxSettings.style.display = 'none';
-  if (kkSettings) kkSettings.style.display = 'none';
-  if (kkCfgCard) kkCfgCard.className = 'card kk-cfg-card';
-
-  if (eng === 'nicevoice') {
-    genBtn.className = 'gen-btn nv-active';
-    genBtnText.innerHTML = '&#x1F680; 开始合成 (NiceVoice)';
-    if (nvSettings) nvSettings.style.display = '';
-  } else if (eng === 'indextts') {
-    genBtn.className = 'gen-btn idx-active';
-    genBtnText.innerHTML = '&#x1F680; 开始合成 (IndexTTS)';
-    if (idxSettings) idxSettings.style.display = '';
-  } else if (eng === 'kikivoice') {
-    genBtn.className = 'gen-btn kk-active';
-    genBtnText.innerHTML = '&#x1F680; 开始合成 (KikiVoice)';
-    if (kkSettings) kkSettings.style.display = '';
-    if (kkCfgCard) kkCfgCard.className = 'card kk-cfg-card visible';
-    // Auto-detect KikiVoice connection when switching to this engine
-    if (!S.kkConnected) {
-      setTimeout(function() { testKK(); }, 300);
-    }
-  }
-
-  if (cfgEngine) cfgEngine.value = eng;
+  if (btnNV) btnNV.className = 'engine-btn active-nv';
+  if (genBtn) genBtn.className = 'gen-btn nv-active';
+  if (genBtnText) genBtnText.innerHTML = '&#x1F680; 开始合成 (NiceVoice)';
+  if (nvSettings) nvSettings.style.display = '';
   updateTextStats();
   checkApiStatus();
 }
@@ -1534,73 +1258,7 @@ async function checkApiStatus() {
       dot.className = 'dot offline';
       txt.textContent = 'NiceVoice 不可达';
     }
-  } else if (S.engine === 'indextts') {
-    // Check IndexTTS API
-    try {
-      var ctrl = new AbortController();
-      var tid = setTimeout(function() { ctrl.abort(); }, 8000);
-      var resp = await fetch(S.config.apiBase + '/', { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (resp.ok) {
-        var data = await resp.json();
-        if (data.name || data.endpoints) {
-          dot.className = 'dot online';
-          txt.textContent = 'IndexTTS 在线';
-        } else {
-          dot.className = 'dot offline';
-          txt.textContent = 'API 响应异常';
-        }
-      } else {
-        dot.className = 'dot offline';
-        txt.textContent = 'API 异常 (' + resp.status + ')';
-      }
-    } catch(e) {
-      dot.className = 'dot offline';
-      txt.textContent = 'API 不可达';
-    }
-  } else if (S.engine === 'kikivoice') {
-    try {
-      var ctrl = new AbortController();
-      var tid = setTimeout(function() { ctrl.abort(); }, 8000);
-      var resp = await fetch('/api/kiki/model-capabilities?uuid=' + encodeURIComponent(S.kkUuid), { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (resp.ok) {
-        var data = await resp.json();
-        if (data.error_code === 0) {
-          S.kkConnected = true; S.kkCaps = data;
-          dot.className = 'dot online';
-          txt.textContent = 'KikiVoice 在线';
-          // Update KK connection status UI
-          var cs = document.getElementById('kkConn');
-          if (cs) { cs.className = 'kk-conn-status ok'; cs.innerHTML = '<span class="kk-conn-dot"></span>已连接'; }
-          // Update model credit rates
-          var c = data.model_capabilities || {};
-          if (c.kiki_core) { var el = document.querySelector('#mCore .mc'); if (el) el.textContent = c.kiki_core.credit_rate + 'x'; }
-          if (c.kiki_pro) { var el = document.querySelector('#mPro .mc'); if (el) el.textContent = c.kiki_pro.credit_rate + 'x'; }
-          if (c.kiki_multilingual && c.kiki_multilingual.credit_rates && c.kiki_multilingual.credit_rates.v2) { var el = document.querySelector('#mMulti .mc'); if (el) el.textContent = c.kiki_multilingual.credit_rates.v2.rate + 'x'; }
-          // Update quota info from capabilities response
-          if (data.available_count !== undefined || data.user_tts_available_count !== undefined) {
-            updKKQuota(data);
-          }
-        } else {
-          S.kkConnected = false;
-          dot.className = 'dot offline';
-          txt.textContent = 'KikiVoice 不可用';
-          var cs = document.getElementById('kkConn');
-          if (cs) { cs.className = 'kk-conn-status fail'; cs.innerHTML = '<span class="kk-conn-dot"></span>失败'; }
-        }
-      } else {
-        dot.className = 'dot offline';
-        txt.textContent = 'KikiVoice 不可达';
-        var cs = document.getElementById('kkConn');
-        if (cs) { cs.className = 'kk-conn-status fail'; cs.innerHTML = '<span class="kk-conn-dot"></span>不可达'; }
-      }
-    } catch(e) {
-      dot.className = 'dot offline';
-      txt.textContent = 'KikiVoice 不可达';
-      var cs = document.getElementById('kkConn');
-      if (cs) { cs.className = 'kk-conn-status fail'; cs.innerHTML = '<span class="kk-conn-dot"></span>错误'; }
-    }
+
   }
 }
 
@@ -1620,6 +1278,36 @@ function initDocxDragDrop() {
       if (file.name.endsWith('.docx')) { processDocxFile(file); }
       else if (file.type.startsWith('audio/')) { /* handled by audio zone */ }
       else { showToast('请拖入 .docx 格式的 Word 文档', 'error'); }
+    }
+  });
+}
+
+// v2.20: Prevent browser default navigation when dropping audio files on upload zones
+function initUploadZoneDragDrop() {
+  document.addEventListener('dragover', function(e) {
+    var zone = e.target.closest('.upload-zone');
+    if (zone) { e.preventDefault(); e.stopPropagation(); }
+  });
+  document.addEventListener('drop', function(e) {
+    var zone = e.target.closest('.upload-zone');
+    if (zone) {
+      e.preventDefault(); e.stopPropagation();
+      var fileInput = zone.querySelector('input[type="file"]');
+      if (!fileInput) {
+        var nextEl = zone.nextElementSibling;
+        if (nextEl && nextEl.tagName === 'INPUT' && nextEl.type === 'file') fileInput = nextEl;
+      }
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length > 0 && files[0].type.startsWith('audio/')) {
+        if (fileInput) {
+          var dt = new DataTransfer();
+          dt.items.add(files[0]);
+          fileInput.files = dt.files;
+          fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      } else if (files && files.length > 0) {
+        showToast('请拖入音频文件', 'error');
+      }
     }
   });
 }
@@ -1729,16 +1417,9 @@ function saveConfig() {
 function applyConfigToUI() {
   var c = S.config;
   var el;
-  el = E.cfgEngine; if (el) el.value = c.engine || 'nicevoice';
   el = E.cfgNvWait; if (el) el.value = c.nvWait || 16;
   el = E.cfgNvMaxChars; if (el) el.value = c.nvMaxChars || 150;
   el = E.cfgNvMaxPoll; if (el) el.value = c.nvMaxPoll || 60;
-  el = E.cfgApiBase; if (el) el.value = c.apiBase;
-  el = E.cfgLanguage; if (el) el.value = c.language;
-  el = E.cfgMaxChars; if (el) el.value = c.maxChars;
-  el = E.cfgConcurrency; if (el) el.value = c.concurrency;
-  el = E.cfgRetry; if (el) el.value = c.retryCount;
-  el = E.cfgPollInterval; if (el) el.value = c.pollInterval;
   el = E.cfgMaxHistory; if (el) el.value = c.maxHistory || 10;
   el = E.cfgSpBracket; if (el) el.checked = c.spBracket !== false;
   el = E.cfgSpColon; if (el) el.checked = c.spColon !== false;
@@ -1768,16 +1449,10 @@ function applyConfigToUI() {
 
 function readConfigFromUI() {
   var c = S.config;
-  c.engine = E.cfgEngine.value || 'nicevoice';
+  c.engine = 'nicevoice'; // v2.21: single engine
   c.nvWait = parseInt(E.cfgNvWait.value) || 16;
   c.nvMaxChars = parseInt(E.cfgNvMaxChars.value) || 150;
   c.nvMaxPoll = parseInt(E.cfgNvMaxPoll.value) || 60;
-  c.apiBase = (E.cfgApiBase.value || '').trim() || DEFAULT_API;
-  c.language = E.cfgLanguage.value || 'zh';
-  c.maxChars = parseInt(E.cfgMaxChars.value) || 250;
-  c.concurrency = Math.max(1, Math.min(5, parseInt(E.cfgConcurrency.value) || 1));
-  c.retryCount = parseInt(E.cfgRetry.value) || 2;
-  c.pollInterval = parseInt(E.cfgPollInterval.value) || 2000;
   c.maxHistory = Math.max(1, parseInt(E.cfgMaxHistory.value) || 10);
   c.spBracket = E.cfgSpBracket ? E.cfgSpBracket.checked : true;
   c.spColon = E.cfgSpColon ? E.cfgSpColon.checked : true;
@@ -2133,7 +1808,7 @@ function updateTextStats() {
   var lines = text ? text.split('\\n').length : 0;
   E.charCount.textContent = chars;
   E.lineCount.textContent = lines;
-  var maxChars = S.engine === 'nicevoice' ? (S.config.nvMaxChars || 150) : S.engine === 'kikivoice' ? kkMaxChars() : (S.config.maxChars || 250);
+  var maxChars = (S.config.nvMaxChars || 150);
   // Detect speakers first
   detectSpeakers(text);
   // Split text for segment count
@@ -2149,6 +1824,19 @@ function updateTextStats() {
 }
 
 // ==================== Speaker Detection & Parsing ====================
+// v2.21: prefixes that look like labels, not speakers ("标题：" etc.), plus
+// pure numbers/times ("12：", "12:30"). Only >=2 DISTINCT valid prefixes
+// trigger multi-speaker mode.
+var SPEAKER_META_WORDS = ['标题','备注','链接','地址','时间','日期','地点','电话','价格','原价','现价','规格','品牌','型号','注意','提示','简介','摘要','关键词','标签','正文','参考','来源','时长','大小','名称','背景','重点','卖点','成分','产地','用法','功效','保质期'];
+function isMetaSpeakerName(name) {
+  if (!name) return true;
+  var n = name.replace(/[\s\d.。:：,%%，、-]+/g, '');
+  if (!n) return true; // pure digits / time-like ("12:30" -> "12")
+  for (var i = 0; i < SPEAKER_META_WORDS.length; i++) {
+    if (n === SPEAKER_META_WORDS[i]) return true;
+  }
+  return false;
+}
 var SPEAKER_COLORS = ['#a29bfe', '#55efc4', '#74b9ff', '#fdcb6e', '#e17055', '#fd79a8', '#6c5ce7', '#00b894'];
 
 function getSpeakerPatterns() {
@@ -2200,12 +1888,13 @@ function detectSpeakers(text) {
       var match = line.match(patterns[pi].regex);
       if (match && match[1]) {
         var name = match[1].trim();
-        if (name && name.length <= 8 && name.length > 0) {
+        if (name && name.length <= 8 && name.length > 0 && !isMetaSpeakerName(name)) {
           currentSpeaker = name;
           firstSpeakerFound = true;
           var content = line.replace(patterns[pi].regex, '').trim();
-          if (!speakerMap[name]) speakerMap[name] = { name: name, lineCount: 0, charCount: 0 };
+          if (!speakerMap[name]) speakerMap[name] = { name: name, lineCount: 0, charCount: 0, markedCount: 0, isBracket: patterns[pi].name === '【姓名】' };
           speakerMap[name].lineCount++;
+          speakerMap[name].markedCount++;
           speakerMap[name].charCount += content.length;
           matched = true;
           break;
@@ -2220,19 +1909,25 @@ function detectSpeakers(text) {
     }
   }
 
-  var speakers = Object.values(speakerMap);
+  // v2.21: colon-marked names must appear on >= 2 MARKED lines (real dialogue
+  // alternates repeatedly). One-off colon prefixes are labels in normal copy
+  // ("正值618大促：全场五折"), not speakers. 【bracket】names are explicit
+  // intent and always qualify.
+  var speakers = [];
+  var allNames = Object.values(speakerMap);
+  for (var qi = 0; qi < allNames.length; qi++) {
+    var spq = allNames[qi];
+    if (spq.isBracket || spq.markedCount >= 2) speakers.push(spq);
+  }
   if (speakers.length >= 2) {
+    // v2.21: >=2 distinct valid names -> genuine multi-speaker dialogue
     S.speakerMode = 'multi';
     S.detectedSpeakers = speakers;
     checkSpeakerBalance(speakers);
-  } else if (speakers.length === 1 && firstSpeakerFound) {
-    // Only one speaker detected but markers present
-    S.speakerMode = 'single';
-    S.detectedSpeakers = speakers;
-    E.speakerWarning.style.display = 'flex';
-    E.speakerWarningText.innerHTML = '检测到说话人标记，但只找到一个说话人 <b>' + escHtml(speakers[0].name) + '</b>。如果是多人文案，请检查是否遗漏了说话人标记。';
   } else {
-    // No speaker markers found - single mode with "默认" speaker
+    // v2.21: 0 or 1 valid names -> single mode. A single "xxx：" prefix is far
+    // more likely a section label than a speaker; text stays intact and the
+    // full-width colon is converted to a comma by preprocessing before TTS.
     S.speakerMode = 'single';
     S.detectedSpeakers = [];
     E.speakerWarning.style.display = 'none';
@@ -2318,8 +2013,9 @@ function renderSpeakerAssignmentList() {
     for (var j = 0; j < S.audioSources.length; j++) {
       var src = S.audioSources[j];
       var sel = assignedSource === src.id ? ' selected' : '';
-      var disabled = (usedSourceIds[src.id] && usedSourceIds[src.id] !== sp.name) ? ' disabled style="color:var(--text2);opacity:0.5"' : '';
-      html += '<option value="' + escHtml(src.id) + '"' + sel + disabled + '>' + escHtml(src.name) + (disabled ? ' (已分配)' : '') + '</option>';
+      // v2.20: Show which speaker uses this source, but allow re-selection
+      var usedBy = usedSourceIds[src.id] && usedSourceIds[src.id] !== sp.name ? ' (' + usedSourceIds[src.id] + ')' : '';
+      html += '<option value="' + escHtml(src.id) + '"' + sel + '>' + escHtml(src.name) + usedBy + '</option>';
     }
 
     // Add "新建音源" option
@@ -2499,6 +2195,9 @@ function splitTextBySpeakers(text, maxChars) {
   if (!text || !text.trim()) return [];
 
   var patterns = getSpeakerPatterns();
+  // v2.21: only names qualified by detectSpeakers may start a speaker block
+  var qualifiedNames = {};
+  for (var qi2 = 0; qi2 < S.detectedSpeakers.length; qi2++) qualifiedNames[S.detectedSpeakers[qi2].name] = true;
   var lines = text.split('\\n');
   var currentSpeaker = null;
   var speakerBlocks = []; // { speaker, lines: [{text, isContinuation}] }
@@ -2511,7 +2210,7 @@ function splitTextBySpeakers(text, maxChars) {
       var match = line.match(patterns[pi].regex);
       if (match && match[1]) {
         var name = match[1].trim();
-        if (name && name.length <= 8) {
+        if (name && name.length <= 8 && !isMetaSpeakerName(name) && qualifiedNames[name]) {
           currentSpeaker = name;
           var content = line.replace(patterns[pi].regex, '').trim();
           if (content) {
@@ -2653,14 +2352,33 @@ function numberToChineseYear(numStr) {
   return result;
 }
 
+// v2.21: brand/marketing terms that must NOT be read as plain cardinal numbers.
+// Applied before number rules; context-anchored to avoid false hits (e.g. 价格618元).
+var NV_BRAND_TERMS = [
+  [/618(大促|年中|狂欢|活动|好物节|开门红|晚会|预热|爆款|专场|盛典|购物节)/g, '六一八$1'],
+  [/520(告白|大促|活动|专场|盛典|礼物节)/g, '五二零$1'],
+  [/双11/g, '双十一'],
+  [/双12/g, '双十二'],
+  [/双旦/g, '双旦']
+];
+
 function preprocessTextForTTS(text) {
   if (!text) return text;
 
   var result = text;
   var _origLen = text.length;
 
-  // 1. Handle percentage patterns first: X% or X.X%
-  result = result.replace(/(\\d+(?:\\.\\d+)?)\\s*%/g, function(m, num) {
+  // 0. v2.21: normalize look-alike symbols
+  result = result.replace(/％/g, '%');
+  result = result.replace(/[¥￥]\s*(\d+(?:\.\d+)?)/g, '$1元');
+
+  // 0.5 v2.21: brand terms BEFORE number rules (618大促 -> 六一八大促)
+  for (var bi = 0; bi < NV_BRAND_TERMS.length; bi++) {
+    result = result.replace(NV_BRAND_TERMS[bi][0], NV_BRAND_TERMS[bi][1]);
+  }
+
+  // 1. Percentage patterns first: X% or X.X%
+  result = result.replace(/(\d+(?:\.\d+)?)\s*%/g, function(m, num) {
     var parts = num.split('.');
     var intPart = numberToChinese(parts[0]);
     var decPart = '';
@@ -2676,17 +2394,22 @@ function preprocessTextForTTS(text) {
   });
 
   // 2. Date patterns: X月X日
-  result = result.replace(/(\\d{1,2})\\s*月\\s*(\\d{1,2})\\s*[日号]/g, function(m, month, day) {
+  result = result.replace(/(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]/g, function(m, month, day) {
     return numberToChinese(month) + '月' + numberToChinese(day) + '日';
   });
 
-  // 3. Year patterns: 4-digit numbers followed by 年
-  result = result.replace(/(\\d{4})\\s*年/g, function(m, year) {
+  // 3. Year patterns: 4-digit numbers followed by 年 (digit-by-digit reading)
+  result = result.replace(/(\d{4})\s*年/g, function(m, year) {
     return numberToChineseYear(year) + '年';
   });
 
-  // 4. Phone numbers: 11 digits starting with 1
-  result = result.replace(/1[3-9]\\d{9}/g, function(m) {
+  // 3.5 v2.21: year-like numbering (届/级/款/期/季/集) also read digit-by-digit
+  result = result.replace(/(\d{3,4})(?=\s*(届|级|款|期|季|集))/g, function(m) {
+    return numberToChineseYear(m);
+  });
+
+  // 4. Phone numbers: 11 digits starting with 1 (digit-by-digit)
+  result = result.replace(/1[3-9]\d{9}/g, function(m) {
     var digitMap = ['零','一','二','三','四','五','六','七','八','九'];
     var r = '';
     for (var i = 0; i < m.length; i++) r += digitMap[parseInt(m[i], 10)];
@@ -2694,7 +2417,7 @@ function preprocessTextForTTS(text) {
   });
 
   // 5. Decimal numbers: X.XX
-  result = result.replace(/(\\d+)\\.(\\d+)/g, function(m, intPart, decPart) {
+  result = result.replace(/(\d+)\.(\d+)/g, function(m, intPart, decPart) {
     var digitMap = ['零','一','二','三','四','五','六','七','八','九'];
     var r = numberToChinese(intPart) + '点';
     for (var i = 0; i < decPart.length; i++) {
@@ -2705,24 +2428,24 @@ function preprocessTextForTTS(text) {
   });
 
   // 6. Numbers with 万/亿 (keep Chinese units, convert the number part)
-  result = result.replace(/(\\d+)\\s*万/g, function(m, num) {
+  result = result.replace(/(\d+)\s*万/g, function(m, num) {
     return numberToChinese(num) + '万';
   });
-  result = result.replace(/(\\d+)\\s*亿/g, function(m, num) {
+  result = result.replace(/(\d+)\s*亿/g, function(m, num) {
     return numberToChinese(num) + '亿';
   });
 
-  // 7. Remaining multi-digit numbers (2+ digits)
-  result = result.replace(/\\d{2,}/g, function(m) {
-    // Check if it looks like a year (4 digits, not adjacent to Chinese units)
-    if (m.length === 4) {
-      return numberToChineseYear(m);
-    }
+  // 7. v2.21 FIX: all remaining multi-digit numbers -> place-value reading.
+  //    (1000 -> 一千, 7000 -> 七千, 4999 -> 四千九百九十九)
+  //    The old rule read ALL 4-digit numbers digit-by-digit, which broke
+  //    prices/quantities ("7000套" -> "七零零零套"). Years/届级 are handled
+  //    by rules 3/3.5 above; phone numbers by rule 4.
+  result = result.replace(/\d{2,}/g, function(m) {
     return numberToChinese(m);
   });
 
   // 8. Single digits
-  result = result.replace(/\\d/g, function(m) {
+  result = result.replace(/\d/g, function(m) {
     var digitMap = ['零','一','二','三','四','五','六','七','八','九'];
     return digitMap[parseInt(m, 10)];
   });
@@ -2740,10 +2463,17 @@ function preprocessTextForTTS(text) {
   // 单个破折号 — → 逗号（双破折号 —— 已在上面处理）
   result = result.replace(/—/g, '，');
   // 竖线 | → 逗号
-  result = result.replace(/\\|/g, '，');
-  result = result.replace(/\\.{3,}/g, '等等');
+  result = result.replace(/\|/g, '，');
+  result = result.replace(/\.{3,}/g, '等等');
+  // v2.21: lone ellipsis char -> comma
+  result = result.replace(/…/g, '，');
   // Tilde → 至/到
   result = result.replace(/～/g, '至');
+  result = result.replace(/~/g, '至');
+  // v2.21: full-width colon -> comma. (Speaker prefixes are stripped before
+  // this point in multi mode; in single mode stray "label：" colons confuse
+  // prosody and could be mistaken for speaker marks by the listener.)
+  result = result.replace(/：/g, '，');
   // Hyphen/minus in range context: X-Y人, X-Y个
   result = result.replace(/([一二三四五六七八九十百千万零]+)-([一二三四五六七八九十百千万零]+)([人个条只本张架辆艘间场次块元角分])/g, function(m, a, b, unit) { return a + '到' + b + unit; });
   // Remaining hyphens in ranges with Chinese
@@ -2753,7 +2483,7 @@ function preprocessTextForTTS(text) {
   // Multiply
   result = result.replace(/×/g, '乘');
   // Plus
-  result = result.replace(/\\+/g, '加');
+  result = result.replace(/\+/g, '加');
   // Equals
   result = result.replace(/=/g, '等于');
   // Celsius
@@ -2897,7 +2627,7 @@ function renderSpeakerPatterns() {
 
 function splitTextForTTS(text, maxChars) {
   if (!text || !text.trim()) return [];
-  if (!maxChars) maxChars = S.engine === 'nicevoice' ? 150 : S.engine === 'kikivoice' ? kkMaxChars() : 250;
+  if (!maxChars) maxChars = 150;
 
   var originalLines = text.split('\\n');
 
@@ -2906,7 +2636,7 @@ function splitTextForTTS(text, maxChars) {
   var lineInfos = [];
   for (var i = 0; i < originalLines.length; i++) {
     var lineText = originalLines[i];
-    if (i > 0) merged += ' ';
+    // v2.21: no space inserted between lines (Chinese TTS turns stray spaces into odd pauses)
     var startPos = merged.length;
     merged += lineText;
     lineInfos.push({ text: lineText, startPos: startPos, endPos: merged.length });
@@ -2949,7 +2679,7 @@ function splitTextForTTS(text, maxChars) {
       currentStart = sent.start;
     } else {
       // Add sentence to current segment
-      currentText = currentText ? currentText + ' ' + sent.text : sent.text;
+      currentText = currentText ? currentText + sent.text : sent.text; // v2.21: no space join
       if (!currentStart) currentStart = sent.start;
     }
   }
@@ -3159,10 +2889,16 @@ async function nvCloneVoice(voiceDataOrFile) {
         appLog('[NV] getSyncRefStatus[' + (i+1) + '] => ' + JSON.stringify(data4).substring(0, 300), 'i');
       }
       if (data4.data && data4.data.error === 0) {
+        appLog('[NV] 文件同步完成，正在验证音色...', 'i');
+        var isValid = await nvValidateClone(referenceId);
         S.nvCloneBusy = false;
-        showToast('声音克隆完成', 'success');
-        appLog('[NV] 声音克隆完成', 's');
-
+        if (isValid) {
+          showToast('声音克隆完成并验证通过', 'success');
+          appLog('[NV] 声音克隆完成 (已验证)', 's');
+        } else {
+          showToast('声音克隆失败: 上游 API 返回错误，请稍后重试或切换引操', 'error');
+          appLog('[NV] 声音克隆失败 - 文件同步成功但 TTS 不可用', 'e');
+        }
         return referenceId;
       }
     }
@@ -3172,6 +2908,38 @@ async function nvCloneVoice(voiceDataOrFile) {
     S.nvCloneBusy = false;
     showToast('声音克隆失败: ' + e.message, 'error');
     return null;
+  }
+}
+
+// v2.18: Post-clone validation - test TTS with cloned voice to confirm it works
+async function nvValidateClone(referenceId, testText) {
+  try {
+    var vt = testText || '\u6d4b\u8bd5';
+    var vd = await fetch('/api/nv/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: vt, referenceId: referenceId })
+    });
+    var vdata = await vd.json();
+    if (vdata.code === 70002006) {
+      appLog('[NV] \u9a8c\u8bc1\u88ab\u9650\u6d41\uff0c\u7b49\u5f8516s\u540e\u91cd\u8bd5', 'w');
+      await sleep(16000);
+      vd = await fetch('/api/nv/tts', {
+        method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: vt, referenceId: referenceId })
+      });
+      vdata = await vd.json();
+    }
+    if (vdata.code === 200 && vdata.data && vdata.data.taskSn) {
+      appLog('[NV] \u514b\u9a8c\u786e\u8ba4\u97f3\u8272\u53ef\u7528', 's');
+      return true;
+    }
+    appLog('[NV] \u514b\u9a8c\u5931\u8d25: TTS code=' + vdata.code + '\\n' + JSON.stringify(vdata).substring(0, 200), 'w');
+    return false;
+  } catch(ve) {
+    appLog('[NV] \u514b\u9a8c\u5f02\u5e38: ' + ve.message, 'w');
+    return false;
   }
 }
 
@@ -3274,7 +3042,7 @@ async function nvGenerateAll(segments, referenceId) {
 
     try {
       appLog('[NV] 生成段' + (i+1) + '/' + S.segments.length, 'i');
-      var audioBlob = await nvGenerateSegment((S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : await preprocessTextForTTSSmart(seg.text), referenceId, i);
+      var audioBlob = await nvGenerateSegment(await preprocessTextForTTSSmart((S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : seg.text), referenceId, i);
       if (!audioBlob) {
         seg.status = 'cancelled';
         renderSegmentTable();
@@ -3304,135 +3072,6 @@ async function nvGenerateAll(segments, referenceId) {
   }
 }
 
-// ==================== IndexTTS Generation ====================
-async function idxGenerateAll(segments) {
-  var retryCount = S.config.retryCount;
-  var pollInterval = S.config.pollInterval;
-  var apiBase = S.config.apiBase;
-  var language = S.config.language;
-  var speakerWav = S.speakerVoiceData['默认'] ? S.speakerVoiceData['默认'].audioFile.base64 : null;
-  var concurrency = S.config.concurrency;
-
-  var indices = [];
-  for (var i = 0; i < S.segments.length; i++) indices.push(i);
-
-  var nextIdx = 0;
-  var active = new Map();
-
-  function launchNext() {
-    while (nextIdx < indices.length && active.size < concurrency && !S.cancelRequested) {
-      var segIdx = indices[nextIdx++];
-      var p = idxProcessSegment(segIdx, apiBase, language, speakerWav, retryCount, pollInterval);
-      var entry = { promise: p, segIdx: segIdx };
-      p.then(function() { active.delete(entry); }, function() { active.delete(entry); });
-      active.set(entry, entry);
-    }
-  }
-
-  launchNext();
-  while (active.size > 0) {
-    if (S.cancelRequested) {
-      for (var i = 0; i < S.segments.length; i++) {
-        if (S.segments[i].status === 'pending' || S.segments[i].status === 'submitting' || S.segments[i].status === 'processing') {
-          S.segments[i].status = 'cancelled';
-        }
-      }
-      renderSegmentTable();
-      updateProgress();
-      break;
-    }
-    var promises = [];
-    active.forEach(function(entry) { promises.push(entry.promise); });
-    await Promise.race(promises);
-    launchNext();
-  }
-}
-
-async function idxProcessSegment(segIdx, apiBase, language, speakerWav, retryCount, pollInterval) {
-  var seg = S.segments[segIdx];
-  seg.status = 'submitting';
-  renderSegmentTable();
-
-  for (var attempt = 0; attempt <= retryCount; attempt++) {
-    if (S.cancelRequested) {
-      seg.status = 'cancelled';
-      renderSegmentTable();
-      break;
-    }
-    try {
-      var submitResp = await fetch(apiBase + '/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: (S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : await preprocessTextForTTSSmart(seg.text), speaker_wav: speakerWav, language: language })
-      });
-      if (!submitResp.ok) {
-        throw new Error('Submit failed: ' + submitResp.status);
-      }
-      var submitData = await submitResp.json();
-      appLog('[IDX] generate => ' + JSON.stringify(submitData).substring(0, 300), 'i');
-      if (!submitData.job_id) {
-        throw new Error('No job_id returned');
-      }
-
-      seg.jobId = submitData.job_id;
-      seg.status = 'processing';
-      renderSegmentTable();
-
-      for (var poll = 0; poll < 300; poll++) {
-        if (S.cancelRequested) {
-          seg.status = 'cancelled';
-          renderSegmentTable();
-          return;
-        }
-        await sleep(pollInterval);
-        var statusResp = await fetch(apiBase + '/status/' + seg.jobId);
-        if (!statusResp.ok) {
- continue;
-        }
-        var statusData = await statusResp.json();
-        if (poll % 5 === 0 || statusData.status === 'completed') {
-          appLog('[IDX] status[' + (poll+1) + '] => ' + JSON.stringify(statusData).substring(0, 200), 'i');
-        }
-
-        if (statusData.status === 'completed') {
-          var resultResp = await fetch(apiBase + '/result/' + seg.jobId);
-          if (!resultResp.ok) throw new Error('Failed to get audio');
-          var audioArrayBuffer = await resultResp.arrayBuffer();
-          seg.audioBlob = new Blob([audioArrayBuffer], { type: 'audio/wav' });
-          try {
-            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            var audioBuffer = await audioCtx.decodeAudioData(audioArrayBuffer.slice(0));
-            seg.duration = audioBuffer.duration;
-            audioCtx.close();
-          } catch(de) {
-            seg.duration = audioArrayBuffer.byteLength / (44100 * 2);
-          }
-          seg.status = 'done';
-          renderSegmentTable();
-          updateProgress();
-          return;
-        } else if (statusData.status === 'error') {
-          throw new Error('API error');
-        }
-      }
-      throw new Error('Polling timeout');
-    } catch(e) {
-      if (attempt < retryCount && !S.cancelRequested) {
-        seg.status = 'submitting';
-        renderSegmentTable();
-        await sleep(1000 * (attempt + 1));
-        continue;
-      }
-      seg.status = 'error';
-      seg.error = e.message;
-      renderSegmentTable();
-      updateProgress();
-      return;
-    }
-  }
-}
-
-
 // ==================== Log Console ====================
 function appLog(msg, type) {
   type = type || 'i';
@@ -3443,322 +3082,6 @@ function appLog(msg, type) {
   e.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
   c.appendChild(e);
   c.scrollTop = c.scrollHeight;
-}
-
-// ==================== KikiVoice Functions ====================
-var KK_MAX_RETRIES = 3;
-var KK_MODEL_IDS = {'kiki_core':'mCore','kiki_pro':'mPro','kiki_multilingual':'mMulti'};
-
-function kkMaxChars() {
-  if (S.kkCaps && S.kkCaps.model_capabilities && S.kkCaps.model_capabilities[S.kkModel])
-    return S.kkCaps.model_capabilities[S.kkModel].max_text_length || 1000;
-  if (S.kkModel === 'kiki_pro') return 500;
-  if (S.kkModel === 'kiki_multilingual') return 2000;
-  return 1000;
-}
-
-function pickKKModel(m) {
-  S.kkModel = m;
-  Object.entries(KK_MODEL_IDS).forEach(function(entry) {
-    var el = document.getElementById(entry[1]);
-    if (el) el.className = 'kk-model' + (entry[0] === m ? ' sel' : '');
-  });
-  var isPro = m === 'kiki_pro';
-  var emotionRow = document.getElementById('emotionRow');
-  var intensityRow = document.getElementById('intensityRow');
-  if (emotionRow) emotionRow.className = 'kk-param-row' + (isPro ? ' kk-pro-only active' : ' kk-pro-only');
-  if (intensityRow) intensityRow.className = 'kk-param-row' + (isPro ? ' kk-pro-only active' : ' kk-pro-only');
-  updateTextStats();
-}
-
-function updKKParam() {
-  var speedEl = document.getElementById('kSpeed');
-  var volEl = document.getElementById('kVolume');
-  var speedValEl = document.getElementById('kSpeedVal');
-  var volValEl = document.getElementById('kVolumeVal');
-  if (speedEl && speedValEl) speedValEl.textContent = parseFloat(speedEl.value).toFixed(1);
-  if (volEl && volValEl) volValEl.textContent = volEl.value;
-}
-
-async function kGet(path) {
-  var r = await fetch('/api/kiki' + path + (path.includes('?') ? '&' : '?') + 'uuid=' + encodeURIComponent(S.kkUuid));
-  var d;
-  try { d = await r.json(); } catch(e) { d = { error_code: -1, msg: 'Invalid JSON' }; }
-  appLog('[KK] GET ' + path + ' => ' + r.status + ' | error_code=' + (d.error_code !== undefined ? d.error_code : '?'), d.error_code === 0 ? 'i' : 'e');
-  if (d.msg) appLog('[KK] msg: ' + d.msg, d.error_code === 0 ? 'i' : 'w');
-  // Always log full response data for debugging
-  appLog('[KK] 完整响应: ' + JSON.stringify(d).substring(0, 500), 'i');
-  return d;
-}
-
-async function kPost(path, body) {
-  var r = await fetch('/api/kiki' + path + (path.includes('?') ? '&' : '?') + 'uuid=' + encodeURIComponent(S.kkUuid), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Kiki-Uuid': S.kkUuid },
-    body: JSON.stringify(body)
-  });
-  var d;
-  try { d = await r.json(); } catch(e) { d = { error_code: -1, msg: 'Invalid JSON' }; }
-  appLog('[KK] POST ' + path + ' => ' + r.status + ' | error_code=' + (d.error_code !== undefined ? d.error_code : '?'), d.error_code === 0 ? 'i' : 'e');
-  if (d.msg) appLog('[KK] msg: ' + d.msg, d.error_code === 0 ? 'i' : 'w');
-  // Always log full response data for debugging
-  appLog('[KK] 完整响应: ' + JSON.stringify(d).substring(0, 500), 'i');
-  if (d.available_count !== undefined || d.user_tts_available_count !== undefined) updKKQuota(d);
-  return d;
-}
-
-async function testKK() {
-  appLog('[KK] 检测连接...', 'i');
-  var cs = document.getElementById('kkConn');
-  if (cs) { cs.className = 'kk-conn-status pen'; cs.innerHTML = '<span class="kk-conn-dot"></span>检测中...'; }
-  try {
-    var d = await kGet('/model-capabilities');
-    appLog('[KK] model-capabilities完整响应: ' + JSON.stringify(d).substring(0, 800), 'i');
-    if (d.error_code === 0) {
-      S.kkConnected = true; S.kkCaps = d;
-      if (cs) { cs.className = 'kk-conn-status ok'; cs.innerHTML = '<span class="kk-conn-dot"></span>已连接'; }
-      appLog('[KK] 连接成功！', 's');
-      var c = d.model_capabilities || {};
-      if (c.kiki_core) { var el = document.querySelector('#mCore .mc'); if (el) el.textContent = c.kiki_core.credit_rate + 'x'; }
-      if (c.kiki_pro) { var el = document.querySelector('#mPro .mc'); if (el) el.textContent = c.kiki_pro.credit_rate + 'x'; }
-      if (c.kiki_multilingual && c.kiki_multilingual.credit_rates && c.kiki_multilingual.credit_rates.v2) { var el = document.querySelector('#mMulti .mc'); if (el) el.textContent = c.kiki_multilingual.credit_rates.v2.rate + 'x'; }
-      updateTextStats();
-    } else {
-      S.kkConnected = false;
-      if (cs) { cs.className = 'kk-conn-status fail'; cs.innerHTML = '<span class="kk-conn-dot"></span>失败'; }
-      appLog('[KK] 连接失败: ' + (d.msg || d.error_summary || JSON.stringify(d).substring(0, 300)), 'e');
-    }
-  } catch(e) {
-    S.kkConnected = false;
-    if (cs) { cs.className = 'kk-conn-status fail'; cs.innerHTML = '<span class="kk-conn-dot"></span>错误'; }
-    appLog('[KK] 错误: ' + e.message, 'e');
-  }
-}
-
-function updKKQuota(d) {
-  if (!d) return;
-  var a = d.available_count ?? d.available ?? d.user_tts_available_count;
-  var u = d.used_count ?? d.used ?? d.user_tts_used_count;
-  var m = d.max_count ?? d.max ?? S.kkQuota.m;
-  var r = d.next_reset_days ?? d.resetTime;
-  if (typeof a === 'number') S.kkQuota.a = a;
-  if (typeof u === 'number') S.kkQuota.u = u;
-  if (typeof m === 'number') S.kkQuota.m = m;
-  if (typeof r === 'number') S.kkQuota.r = r;
-  var qAvail = document.getElementById('qAvail');
-  var qUsed = document.getElementById('qUsed');
-  var qReset = document.getElementById('qReset');
-  var qBar = document.getElementById('qBar');
-  if (qAvail) qAvail.textContent = S.kkQuota.a.toLocaleString();
-  if (qUsed) qUsed.textContent = S.kkQuota.u.toLocaleString();
-  if (qReset) qReset.textContent = S.kkQuota.r + '天后重置';
-  var p = S.kkQuota.m > 0 ? (S.kkQuota.a / S.kkQuota.m * 100) : 0;
-  if (qBar) { qBar.style.width = p + '%'; qBar.className = 'kk-qb ' + (p >= 60 ? 'g' : p >= 30 ? 'y' : 'r'); }
-  if (d.deducted_credits) appLog('[KK] 本次扣除: ' + d.deducted_credits, 'i');
-}
-
-// CF Verification
-function showCFPanel(vpath, wip, rawResp) {
-  appLog('[CF] 显示极验验证面板', 'i');
-  appLog('[CF] Worker IP: ' + (wip || '未知'), 'i');
-  appLog('[CF] 验证路径: ' + (vpath || '空'), 'i');
-  appLog('[CF] 原始响应: ' + (rawResp || '{}'), 'w');
-  if (!vpath) {
-    appLog('[CF] 警告: validation_url_path为空，尝试使用默认路径', 'w');
-    vpath = '/auth/geetest-validation';
-  }
-  S.cfProxyUrl = location.origin + '/api/kiki/geetest-page?uuid=' + encodeURIComponent(S.kkUuid) + '&path=' + encodeURIComponent(vpath);
-  var cfIP = document.getElementById('cfIP');
-  var cfUUID = document.getElementById('cfUUID');
-  var cfUrl = document.getElementById('cfUrl');
-  var cfRaw = document.getElementById('cfRaw');
-  var cfPanel = document.getElementById('cfPanel');
-  if (cfIP) cfIP.textContent = wip || '未知';
-  if (cfUUID) cfUUID.textContent = S.kkUuid;
-  if (cfUrl) cfUrl.textContent = S.cfProxyUrl;
-  if (cfRaw) cfRaw.textContent = rawResp || '{}';
-  if (cfPanel) cfPanel.style.display = 'block';
-  var iframe = document.getElementById('cfIframe');
-  var overlay = document.getElementById('cfIframeOverlay');
-  if (overlay) overlay.style.display = 'flex';
-  if (iframe) {
-    iframe.onload = function() { if (overlay) overlay.style.display = 'none'; appLog('[CF] 验证页面已加载', 's'); };
-    iframe.src = S.cfProxyUrl;
-  }
-  if (cfPanel) cfPanel.scrollIntoView({behavior: 'smooth', block: 'center'});
-}
-function hideCFPanel() {
-  var cfPanel = document.getElementById('cfPanel');
-  var cfIframe = document.getElementById('cfIframe');
-  if (cfPanel) cfPanel.style.display = 'none';
-  if (cfIframe) cfIframe.src = 'about:blank';
-}
-function openCFNewTab() { window.open(S.cfProxyUrl, '_blank'); appLog('[CF] 已在新标签页打开', 'i'); }
-function waitForCFVerification() { return new Promise(function(resolve, reject) { S.cfResolve = resolve; S.cfReject = reject; }); }
-function cfDone() {
-  hideCFPanel();
-  appLog('[CF] 用户确认验证完成，继续生成...', 's');
-  if (S.cfResolve) { S.cfResolve(); S.cfResolve = null; S.cfReject = null; }
-}
-// Auto-detect geetest verification completion via postMessage from iframe
-window.addEventListener('message', function(ev) {
-  if (ev.data && ev.data.type === 'geetest-success') {
-    appLog('[CF] 检测到极验验证成功（自动）', 's');
-    cfDone();
-  }
-  if (ev.data && ev.data.type === 'geetest-error') {
-    appLog('[CF] 极验验证失败', 'e');
-  }
-});
-function cfCancel() {
-  hideCFPanel();
-  appLog('[CF] 用户取消验证', 'e');
-  if (S.cfReject) { S.cfReject(new Error('用户取消CF验证')); S.cfReject = null; S.cfResolve = null; }
-  S.cancelRequested = true;
-}
-
-// KikiVoice generation
-async function kkGenerateAll(segments) {
-  // Auto-detect connection if not already connected
-  if (!S.kkConnected) {
-    appLog('[KK] 未连接，自动检测连接...', 'w');
-    await testKK();
-    if (!S.kkConnected) throw new Error('KikiVoice连接失败，请检查网络');
-  }
-  var vn = (S.speakerVoiceData['默认'] && S.speakerVoiceData['默认'].audioFile && S.speakerVoiceData['默认'].audioFile.name) ? S.speakerVoiceData['默认'].audioFile.name.replace(/\\.[^.]+$/, '') : 'MyVoice';
-
-  appLog('[KK] 1.上传声音...', 'i');
-  if (!S.kkVoiceId) {
-    var sd = await kGet('/get-sig');
-    if (sd.error_code !== 0) throw new Error('签名失败:' + (sd.msg || sd.error_summary || JSON.stringify(sd).substring(0, 200)));
-    appLog('[KK] 签名OK', 's');
-    appLog('[KK] 上传音频文件...', 'i');
-    var defaultVoice = S.speakerVoiceData['默认'];
-    var defaultAudioFile = defaultVoice ? defaultVoice.audioFile : null;
-    var uploadBlob = (defaultAudioFile && defaultAudioFile.wavBlob) || (defaultAudioFile && defaultAudioFile.base64 ? (function() { var binary = atob(defaultAudioFile.base64); var bytes = new Uint8Array(binary.length); for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); return new Blob([bytes], {type: 'audio/wav'}); })() : null);
-    if (!uploadBlob) throw new Error('无音频数据');
-    var uploadFile = new File([uploadBlob], (defaultAudioFile.name || 'audio.wav'), { type: uploadBlob.type || 'audio/wav' });
-    var fd = new FormData();
-    fd.append('voice-file', uploadFile);
-    fd.append('sig', sd.sig);
-    fd.append('create_url', sd.kiki_voice_microservices_api_create_voice_url);
-    fd.append('voice_name', vn);
-    var r = await fetch('/api/kiki/upload-voice?uuid=' + encodeURIComponent(S.kkUuid), { method: 'POST', body: fd });
-    var d;
-    try { d = await r.json(); } catch(e) { throw new Error('上传响应解析失败'); }
-    appLog('[KK] 上传: errcode=' + d.errcode, d.errcode === 0 ? 's' : 'e');
-    if (d.errcode !== 0) {
-      var em = {'-1':'上传失败','-2':'参数错误','-3':'语音达上限','-4':'不支持的格式','-5':'页面过期'};
-      throw new Error('上传[' + d.errcode + ']:' + (em[d.errcode] || d.errmsg || '未知'));
-    }
-    S.kkVoiceId = d.voice_id;
-    appLog('[KK] 声音ID: ' + S.kkVoiceId, 's');
-  } else {
-    appLog('[KK] 使用已有声音: ' + S.kkVoiceId, 'i');
-  }
-
-  appLog('[KK] 2.检测语言...', 'i');
-  var lr = await kPost('/detect-language', { text: segments.join(' ').substring(0, 200) });
-  var lc = 'zh';
-  if (lr.error_code === 0 && lr.detected_language) {
-    lc = lr.detected_language.code;
-    appLog('[KK] 语言: ' + lr.detected_language.name + '(' + lc + ')', 's');
-  } else appLog('[KK] 默认中文', 'w');
-
-  appLog('[KK] 3.分段生成(' + S.segments.length + '段)', 'i');
-  for (var i = 0; i < S.segments.length; i++) {
-    if (S.cancelRequested) break;
-    var seg = S.segments[i];
-    seg.status = 'submitting';
-    renderSegmentTable();
-    var blob = null;
-    for (var retry = 0; retry <= KK_MAX_RETRIES; retry++) {
-      if (S.cancelRequested) { seg.status = 'cancelled'; renderSegmentTable(); break; }
-      try {
-        appLog('[KK] 创建任务(尝试' + (retry+1) + ')...', 'i');
-        var td = await kPost('/create-clone-task', {
-          text: (S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : await preprocessTextForTTSSmart(seg.text), voice_id: S.kkVoiceId, lang_code: lc, model_type: S.kkModel,
-          emotion: S.kkModel === 'kiki_pro' ? (document.getElementById('kEmotion') ? document.getElementById('kEmotion').value : 'normal') : 'normal',
-          intensity: S.kkModel === 'kiki_pro' ? (document.getElementById('kIntensity') ? document.getElementById('kIntensity').value : 'normal') : 'normal',
-          gender: document.getElementById('kGender') ? parseInt(document.getElementById('kGender').value) : 0,
-          speed: document.getElementById('kSpeed') ? parseFloat(document.getElementById('kSpeed').value) : 1.0,
-          volume: document.getElementById('kVolume') ? parseInt(document.getElementById('kVolume').value) : 100,
-          format: 'mp3', hq: document.getElementById('kHq') ? parseInt(document.getElementById('kHq').value) : 0,
-          mver: S.kkModel === 'kiki_multilingual' ? 'v2' : 'default'
-        });
-        if (td.error_code !== 0 && td.error_code !== undefined) {
-          if (td.error_code === 777) {
-            appLog('[KK] 收到777 - 需要极验验证!', 'w');
-            appLog('[KK] Worker IP: ' + (td.public_ip || '未知'), 'w');
-            appLog('[KK] 验证路径: ' + (td.validation_url_path || '空'), 'w');
-            appLog('[KK] auth_solution: ' + (td.auth_solution || 'GEETEST'), 'i');
-            appLog('[KK] 完整777响应: ' + JSON.stringify(td), 'w');
-            showCFPanel(td.validation_url_path || '', td.public_ip || '', JSON.stringify(td, null, 2));
-            await waitForCFVerification();
-            appLog('[KK] 验证完成，重试...', 'i');
-            continue;
-          }
-          if (td.error_code === 'QUOTA_EXCEEDED' || td.error_code === 403) {
-            if (td.quota_info) updKKQuota(td.quota_info);
-            throw new Error('积分不足！剩余: ' + (td.available_count || 0));
-          }
-          if (td.error_code === 'IP_DISABLED') throw new Error('IP被禁用');
-          throw new Error('任务失败[' + td.error_code + ']:' + (td.msg || td.error_summary || JSON.stringify(td).substring(0, 300)));
-        }
-        if (!td.success && td.error_code === undefined) throw new Error('任务失败: ' + JSON.stringify(td).substring(0, 300));
-        var jid = td.job_id;
-        if (!jid) throw new Error('无job_id');
-        appLog('[KK] 任务: ' + jid, 's');
-        if (td.quota_info) updKKQuota(td.quota_info);
-        var hb = (td.heartbeat_interval_seconds || 3) * 1000;
-        var est = td.estimated_time_seconds || 30;
-        appLog('[KK] 预计' + est + 's', 'i');
-        seg.status = 'processing';
-        renderSegmentTable();
-        var done = false;
-        var maxPoll = Math.ceil(est / (hb / 1000)) + 30;
-        for (var p = 0; p < maxPoll; p++) {
-          if (S.cancelRequested) { seg.status = 'cancelled'; renderSegmentTable(); break; }
-          await sleep(hb);
-          var sd2 = await kGet('/job-status?job_id=' + jid);
-          if (sd2.error_code !== 0) { appLog('[KK] 轮询错误:' + sd2.error_code, 'e'); continue; }
-          var js = sd2.job_state;
-          appLog('[KK] 轮询[' + (p+1) + ']: state=' + js, 'i');
-          if (js === 1) {
-            done = true;
-            var au = sd2.audiourl;
-            if (au) {
-              appLog('[KK] 音频OK', 's');
-              var ar = await fetch('/api/kiki-audio?url=' + encodeURIComponent(au) + '&uuid=' + encodeURIComponent(S.kkUuid));
-              if (ar.ok) blob = await ar.blob(); else throw new Error('下载失败:' + ar.status);
-            } else throw new Error('无音频URL');
-            if (sd2.quota_info) updKKQuota(sd2.quota_info);
-            else if (typeof sd2.user_tts_available_count === 'number') updKKQuota({available: sd2.user_tts_available_count, used: sd2.user_tts_used_count});
-            break;
-          }
-          if (js === -1) throw new Error('任务失败: ' + (sd2.msg || sd2.error_summary || ''));
-        }
-        if (!done) throw new Error('任务超时');
-        if (blob) break;
-      } catch(e) {
-        appLog('[KK] 尝试' + (retry+1) + '失败: ' + e.message, 'e');
-        if (e.message.includes('积分') || e.message.includes('IP被禁') || e.message.includes('取消CF')) throw e;
-        if (retry < KK_MAX_RETRIES) { appLog('5秒后重试...', 'w'); await sleep(5000); }
-      }
-    }
-    if (blob) {
-      seg.audioBlob = blob;
-      try { var ac = new (window.AudioContext||window.webkitAudioContext)(); var ab = await ac.decodeAudioData(await blob.arrayBuffer()); seg.duration = ab.duration; ac.close(); } catch(de) { seg.duration = blob.size / (24000*2); }
-      seg.status = 'done';
-      appLog('[KK] 段' + (i+1) + ' OK (' + Math.round(blob.size/1024) + 'KB)', 's');
-    } else {
-      seg.status = S.cancelRequested ? 'cancelled' : 'error';
-      if (!S.cancelRequested) seg.error = 'KikiVoice生成失败';
-      appLog('[KK] 段' + (i+1) + ' 失败', 'e');
-    }
-    renderSegmentTable();
-    updateProgress();
-  }
 }
 
 // ==================== Main Generation Entry ====================
@@ -3802,7 +3125,7 @@ async function startGenerate() {
   // Set project name: use docx filename if available, otherwise timestamp
   S.projectName = S.docxFileName || S.downloadTimestamp;
 
-  var maxChars = S.engine === 'nicevoice' ? (S.config.nvMaxChars || 150) : S.engine === 'kikivoice' ? kkMaxChars() : (S.config.maxChars || 250);
+  var maxChars = (S.config.nvMaxChars || 150);
 
   // Build segments based on speaker mode
   if (S.speakerMode === 'multi') {
@@ -3822,6 +3145,7 @@ async function startGenerate() {
     if (S.segments.length === 0) { showToast('文本为空或无法分段', 'error'); S.isGenerating = false; return; }
     appLog('[GEN] 引擎=' + S.engine + ' maxChars=' + maxChars + ' 分段数=' + S.segments.length + ' 说话人数=' + S.detectedSpeakers.length, 'i');
     // v2.14: Check speaker alternation issues
+    _alternationDismissed = false; // v2.20: reset
     checkSpeakerAlternation();
   } else {
     var segments = splitTextForTTS(text, maxChars);
@@ -3841,15 +3165,13 @@ async function startGenerate() {
   E.resultSection.classList.remove('active');
   renderSegmentTable();
   var logBox = document.getElementById('logBox'); if (logBox) logBox.innerHTML = '';
-  S.kkVoiceId = null;
-
   S.elapsedStart = Date.now();
   updateElapsed();
   S.elapsedTimer = setInterval(updateElapsed, 1000);
   E.elapsed.style.display = 'block';
 
-  if (S.engine === 'nicevoice') {
-    // NiceVoice flow
+  {
+    // v2.21: NiceVoice is the only engine
     if (S.speakerMode === 'multi') {
       await nvMultiSpeakerGenerate();
     } else {
@@ -3859,27 +3181,13 @@ async function startGenerate() {
         await nvGenerateAll(S.segments, referenceId);
       }
     }
-  } else if (S.engine === 'kikivoice') {
-    // KikiVoice flow
-    if (S.speakerMode === 'multi') {
-      await kkMultiSpeakerGenerate();
-    } else {
-      await kkGenerateAll(S.segments);
-    }
-  } else {
-    // IndexTTS flow
-    if (S.speakerMode === 'multi') {
-      await idxMultiSpeakerGenerate();
-    } else {
-      await idxGenerateAll(S.segments);
-    }
   }
 
   // Done
   clearInterval(S.elapsedTimer);
   S.isGenerating = false;
   E.generateBtn.disabled = false;
-  var btnLabel = S.engine === 'nicevoice' ? '&#x1F680; 开始合成 (NiceVoice)' : S.engine === 'kikivoice' ? '&#x1F680; 开始合成 (KikiVoice)' : '&#x1F680; 开始合成 (IndexTTS)';
+  var btnLabel = '&#x1F680; 开始合成 (NiceVoice)';
   E.genBtnText.innerHTML = btnLabel;
   E.cancelBtn.style.display = 'none';
   // v2.17: Re-render segment table so cells become editable now that isGenerating=false
@@ -3980,7 +3288,7 @@ async function nvMultiSpeakerGenerate() {
 
     try {
       appLog('[NV] 生成段' + (i+1) + '/' + S.segments.length + ' (说话人: ' + (seg.speaker || '默认') + ')', 'i');
-      var audioBlob = await nvGenerateSegment((S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : await preprocessTextForTTSSmart(seg.text), refId, i);
+      var audioBlob = await nvGenerateSegment(await preprocessTextForTTSSmart((S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : seg.text), refId, i);
       if (!audioBlob) {
         seg.status = 'cancelled';
         renderSegmentTable();
@@ -4002,270 +3310,6 @@ async function nvMultiSpeakerGenerate() {
       seg.status = 'error';
       seg.error = e.message;
     }
-    renderSegmentTable();
-    updateProgress();
-  }
-}
-
-async function kkMultiSpeakerGenerate() {
-  // Generate segments using the appropriate voice for each speaker
-  var kkVoiceIds = {};
-
-  // Upload voices for each speaker
-  for (var si = 0; si < S.detectedSpeakers.length; si++) {
-    var sp = S.detectedSpeakers[si];
-    var voiceData = S.speakerVoiceData[sp.name];
-    if (!voiceData) { appLog('[KK] 说话人 ' + sp.name + ' 未分配音源', 'e'); continue; }
-
-    appLog('[KK] 上传说话人音源: ' + sp.name, 'i');
-    var voiceId = await kkUploadVoice(voiceData.audioFile, sp.name);
-    kkVoiceIds[sp.name] = voiceId;
-    if (S.cancelRequested) return;
-  }
-
-  // Generate segments
-  for (var i = 0; i < S.segments.length; i++) {
-    if (S.cancelRequested) break;
-    var seg = S.segments[i];
-    var voiceId = kkVoiceIds[seg.speaker];
-    if (!voiceId) {
-      seg.status = 'error';
-      seg.error = '说话人 ' + seg.speaker + ' 音源上传失败';
-      renderSegmentTable();
-      updateProgress();
-      continue;
-    }
-    await kkGenerateSegmentWithVoice(seg, voiceId, i);
-  }
-}
-
-async function idxMultiSpeakerGenerate() {
-  // For IndexTTS, generate segments with appropriate speaker_wav
-  for (var i = 0; i < S.segments.length; i++) {
-    if (S.cancelRequested) break;
-    var seg = S.segments[i];
-    var voiceData = S.speakerVoiceData[seg.speaker];
-    var speakerWav = voiceData ? voiceData.audioFile.base64 : (S.speakerVoiceData['默认'] ? S.speakerVoiceData['默认'].audioFile.base64 : null);
-    if (!speakerWav) {
-      seg.status = 'error';
-      seg.error = '说话人 ' + seg.speaker + ' 未分配音源';
-      renderSegmentTable();
-      updateProgress();
-      continue;
-    }
-    await idxProcessSegmentWithWav(i, speakerWav);
-  }
-}
-
-async function idxProcessSegmentWithWav(segIdx, speakerWav) {
-  var seg = S.segments[segIdx];
-  seg.status = 'submitting';
-  renderSegmentTable();
-
-  var retryCount = S.config.retryCount;
-  var pollInterval = S.config.pollInterval;
-  var apiBase = S.config.apiBase;
-  var language = S.config.language;
-
-  for (var attempt = 0; attempt <= retryCount; attempt++) {
-    if (S.cancelRequested) {
-      seg.status = 'cancelled';
-      renderSegmentTable();
-      return;
-    }
-    try {
-      var submitResp = await fetch(apiBase + '/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: (S.previewEdits && S.previewEdits[i] !== undefined) ? S.previewEdits[i] : await preprocessTextForTTSSmart(seg.text), speaker_wav: speakerWav, language: language })
-      });
-      if (!submitResp.ok) throw new Error('Submit failed: ' + submitResp.status);
-      var submitData = await submitResp.json();
-      if (!submitData.job_id) throw new Error('No job_id returned');
-
-      seg.jobId = submitData.job_id;
-      seg.status = 'processing';
-      renderSegmentTable();
-
-      for (var poll = 0; poll < 300; poll++) {
-        if (S.cancelRequested) { seg.status = 'cancelled'; renderSegmentTable(); return; }
-        await sleep(pollInterval);
-        var statusResp = await fetch(apiBase + '/status/' + seg.jobId);
-        if (!statusResp.ok) continue;
-        var statusData = await statusResp.json();
-        if (statusData.status === 'completed') {
-          var resultResp = await fetch(apiBase + '/result/' + seg.jobId);
-          if (!resultResp.ok) throw new Error('Failed to get audio');
-          var audioArrayBuffer = await resultResp.arrayBuffer();
-          seg.audioBlob = new Blob([audioArrayBuffer], { type: 'audio/wav' });
-          try {
-            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            var audioBuffer = await audioCtx.decodeAudioData(audioArrayBuffer.slice(0));
-            seg.duration = audioBuffer.duration;
-            audioCtx.close();
-          } catch(de) { seg.duration = audioArrayBuffer.byteLength / (44100 * 2); }
-          seg.status = 'done';
-          renderSegmentTable();
-          updateProgress();
-          return;
-        } else if (statusData.status === 'error') { throw new Error('API error'); }
-      }
-      throw new Error('Polling timeout');
-    } catch(e) {
-      if (attempt < retryCount && !S.cancelRequested) {
-        seg.status = 'submitting';
-        renderSegmentTable();
-        await sleep(1000 * (attempt + 1));
-        continue;
-      }
-      seg.status = 'error';
-      seg.error = e.message;
-      renderSegmentTable();
-      updateProgress();
-      return;
-    }
-  }
-}
-
-// KikiVoice helper: upload voice and get voice_id
-async function kkUploadVoice(audioFile, speakerName) {
-  appLog('[KK] 上传说话人音源: ' + speakerName, 'i');
-
-  // Step 1: Get signature
-  var sigData = await kGet('/get-sig');
-  if (sigData.error_code !== 0) {
-    appLog('[KK] 获取签名失败', 'e');
-    return null;
-  }
-  var sig = sigData.sig || sigData.data?.sig || '';
-  var createUrl = sigData.create_url || sigData.data?.create_url || '';
-
-  if (!sig || !createUrl) {
-    appLog('[KK] 签名数据不完整', 'e');
-    return null;
-  }
-
-  // Step 2: Upload voice file
-  try {
-    var wavBlob = audioFile.wavBlob;
-    if (!wavBlob) {
-      // Need to create wav from base64
-      var audioBytes = Uint8Array.from(atob(audioFile.base64), function(c) { return c.charCodeAt(0); });
-      wavBlob = new Blob([audioBytes], { type: 'audio/wav' });
-    }
-
-    var formData = new FormData();
-    formData.append('voice-file', wavBlob, speakerName + '.wav');
-    formData.append('sig', sig);
-    formData.append('create_url', createUrl);
-    formData.append('voice_name', speakerName + '_' + Date.now());
-
-    var uploadResp = await fetch('/api/kiki/upload-voice?uuid=' + encodeURIComponent(S.kkUuid), {
-      method: 'POST',
-      body: formData
-    });
-
-    var uploadData;
-    try { uploadData = await uploadResp.json(); } catch(e) { uploadData = {}; }
-    appLog('[KK] 上传结果: ' + JSON.stringify(uploadData).substring(0, 300), 'i');
-
-    if (uploadData.error_code === 0 || uploadData.voice_id) {
-      return uploadData.voice_id || uploadData.data?.voice_id;
-    }
-
-    // May need Geetest verification
-    if (uploadData.validation_url_path || uploadData.error_code === 40001) {
-      appLog('[KK] 需要人机验证', 'w');
-      var vpath = uploadData.validation_url_path || '';
-      var wip = uploadData.worker_ip || '';
-      showCFPanel(vpath, wip, JSON.stringify(uploadData));
-      await waitForCFVerification();
-      // Retry upload after verification
-      return await kkUploadVoice(audioFile, speakerName);
-    }
-
-    return null;
-  } catch(e) {
-    appLog('[KK] 上传音源失败: ' + e.message, 'e');
-    return null;
-  }
-}
-
-async function kkGenerateSegmentWithVoice(seg, voiceId, segIdx) {
-  seg.status = 'submitting';
-  renderSegmentTable();
-
-  var gender = document.getElementById('kGender') ? parseInt(document.getElementById('kGender').value) : 0;
-  var speed = document.getElementById('kSpeed') ? parseFloat(document.getElementById('kSpeed').value) : 1.0;
-  var volume = document.getElementById('kVolume') ? parseInt(document.getElementById('kVolume').value) : 100;
-  var emotion = document.getElementById('kEmotion') ? document.getElementById('kEmotion').value : 'normal';
-  var intensity = document.getElementById('kIntensity') ? document.getElementById('kIntensity').value : 'normal';
-  var hq = document.getElementById('kHq') ? parseInt(document.getElementById('kHq').value) : 0;
-
-  var body = {
-    text: await preprocessTextForTTSSmart(seg.text),
-    voice_id: voiceId,
-    lang_code: 'zh-cn',
-    emotion: emotion,
-    intensity: intensity,
-    gender: gender,
-    model_type: S.kkModel,
-    speed: speed,
-    volume: volume,
-    format: 'mp3',
-    hq: hq,
-    mver: 'default'
-  };
-
-  try {
-    var createResp = await kPost('/create-clone-task', body);
-    if (createResp.error_code === 40001 || createResp.validation_url_path) {
-      var vpath = createResp.validation_url_path || '';
-      var wip = createResp.worker_ip || '';
-      showCFPanel(vpath, wip, JSON.stringify(createResp));
-      await waitForCFVerification();
-      createResp = await kPost('/create-clone-task', body);
-    }
-
-    if (createResp.error_code !== 0 || !createResp.job_id) {
-      throw new Error(createResp.msg || '创建任务失败');
-    }
-
-    var jobId = createResp.job_id;
-    seg.jobId = jobId;
-    seg.status = 'processing';
-    renderSegmentTable();
-
-    // Poll for result
-    for (var p = 0; p < 120; p++) {
-      if (S.cancelRequested) { seg.status = 'cancelled'; renderSegmentTable(); return; }
-      await sleep(2000);
-      var statusData = await kGet('/job-status?job_id=' + encodeURIComponent(jobId));
-      if (statusData.error_code === 0 && statusData.status === 'completed' && statusData.audio_url) {
-        var audioResp = await fetch('/api/kiki-audio?url=' + encodeURIComponent(statusData.audio_url));
-        if (audioResp.ok) {
-          var blob = await audioResp.blob();
-          seg.audioBlob = blob;
-          try { var ac = new (window.AudioContext||window.webkitAudioContext)(); var ab = await ac.decodeAudioData(await blob.arrayBuffer()); seg.duration = ab.duration; ac.close(); } catch(de) { seg.duration = blob.size / (24000*2); }
-          seg.status = 'done';
-          appLog('[KK] 段' + (segIdx+1) + ' OK (' + (seg.speaker || '默认') + ')', 's');
-        } else {
-          seg.status = 'error';
-          seg.error = '下载音频失败';
-        }
-        renderSegmentTable();
-        updateProgress();
-        return;
-      }
-      if (statusData.status === 'failed') {
-        throw new Error('KikiVoice生成失败');
-      }
-    }
-    throw new Error('KikiVoice轮询超时');
-  } catch(e) {
-    seg.status = S.cancelRequested ? 'cancelled' : 'error';
-    if (!S.cancelRequested) seg.error = e.message;
-    appLog('[KK] 段' + (segIdx+1) + ' 失败: ' + e.message, 'e');
     renderSegmentTable();
     updateProgress();
   }
@@ -4355,7 +3399,7 @@ function renderSegmentTable() {
     var genBtn2 = document.getElementById('generateBtn');
     var genBtnText2 = document.getElementById('genBtnText');
     if (genBtn2 && genBtnText2 && !genBtn2.onclick.toString().match('onGenerateClick')) {
-      genBtnText2.innerHTML = '&#x1F680; 开始合成 (' + (S.engine === 'nicevoice' ? 'NiceVoice' : S.engine === 'kikivoice' ? 'KikiVoice' : 'IndexTTS') + ')';
+      genBtnText2.innerHTML = '&#x1F680; 开始合成 (NiceVoice)';
       genBtn2.onclick = onGenerateClick;
     }
   }
@@ -4403,11 +3447,16 @@ function editSegmentText(idx, cellEl) {
     showToast('生成中无法编辑', 'error');
     return;
   }
+  // v2.20: Defensive check — cellEl may be orphaned
+  if (!cellEl || !cellEl.parentNode || !document.body.contains(cellEl)) {
+    renderSegmentTable();
+    return;
+  }
   var seg = S.segments[idx];
   if (!seg) return;
-  // If currently editing another cell, commit it first
+  // If currently editing another cell, commit it first (but do NOT re-render)
   if (_segEditingIdx >= 0 && _segEditingIdx !== idx) {
-    commitSegmentEdit();
+    commitSegmentEditSilent(); // v2.20: silent commit without re-render
   }
   _segEditingIdx = idx;
   _segEditingOriginal = seg.text;
@@ -4422,13 +3471,18 @@ function editSegmentText(idx, cellEl) {
   cellEl.onclick = null;
   cellEl.style.cursor = 'default';
   var ta = cellEl.querySelector('textarea');
+  if (!ta) return; // v2.20: guard
   ta.focus();
   ta.setSelectionRange(ta.value.length, ta.value.length);
   // Auto-resize
   ta.style.height = ta.scrollHeight + 'px';
   ta.addEventListener('input', function() { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
-  // Commit on blur
-  ta.addEventListener('blur', function() { commitSegmentEdit(); });
+  // v2.20: Commit on blur — use requestAnimationFrame to avoid race with click events
+  ta.addEventListener('blur', function(e) {
+    requestAnimationFrame(function() {
+      if (_segEditingIdx === idx) { commitSegmentEdit(); }
+    });
+  });
   // Commit on Ctrl+Enter
   ta.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -4444,6 +3498,24 @@ function editSegmentText(idx, cellEl) {
       renderSegmentTable();
     }
   });
+}
+
+// v2.20: Silent commit — saves text but does NOT re-render
+function commitSegmentEditSilent() {
+  if (_segEditingIdx < 0) return;
+  var idx = _segEditingIdx;
+  var seg = S.segments[idx];
+  if (!seg) { _segEditingIdx = -1; return; }
+  var ta = document.querySelector('textarea[data-seg-idx="' + idx + '"]');
+  var newText = ta ? ta.value.trim() : _segEditingOriginal;
+  _segEditingIdx = -1;
+  var oldText = _segEditingOriginal;
+  _segEditingOriginal = '';
+  if (newText && newText !== oldText) {
+    seg.text = newText;
+    seg.edited = true;
+    appLog('[EDIT-SILENT] 段 ' + (idx+1) + ' 已修改', 'i');
+  }
 }
 
 function commitSegmentEdit() {
@@ -4536,7 +3608,7 @@ async function applySegmentEdits() {
       var referenceId = await nvCloneVoice(voiceData);
       if (!referenceId) throw new Error('Clone failed for ' + spName);
       // Apply preprocessing (previewEdits or smart preprocess)
-      var textToUse = (S.previewEdits && S.previewEdits[idx] !== undefined) ? S.previewEdits[idx] : await preprocessTextForTTSSmart(seg.text);
+      var textToUse = await preprocessTextForTTSSmart((S.previewEdits && S.previewEdits[idx] !== undefined) ? S.previewEdits[idx] : seg.text);
       var audioBlob = await nvGenerateSegment(textToUse, referenceId, idx);
       if (audioBlob) {
         seg.audioBlob = audioBlob;
@@ -4622,7 +3694,11 @@ async function concatenateAudio() {
     sampleRate = Math.max(sampleRate, S.segmentBuffers[i].sampleRate);
   }
 
-  var totalSamples = Math.ceil(totalDuration * sampleRate);
+  // v2.21: natural pause between segments (fixes "sentences glued together")
+  var segGapMs = (S.config.segGapMs === undefined) ? 150 : parseInt(S.config.segGapMs, 10) || 0;
+  var gapSamples = Math.round((segGapMs / 1000) * sampleRate);
+
+  var totalSamples = Math.ceil(totalDuration * sampleRate) + gapSamples * Math.max(0, S.segmentBuffers.length - 1);
   var resultBuffer = audioCtx.createBuffer(numberOfChannels, totalSamples, sampleRate);
 
   var offset = 0;
@@ -4633,7 +3709,7 @@ async function concatenateAudio() {
       var sourceData = buf.getChannelData(Math.min(ch, buf.numberOfChannels - 1));
       resultBuffer.copyToChannel(sourceData, ch, offset);
     }
-    offset += buf.length;
+    offset += buf.length + gapSamples;
   }
   audioCtx.close();
 
@@ -4729,11 +3805,17 @@ function generateSrt() {
     for (var li = 0; li < entry.lines.length; li++) totalChars += entry.lines[li].text.length;
     if (totalChars === 0) totalChars = 1;
 
+    // v2.21: compute raw durations then enforce a minimum subtitle duration
+    var rawDurs = [];
+    for (var li = 0; li < entry.lines.length; li++) {
+      rawDurs.push((entry.lines[li].text.length / totalChars) * segDuration);
+    }
+    rebalanceSrtDurations(rawDurs, 0.6);
+
     var lineOffset = timeOffset;
     for (var li = 0; li < entry.lines.length; li++) {
       var lineText = entry.lines[li].text;
-      // Proportional duration based on character count
-      var lineDuration = (lineText.length / totalChars) * segDuration;
+      var lineDuration = rawDurs[li];
       var cleanText = cleanSubtitleText(lineText);
       if (cleanText) {
         srt += subtitleIndex + '\\n';
@@ -4776,10 +3858,17 @@ function generateSrtMultiSpeaker() {
     for (var li = 0; li < segLines.length; li++) totalChars += (segLines[li].text || '').length;
     if (totalChars === 0) totalChars = 1;
 
+    // v2.21: compute raw durations then enforce a minimum subtitle duration
+    var rawDurs = [];
+    for (var li = 0; li < segLines.length; li++) {
+      rawDurs.push(((segLines[li].text || '').length / totalChars) * segDuration);
+    }
+    rebalanceSrtDurations(rawDurs, 0.6);
+
     var lineOffset = timeOffset;
     for (var li = 0; li < segLines.length; li++) {
       var lineText = segLines[li].text || '';
-      var lineDuration = (lineText.length / totalChars) * segDuration;
+      var lineDuration = rawDurs[li];
       var cleanText = cleanSubtitleText(lineText);
       if (cleanText) {
         srt += subtitleIndex + '\\n';
@@ -4795,6 +3884,30 @@ function generateSrtMultiSpeaker() {
     timeOffset += segDuration;
   }
   S.resultSrt = srt;
+}
+
+// v2.21: rebalance per-line durations so no subtitle is shorter than minSec
+// (fixes "这5个字还是贴的特别近"). Time is borrowed from the longest sibling
+// within the same segment, so the segment total stays exact.
+function rebalanceSrtDurations(durs, minSec) {
+  minSec = minSec || 0.6;
+  if (!durs || durs.length < 2) return durs;
+  var total = 0;
+  for (var i = 0; i < durs.length; i++) total += durs[i];
+  if (total < minSec * durs.length) return durs; // cannot satisfy, leave as-is
+  for (var pass = 0; pass < 3; pass++) {
+    var deficit = 0, maxIdx = 0;
+    for (var i = 0; i < durs.length; i++) {
+      if (durs[i] < minSec) deficit += (minSec - durs[i]);
+      if (durs[i] > durs[maxIdx]) maxIdx = i;
+    }
+    if (deficit <= 0.001) break;
+    if (durs[maxIdx] - deficit < minSec) break;
+    for (var i = 0; i < durs.length; i++) if (durs[i] < minSec) durs[i] = minSec;
+    durs[maxIdx] -= deficit;
+    break;
+  }
+  return durs;
 }
 
 // Auto-break text into subtitle lines
@@ -4912,15 +4025,32 @@ function mapOriginalLinesToSegments() {
 
     while (linePtr < originalLines.length) {
       var lineText = originalLines[linePtr];
-      var newLen = accumulatedLen + (accumulatedLen > 0 ? 1 : 0) + lineText.length;
+      var newLen = accumulatedLen + lineText.length;
 
-      // Check if adding this line would exceed the segment text length
-      // Allow small tolerance (+3) for minor discrepancies from punctuation/space differences
+      // v2.21: no space joining anymore, so length accounting is exact.
+      // Allow small tolerance (+3) for minor discrepancies from punctuation differences
       if (newLen <= segTextLen + 3) {
         var charStart = accumulatedLen; // position within the segment text
         segLines.push({ text: lineText, charStart: charStart, charEnd: charStart + lineText.length });
         accumulatedLen = newLen;
         linePtr++;
+      } else if (accumulatedLen === 0 && segTextLen > 10 && lineText.length > 10) {
+        // v2.21: this single line is longer than the WHOLE segment -> the line
+        // was split across segments by the packer. Assign the spoken part to
+        // THIS segment and keep the remainder for the next one, so subtitles
+        // never show a whole line while only half of it is voiced (fixes
+        // "从'的'开始半句在屏幕上"). Prefer splitting at punctuation.
+        var limit = segTextLen + 3;
+        var splitAt = -1;
+        for (var p = limit; p > 5; p--) {
+          if (/[，,。！？；、]/.test(lineText.charAt(p - 1))) { splitAt = p; break; }
+        }
+        if (splitAt < 0) splitAt = limit;
+        var part1 = lineText.substring(0, splitAt);
+        var rest = lineText.substring(splitAt);
+        segLines.push({ text: part1, charStart: 0, charEnd: part1.length });
+        originalLines[linePtr] = rest;
+        break;
       } else {
         break;
       }
@@ -5333,7 +4463,7 @@ async function renderHistoryList() {
       if (!history.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text2)">暂无历史记录</div>'; return; }
       var html = '<div style="text-align:right;margin-bottom:8px"><button class="clear-btn" onclick="clearHistory()">清空历史</button></div>';
       history.forEach(function(item) {
-        var engLabel = item.engine === 'nicevoice' ? 'NV' : item.engine === 'kikivoice' ? 'KK' : 'IDX';
+        var engLabel = 'NV';
         var hasAudio = !!item.wavBlob;
         // v2.16: Check if segment audios are available for edit/restore
         var hasSegmentAudios = !!(item.segmentAudios && item.segmentAudios.length > 0);
@@ -5545,7 +4675,7 @@ async function loadPreview() {
   E.regenGlmBtn.style.display = 'inline-block';
 
   // Build segments first to know how many to preview
-  var maxChars = S.engine === 'nicevoice' ? (S.config.nvMaxChars || 150) : S.engine === 'kikivoice' ? kkMaxChars() : (S.config.maxChars || 250);
+  var maxChars = (S.config.nvMaxChars || 150);
   var segs = [];
   if (S.speakerMode === 'multi') {
     var spGroups = splitTextBySpeakers(text, maxChars);
@@ -5598,9 +4728,22 @@ function onGenerateClick() {
   }
 }
 
+// v2.20: One-time dismiss for alternation false positives
+var _alternationDismissed = false;
+function dismissAlternationWarning() {
+  _alternationDismissed = true;
+  E.alternationWarning.style.display = 'none';
+  appLog('[ALT-DISMISS] 说话人交替警告已忽略', 'i');
+}
+
 // ---- Speaker Alternation Check ----
 function checkSpeakerAlternation() {
   if (S.speakerMode !== 'multi' || S.segments.length < 2) {
+    E.alternationWarning.style.display = 'none';
+    return;
+  }
+  // v2.20: If user previously dismissed, skip check
+  if (_alternationDismissed) {
     E.alternationWarning.style.display = 'none';
     return;
   }
@@ -6095,4 +5238,4 @@ function downloadWavVoiceOnly() {
 </body>
 </html>`;
 }
-// v2.17 source — Deployed: 2026-06-18
+// v2.21.0 source — channel cleanup + NiceVoice input-layer fixes, deployed 2026-09-29

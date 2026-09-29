@@ -1,12 +1,14 @@
 // ============================================================
-// TTS Voice Lab v2.17 — Cloudflare Worker
+// TTS Voice Lab v2.18 — Cloudflare Worker
 // NiceVoice (primary) + IndexTTS + KikiVoice (backup)
 // Voice cloning TTS with subtitle generation & JianYing export
-// v2.17: fix segment editing not clickable after generation completes
-//        (S.isGenerating=false was set but renderSegmentTable() not re-called).
+// v2.19: fix NV TTS 400 — upstream /clone/tts rejects HMAC-signed requests
+//        (1) TTS + getItemByTaskSn proxied WITHOUT HMAC signing (upstream requirement)
+//        (2) Clone management endpoints (getUploadUrl/saveRefAudio2/getSyncRefStatus) still signed
+//        (3) Updated version, readme, changelog
 // ============================================================
 
-const VERSION = '2.17.0';
+const VERSION = '2.20.1';
 const DEFAULT_INDEX_API = 'https://kozzzq-indextts2api.hf.space';
 
 // NiceVoice API constants
@@ -40,7 +42,7 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 ## 🔧 功能特性
 
 - **三引擎支持**：NiceVoice（推荐）+ IndexTTS + KikiVoice，一键切换
-- **NiceVoice**：免费无限制语音克隆，无需登录，API 代理自动签名
+- **NiceVoice**：免费无限制语音克隆，无需登录，API 代理自动签名（上游克隆偶有不稳定，v2.18 增加克隆后验证）
 - **IndexTTS**：基于 kozzzq/indextts2api REST API，支持并发生成
 - **KikiVoice**：备选 TTS 引擎，三种模型（Core/Pro/Multilingual），每周 60,000 免费积分
 - **文本优先工作流**：先输入文本，自动检测说话人，再为每人分配音源
@@ -111,6 +113,17 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 
 ## 📝 更新日志
 
+### v2.19.0 (2026-07-24)
+
+**修复**
+- 修复 NiceVoice TTS 始终返回 400 的根本原因：上游 /clone/tts 端点拒绝 HMAC 签名请求
+- TTS 和 getItemByTaskSn 两个端点改为不签名代理，其余克隆管理端点（getUploadUrl/saveRefAudio2/getSyncRefStatus）保持签名
+
+**调查发现**
+- 上游 NiceVoice 已将存储从 COS 迁移至 R2，训练后端同步有约 20 秒延迟（COS 错误为瞬态，轮询会自动恢复）
+- 上游网站自身对 TTS 请求不使用 HMAC 签名
+- 任务状态查询端点为 getItemByTaskSn（非 getTaskStatus，后者已 404）
+
 ### v2.14.0 (2026-06-17)
 
 **新增**
@@ -145,8 +158,9 @@ v2.14 在 v2.13 基础上引入：GLM 系统提示词可编辑、Before/After �
 
 ### v2.13.0 (2026-06-12)
 
-- 修复 nvCloneVoice 音色复用：nvReferenceId 现在正确传递，已有音色无需重复克隆
-- 修复无音频数据时的音色复用：即使 localStorage 中没有 base64 数据，只要 referenceId 有效也能复用
+- 修复 NV 克隆上传 Content-Type 错误：audio/wav -> audio/mpeg（匹配实际 MP3 文件）
+- 新增克隆后 TTS 验证：自动用克隆音色发送测试请求，确认音色真正可用
+- 优化 NV 克隆错误提示：克隆成功但 TTS 不可用时给出明确的上游故障提示
 - GLM 智能预处理：支持 GLM-4-Flash API 进行中文数字、符号、多音字智能预处理
 - GLM API Key 管理：设置中新增 API Key 输入和测试按钮，支持导入导出
 - 预处理模式选择：关闭/回退模式（正则失败时用 GLM）/始终使用 GLM
@@ -377,7 +391,22 @@ export default {
         if (nvPath === '/clone/tts' && bodyObj.text) {
           console.log('[NV-PROXY] TTS text="' + String(bodyObj.text).substring(0, 100) + '" (len=' + String(bodyObj.text).length + ') refId=' + bodyObj.referenceId);
         }
-        // Always use empty account for anonymous mode
+        // v2.19: TTS and getItemByTaskSn must NOT be HMAC-signed (upstream rejects signed TTS with 400)
+        if (nvPath === '/clone/tts' || nvPath === '/clone/getItemByTaskSn') {
+          const resp = await fetch(NV_API_BASE + nvPath, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyObj),
+          });
+          const text = await resp.text();
+          let data;
+          try { data = JSON.parse(text); } catch(e) { data = { code: resp.status, raw: text }; }
+          return new Response(JSON.stringify(data), {
+            status: resp.status,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders() },
+          });
+        }
+        // All other NV endpoints: use HMAC-signed proxy
         return await nvProxy(nvPath, bodyObj, '');
       } catch (e) {
         return new Response(JSON.stringify({ error: e.message }), {
@@ -393,7 +422,7 @@ export default {
         const audioBytes = Uint8Array.from(atob(audioBase64), c => c.charCodeAt(0));
         const resp = await fetch(uploadUrl, {
           method: 'PUT',
-          headers: { 'Content-Type': 'audio/wav' },
+          headers: { 'Content-Type': 'audio/mpeg' },
           body: audioBytes,
         });
         return new Response(JSON.stringify({ ok: resp.ok, status: resp.status }), {
@@ -1004,7 +1033,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans
   <div class="card" id="alternationWarning" style="display:none;border-color:var(--orange);background:rgba(253,203,110,0.05)">
     <div class="card-title" style="color:var(--orange)"><span class="icon">⚠️</span> 说话人交替异常</div>
     <p style="font-size:12px;color:var(--text2);margin-bottom:10px" id="alternationWarningText"></p>
-    <button class="dl-btn" id="alternationFixBtn" onclick="autoFixAlternation()" style="background:var(--orange);color:#000;border-color:var(--orange)">🔧 自动交替</button>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="dl-btn" id="alternationFixBtn" onclick="autoFixAlternation()" style="background:var(--orange);color:#000;border-color:var(--orange)">🔧 自动交替</button>
+      <button class="dl-btn" id="alternationDismissBtn" onclick="dismissAlternationWarning()" style="background:transparent;color:var(--text2);border:1px solid var(--border);font-size:11px;padding:4px 10px;cursor:pointer;border-radius:4px;opacity:0.7" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">忽略</button>
+    </div>
   </div>
 
   <!-- Card 3: Generate -->
@@ -1416,6 +1448,7 @@ window.addEventListener('DOMContentLoaded', function() {
   loadAudioSources();
   checkApiStatus();
   initDocxDragDrop();
+  initUploadZoneDragDrop(); // v2.20
   updateTextStats();
   applyConfigToUI();
   switchEngine(S.config.engine || 'nicevoice');
@@ -1620,6 +1653,36 @@ function initDocxDragDrop() {
       if (file.name.endsWith('.docx')) { processDocxFile(file); }
       else if (file.type.startsWith('audio/')) { /* handled by audio zone */ }
       else { showToast('请拖入 .docx 格式的 Word 文档', 'error'); }
+    }
+  });
+}
+
+// v2.20: Prevent browser default navigation when dropping audio files on upload zones
+function initUploadZoneDragDrop() {
+  document.addEventListener('dragover', function(e) {
+    var zone = e.target.closest('.upload-zone');
+    if (zone) { e.preventDefault(); e.stopPropagation(); }
+  });
+  document.addEventListener('drop', function(e) {
+    var zone = e.target.closest('.upload-zone');
+    if (zone) {
+      e.preventDefault(); e.stopPropagation();
+      var fileInput = zone.querySelector('input[type="file"]');
+      if (!fileInput) {
+        var nextEl = zone.nextElementSibling;
+        if (nextEl && nextEl.tagName === 'INPUT' && nextEl.type === 'file') fileInput = nextEl;
+      }
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length > 0 && files[0].type.startsWith('audio/')) {
+        if (fileInput) {
+          var dt = new DataTransfer();
+          dt.items.add(files[0]);
+          fileInput.files = dt.files;
+          fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      } else if (files && files.length > 0) {
+        showToast('请拖入音频文件', 'error');
+      }
     }
   });
 }
@@ -2318,8 +2381,9 @@ function renderSpeakerAssignmentList() {
     for (var j = 0; j < S.audioSources.length; j++) {
       var src = S.audioSources[j];
       var sel = assignedSource === src.id ? ' selected' : '';
-      var disabled = (usedSourceIds[src.id] && usedSourceIds[src.id] !== sp.name) ? ' disabled style="color:var(--text2);opacity:0.5"' : '';
-      html += '<option value="' + escHtml(src.id) + '"' + sel + disabled + '>' + escHtml(src.name) + (disabled ? ' (已分配)' : '') + '</option>';
+      // v2.20: Show which speaker uses this source, but allow re-selection
+      var usedBy = usedSourceIds[src.id] && usedSourceIds[src.id] !== sp.name ? ' (' + usedSourceIds[src.id] + ')' : '';
+      html += '<option value="' + escHtml(src.id) + '"' + sel + '>' + escHtml(src.name) + usedBy + '</option>';
     }
 
     // Add "新建音源" option
@@ -3159,10 +3223,16 @@ async function nvCloneVoice(voiceDataOrFile) {
         appLog('[NV] getSyncRefStatus[' + (i+1) + '] => ' + JSON.stringify(data4).substring(0, 300), 'i');
       }
       if (data4.data && data4.data.error === 0) {
+        appLog('[NV] 文件同步完成，正在验证音色...', 'i');
+        var isValid = await nvValidateClone(referenceId);
         S.nvCloneBusy = false;
-        showToast('声音克隆完成', 'success');
-        appLog('[NV] 声音克隆完成', 's');
-
+        if (isValid) {
+          showToast('声音克隆完成并验证通过', 'success');
+          appLog('[NV] 声音克隆完成 (已验证)', 's');
+        } else {
+          showToast('声音克隆失败: 上游 API 返回错误，请稍后重试或切换引操', 'error');
+          appLog('[NV] 声音克隆失败 - 文件同步成功但 TTS 不可用', 'e');
+        }
         return referenceId;
       }
     }
@@ -3172,6 +3242,38 @@ async function nvCloneVoice(voiceDataOrFile) {
     S.nvCloneBusy = false;
     showToast('声音克隆失败: ' + e.message, 'error');
     return null;
+  }
+}
+
+// v2.18: Post-clone validation - test TTS with cloned voice to confirm it works
+async function nvValidateClone(referenceId, testText) {
+  try {
+    var vt = testText || '\u6d4b\u8bd5';
+    var vd = await fetch('/api/nv/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: vt, referenceId: referenceId })
+    });
+    var vdata = await vd.json();
+    if (vdata.code === 70002006) {
+      appLog('[NV] \u9a8c\u8bc1\u88ab\u9650\u6d41\uff0c\u7b49\u5f8516s\u540e\u91cd\u8bd5', 'w');
+      await sleep(16000);
+      vd = await fetch('/api/nv/tts', {
+        method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: vt, referenceId: referenceId })
+      });
+      vdata = await vd.json();
+    }
+    if (vdata.code === 200 && vdata.data && vdata.data.taskSn) {
+      appLog('[NV] \u514b\u9a8c\u786e\u8ba4\u97f3\u8272\u53ef\u7528', 's');
+      return true;
+    }
+    appLog('[NV] \u514b\u9a8c\u5931\u8d25: TTS code=' + vdata.code + '\\n' + JSON.stringify(vdata).substring(0, 200), 'w');
+    return false;
+  } catch(ve) {
+    appLog('[NV] \u514b\u9a8c\u5f02\u5e38: ' + ve.message, 'w');
+    return false;
   }
 }
 
@@ -3822,6 +3924,7 @@ async function startGenerate() {
     if (S.segments.length === 0) { showToast('文本为空或无法分段', 'error'); S.isGenerating = false; return; }
     appLog('[GEN] 引擎=' + S.engine + ' maxChars=' + maxChars + ' 分段数=' + S.segments.length + ' 说话人数=' + S.detectedSpeakers.length, 'i');
     // v2.14: Check speaker alternation issues
+    _alternationDismissed = false; // v2.20: reset
     checkSpeakerAlternation();
   } else {
     var segments = splitTextForTTS(text, maxChars);
@@ -4403,11 +4506,16 @@ function editSegmentText(idx, cellEl) {
     showToast('生成中无法编辑', 'error');
     return;
   }
+  // v2.20: Defensive check — cellEl may be orphaned
+  if (!cellEl || !cellEl.parentNode || !document.body.contains(cellEl)) {
+    renderSegmentTable();
+    return;
+  }
   var seg = S.segments[idx];
   if (!seg) return;
-  // If currently editing another cell, commit it first
+  // If currently editing another cell, commit it first (but do NOT re-render)
   if (_segEditingIdx >= 0 && _segEditingIdx !== idx) {
-    commitSegmentEdit();
+    commitSegmentEditSilent(); // v2.20: silent commit without re-render
   }
   _segEditingIdx = idx;
   _segEditingOriginal = seg.text;
@@ -4422,13 +4530,18 @@ function editSegmentText(idx, cellEl) {
   cellEl.onclick = null;
   cellEl.style.cursor = 'default';
   var ta = cellEl.querySelector('textarea');
+  if (!ta) return; // v2.20: guard
   ta.focus();
   ta.setSelectionRange(ta.value.length, ta.value.length);
   // Auto-resize
   ta.style.height = ta.scrollHeight + 'px';
   ta.addEventListener('input', function() { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
-  // Commit on blur
-  ta.addEventListener('blur', function() { commitSegmentEdit(); });
+  // v2.20: Commit on blur — use requestAnimationFrame to avoid race with click events
+  ta.addEventListener('blur', function(e) {
+    requestAnimationFrame(function() {
+      if (_segEditingIdx === idx) { commitSegmentEdit(); }
+    });
+  });
   // Commit on Ctrl+Enter
   ta.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -4444,6 +4557,24 @@ function editSegmentText(idx, cellEl) {
       renderSegmentTable();
     }
   });
+}
+
+// v2.20: Silent commit — saves text but does NOT re-render
+function commitSegmentEditSilent() {
+  if (_segEditingIdx < 0) return;
+  var idx = _segEditingIdx;
+  var seg = S.segments[idx];
+  if (!seg) { _segEditingIdx = -1; return; }
+  var ta = document.querySelector('textarea[data-seg-idx="' + idx + '"]');
+  var newText = ta ? ta.value.trim() : _segEditingOriginal;
+  _segEditingIdx = -1;
+  var oldText = _segEditingOriginal;
+  _segEditingOriginal = '';
+  if (newText && newText !== oldText) {
+    seg.text = newText;
+    seg.edited = true;
+    appLog('[EDIT-SILENT] 段 ' + (idx+1) + ' 已修改', 'i');
+  }
 }
 
 function commitSegmentEdit() {
@@ -5598,9 +5729,22 @@ function onGenerateClick() {
   }
 }
 
+// v2.20: One-time dismiss for alternation false positives
+var _alternationDismissed = false;
+function dismissAlternationWarning() {
+  _alternationDismissed = true;
+  E.alternationWarning.style.display = 'none';
+  appLog('[ALT-DISMISS] 说话人交替警告已忽略', 'i');
+}
+
 // ---- Speaker Alternation Check ----
 function checkSpeakerAlternation() {
   if (S.speakerMode !== 'multi' || S.segments.length < 2) {
+    E.alternationWarning.style.display = 'none';
+    return;
+  }
+  // v2.20: If user previously dismissed, skip check
+  if (_alternationDismissed) {
     E.alternationWarning.style.display = 'none';
     return;
   }
