@@ -42,10 +42,12 @@ except ImportError:
 # ================= 配置区 =================
 # 智谱 API Key (Fallback 默认使用)
 ZHIPU_API_KEY = os.environ.get("GLM_API_KEY", "")  # v1.14: 从 .env 读取
-ZHIPU_MODEL = "glm-4-flash"
+# v1.26: 完全免费档最新模型（docs.bigmodel.cn 官方定价：输入/输出均免费，200K 上下文）
+ZHIPU_MODEL = "glm-4.7-flash"
 
 # Gemini 配置 (如果你通过命令行传入了 API Key 则使用)
-GEMINI_MODEL = "gemini-2.5-flash"  # 或使用 gemini-3-flash-preview 如果您有权限
+# v1.26: 免费档最新模型（ai.google.dev 官方定价：Free of charge 档）
+GEMINI_MODEL = "gemini-3.8-flash"
 
 # 批处理大小（避免一次性传入太多导致小模型遗忘或JSON截断）
 BATCH_SIZE = 40
@@ -91,9 +93,9 @@ def call_llm(sys_prompt: str, user_prompt: str, gemini_api_key: str = None) -> s
             result = response.text
             return result
         except Exception as e:
-            print(f"[Warn] Gemini 调用失败: {e}，正在 Fallback 到智谱 GLM-4-Flash...")
+            print(f"[Warn] Gemini 调用失败: {e}，正在 Fallback 到智谱 GLM Flash...")
     
-    # Fallback 使用智谱 GLM-4-Flash
+    # Fallback 使用智谱 GLM Flash
     if HAS_ZHIPU:
         try:
             client = ZhipuAI(api_key=ZHIPU_API_KEY)

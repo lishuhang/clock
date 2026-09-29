@@ -1,31 +1,85 @@
 # keepitrun 完整开发日志（单一真相源）
 
-生成时间：2026-09-28 17:5x（GMT+8，以文件名时间戳为准）。本文件合并并取代 `For_Agents/todos/` 此前全部 15 份 todo、prompt 记录与时间轴报告（原件已移入 `merged-sources-0928/` 存档，其中明文凭据已脱敏）。本文件不含 token、API Key、密码、Cookie 或任何可复用凭据；用户需求一律以脱敏转述保留。
+## ⚠️ Agent 守则（后续每轮维护必须首先阅读并遵守）
 
-**本轮（2026-09-28）要点速览**：版本 1.24 → **1.25**。① 核查 piczip 引用后移除 `piczip/oxipng.exe`，03/04/91 图片压缩全部改为纯 Pillow（同格式压缩为主，转换规则不变）；② 02 新增 **24 小时已提取记忆** `rss_issue_memory.json`，摘要被取走后 24 小时内重复条目不再重现；③ 打包 `keepitrun-v1.25.zip`（For_Agents + 工作文件夹根各一份）；④ 全部历史 todo 去重合并为本文件；⑤ 发现并处理旧文档中两处已泄露凭据（需轮换，见 §5.3）。
+1. **工作日志要求**：每轮任务完成后，必须在本文件追加本轮增量日志（含用户需求脱敏转述、处理结果、验证证据、偏差与未完成项），并**将本文件重命名为 `todo-keepitrun-full-MMDD-HHMM.md`，时间戳取本轮截稿时间，时区 GMT+8**。旧文件名不留存，本文件始终是唯一活跃交接文档。
+2. **单一真相源**：不得新建其他 todo 中间文件；历史文档只在 `For_Agents/merged-sources-0928/` 存档。仓库工作夹内运行时文件（logs/、tmp/ 等）不提交。
+3. **凭据铁律**：本文件、readme、发行包、提交记录均不得包含 token、API Key、密码、Cookie 或任何可复用凭据；用户需求一律脱敏转述。
+4. **发版纪律**：升版需同步 `keepitrun.py`（VERSION/VERSION_DATE/模块 docstring）、`readme.md`、`.env.example` 头部，打包前确认包内不含 `.env`/日志/凭据，包名 `keepitrun-vX.Y.zip`，For_Agents 与工作夹根各一份，并记录 SHA-256。
+5. **调度纪律**：修改生产前确认 `keepitrun.py` 未在运行；未经用户授权不停止/启动调度器；时区一律 GMT+8。
+
+---
+
+生成时间：2026-09-28 17:5x 首建（GMT+8，以文件名时间戳为准，每轮更新后重命名）。本文件合并并取代 `For_Agents/todos/` 此前全部 15 份 todo、prompt 记录与时间轴报告（原件已移入 `merged-sources-0928/` 存档，其中明文凭据已脱敏）。本文件不含 token、API Key、密码、Cookie 或任何可复用凭据；用户需求一律以脱敏转述保留。
+
+**上一轮（2026-09-28）要点速览**：版本 1.24 → **1.25**。① 核查 piczip 引用后移除 `piczip/oxipng.exe`，03/04/91 图片压缩全部改为纯 Pillow（同格式压缩为主，转换规则不变）；② 02 新增 **24 小时已提取记忆** `rss_issue_memory.json`，摘要被取走后 24 小时内重复条目不再重现；③ 打包 `keepitrun-v1.25.zip`（For_Agents + 工作文件夹根各一份）；④ 全部历史 todo 去重合并为本文件；⑤ 发现并处理旧文档中两处已泄露凭据（需轮换，见 §5.3）。
+
+**本轮（2026-09-29）要点速览**：版本 1.25 → **1.26**。① 依据官方定价文档将 02/92 的 Gemini 升级至 `gemini-3.8-flash`（Free of charge 档）、GLM 升级至 `glm-4.7-flash`（输入/输出均免费档，GLM-5.3-Flash 为收费档故不采用）；② 移除版本变更重做机制：同日版本替换后首次运行只执行今天尚未完成的任务，首次启动逐任务门控，cleanup 纳入完成记录；③ 打包 `keepitrun-v1.26.zip` 双份；④ 本文件开头新增 Agent 守则。详见 §2A。
 
 ---
 
 ## 1. 当前状态与运行基线
 
 - 生产目录：`C:\Users\james\Dropbox\WORKS\SOFT\AI-Python\keepitrun`（Windows 11）。
-- 当前版本：**v1.25**（2026-09-28）。
-- 新发行包：`For_Agents/keepitrun-v1.25.zip` 与工作文件夹根 `keepitrun-v1.25.zip`（同一文件，SHA-256 `7DDC0BB09E272CC5F68C90AB0E34A3E2A94908B4B6C06826F3A5A75527EAA19B`，14 个成员，111,967 bytes）。相比 v1.24 包（656,628 bytes）缩小约 83%，原因是移除了 1.1MB 的 `piczip/oxipng.exe`。
-- 包内无 `.env`、日志、临时文件、用户内容、凭据；仅含 `.env.example`。zip 内路径使用标准正斜杠（v1.24 包使用非标准反斜杠，本轮已纠正）。
-- 更新方式不变：解压覆盖生产目录（保留 `.env`），替换后 `python keepitrun.py`。
-- 上一回滚点：`backups/v1.23-before-v1.24-20260903_1650/`；本轮变更仅涉及仓库与发行包，生产机尚未部署，用户手动替换后即生效。
+- 当前版本：**v1.26**（2026-09-29）。
+- 新发行包：`For_Agents/keepitrun-v1.26.zip` 与工作文件夹根 `keepitrun-v1.26.zip`（同一文件，SHA-256 `F5D501BD7DFF8B39B78637EF825C5E54629A233A44B15ABD2CC77818E5C25554`，14 个成员，112,334 bytes）。v1.25 包（111,967 bytes）随之作废但仍可作回滚点。
+- 包内无 `.env`、日志、临时文件、用户内容、凭据；仅含 `.env.example`。zip 内路径使用标准正斜杠。
+- 更新方式不变：解压覆盖生产目录（保留 `.env`），替换后 `python keepitrun.py`。**v1.26 起替换当日重新打开脚本，只会补做今天尚未完成的任务，不会把当天已做过的事情重来一遍。**
+- 上一回滚点：v1.25 包（For_Agents 存档）；本轮变更仅涉及仓库与发行包，生产机由用户手动替换后生效。
 - 调度纪律：替换文件前确认 `keepitrun.py` 未在运行；无用户明确授权不停止/启动调度器。
 
-## 2. 本轮（2026-09-28）增量日志
+## 2. 本轮（2026-09-29）增量日志
 
-### 2.1 用户需求（脱敏保留）
+### 2A.1 用户需求（脱敏保留）
 
-> 使用仓库 `lishuhang/clock` 下 `0928-keepitrun` 作为工作文件夹，凭据仅会话内使用、严禁 push。先查阅 For_Agents/todos 了解开发历史；将所有 todo 去重、合并同类项生成单一完整开发日志，photos 的 todo 与 prompts 文件按时间线一并合并。当前版本 1.24：
-> 1. 检查 piczip 功能模块是否被正确引用；如果没起作用则删除它，同时调研不依赖大模型、纯 Python 可调用的图片压缩工具，以减小上传图床的图片体积，且尽量不更改图片后缀名（改后缀就要同步改引用文档）。
-> 2. getrss 已支持多日 RSS 合并去重；请增加：已提取的条目也保留 24 小时，新条目仍需去除与过去 24 小时内条目的重复。
-> 完成后打包 1.25 存档到 For_Agents，并将 1.25 放到工作文件夹下供手动替换；将本轮增量日志写入 todo-keepitrun-full.md 并以完成时间（GMT+8）更新文件名时间戳。
+> todo 已提到 For_Agents 文件夹，其他 todo 中间文件已删除，以 todo-full 为准。
+> 1. 检查 combine-gemini 及其他可能用到 LLM 的地方是否使用最新模型：谷歌 Gemini 已升级到 3.8 flash 免费档，请首先查看官方 API 文档免费档位，然后在定义中选择最新模型；GLM 同样操作；其他模型用到的都根据官方完全免费的档位升级到最新版调用。不限于该脚本。
+> 2. 刚才关闭 keepitrun 主脚本升级到 1.25 时，打开又重新运行了一次。本次以后的更新，在检查到版本号在今日替换时，首次运行新版只做今天还没做过的任务即可，不必所有事情都重来一遍。
+> 3. 输出 1.26 打压缩包，更新 todo-full 加入本次工作日志；重命名文件为截稿时间（GMT+8）；并将每次更新工作日志的要求写入 todo-full 开头作为 agent 后续要遵循的事项。
 
-### 2.2 任务 1：piczip 核查结论与处置
+### 2A.2 任务 1：LLM 免费档模型升级（02 / 92）
+
+**排查范围**：全仓 10 个脚本 + 配置 JSON 扫描（generativelanguage/bigmodel/zhipu/openai/dashscope/groq/deepseek 等端点特征）。LLM 调用只存在于 `02_combine-gemini.py`（标题翻译链 Gemini → GLM HTTP → Google Free）与 `92_model-process.py`（可选后处理，Gemini → GLM SDK 回退）；keywords.json 中的 GPT/GLM 等词均为新闻分类关键词，非调用。03/04/05/90/91/01/image_routing 无任何 LLM 端点。
+
+**官方文档核查**（2026-09-29 实测抓取）：
+
+- Gemini：`ai.google.dev/gemini-api/docs/pricing`。`gemini-3.8-flash`（Gemini 3.8 Flash）在 Free Tier 列 "Free of charge"，Paid Tier 输入 $0.75/1M（2026-12-31 前价）；3.7/3.6/3.5/3.1/3.0/2.5 系列 Flash 均有免费档，3.8 为最新。**选定 `gemini-3.8-flash`**（与用户提示一致）。
+- GLM：`docs.bigmodel.cn/cn/guide/start/pricing` 与模型概览页。GLM-5.3-Flash 输入 0.8 元/输出 2.8 元每百万 tokens，**为收费档，不符合"完全免费"**；GLM-4.7-FlashX 亦收费（0.5/3）。完全免费（输入/输出均标"免费"）的文本模型中最新为 **`glm-4.7-flash`**（200K 上下文/128K 输出，GLM-4.7 基座）；其余免费档 GLM-4.5-Flash、GLM-4-Flash-250414 均更旧。**选定 `glm-4.7-flash`**。
+
+**代码变更**：
+
+- `02_combine-gemini.py`：`GEMINI_MODEL` `gemini-2.5-flash` → `gemini-3.8-flash`；`GLM_MODEL` `glm-4-flash` → `glm-4.7-flash`；附官方定价出处注释。两处模型名均为参数传入引擎函数，无其他改动。
+- `92_model-process.py`：`GEMINI_MODEL` → `gemini-3.8-flash`（删除过时的 "gemini-3-flash-preview" 注释）；`ZHIPU_MODEL` → `glm-4.7-flash`；回退提示文案去掉硬编码版本号。
+- `.env.example`：`GEMINI_MODEL`/`GLM_MODEL` 可选覆盖项示例同步为新默认值；覆盖链路测试通过（环境变量覆盖优先级不变）。
+- 兼容性：02 走官方 REST（GLM v4 chat/completions、generativelanguage SDK generateContent），模型名均为字符串参数，新模型无需接口变更；GLM-4.7-Flash 上下文 200K 远大于翻译批次需求。
+
+### 2A.3 任务 2：同日版本替换不重做已完成任务（keepitrun.py 1.26）
+
+**问题还原**（依据仓库内存档的生产日志 `logs/20260928.log` 与 `logs/task_completion.json`）：0928 全天任务由 v1.24 完成并记录；用户当日关闭脚本替换 v1.25 后，`should_task_redo` 判定 done_version(1.24) ≠ VERSION(1.25) 且任务在 `VERSION_TASK_CHANGES["1.25"]` 影响集内 → 触发 `version_changed` 重做；首次启动流程 `run_first_boot_tasks` 也无条件执行全部任务、不看当日完成记录。两条路径都会把当天已做过的事情重来一遍。
+
+**处置**（v1.26 语义：今天已完成 = 已完成，无论由哪个版本完成）：
+
+- 移除 `VERSION_TASK_CHANGES` 映射、`should_task_redo`、`get_tasks_changed_between`；`task_completion.json` 仍记录完成任务时的版本号，仅作审计与跳过提示。
+- `should_run`：内存去重后仅查 `get_done_version_today`——今天已完成（任意版本）即跳过；版本不同时日志明确提示"版本替换日不重做"。
+- `run_first_boot_tasks` 逐任务门控：combine/daily/blog/photos_update 均先查当日完成记录再执行；**cleanup（首次启动维护）也纳入完成记录**（`record_task_done("cleanup")`），成功才记，避免版本替换日重复 3×1800 秒的预览重试。
+- 失败任务仍不记完成、次日或下次调度照常重试；昨日完成记录不影响今日运行（按日滚动语义不变）。
+- 同步：模块 docstring v1.26 变更、启动横幅改为"同日任务去重: 已启用"、readme §同日任务完成追踪 + v1.26 更新日志、`.env.example` 头部版本。
+
+### 2A.4 验证证据
+
+- `py_compile` 全部 10 个脚本通过（04 的 docstring `\s` SyntaxWarning 为历史遗留，未改动）。
+- 功能测试 **36/36 通过**（隔离副本 + monkeypatch，测试脚本 `scripts/test_keepitrun_v126.py`）：v1.26 模块断言 5 项；should_run 同日去重语义 7 项（未完成运行/完成跳过/旧版本今日完成跳过/昨日完成今日运行/会话内去重）；首次启动门控 15 项（全部已完成→零调用、全部未完成→全部执行并记录 v1.26、仅 combine 完成→其余执行）；02/92 模型默认值 4 项；02 `.env` 覆盖链路 2 项。
+- 发行包：14 成员、正斜杠路径、无 `.env`/敏感条目；内容级凭据扫描仅命中 03/04/90 的 `ghp_xxxxx` 类**占位示例串**（帮助文本，非实值）。
+
+### 2A.5 偏差与未完成项
+
+- GLM 免费档停留在 glm-4.7-flash：GLM-5.3-Flash（2026-08-26 发布）与 FlashX 均为收费档，不满足用户"完全免费"限定；后续若智谱将 5.3-Flash 转免费可再升级。
+- 生产日志发现 90_cleanup 预览在 2 万篇文章上 3 次×1800 秒全部超时（20260928.log 11:14 结束后才进入定时调度），本轮未处理——首轮启动已因此拖慢约 90 分钟；建议下轮评估（分批列出/缓存文件清单/提高时限/降频）。本轮 v1.26 的 cleanup 同日门控可避免版本替换日的重复浪费。
+- 生产机部署（解压替换 + 重启验证）由用户手动执行；替换当日首次运行只会补做未完成任务，无需用户做任何额外操作。
+
+## 2B. 上一轮（2026-09-28）增量日志
+
+### 2B.1 任务 1：piczip 核查结论与处置
 
 **核查证据**（静态 + 动态）：
 
@@ -47,7 +101,7 @@
 
 **调研备选**（为何选择 Pillow）：v1.23 已评估过 PicLite（桌面/Web 工作流，无 CLI，依赖 Node/Rust/Tauri）被否决；jpegoptim/gifsicle/oxipng 均为非 pip 系统工具，正是"Windows 上装不了"的痛点本身；pngquant 有损、需系统安装。Pillow 是唯一"已在依赖内、跨平台、纯 pip、可脚本调用"的选项，其中 PNG `optimize=True` 为无损压缩（等效 oxipng 低档收益，透明 PNG 场景本就收益有限）。
 
-### 2.3 任务 2：getrss/02 的 24 小时已提取记忆
+### 2B.2 任务 2：getrss/02 的 24 小时已提取记忆
 
 - 架构说明：按 v1.24 设计，跨批次去重职责在 `02_combine-gemini.py`（01 只抓取与规范化），因此本需求实现在 02。
 - 新增根目录运行时文件 `rss_issue_memory.json`：02 每次成功写出摘要后，将本次全部条目记入（键与去重规则一致：优先最终规范化 URL，无链接项按标题文本；值为提取时间戳）。
@@ -55,7 +109,7 @@
 - 记忆每次运行自动修剪（>24h 丢弃），原子写入（tmp + os.replace），写入失败仅警告不阻断主流程；文件损坏/缺失视为空记忆。
 - 效果：摘要文件被用户取走后，早晨已发过的条目不会在下午摘要中重现；超过 24 小时的旧闻不受限。README 的"RSS 增量摘要规则""目录结构""文件清理策略"均已同步该文件（不应手动删除）。
 
-### 2.4 验证证据
+### 2B.3 验证证据
 
 - `py_compile` 全部 10 个脚本通过（沙箱 Python 3.12；04 的 docstring `\s` SyntaxWarning 为历史遗留，未改动其逻辑）。
 - 功能测试 31 项全部通过（隔离副本执行，测试脚本 `scripts/test_keepitrun_v125.py`）：
@@ -63,7 +117,7 @@
   - 03/04/91 压缩链路 17 项：透明 PNG 保持 `.png`、不透明 PNG→`.jpg`（既有规则）、JPEG 保持 `.jpg` 且 17,732→6,942 字节、动图 GIF 保持 `.gif` 且 2 帧保留、静态 GIF→PNG/JPG（既有规则）、WebP→JPG/PNG、无文件变大、无 `.tmp` 残留、91 报告中各格式均出现 `ok-pillow` 状态。
 - 沙箱为 Linux，无法执行 Windows exe 语义测试；但移除 exe 后代码路径与平台无关，上述测试即为生产行为的直接验证。
 
-### 2.5 偏差与未完成项
+### 2B.4 偏差与未完成项
 
 - 05_photos-update.py 本身不上传图片，故未纳入压缩改造（原任务描述"上传到图床"经核实仅发生在 03/04）。
 - zip 内路径分隔符由反斜杠改为正斜杠：Windows 资源管理器/7-Zip 解压均正常，属标准化修正而非行为变更。
@@ -123,18 +177,22 @@
 - 01 只负责抓取/还原/规范化，跨批次去重统一延后到 02（按最终 URL 保留最长说明）；
 - Photos 将未创建的月份目录视为空目录正常跳过；失败不再误记完成。
 
-### 阶段六：v1.25（2026-09-28，本轮）
+### 阶段六：v1.25（2026-09-28，上一轮）
 
-见 §2。
+见 §2B。
+
+### 阶段七：v1.26（2026-09-29，本轮）
+
+见 §2A。
 
 ## 4. 运行规则与文件策略（现行有效）
 
 - 调度（GMT+8）：02:00/14:00 getrss → 10:05 daily → 10:10 blog → 14:05 combine → 15:00 photos；90/91/92 手动。
 - 根目录 `YYYYMMDD-HHMMSS.md` = 用户尚未取走的摘要；02 会把它与新 RSS 合并去重，原子写入新文件后才删旧摘要。
 - `rss_issue_memory.json`（v1.25 新增）= 24 小时已提取记忆；不应手动删除，删除会短暂失去跨批去重能力；02 每次运行自动修剪。
-- 翻译顺序 Gemini → GLM HTTP → Google Free；全部失败或安全拒答时保留英文源内容，不写错误文本、不丢条目。
+- 翻译顺序 Gemini → GLM HTTP → Google Free（v1.26 默认模型：`gemini-3.8-flash`、`glm-4.7-flash`，均为官方免费档）；全部失败或安全拒答时保留英文源内容，不写错误文本、不丢条目。
 - 清理：tmp/ 1 天、logs/ 7 天转归档、归档日志与 archived/ 30 天；`last_blog_crawl.txt`、`rss_issue_memory.json`、`logs/task_completion.json` 不应手动删除。
-- 版本感知任务追踪：`VERSION_TASK_CHANGES["1.25"] = {combine, daily, blog}`；同日升级后仅受影响任务重跑。
+- 版本感知任务追踪：v1.26 起改为**同日任务去重**——今天已完成（无论哪个版本）即不再执行，版本替换日首跑只补做未完成任务；`task_completion.json` 仅记完成版本供审计。
 - 图床路由：blog/daily/Photos 均读目标站 `_config.yml` 的 `image_prefixes`（半开区间，不得重叠/留空档）；Photos 2026-07-31 前 `modem-56k/img@main`、2026-08-01 起 `modem-56k/img2@main`（公开仓库）。
 
 ## 5. 安全、打包与操作边界
@@ -144,9 +202,9 @@
 - `.env` 只留在生产机；不得读取、复制、打印、提交或进入 ZIP；任何交接文档不得写 token、Key、Cookie、密码或账号内容。
 - 发行包仅含 `.env.example`、活动/维护脚本、配置 JSON、README；禁止 `.env`、日志、缓存、测试、备份、用户内容。v1.25 起不再包含 `piczip/oxipng.exe`。
 - 修改生产前确认常驻进程状态并建立最小回滚备份；未经授权不停止/启动调度器。
-- 每轮完成新建仅含增量的 `todo-MMDD-HHMM.md`（本轮按用户指示改为维护单一 full 文件）。
+- 每轮完成后在本文件追加增量日志并重命名文件名时间戳（详见文件开头 Agent 守则；不再新建单独 todo 文件）。
 
-### 5.3 打包清单（v1.25）
+### 5.3 打包清单（v1.26）
 
 `.env.example`、01–05、90–92、image_routing.py、keepitrun.py、keywords.json、readme.md、rss_feeds.json，共 14 项；SHA-256 见 §1。
 

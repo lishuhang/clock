@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
-版本: 1.25 (2026-09-28)
+版本: 1.26 (2026-09-29)
 基于: keepitrun-260424.py (v1.0)
 
 每日定时任务（GMT+8）:
@@ -12,6 +12,14 @@ keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
   14:00  01_getrss.py 抓取第 2 次 RSS
   14:05  02_combine-gemini.py 合并、去重并翻译 RSS
   15:00  05_photos-update.py 自动同步（脚本存在时启用）
+
+v1.26 变更:
+  - 同日版本替换后首次运行只执行今天尚未完成的任务：版本升级不再触发
+    当日已完成任务重做（移除 VERSION_TASK_CHANGES 重做机制）；
+    task_completion.json 继续记录完成版本，仅作审计与跳过判断。
+  - LLM 免费档模型升级（依据官方定价文档）：
+    · 02/92 Gemini gemini-2.5-flash → gemini-3.8-flash（Free of charge 档）
+    · 02/92 GLM glm-4-flash → glm-4.7-flash（输入/输出均免费档，200K 上下文）
 
 v1.25 变更:
   - 02 新增 24 小时已提取记忆（rss_issue_memory.json）：摘要发出后即使被取走，
@@ -100,7 +108,7 @@ v1.4 变更 (2026-06-12):
 v1.3 变更 (2026-06-11):
   - 重新启用微信公众号AIGC早报抓取 (10:05)
   - 新增版本感知任务完成追踪系统
-    · 版本升级后，已完成的任务若受变更影响则自动重做
+    · v1.26 起不再按版本变更重做当日任务，仅保留完成记录用于同日去重
     · 任务完成记录持久化至 logs/task_completion.json
   - 03_convert-daily.py 从 disabled/ 移回主目录
 
@@ -157,8 +165,8 @@ if sys.stdout.encoding != 'utf-8':
 # 版本信息
 # ═══════════════════════════════════════════════════════════════
 
-VERSION = "1.25"
-VERSION_DATE = "2026-09-28"
+VERSION = "1.26"
+VERSION_DATE = "2026-09-29"
 
 # ═══════════════════════════════════════════════════════════════
 # 配置区域
@@ -241,31 +249,13 @@ def schedule_today():
     return schedule_now().date()
 
 # ═══════════════════════════════════════════════════════════════
-# 版本感知任务完成追踪
+# 同日任务完成追踪 (v1.26 语义)
 # ═══════════════════════════════════════════════════════════════
 
-# 版本变更影响映射: 哪些版本更新影响了哪些任务
-# 当版本升级时，如果今天已完成的任务在此列表中，需要重做
-VERSION_TASK_CHANGES = {
-    "1.1": {"rss", "combine"},           # v1.1 改了日志和文件路径
-    "1.2": {"blog"},                     # v1.2 重新启用blog，改用合集API
-    "1.3": {"blog", "daily"},            # v1.3 重新启用daily，blog日志前缀变更
-    "1.4": {"photos_update"},        # v1.4 修复所有子脚本 Windows UTF-8 编码问题
-    "1.5": {"blog", "photos_update"},  # v1.5 修复 blog 首次启动超时 + photos_update 401 处理
-    "1.6": {"daily", "blog"},          # v1.6 新增 blog/daily 文章归档机制
-    "1.9": {"blog"},                  # v1.9 修复 blog section 标签内容提取 + cleanup 分支探测
-    "1.14": {"combine"},  # v1.14 translation engine fix
-    "1.15": {"blog"},     # v1.15 防御性检查：排除 daily 文章混入主博客
-    "1.16": {"combine", "blog"},  # v1.16 Google Free 翻译兜底 + z-ai page_reader 回退
-    "1.18": {"rss", "combine"},  # v1.18 RSS 恢复、去重与多引擎翻译可靠性改进
-    "1.19": {"rss", "combine", "daily", "blog", "photos_update"},  # 重命名与积压 RSS 合并
-    "1.20": {"daily", "blog"},  # 后台无交互与重复发布防护
-    "1.21": {"daily", "blog", "photos_update"},  # 图床路由改为由目标站 _config.yml 决定
-    "1.22": {"blog"},  # 博客图片格式转换后回写正文与题图 URL
-    "1.23": {"rss"},  # Techmeme RSS 从摘要提取原始报道 URL
-    "1.24": {"rss", "combine", "photos_update"},  # 实时子进程日志、02 统一去重、Photos 空月份修复
-    "1.25": {"combine", "daily", "blog"},  # 02 新增 24h 已提取记忆；03/04 图片压缩改纯 Pillow
-}
+# v1.26 起：任务今天已完成（无论由哪个版本完成）即不再重复执行。
+# 版本替换当日，首次运行新版只执行今天尚未完成的任务，不再按版本变更重做。
+# v1.25 及更早的 VERSION_TASK_CHANGES 重做映射已移除；task_completion.json
+# 仍记录完成任务时的版本号，用于审计与跳过提示。
 
 TASK_COMPLETION_FILE = os.path.join(LOG_DIR, "task_completion.json")
 
@@ -296,7 +286,7 @@ def save_task_completion(records):
 
 
 def record_task_done(task_name):
-    """记录任务今日已完成（附带当前版本号）"""
+    """记录任务今日已完成（附带当前版本号，仅作审计用途）"""
     records = load_task_completion()
     today_str = schedule_today().strftime("%Y-%m-%d")
     if task_name not in records:
@@ -307,47 +297,11 @@ def record_task_done(task_name):
         logger.debug(f"记录任务完成: {task_name} @ {today_str} (v{VERSION})")
 
 
-def should_task_redo(task_name):
-    """检查任务是否需要因版本变更而重做
-
-    返回: (should_run, reason)
-    - should_run=True, reason="not_done_today" -- 任务今日未完成
-    - should_run=True, reason="version_changed" -- 任务由受影响旧版本完成，需重做
-    - should_run=False, reason="already_done" -- 任务已由当前版本或未受影响版本完成
-    """
+def get_done_version_today(task_name):
+    """返回任务今天完成时所用的版本号；今天尚未完成则返回空字符串。"""
     records = load_task_completion()
     today_str = schedule_today().strftime("%Y-%m-%d")
-
-    # 检查任务今天是否已完成
-    task_records = records.get(task_name, {})
-    done_version = task_records.get(today_str)
-
-    if not done_version:
-        return True, "not_done_today"
-
-    if done_version == VERSION:
-        return False, "already_done"
-
-    # 检查已完成版本与当前版本之间是否有变更影响了该任务
-    changed = get_tasks_changed_between(done_version, VERSION)
-    if task_name in changed:
-        return True, f"version_changed({done_version}->{VERSION})"
-
-    return False, "already_done_unchanged"
-
-
-def get_tasks_changed_between(old_version, new_version):
-    """获取两个版本之间变更的任务名称集合"""
-    changed = set()
-    # 按版本号排序遍历
-    all_versions = sorted(VERSION_TASK_CHANGES.keys(), key=lambda v: tuple(int(x) for x in v.split(".")))
-    for v in all_versions:
-        v_tuple = tuple(int(x) for x in v.split("."))
-        old_tuple = tuple(int(x) for x in old_version.split("."))
-        new_tuple = tuple(int(x) for x in new_version.split("."))
-        if old_tuple < v_tuple <= new_tuple:
-            changed.update(VERSION_TASK_CHANGES.get(v, set()))
-    return changed
+    return str(records.get(task_name, {}).get(today_str) or "")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -941,38 +895,56 @@ def mark_boot_today():
 
 
 def run_first_boot_tasks():
-    """每日首次启动时立即执行全部任务
+    """每日首次启动时执行今日尚未完成的任务
 
-    场景: Windows 更新重启、脚本意外退出后重新启动等。
+    场景: Windows 更新重启、脚本意外退出后重新启动、版本替换后首次运行等。
+    v1.26 起：今天已完成的任务（无论由哪个版本完成）直接跳过，
+    只补做今天尚未完成的任务，不因版本变更把当天所有事情重来一遍。
     """
     logger.info("=" * 60)
-    logger.info("检测到今日首次启动，立即执行全部任务")
+    logger.info("检测到今日首次启动，仅执行今天尚未完成的任务")
     logger.info("=" * 60)
 
     # 1. 先恢复/合并 RSS：已有文件优先，绝不为凑两份而重复抓取。
-    logger.info("[首次启动] 步骤 1/4: 恢复并合并 RSS 结果")
-    combine_ok = run_first_boot_rss_recovery()
-    if combine_ok:
-        record_task_done("combine")
-        logger.info("[首次启动] RSS 合并去重翻译完成")
+    if get_done_version_today("combine"):
+        logger.info(
+            "[首次启动] 步骤 1/4: RSS 恢复合并今天已完成 (v%s)，跳过",
+            get_done_version_today("combine"),
+        )
     else:
-        logger.warning("[首次启动] RSS 合并去重翻译失败，保留中间文件等待下次恢复")
+        logger.info("[首次启动] 步骤 1/4: 恢复并合并 RSS 结果")
+        combine_ok = run_first_boot_rss_recovery()
+        if combine_ok:
+            record_task_done("combine")
+            logger.info("[首次启动] RSS 合并去重翻译完成")
+        else:
+            logger.warning("[首次启动] RSS 合并去重翻译失败，保留中间文件等待下次恢复")
 
     # 2. 爬取最新 daily + blog
     logger.info("[首次启动] 步骤 2/4: 爬取最新 daily + blog")
     daily_path = os.path.join(SCRIPT_DIR, DAILY_SCRIPT)
-    if os.path.isfile(daily_path):
+    if not os.path.isfile(daily_path):
+        logger.info("[首次启动] Daily脚本不存在，跳过")
+    elif get_done_version_today("daily"):
+        logger.info(
+            "[首次启动] daily 今天已完成 (v%s)，跳过", get_done_version_today("daily")
+        )
+    else:
         success_daily, _ = run_script(
             DAILY_SCRIPT, args=["--non-interactive"], timeout=TASK_TIMEOUTS["daily"]
         )
         if success_daily:
             record_task_done("daily")
-    else:
-        logger.info("[首次启动] Daily脚本不存在，跳过")
     time.sleep(2)
 
     blog_path = os.path.join(SCRIPT_DIR, BLOG_SCRIPT)
-    if os.path.isfile(blog_path):
+    if not os.path.isfile(blog_path):
+        logger.info("[首次启动] Blog脚本不存在，跳过")
+    elif get_done_version_today("blog"):
+        logger.info(
+            "[首次启动] blog 今天已完成 (v%s)，跳过", get_done_version_today("blog")
+        )
+    else:
         # 读取上次成功爬取日期
         last_date = ""
         if os.path.isfile(BLOG_LAST_CRAWL_FILE):
@@ -1001,26 +973,36 @@ def run_first_boot_tasks():
                     f.write(schedule_today().strftime("%Y%m%d"))
             except OSError:
                 pass
-    else:
-        logger.info("[首次启动] Blog脚本不存在，跳过")
 
     # 4.5 归档 blog/daily 本地文件（两者都执行完后统一归档）
     archive_blog_daily_files(logger)
 
     # 5. Photos 同步
-    logger.info("[首次启动] 步骤 3/4: Photos 自动同步")
-    if is_photos_update_enabled():
+    if get_done_version_today("photos_update"):
+        logger.info(
+            "[首次启动] 步骤 3/4: Photos 自动同步今天已完成 (v%s)，跳过",
+            get_done_version_today("photos_update"),
+        )
+    elif is_photos_update_enabled():
+        logger.info("[首次启动] 步骤 3/4: Photos 自动同步")
         if run_photos_update():
             record_task_done("photos_update")
     else:
-        logger.info("[首次启动] Photos 同步脚本不存在，跳过")
+        logger.info("[首次启动] 步骤 3/4: Photos 同步脚本不存在，跳过")
 
     # 4. AIGC 早报清理（手动维护工具，首次启动时仍按既有安全预览流程执行）
-    logger.info("[首次启动] 步骤 4/4: AIGC 早报清理（一次性维护）")
-    run_cleanup_daily_from_blog()
+    if get_done_version_today("cleanup"):
+        logger.info(
+            "[首次启动] 步骤 4/4: AIGC 早报清理今天已完成 (v%s)，跳过",
+            get_done_version_today("cleanup"),
+        )
+    else:
+        logger.info("[首次启动] 步骤 4/4: AIGC 早报清理（一次性维护）")
+        if run_cleanup_daily_from_blog():
+            record_task_done("cleanup")
 
     logger.info("=" * 60)
-    logger.info("首次启动全部任务执行完毕，进入定时调度模式")
+    logger.info("首次启动任务执行完毕，进入定时调度模式")
     logger.info("=" * 60)
 
 
@@ -1034,26 +1016,27 @@ _executed_tasks = {}
 def should_run(task_name):
     """判断某个任务今天是否应该执行
 
-    综合两个判断:
-    1. 同一分钟内不重复执行 (内存去重)
-    2. 版本升级后，如果任务已被旧版本完成且版本变更影响了该任务，需要重做
+    v1.26 语义:
+    1. 同一会话内同一任务只执行一次 (内存去重)
+    2. 今天已完成（无论由哪个版本完成）即不再执行；
+       版本替换当日，首次运行新版只执行今天尚未完成的任务。
     """
     today = schedule_today().strftime("%Y-%m-%d")
     key = f"{task_name}_{today}"
 
-    # 内存去重: 同一天内同一任务只执行一次 (除非版本变更需要重做)
+    # 内存去重: 本会话内已执行过（含失败），不因版本变更重跑
     if key in _executed_tasks:
-        # 已执行过，检查版本是否需要重做
-        should_redo, reason = should_task_redo(task_name)
-        if should_redo:
-            logger.info(f"任务 {task_name} 需要重做: {reason}")
-            return True
         return False
 
-    # 检查是否今天已被旧版本完成
-    should_redo, reason = should_task_redo(task_name)
-    if not should_redo:
-        logger.info(f"任务 {task_name} 今天已完成 (v{load_task_completion().get(task_name, {}).get(today, '?')}), {reason}")
+    # 今天已完成（任意版本）即跳过；版本号仅用于日志提示
+    done_version = get_done_version_today(task_name)
+    if done_version:
+        if done_version == VERSION:
+            logger.info(f"任务 {task_name} 今天已完成 (v{done_version}), already_done")
+        else:
+            logger.info(
+                f"任务 {task_name} 今天已完成 (v{done_version})，版本替换日不重做, already_done"
+            )
         return False
 
     _executed_tasks[key] = True
@@ -1091,7 +1074,7 @@ def main_loop():
     else:
         logger.info(f"  15:00 - Photos 自动同步 [未找到: {PHOTOS_SCRIPT_NAME}]")
     logger.info(f"  首次启动维护 - daily 清理预览/执行 [{CLEANUP_DAILY_SCRIPT}]")
-    logger.info("版本感知追踪: 已启用 (task_completion.json)")
+    logger.info("同日任务去重: 已启用 (task_completion.json；版本替换日不重做已完成任务)")
     logger.info("=" * 60)
 
     # 启动时执行清理

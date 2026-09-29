@@ -31,8 +31,11 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 GEMINI_API_KEY = ""
 GLM_API_KEY = ""
-GEMINI_MODEL = "gemini-2.5-flash"
-GLM_MODEL = "glm-4-flash"
+# v1.26: 免费档最新模型（依据 ai.google.dev 官方定价文档，gemini-3.8-flash 提供 Free of charge 档）
+GEMINI_MODEL = "gemini-3.8-flash"
+# v1.26: 完全免费档最新模型（依据 docs.bigmodel.cn 官方定价，glm-4.7-flash 输入/输出均免费、200K 上下文；
+# 注意 GLM-5.3-Flash 为收费档）
+GLM_MODEL = "glm-4.7-flash"
 
 TRANSLATION_BATCH_SIZE = 16
 REQUEST_TIMEOUT_SECONDS = 45
