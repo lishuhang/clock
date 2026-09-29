@@ -1,0 +1,60 @@
+【注意：当时prompt规定的1.2或1.3倍速，请不要在声音克隆时设定变速，因为我完全可以用已经变速过了的声音作为音源】
+
+请根据我提供的文案，自动生成完整的剪映草稿项目。具体要求如下：
+
+1、视频文案处理
+
+读取文案脚本，保留原始文案中的换行（\n），这些换行将作为字幕换行的依据。去除换行后拼接为连贯的一段话，用于TTS语音合成
+
+2、TTS语音合成
+
+1. 使用剪映SAMI原生TTS引擎（通过 jianying-editor-skill v1.6.0+ 的 universal_tts.py），https://github.com/luoluoluo22/jianying-editor-skill
+2. 音色：娱乐扒妹II（speaker_id: zh_female_f220_yule），备用音色：娱乐扒妹（BV005_streaming）
+3. 按句号/问号/感叹号/分号拆分为短句，逐句生成TTS
+4. 输出格式：MP3（SAMI原生输出OGG Opus，通过 auto_convert_mp3=True 参数自动转码为MP3，剪映兼容）
+5. 自动转码使用 ffmpeg：OGG → MP3（libmp3lame, 192kbps, 44100Hz），转码后删除OGG原文件
+
+3、变速处理
+
+1. 对所有TTS音频片段应用 1.2倍速不变调（speed=1.2, change_pitch=False）
+2. 在剪映项目中设置 AudioSegment 的 speed=1.2, is_tone_modify=False
+
+4、字幕
+
+1. 换行严格参照原始文案的换行，不做算法自动拆行。请注意，原文案提供了正确的拼写、标点符号和分行位置。
+2. 每条字幕对应文案中的一行
+3. 字幕按比例分配到所属TTS句子的时长内。请注意，刚才实现了1.2倍变速，字幕时间轴对齐到变速后的时间线，逐句对齐声音以免时间轴错位。
+4. 字体大小：9号，使用默认字体（思源黑体）
+5. 位置：在16：9画幅 的 画面底部1/4（transform_y = -0.75）
+6. 黑色描边（width=40.0, alpha=1.0）
+7. 请在保证字幕分行及文字与原文案一致时，检查音频时长和字幕时间轴长度，如果时长不一致，需要再度确认每句话是在哪里结束的，并完全对齐。
+8. 每一条字幕结尾，如有自动生成的逗号和句号应该去除，中间的标点符号可保留，结尾为引号的可以保留
+
+5、生成剪映项目
+
+使用 https://github.com/luoluoluo22/jianying-editor-skill 生成内含配音及字幕的剪映草稿，使得用户只需要复制到自己的草稿文件夹 com.lveditor.draft 即可打开运行。
+
+画布比例：9:16（1080×1920）
+
+1. 所有素材文件（audio/、images/、subtitles/）放置在草稿文件夹内部，如：mmdd-项目名称-v1.zip/mmdd-项目名称/audio/，与draft_content.json同级（如：mmdd-项目名称-v1.zip/mmdd-项目名称/draft_content.json），用户只需要复制解压后的 mmdd-项目名称 文件夹，到自己的草稿文件夹 C:\Users\【我的用户名】\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft 即可打开运行。
+2. draft_content.json 中使用相对路径（如 ./audio/seg_00_00.mp3），确保跨电脑可用
+3. 输出为版本化ZIP包名，用户只需解压到剪映草稿目录即可打开
+
+输出：
+
+- 剪映工程文件，可以用Windows版剪映打开并编辑和导出
+- 文件夹内含素材音频，全部打压缩包，解包即可复制打开
+- 对好时间轴，并且文字内容和换行与原文案对齐的SRT字幕，字幕同时位于工程文件中
+
+技术实现
+
+1. 使用 jianying-editor-skill v1.6.0+（https://github.com/luoluoluo22/jianying-editor-skill）
+2. TTS：universal_tts.py → generate_voice_with_meta()，backend="sami"，auto_convert_mp3=True
+3. OGG→MP3自动转码：_convert_ogg_to_mp3() 函数，使用ffmpeg，转码后删除OGG原文件
+4. 项目构建：JyProject → add_media_safe() / add_text_simple() / add_audio_safe()
+5. 变速：直接创建 AudioSegment(mat, target_timerange, source_timerange=..., speed=1.2, change_pitch=False)
+6. 路径转换：保存后遍历JSON，将所有path字段转为相对路径
+
+## 字幕
+
+（下接word文档表格的左列，保留其换行）
