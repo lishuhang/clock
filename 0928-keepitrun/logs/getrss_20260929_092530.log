@@ -1,0 +1,129 @@
+2026-09-29 09:25:30,955 - INFO - 开始执行 RSS 处理脚本
+2026-09-29 09:25:30,957 - INFO - 加载了 39 个 RSS 源
+2026-09-29 09:25:30,957 - INFO - 加载了 424 个关键词
+2026-09-29 09:25:30,957 - INFO - 正在获取 RSS 源: http://feeds.feedburner.com/CBer
+2026-09-29 09:25:31,154 - INFO - 从 http://feeds.feedburner.com/CBer 获取到 20 个条目
+2026-09-29 09:25:31,155 - INFO - 正在获取 RSS 源: http://techmeme.com/feed.xml
+2026-09-29 09:25:31,948 - INFO - 从 http://techmeme.com/feed.xml 获取到 15 个条目
+2026-09-29 09:25:31,949 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.bloomberg.com
+2026-09-29 09:25:31,950 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.reuters.com
+2026-09-29 09:25:31,951 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.theblock.co
+2026-09-29 09:25:31,952 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.wsj.com
+2026-09-29 09:25:31,953 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.cnbc.com
+2026-09-29 09:25:31,954 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.reuters.com
+2026-09-29 09:25:31,955 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.nytimes.com
+2026-09-29 09:25:31,955 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: artificialanalysis.ai
+2026-09-29 09:25:31,956 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.wsj.com
+2026-09-29 09:25:31,957 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.bloomberg.com
+2026-09-29 09:25:31,958 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.bloomberg.com
+2026-09-29 09:25:31,958 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.cnbc.com
+2026-09-29 09:25:31,959 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.bloomberg.com
+2026-09-29 09:25:31,960 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: www.anthropic.com
+2026-09-29 09:25:31,961 - INFO - 从 Techmeme RSS 摘要提取原始文章链接: 9to5google.com
+2026-09-29 09:25:31,961 - INFO - 正在获取 RSS 源: https://techcrunch.com/feed/
+2026-09-29 09:25:32,046 - INFO - 从 https://techcrunch.com/feed/ 获取到 20 个条目
+2026-09-29 09:25:32,046 - INFO - 正在获取 RSS 源: https://feeds.arstechnica.com/arstechnica/index/
+2026-09-29 09:25:32,139 - INFO - 从 https://feeds.arstechnica.com/arstechnica/index/ 获取到 20 个条目
+2026-09-29 09:25:32,140 - INFO - 正在获取 RSS 源: https://www.technologyreview.com/feed/
+2026-09-29 09:25:32,255 - INFO - 从 https://www.technologyreview.com/feed/ 获取到 10 个条目
+2026-09-29 09:25:32,255 - INFO - 正在获取 RSS 源: https://www.engadget.com/rss.xml
+2026-09-29 09:25:32,394 - INFO - 从 https://www.engadget.com/rss.xml 获取到 20 个条目
+2026-09-29 09:25:32,395 - INFO - 正在获取 RSS 源: http://feeds.feedburner.com/businessinsider/
+2026-09-29 09:25:32,782 - INFO - 从 http://feeds.feedburner.com/businessinsider/ 获取到 50 个条目
+2026-09-29 09:25:32,783 - INFO - 正在获取 RSS 源: https://www.cnet.com/rss/all/
+2026-09-29 09:25:32,895 - INFO - 从 https://www.cnet.com/rss/all/ 获取到 25 个条目
+2026-09-29 09:25:32,895 - INFO - 正在获取 RSS 源: https://www.techradar.com/feeds.xml
+2026-09-29 09:25:33,459 - INFO - 从 https://www.techradar.com/feeds.xml 获取到 50 个条目
+2026-09-29 09:25:33,460 - INFO - 正在获取 RSS 源: https://mashable.com/feeds/rss/all
+2026-09-29 09:25:34,135 - INFO - 从 https://mashable.com/feeds/rss/all 获取到 100 个条目
+2026-09-29 09:25:34,136 - INFO - 正在获取 RSS 源: https://www.theverge.com/rss/index.xml
+2026-09-29 09:25:34,183 - INFO - 从 https://www.theverge.com/rss/index.xml 获取到 10 个条目
+2026-09-29 09:25:34,183 - INFO - 正在获取 RSS 源: https://www.wired.com/feed/tag/ai/latest/rss
+2026-09-29 09:25:34,304 - INFO - 从 https://www.wired.com/feed/tag/ai/latest/rss 获取到 10 个条目
+2026-09-29 09:25:34,304 - INFO - 正在获取 RSS 源: https://feeds.bbci.co.uk/news/technology/rss.xml
+2026-09-29 09:25:34,364 - INFO - 从 https://feeds.bbci.co.uk/news/technology/rss.xml 获取到 21 个条目
+2026-09-29 09:25:34,364 - INFO - 正在获取 RSS 源: https://www.economist.com/science-and-technology/rss.xml
+2026-09-29 09:25:34,584 - WARNING - RSS 源 https://www.economist.com/science-and-technology/rss.xml 解析时出现问题: document declared as us-ascii, but parsed as utf-8
+2026-09-29 09:25:34,584 - INFO - 从 https://www.economist.com/science-and-technology/rss.xml 获取到 300 个条目
+2026-09-29 09:25:34,585 - INFO - 正在获取 RSS 源: https://www.economist.com/business/rss.xml
+2026-09-29 09:25:34,755 - WARNING - RSS 源 https://www.economist.com/business/rss.xml 解析时出现问题: document declared as us-ascii, but parsed as utf-8
+2026-09-29 09:25:34,755 - INFO - 从 https://www.economist.com/business/rss.xml 获取到 300 个条目
+2026-09-29 09:25:34,756 - INFO - 正在获取 RSS 源: https://www.economist.com/international/rss.xml
+2026-09-29 09:25:35,107 - WARNING - RSS 源 https://www.economist.com/international/rss.xml 解析时出现问题: document declared as us-ascii, but parsed as utf-8
+2026-09-29 09:25:35,107 - INFO - 从 https://www.economist.com/international/rss.xml 获取到 300 个条目
+2026-09-29 09:25:35,108 - INFO - 正在获取 RSS 源: https://www.economist.com/china/rss.xml
+2026-09-29 09:25:35,282 - WARNING - RSS 源 https://www.economist.com/china/rss.xml 解析时出现问题: document declared as us-ascii, but parsed as utf-8
+2026-09-29 09:25:35,282 - INFO - 从 https://www.economist.com/china/rss.xml 获取到 300 个条目
+2026-09-29 09:25:35,283 - INFO - 正在获取 RSS 源: https://arstechnica.com/feed/
+2026-09-29 09:25:35,685 - INFO - 从 https://arstechnica.com/feed/ 获取到 20 个条目
+2026-09-29 09:25:35,685 - INFO - 正在获取 RSS 源: https://www.google.com/alerts/feeds/00120727335941528291/15923614493533912620
+2026-09-29 09:25:35,950 - INFO - 从 https://www.google.com/alerts/feeds/00120727335941528291/15923614493533912620 获取到 20 个条目
+2026-09-29 09:25:35,950 - INFO - 正在获取 RSS 源: https://36kr.com/feed-newsflash
+2026-09-29 09:25:36,883 - WARNING - RSS 源 https://36kr.com/feed-newsflash 解析时出现问题: <unknown>:10:542: not well-formed (invalid token)
+2026-09-29 09:25:36,883 - WARNING - RSS 源 https://36kr.com/feed-newsflash 没有返回条目
+2026-09-29 09:25:36,883 - INFO - 正在获取 RSS 源: https://36kr.com/feed-article
+2026-09-29 09:25:37,811 - WARNING - RSS 源 https://36kr.com/feed-article 解析时出现问题: <unknown>:10:542: not well-formed (invalid token)
+2026-09-29 09:25:37,811 - WARNING - RSS 源 https://36kr.com/feed-article 没有返回条目
+2026-09-29 09:25:37,812 - INFO - 正在获取 RSS 源: https://www.ithome.com/rss/
+2026-09-29 09:25:39,519 - INFO - 从 https://www.ithome.com/rss/ 获取到 60 个条目
+2026-09-29 09:25:39,520 - INFO - 正在获取 RSS 源: https://rss.mydrivers.com/Rss.aspx?Tid=1
+2026-09-29 09:25:43,087 - INFO - 从 https://rss.mydrivers.com/Rss.aspx?Tid=1 获取到 100 个条目
+2026-09-29 09:25:43,088 - INFO - 正在获取 RSS 源: https://www.solidot.org/index.rss
+2026-09-29 09:25:44,235 - INFO - 从 https://www.solidot.org/index.rss 获取到 20 个条目
+2026-09-29 09:25:44,235 - INFO - 正在获取 RSS 源: https://www.geekpark.net/rss
+2026-09-29 09:26:05,011 - INFO - 从 https://www.geekpark.net/rss 获取到 30 个条目
+2026-09-29 09:26:05,012 - INFO - 正在获取 RSS 源: https://www.ifanr.com/feed
+2026-09-29 09:26:05,820 - INFO - 从 https://www.ifanr.com/feed 获取到 20 个条目
+2026-09-29 09:26:05,820 - INFO - 正在获取 RSS 源: https://www.tmtpost.com/rss.xml
+2026-09-29 09:26:08,728 - INFO - 从 https://www.tmtpost.com/rss.xml 获取到 17 个条目
+2026-09-29 09:26:08,728 - INFO - 正在获取 RSS 源: https://rss.huxiu.com/
+2026-09-29 09:26:10,541 - INFO - 从 https://rss.huxiu.com/ 获取到 24 个条目
+2026-09-29 09:26:10,542 - INFO - 正在获取 RSS 源: https://www.qbitai.com/feed
+2026-09-29 09:26:11,624 - INFO - 从 https://www.qbitai.com/feed 获取到 10 个条目
+2026-09-29 09:26:11,624 - INFO - 正在获取 RSS 源: https://www.leiphone.com/feed/
+2026-09-29 09:26:14,177 - INFO - 从 https://www.leiphone.com/feed/ 获取到 20 个条目
+2026-09-29 09:26:14,178 - INFO - 正在获取 RSS 源: https://plink.anyfeeder.com/mittrchina/hot
+2026-09-29 09:26:14,729 - INFO - 从 https://plink.anyfeeder.com/mittrchina/hot 获取到 10 个条目
+2026-09-29 09:26:14,730 - INFO - 正在获取 RSS 源: https://sspai.com/feed
+2026-09-29 09:26:15,857 - INFO - 从 https://sspai.com/feed 获取到 10 个条目
+2026-09-29 09:26:15,857 - INFO - 正在获取 RSS 源: https://v2ex.com/index.xml
+2026-09-29 09:26:16,217 - INFO - 从 https://v2ex.com/index.xml 获取到 50 个条目
+2026-09-29 09:26:16,218 - INFO - 正在获取 RSS 源: https://plink.anyfeeder.com/zaobao/realtime/china
+2026-09-29 09:26:16,435 - INFO - 从 https://plink.anyfeeder.com/zaobao/realtime/china 获取到 24 个条目
+2026-09-29 09:26:16,435 - INFO - 正在获取 RSS 源: https://plink.anyfeeder.com/zaobao/realtime/world
+2026-09-29 09:26:16,741 - INFO - 从 https://plink.anyfeeder.com/zaobao/realtime/world 获取到 24 个条目
+2026-09-29 09:26:16,741 - INFO - 正在获取 RSS 源: https://hnrss.org/frontpage
+2026-09-29 09:26:37,790 - WARNING - RSS 源 https://hnrss.org/frontpage 解析时出现问题: <urlopen error [WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。>
+2026-09-29 09:26:37,791 - WARNING - RSS 源 https://hnrss.org/frontpage 没有返回条目
+2026-09-29 09:26:37,792 - INFO - 正在获取 RSS 源: https://www.jiqizhixin.com/feed
+2026-09-29 09:26:38,479 - WARNING - RSS 源 https://www.jiqizhixin.com/feed 解析时出现问题: <unknown>:8:82: not well-formed (invalid token)
+2026-09-29 09:26:38,480 - WARNING - RSS 源 https://www.jiqizhixin.com/feed 没有返回条目
+2026-09-29 09:26:38,480 - INFO - 正在获取 RSS 源: https://blogs.nvidia.com/feed/
+2026-09-29 09:26:38,760 - INFO - 从 https://blogs.nvidia.com/feed/ 获取到 18 个条目
+2026-09-29 09:26:38,760 - INFO - 正在获取 RSS 源: https://ai.googleblog.com/feeds/posts/default
+2026-09-29 09:26:38,953 - WARNING - RSS 源 https://ai.googleblog.com/feeds/posts/default 解析时出现问题: <unknown>:4:31: mismatched tag
+2026-09-29 09:26:38,953 - WARNING - RSS 源 https://ai.googleblog.com/feeds/posts/default 没有返回条目
+2026-09-29 09:26:38,953 - INFO - 总共获取到 597 个有效条目
+2026-09-29 09:26:38,985 - INFO - 关键词过滤后剩余 333 个条目
+2026-09-29 09:26:38,988 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,988 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,989 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,990 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,991 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,991 - INFO - 解析 Google 重定向链接为原始地址
+2026-09-29 09:26:38,995 - INFO - 规范化后得到 333 个候选条目，交由 02 跨批次去重
+2026-09-29 09:26:38,997 - INFO - 处理完成，结果已保存到 C:\Users\james\Dropbox\WORKS\SOFT\AI-Python\keepitrun\tmp\rss_2026-09-29_09-26-38.md
