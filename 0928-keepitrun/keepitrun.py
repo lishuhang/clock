@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
-版本: 1.26 (2026-09-29)
+版本: 1.27 (2026-09-29)
 基于: keepitrun-260424.py (v1.0)
 
 每日定时任务（GMT+8）:
@@ -12,6 +12,14 @@ keepitrun - 定时任务调度脚本 (Windows 11 / 跨平台常驻)
   14:00  01_getrss.py 抓取第 2 次 RSS
   14:05  02_combine-gemini.py 合并、去重并翻译 RSS
   15:00  05_photos-update.py 自动同步（脚本存在时启用）
+
+v1.27 变更:
+  - 冷启动提速：90_cleanup 从「逐文件 API 拉全文」重建为 Git Trees 一次列全量
+    + raw CDN 并行拉取 + sha 增量缓存（cleanup_scan_memory.json）+ 内部时间预算
+    （超时存断点、退出码 2、续扫不重头）。0928 生产日志中该任务三连 1800s 超时
+    拖慢冷启动约 90 分钟且从未完成过；修复后首扫约 1 分钟，日常首次启动秒级。
+  - 判定语义修正：裸 "aigc"/"早报" 文件名不再不经内容确认即判删（避免误删
+    正经 AIGC 主题文章）；判定 = front matter 内容匹配或无歧义拼音组合文件名。
 
 v1.26 变更:
   - 同日版本替换后首次运行只执行今天尚未完成的任务：版本升级不再触发
@@ -165,7 +173,7 @@ if sys.stdout.encoding != 'utf-8':
 # 版本信息
 # ═══════════════════════════════════════════════════════════════
 
-VERSION = "1.26"
+VERSION = "1.27"
 VERSION_DATE = "2026-09-29"
 
 # ═══════════════════════════════════════════════════════════════
@@ -757,17 +765,19 @@ def run_photos_update():
 # ═══════════════════════════════════════════════════════════════
 
 def run_cleanup_daily_from_blog():
-    """运行 AIGC 早报清理脚本 (一次性)
+    """运行 AIGC 早报清理脚本 (每日首次启动维护)
 
     清理之前因 04_convert-blog.py bug 误同步到主博客 lishuhang.me 的 AIGC 早报内容。
-    v1.9 首次启动时自动调用。脚本会自动探测仓库分支并匹配 AIGC 早报文件。
+    v2.0 起脚本内部使用 trees API + raw CDN 并行 + sha 增量缓存，首次全量扫描
+    约 1 分钟，日常运行秒级；退出码 2 表示预算内未扫完（已存断点），由重试与
+    次日运行续扫。
     """
     script_path = os.path.join(SCRIPT_DIR, CLEANUP_DAILY_SCRIPT)
     if not os.path.isfile(script_path):
         logger.info("[cleanup] 清理脚本不存在，跳过")
         return False
 
-    logger.info("-- 开始运行 AIGC 早报清理 (v1.9 一次性) --")
+    logger.info("-- 开始运行 AIGC 早报清理 (v2.0 快速扫描) --")
     logger.info(f"  脚本路径: {script_path}")
 
     dry_success, _, dry_output = run_script(

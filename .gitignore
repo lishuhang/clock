@@ -4,3 +4,7 @@
 
 __pycache__/
 *.pyc
+
+# 运行时状态文件（各脚本本地缓存，不入库）
+0928-keepitrun/cleanup_scan_memory.json
+0928-keepitrun/rss_issue_memory.json
