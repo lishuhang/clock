@@ -1,0 +1,15 @@
+# 航通社官网 MCP Server（Cloudflare Workers 免费档）
+# 域名：mcp.lishuhang.com（lishuhang.com 由 Cloudflare 托管；blog 本体保持 lishuhang.me 不变）
+# 部署：CLOUDFLARE_API_TOKEN=<token> npx wrangler deploy（token 只放环境变量，绝不入库）
+name = "lishuhang-site-mcp"
+main = "index.js"
+compatibility_date = "2026-09-15"
+account_id = "ec44dddde866c789a9dd26f5d0cdb248"
+
+routes = [
+  { pattern = "mcp.lishuhang.com", custom_domain = true }
+]
+
+# 无需绑定 KV/R2/DO：索引经 Cache API 缓存，全文走 raw.githubusercontent.com
+[observability]
+enabled = true
