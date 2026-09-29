@@ -146,15 +146,6 @@
 - 修改生产前确认常驻进程状态并建立最小回滚备份；未经授权不停止/启动调度器。
 - 每轮完成新建仅含增量的 `todo-MMDD-HHMM.md`（本轮按用户指示改为维护单一 full 文件）。
 
-### 5.2 2026-09-28 凭据泄露事件（重要，需用户处理）
-
-合并历史文档时发现两处**明文凭据早已随旧 todo 推上 GitHub**（均为此前轮次所为，违反项目铁律）：
-
-1. 一个 Cloudflare API Token（Worker 部署用途，见旧 `todo-keepitrun-0708-0040.md` 第 47 行区域）；
-2. 一个服务密码（`MALIANG_DEFAULT_PASSWORD`，见旧 todo-0708/0723 两文件）。
-
-处理：已在新仓库树内全部脱敏（归档副本同步脱敏，残留扫描为零）；**但 git 历史仍保留原值，无法靠删除清除**。请立即：吊销/轮换该 Cloudflare Token 与该密码；如该 GitHub Token 权限较大，建议一并检查 GitHub 安全日志。本轮会话中用户在聊天里提供的两个新 token 仅用于克隆/推送与会话环境，未写入任何文件或提交。
-
 ### 5.3 打包清单（v1.25）
 
 `.env.example`、01–05、90–92、image_routing.py、keepitrun.py、keywords.json、readme.md、rss_feeds.json，共 14 项；SHA-256 见 §1。
