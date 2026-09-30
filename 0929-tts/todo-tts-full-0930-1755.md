@@ -295,3 +295,43 @@
 12. **（v2.22 新增）canonical 单一编辑层构建法**：全部修改在"浏览器视角"的 canonical 页面完成，模板转义只在最后一步统一做（\ 双写 + \${ 转义），字节级回译比对兜底——v2.21.0 的转义事故从流程上不可能再发生。
 
 （后续增量按时间续写；最近更新：2026-09-30 会话 C，生产版本 v2.22.0）
+
+---
+
+## v2.22.1（2026-09-30 17:55 GMT+8）—— 规则系统统一 + 界面细节修复（用户反馈驱动）
+
+### 用户反馈 → 处置对照
+| 反馈 | 处置 |
+|---|---|
+| 默认规则只能看到黄色省略号，看不到全文 | 内置规则数据化（DEFAULT_BUILTIN_RULES），全部规则全文可见 |
+| 内置规则（名称+内容）与自定义规则（匹配+替换+类型）结构不一致 | 统一 schema：规则名称+匹配内容→替换内容+类型+启用开关 |
+| 希望所有规则可修改可增删，改坏了能复原 | 内置规则可编辑（kind:data 三条含匹配/替换实义，行为型可改名称说明）；新增「复原默认」按钮 |
+| 点击项目出现文本框、移开点击自动保存 | 点击名称/内容就地编辑，autofocus 全选，blur/外点/Enter 保存，Esc 取消 |
+| 不明白「试跑预处理」用途 | 移除（与主面板 Before/After 预览重复） |
+| 面板标题/页签浮动，关闭要滚回顶部 | 标题页签回归文档流，面板底部新增「关闭面板」按钮，动画改 transform（规避 WebView fixed 渲染错位） |
+| 关于页首行显示 `# TTS Voice Lab v${VERSION}` | getReadmeContent 的 replace 搜索串在 worker 模板插值时被替换成 2.22.0 导致永远匹配不上；改用 '$'+'{VERSION}' 拼接 |
+| glm key 没填但改动依然生效 | 属正常：文本/通配/正则规则为本地规则无需 Key；GLM 语义规则无 Key 时列表标注「未生效」 |
+| emoji 图标杂乱 | 全部替换为单色 SVG 线条图标，sprite 集中定义（24+ symbol），一处定义处处 <use> |
+
+### 实测发现并修复的两个深层 bug（热修 hotfix1/hotfix2）
+1. **点击编辑不聚焦**：文本框出现后若用户不先点进输入框、直接点外部，blur 永不触发、不保存 → beginRuleEdit 渲染后 autofocus+select；并加 document 捕获阶段外点提交监听（切换行时先存旧行）
+2. **规则刷新即丢（v2.22 以来一直存在）**：loadConfig 白名单合并 `if (S.config[k] !== undefined)`，而 builtinRules/ttsRules 是懒初始化键、默认 config 上不存在 → 保存的规则加载时被静默丢弃。修复为显式放行 {ttsRules, builtinRules, ttsRuleFlags}。用户上次会话保存的自定义规则因此丢失过，本版起真正持久化（浏览器实测：改名→刷新→保留）
+
+### 验证
+- 构建：canonical 字节回译一致、cooked 脚本 node --check 门禁（新增，防 /+/g 类全局语法死亡）、emoji/实体清零、3 处 ${VERSION} 精确
+- 测试：test_v2221.js 163/163（73 项历史回归 + 统一规则模型/编辑提交/复原默认/导入导出/GLM 徽章/svgIcon/loadConfig 持久化/canonical 结构）
+- 线上门禁 verify_v2221.py 全绿：served==canonical、30+ 函数定义、3 个旧函数确认移除、内联处理器全定义扫描、NV 代理业务 200（cache-buster 防边缘缓存误报）
+- 无头浏览器交互探测：设置面板/规则 7+1 行渲染/点击编辑自动聚焦/外点保存/刷新持久化/历史与关于页签/关于首行 v2.22.1/底部关闭按钮/GLM 未生效徽章，全程控制台零错误
+
+### 产物与脚本
+- work/build/tts-voice-lab-v2.22.1.js（部署产物，286,692B，含真实密钥仅存本机）
+- For_Agents/backups/tts-voice-lab-v2.22.1.js（脱敏归档）
+- scripts/build_v2221.py（单文件全量构建：12 个替换阶段+门禁）
+- scripts/build_test_v2221.py → test_v2221.js（从 v2.22 台架装配，规则段换新 API）
+- scripts/verify_v2221.py（线上发版门禁）
+- 发版记录：v2.22.1 09:43 UTC → hotfix1（聚焦+外点提交）09:46 UTC → hotfix2（loadConfig 持久化）09:50 UTC，均 HTTP 200
+
+### 遗留
+- git 历史中 v2.17 文件仍含旧 HMAC Key（上游 App 内嵌密钥无法轮换，新副本已脱敏）
+- tts2 worker 仍为 v2.19 快照，建议对齐或下线
+- 上游对短句停顿执行仍有随机性（input 侧信号已给足）
