@@ -335,3 +335,37 @@
 - git 历史中 v2.17 文件仍含旧 HMAC Key（上游 App 内嵌密钥无法轮换，新副本已脱敏）
 - tts2 worker 仍为 v2.19 快照，建议对齐或下线
 - 上游对短句停顿执行仍有随机性（input 侧信号已给足）
+
+---
+
+## v2.22.2（2026-09-30 18:10 GMT+8）—— 用户报告 UI 热修：设置面板不可见 + 太阳图标
+
+### 用户反馈 → 处置对照
+| 反馈 | 处置 |
+|---|---|
+| 点击设置按钮后只有一个半透明深色浮层，看不到面板 | 根因：v2.22.1 将面板隐藏机制从 right:-440px 改为 transform:translateX(105%)，但 `.settings-panel.open` 只写了 right:0（本来就是 0），漏写 transform 复位 → 面板永远停在屏幕外。修复：open 态补 `transform:translateX(0)`（与 toast .show 同款正确模式） |
+| 设置按钮的 icon 为什么是太阳而不是齿轮 | 根因：i-gear symbol 画法本身是「中心圆 + 8 根放射短线」= 太阳。更换为标准齿轮轮廓（lucide settings 路径，stroke 线条风格与全 sprite 一致），单处定义全部 `<use>` 引用自动生效 |
+
+### 举一反三审计
+- 全页 JS 切换类（active/hidden-tab/open/show/visible）逐一对 CSS 规则核对：仅 `.settings-panel.open` 一处坏规则；.toast.show 同款 transform 复位写法正确（佐证修法）；.modal-overlay.open/.visible 均为 display 切换无此问题
+
+### 验证（上轮教训针对性加固：面板可见性按计算样式断言）
+- 构建门禁：以本会话取回的线上 2.22.1 worker 为基准（unescape 模板 == 线上下发 HTML 字节一致），canonical 字节回译一致、node --check、emoji 清零、3 处 ${VERSION} 精确
+- 测试：test_v2222.js 168/168（163 项历史回归 + 面板 open transform 复位 + 旧太阳图删除断言 + 新齿轮路径断言 + worker VERSION 2.22.2 + README v2.22.2 条目）
+- 本地无头探测（1280×900 / 375×812 双视口）：点击设置 → panelClass=open、transform=matrix(1,0,0,1,0,0)、桌面右缘贴齐 1280、移动端全宽 0→375、遮罩 block；底部「关闭面板」与右上 X 双路径同步移除 open、过渡落定 transform=441/393.75（=105% 移出屏幕）；关于页首行 v2.22.2；全程控制台零错误
+- 线上门禁 verify_v2222.py 全绿（served==canonical、56 个内联处理器全定义、HOTFIX-1/2 专项断言、NV 代理业务 200）
+- 生产真实点击探测：设置按钮 → 面板 860→1280 完全可见、齿轮路径 M12.22 2h-.44（真齿轮）、三页签切换、关于首行 v2.22.2、关闭后 441 移出、零报错
+
+### 产物与脚本
+- work/build/tts-voice-lab-v2.22.2.js（部署产物，288,888B，含真实密钥仅存本机）
+- For_Agents/backups/tts-voice-lab-v2.22.2.js（脱敏归档）
+- scripts/build_v2222.py / test_v2222.js / verify_v2222.py（可复用）
+- 发版记录：v2.22.2 于 2026-09-30 10:07 UTC（18:07 GMT+8）部署，HTTP 200
+
+### 教训沉淀
+- 上轮探测只断言了 DOM 存在性与类切换，未断言计算样式/几何（getBoundingClientRect、getComputedStyle(transform)），导致「面板类加了 open 但 CSS 不生效」漏网。本版起交互探测一律加几何/计算样式断言
+- 改「隐藏机制」类 CSS 时必须成对检查开/关两态规则（本例 base 态改了、open 态没跟上）
+
+### 遗留
+- git 历史中 v2.17 文件仍含旧 HMAC Key（上游 App 内嵌密钥无法轮换，新副本已脱敏）
+- tts2 worker 仍为 v2.19 快照，建议对齐或下线
