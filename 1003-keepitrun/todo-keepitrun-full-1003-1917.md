@@ -1,5 +1,7 @@
 # keepitrun 完整开发日志（单一真相源）
 
+> **给后续接手 Agent**：本文包含本项目的完整事态——从 v1.0 至当前版本的全部轮次增量日志、完整时间轴、运行规则与操作边界都在这一份文件里，只要从开头通读一遍即可了解本项目的来龙去脉，无需再翻找其他文档。本轮内容见顶部要点速览与 §2H。
+
 ## ⚠️ Agent 守则（后续每轮维护必须首先阅读并遵守）
 
 1. **工作日志要求**：每轮任务完成后，必须在本文件追加本轮增量日志（含用户需求脱敏转述、处理结果、验证证据、偏差与未完成项），并**将本文件重命名为 `todo-keepitrun-full-MMDD-HHMM.md`，时间戳取本轮截稿时间，时区 GMT+8**。旧文件名不留存，本文件始终是唯一活跃交接文档。
@@ -16,7 +18,9 @@
 
 **上轮（2026-09-29 上午）要点速览**：版本 1.25 → **1.26**。① 依据官方定价文档将 02/92 的 Gemini 升级至 `gemini-3.8-flash`（Free of charge 档）、GLM 升级至 `glm-4.7-flash`（输入/输出均免费档，GLM-5.3-Flash 为收费档故不采用）；② 移除版本变更重做机制：同日版本替换后首次运行只执行今天尚未完成的任务，首次启动逐任务门控，cleanup 纳入完成记录；③ 打包 `keepitrun-v1.26.zip` 双份；④ 本文件开头新增 Agent 守则。详见 §2C。
 
-**本轮（2026-09-29 午后·第三轮）要点速览**：官方 MCP Registry 收录完成。① DNS 鉴权：TXT 已按服务端源码要求建到 apex 裸域并全球可见，但 Registry 自有解析器（34.118.224.10）对 lishuhang.com 持续 NXDOMAIN（其基础设施侧问题，官方 issue 库无同类报告）；② HTTP 鉴权：部署 proof Worker（仅 /.well-known/mcp-registry-auth 路径）被 CF 跳转规则先于 Worker 拦截（301），资产保留，日后跳转规则排除该路径即自动可用；③ 最终经 GitHub 设备流（用户浏览器在 github.com/login/device 授权）发布成功：**io.github.lishuhang/site-mcp v1.0.0，status=active**（2026-09-29 15:36 GMT+8），remote 指向 mcp.lishuhang.com/mcp；④ server.json name 由 com.lishuhang/site-mcp 改为 io.github.lishuhang/site-mcp；README/changelog 同步更新，keepitrun 零改动。详见 §2A。
+**本轮（2026-10-03）要点速览**：版本 1.28 → **1.29**。① 解包 v1.28 一手核实外部 debug 指南所称缺陷属实：`resolve_blog_since_date()` 中 `datetime.strptime` 返回 `datetime`，与 `schedule_today()` 的 `date` 直接 `<` 比较必抛 `TypeError`（比较语句在 try 块之外无保护）——首次启动路径会使调度器退出且启动标记未写入（重启循环复崩），10:10 调度路径被主循环吞掉致当日 blog 静默跳过；② 修复为 `.date()`，原函数体复现 7 项 + 修复后真实模块导入级 20 项验证全通过；③ 打包 `keepitrun-v1.29.zip`（14 成员，125,185 bytes，凭据扫描零命中）；④ 外部 debug 指南核心内容并入本文件后按用户指示从仓库移除；⑤ 其余 9 脚本 + 2 配置与 v1.28 字节级一致，零改动。详见 §2H。
+
+**上轮（2026-09-29 午后·第三轮）要点速览**：官方 MCP Registry 收录完成。① DNS 鉴权：TXT 已按服务端源码要求建到 apex 裸域并全球可见，但 Registry 自有解析器（34.118.224.10）对 lishuhang.com 持续 NXDOMAIN（其基础设施侧问题，官方 issue 库无同类报告）；② HTTP 鉴权：部署 proof Worker（仅 /.well-known/mcp-registry-auth 路径）被 CF 跳转规则先于 Worker 拦截（301），资产保留，日后跳转规则排除该路径即自动可用；③ 最终经 GitHub 设备流（用户浏览器在 github.com/login/device 授权）发布成功：**io.github.lishuhang/site-mcp v1.0.0，status=active**（2026-09-29 15:36 GMT+8），remote 指向 mcp.lishuhang.com/mcp；④ server.json name 由 com.lishuhang/site-mcp 改为 io.github.lishuhang/site-mcp；README/changelog 同步更新，keepitrun 零改动。详见 §2A。
 **上轮（2026-09-29 午后·第二轮）要点速览**：用户授权实施并提供 lishuhang.com 子域给 Workers 用。① 站点两仓库新增 agent 入口（blog：articles.json/llms.txt/skill.md/webmcp.js；daily：issues.json/llms.txt）；② Cloudflare Workers 免费档上线**航通社官网 MCP**（mcp.lishuhang.com/mcp，stateless 六工具，零依赖），六工具实测全通；③ 全链路整合既有资产（posts.js 同源索引管线、/img/ 图床规则、raw CDN 全文、v1.28 元数据口径），keepitrun 零改动；④ 交付 readme-site-mcp-v1-0929-1545.md（含 changelog）；Registry 收录与 webmcp.com 提交留待办（详见 §2B/README §5）。
 
 **上轮（2026-09-29 午后）要点速览**：版本 1.26 → **1.27**。① 依据用户提供的 0928 生产日志定位冷启动拖慢约 90 分钟的根因：`90_cleanup` 对 `_posts` 逐文件调 API 拉全文，三连 1800s 超时（09:42:55–11:14:25），且 Contents API 忽略 per_page 导致 1458 个文件被重复计数成 20000；② 重建为 Git Trees 一次列全量 + raw CDN 并行拉取 + sha 增量缓存断点续扫，实测首扫 28.6 秒、日常 1.8 秒；③ 判定语义修正：裸 "aigc"/"早报" 文件名不再不经内容确认即判删（实测保护了 4 篇会被 v1.9 误删的正经文章），并修复 v1.9 多行 tags 死代码；④ 打包 `keepitrun-v1.27.zip` 双份。详见 §2E。
@@ -30,19 +34,56 @@
 ## 1. 当前状态与运行基线
 
 - 生产目录：`C:\Users\james\Dropbox\WORKS\SOFT\AI-Python\keepitrun`（Windows 11）。
-- 当前版本：**v1.28**（2026-09-29）。
+- 当前版本：**v1.29**（2026-10-03）。
+- 本轮（2026-10-03）修复 v1.28 引入的 blog 增量窗口日期类型错误（`resolve_blog_since_date` 的 datetime/date 混比 TypeError），详见 §2H；改动仅 keepitrun.py / readme.md / .env.example 三文件。
 - 0929 午后新增 `For_Agents/research-site-agent-friendly-v1-0929-1250.md`（站点 Agent 友好化调研 v1）；keepitrun 无任何代码/版本改动。
-- 站点 Agent 能力（0929 午后第二轮起上线）：blog/daily 新增 llms.txt 与 JSON 索引（push 即再生）；MCP Server `https://mcp.lishuhang.com/mcp`（Workers 免费档，源码在 clock 仓库 `site-mcp/`）；keepitrun 仍为 v1.28 且零改动。官方 MCP Registry 已收录 `io.github.lishuhang/site-mcp` v1.0.0（**active**，2026-09-29 15:36 GMT+8，remote=streamable-http mcp.lishuhang.com/mcp）。上线说明见 `readme-site-mcp-v1-0929-1545.md`。
-- 新发行包：`For_Agents/keepitrun-v1.28.zip` 与工作文件夹根 `keepitrun-v1.28.zip`（同一文件，SHA-256 `B9D0DD521C71862C47E8941D121B7EED98D418BBC84F817383BA8DBD7FA6E94D`，14 个成员，124,389 bytes）。v1.27 包（119,168 bytes）随之作废但仍可作回滚点；v1.26 包已从仓库移除（git 历史仍可找回）。
+- 站点 Agent 能力（0929 午后第二轮起上线）：blog/daily 新增 llms.txt 与 JSON 索引（push 即再生）；MCP Server `https://mcp.lishuhang.com/mcp`（Workers 免费档，源码在 clock 仓库 `site-mcp/`）；keepitrun 仍为 v1.28 且零改动（0929 时点状态，现版本见本节首行）。官方 MCP Registry 已收录 `io.github.lishuhang/site-mcp` v1.0.0（**active**，2026-09-29 15:36 GMT+8，remote=streamable-http mcp.lishuhang.com/mcp）。上线说明见 `readme-site-mcp-v1-0929-1545.md`。
+- 新发行包：clock 仓库工作夹 `1003-keepitrun/keepitrun-v1.29.zip`（SHA-256 `1F793C5D5785C289D1DDBF296DD80D3E3A82237F6E4FF938037D528AB3979DFD`，14 个成员，125,185 bytes）；用户取回部署后按惯例在生产机 For_Agents 与工作文件夹根各放一份。v1.28 包（124,389 bytes，SHA-256 `B9D0DD521C71862C47E8941D121B7EED98D418BBC84F817383BA8DBD7FA6E94D`）随之作废但仍可作回滚点；更早包已不在仓库（git 历史仍可找回）。
 - 包内无 `.env`、日志、临时文件、用户内容、凭据；仅含 `.env.example`。zip 内路径使用标准正斜杠。
-- 更新方式不变：解压覆盖生产目录（保留 `.env`），替换后 `python keepitrun.py`。**v1.28 替换当日首跑，blog 会以最近 30 天为窗口做一次增量：窗口内已同步过的文章由仓库存在性确认一次性记入 `blog_sync_memory.json`（首跑多花几分钟后转秒级），此后每日增量仅处理新增文章；03/04 的首同步保护与题图校正对历史文章不回溯。**
-- 上一回滚点：v1.27 包（For_Agents 存档）；本轮变更仅涉及仓库与发行包，生产机由用户手动替换后生效。
+- 更新方式不变：解压覆盖生产目录（保留 `.env`），替换后 `python keepitrun.py`。**v1.29 替换当日首跑，blog 会以最近 30 天为窗口做一次增量：窗口内已同步过的文章由仓库存在性确认一次性记入 `blog_sync_memory.json`（首跑多花几分钟后转秒级），此后每日增量仅处理新增文章；03/04 的首同步保护与题图校正对历史文章不回溯。**
+- 上一回滚点：v1.28 包（clock 仓库工作夹存档）；本轮变更仅涉及三文件与发行包，生产机由用户手动替换后生效。
 - 调度纪律：替换文件前确认 `keepitrun.py` 未在运行；无用户明确授权不停止/启动调度器。
 
 
-## 2. 本轮（2026-09-29 午后·第三轮）增量日志：官方 MCP Registry 收录完成
+## 2. 增量日志（**2H = 本轮 2026-10-03 v1.29 修复，置顶**；2A–2G 为前轮，各自独立编号）
 
-### 2A.1 用户需求（脱敏保留）
+### 2H. 本轮（2026-10-03）：v1.29 修复 blog 增量窗口日期类型错误
+
+#### 2H.1 用户需求（脱敏保留）
+
+> 解包 1.28、检查并修改错误、打包 1.29 存工作文件夹。先通读本文件了解来龙去脉，再阅读另一 AI 写的 debug 建议 md 作为参考（不必然照搬）。增量日志写入本文件并按截稿时间（GMT+8）重命名；debug 建议核心内容并入本文件后不再保留该文档。用户出示 CF 与 GitHub token 用于本轮仓库作业（凭据不入任何文档与提交）；产物及工作日志及时推送，勿频繁 push。
+
+#### 2H.2 核查与根因定性（一手验证，非照搬指南）
+
+- **指南主张**：keepitrun.py 的 `resolve_blog_since_date()` 存在 datetime/date 类型混比，v1.28 替换后首次启动在 blog 分支崩溃；其余脚本不必改。
+- **一手核实（解包 v1.28）**：`schedule_today()` 返回 `schedule_now().date()`（`date` 型）；`resolve_blog_since_date` 内 `last_dt = datetime.strptime(last_date, "%Y%m%d")` 为 `datetime` 型，二者 `<` 比较在 Python 3 抛 `TypeError: can't compare datetime.datetime to datetime.date`；比较语句位于 `try (TypeError, ValueError)` 块之外，无拦截。原函数体逐字复现测试：**任意合法 8 位日期输入均必崩**（含等界日期），与输入值无关。
+- **影响面定性（两条调用路径）**：① 首次启动路径（`run_first_boot_tasks` → blog 分支，无 try/except）：TypeError 直接使 `main_loop` 退出，`mark_boot_today()` 不执行 → `is_first_boot_today()` 恒真，每次重启都在 blog 分支复崩（combine/daily 已记录完成则被 v1.26 门控跳过，直接再崩在 blog）；② 10:10 调度路径：异常被主循环 `except Exception` 捕获记「主循环异常」，该分钟过后当日 blog 不再触发 → 每日 blog 同步静默失败。生产机实际受影响程度由用户确认；v1.29 替换后首次启动按 v1.26 门控语义自动补跑当日未完成任务，无需额外操作。
+- **排除项（指南「只改 3 文件」的主张成立）**：全包 10 脚本 py_compile 通过（04 的 docstring `\s` SyntaxWarning 为 0928 已记录的历史遗留，非本轮引入）；keepitrun.py 模块导入级执行正常；其余 timedelta 运算（402/430/455/480 行清理截止时间、1013/1216 行 fallback）与 03/04 内部 strptime 用法类型自洽；11 个未改文件与 v1.28 字节级一致（cmp 逐一确认）。
+
+#### 2H.3 代码与文档变更（三文件、外科手术式）
+
+- **keepitrun.py → 1.29**（4 处）：版本头与变更块新增 v1.29 条目（保留 v1.28 及更早全部历史块）；`VERSION`/`VERSION_DATE` → 1.29 / 2026-10-03；**核心修复一行**：`datetime.strptime(last_date, "%Y%m%d")` → `.date()`，统一按 `date` 比较。
+- **readme.md**（4 处）：当前版本头 → 1.29（2026-10-03）；发布重点区新增 v1.29 条目（含影响面与触发条件）；更新日志新增 `### v1.29（2026-10-03）` 完整条目；文档版本 1.26 → 1.29（顺带修正 v1.28 轮遗漏的陈旧标注）。
+- **.env.example**（1 处）：头部模板版本号 → v1.29。
+
+#### 2H.4 验证证据
+
+- **复现与修复行为测试 7 项全通过**（`scripts/verify_date_bug.py`，逐字复刻 v1.28 原函数体 + 修复版对照）：v1.28 超窗/等界日期均抛 TypeError；修复后窗口内不动、超窗截断到窗口下界（20260801→20260903）且日志恰 1 条、等界不截断、非法输入（空串/非数字/横杠日期/None/7 位）回退原值、返回 8 位 str 可直接拼 `album:` 参数。
+- **修复后真实模块导入级 20 项全通过**（`scripts/test_keepitrun_v129.py`，直接 import 包内 keepitrun.py 调用其 `resolve_blog_since_date`）：10 脚本 py_compile；版本常量与 docstring 断言；窗口内/超窗/等界/昨日/非法输入 9 组行为；超窗日志文案；与 `schedule_today()` 真实类型配合；历史/今天/未来 5 个合法日期回归不再抛 TypeError。
+- **差异比对**：v1.28 → v1.29 仅 3 文件变更（keepitrun.py/readme.md/.env.example），其余 11 项字节级一致；keepitrun.py 实际代码改动仅 1 行（另有版本号与 docstring 注释）。
+- **打包 `keepitrun-v1.29.zip`**（`scripts/pack_v129.py`）：14 成员与 §5.3 清单一致、正斜杠路径、无 `.env`/日志/缓存/记忆文件/测试脚本；内容级凭据扫描零命中；125,185 bytes，SHA-256 `1F793C5D5785C289D1DDBF296DD80D3E3A82237F6E4FF938037D528AB3979DFD`；本轮仓库侧存工作夹一份（生产机双份由用户部署时放置）。
+- **仓库作业纪律**：仓库 5.5GB 无法全量克隆，改用 blobless 浅克隆 + sparse-checkout 仅取 `1003-keepitrun/`；CF/GitHub token 仅存在于 `.git/config` remote URL 与会话环境，未入任何文档/包/提交。
+
+#### 2H.5 偏差与未完成项
+
+- 生产机部署（解压替换 + 重启验证）由用户手动执行；若 v1.28 期间调度器因本缺陷未运行，v1.29 首跑会按 v1.26 同日门控自动补做当日未完成任务。
+- 外部 debug 指南（1.29修改指南.md）核心内容已并入本节与 readme，文件已按用户指示从仓库移除（git 历史可找回）。
+- 04 的 docstring SyntaxWarning 为历史遗留，本轮按「最小改动」原则未动；如需根治可在后续轮次改为 raw docstring。
+- 本轮验证脚本存 `1003-keepitrun/scripts/`（仓库侧取证），生产机 scripts/ 不受影响；v1.28 包保留作回滚点。
+
+### 2A. 前轮（2026-09-29 午后·第三轮）：官方 MCP Registry 收录完成
+
+#### 2A.1 用户需求（脱敏保留）
 
 > 用户出示更新后的 CF token 权限清单（在原 Workers 权限上新增 DNS Write / Zone Write / Zone Settings Write 等区域级权限），要求：给出测试 MCP 用的 prompt 用例；给出"提交浏览器表单"的具体 URL。
 
@@ -375,6 +416,10 @@
 
 见 §2A。
 
+### 阶段十三：v1.29（2026-10-03）
+
+见 §2H。
+
 ## 4. 运行规则与文件策略（现行有效）
 
 - 调度（GMT+8）：02:00/14:00 getrss → 10:05 daily → 10:10 blog → 14:05 combine → 15:00 photos；90/91/92 手动。
@@ -383,7 +428,7 @@
 - 翻译顺序 Gemini → GLM HTTP → Google Free（v1.26 默认模型：`gemini-3.8-flash`、`glm-4.7-flash`，均为官方免费档）；全部失败或安全拒答时保留英文源内容，不写错误文本、不丢条目。
 - 清理：tmp/ 1 天、logs/ 7 天转归档、归档日志与 archived/ 30 天；`last_blog_crawl.txt`、`rss_issue_memory.json`、`blog_sync_memory.json`、`logs/task_completion.json` 不应手动删除。
 - 版本感知任务追踪：v1.26 起改为**同日任务去重**——今天已完成（无论哪个版本）即不再执行，版本替换日首跑只补做未完成任务；`task_completion.json` 仅记完成版本供审计。
-- blog 增量同步（v1.28）：04 以 `blog_sync_memory.json` 记录已同步 URL，命中即跳过；调度侧合集窗口封顶 30 天（`BLOG_SYNC_WINDOW_DAYS`），`last_blog_crawl.txt` 过旧时自动截断到窗口下界；发布日期以正文「文/书航」标注为准；新同步文章自动携带 featured 标签。
+- blog 增量同步（v1.28，v1.29 修复调度侧窗口函数）：04 以 `blog_sync_memory.json` 记录已同步 URL，命中即跳过；调度侧合集窗口封顶 30 天（`BLOG_SYNC_WINDOW_DAYS`），`last_blog_crawl.txt` 过旧时自动截断到窗口下界；发布日期以正文「文/书航」标注为准；新同步文章自动携带 featured 标签。v1.28 的 `resolve_blog_since_date` 因 datetime/date 混比在任何合法日期输入下抛 TypeError（v1.29 已修复为 `.date()`）。
 - daily 首同步保护（v1.28）：同日期早报已存在于 daily 仓库时直接跳过，不覆盖 md 与题图（首同步版本为准）；题图非 1:1 时按原始分辨率中心裁切为 1:1。
 - 图床路由：blog/daily/Photos 均读目标站 `_config.yml` 的 `image_prefixes`（半开区间，不得重叠/留空档）；Photos 2026-07-31 前 `modem-56k/img@main`、2026-08-01 起 `modem-56k/img2@main`（公开仓库）。
 
@@ -396,7 +441,7 @@
 - 修改生产前确认常驻进程状态并建立最小回滚备份；未经授权不停止/启动调度器。
 - 每轮完成后在本文件追加增量日志并重命名文件名时间戳（详见文件开头 Agent 守则；不再新建单独 todo 文件）。
 
-### 5.3 打包清单（v1.28）
+### 5.3 打包清单（v1.29）
 
 `.env.example`、01–05、90–92、image_routing.py、keepitrun.py、keywords.json、readme.md、rss_feeds.json，共 14 项；SHA-256 见 §1。运行时状态文件不入包：`cleanup_scan_memory.json`、`rss_issue_memory.json`、`blog_sync_memory.json`（v1.28 新增）。
 
