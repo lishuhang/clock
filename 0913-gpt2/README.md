@@ -1,33 +1,35 @@
 # 0913-gpt2 — AI生图 Worker（kmage + kdr 双通道）
 
-> **当前生产：`kmage-kdr-1.6`，部署于 `https://ai-image.lishuhang.workers.dev/`（Cloudflare Worker 名 `ai-image`）**
+> **当前生产：`kmage-kdr-1.7`，部署于 `https://ai-image.lishuhang.workers.dev/`（Cloudflare Worker 名 `ai-image`）**
 >
-> 本目录自包含。任何 AI Agent 访问本页/本仓库时：可将 `gpt2-worker-kmage-v1.6.js` 整体作为 skill 调用（单文件 Worker，后端代理 + 内嵌前端，无外部依赖）；排障请先读本文档与文件头部注释，线上自描述接口 `GET /about`、健康检查 `GET /healthz`；页面内右上角齿轮按钮 →「关于」选项卡含同样的自包含文档（对外脱敏版）与完整迭代时间线，与本文档对齐、两头互相补充。
+> 本目录自包含。任何 AI Agent 访问本页/本仓库时：可将 `gpt2-worker-kmage-v1.7.js` 整体作为 skill 调用（单文件 Worker，后端代理 + 内嵌前端，无外部依赖）；排障请先读本文档与文件头部注释，线上自描述接口 `GET /about`、健康检查 `GET /healthz`；页面内右上角齿轮按钮 →「关于」选项卡含同样的自包含文档（对外脱敏版）与完整迭代时间线，与本文档对齐、两头互相补充。
 >
-> **本文档已合并原 `CHANGELOG.md`**（完整迭代时间线见文末，按实际日期正序，从马良渠道至今）；任务交接文档见 `todo-gpt2-full-0923-2250.md`（0722~0819 历史交接全文 + 0913/0923 增量交接日志，由原 `TODO-full.md` 逐次合并重命名而来）。
+> **本文档已合并原 `CHANGELOG.md`**（完整迭代时间线见文末，按实际日期正序，从马良渠道至今）；任务交接文档见 `todo-gpt2-full-1008-0025.md`（0722~1008 历史交接全文 + 各次增量交接日志，由原 `TODO-full.md` 逐次合并重命名而来）。
 
-- **最后更新**：2026-09-23（GMT+8）
+- **最后更新**：2026-10-08（GMT+8）
 - **通道**：
   - **kmage**（默认）：上游 https://image.dddd.zone（kmage · AI 视觉工作台）官方 OpenAI 兼容 API。注册送 1 分；签到 +5 分/天/号（注册满 24h 开放）；1 积分 = 1 张图，失败自动返还；号池 N 号 ≈ 5N 张/天。站内老虎机为娱乐玩法（理论返还率 95.88%，负期望），本工具不对其进行自动化，避免把签到攒的积分赌没
   - **kdr**：上游 https://keydraw.97api.com（Keydraw/Draw Studio）。免费共享 Gift Key（`GET /api/gift-key` 自动轮换），2026-09 新契约：`key`/`host` 放请求 body，任务制（提交→轮询→图床 URL）；免费档固定 主线路 + gpt-image-2 + 1K；可选自定义付费 Key 解锁全部模型与 2K/4K
 - **v1.5 直连优先（2026-09-23 起，重要）**：两上游已将数据中心出口 IP 拉黑（kdr：免费 Key 黑名单；kmage：生图环境异常），**生图类请求由访客浏览器直连上游**（住宅 IP + 真实 UA；两上游均开放 `Access-Control-Allow-Origin: *`；直连地址运行时经 `GET /about` 获取，脱敏原则不变），Worker 代理降级为直连网络失败时的自动回退；kmage 会话类操作（Cookie 会话，无法跨域携带）不受风控影响，仍走 Worker 代理
 - **v1.6 净号直注（2026-09-23 起，重要）**：v1.5 真机实测 kmage 直连生图仍 403「账号使用环境异常」——号池账号全部是 0913 经 Worker 从数据中心 IP 注册的「代理出身号」，实测确认风控按生图请求出口 IP 判定（/v1 与 /api/tasks 双端点、API Key 与会话 Cookie 双鉴权、任意 Origin/UA/XFF 均同拒）；同时实测**注册端点无 CORS/Origin 校验且 text/plain 请求体照常按 JSON 解析（201）**，访客浏览器可直连注册。v1.6 将注册改为**浏览器直连优先**（no-cors 简单请求，新号「住宅 IP 出生 + 住宅 IP 使用」，注册结果由 Worker 代理登录验证，网络失败回退代理注册）；403 `account_environment_abnormal` 触发自愈链：标记账号（24h 选号跳过）→ 换未标记号重试 → 浏览器直连注册净号再试 → 全部失败时透出错误原文与替代建议
+- **v1.7 质询归类 + 充值闸门冷却（2026-10-08 起，重要）**：用户回传 10-07 真机日志显示双通道生图全断——① kdr 上游 10-07 午后起对 `/api/*` 全端点启用 **Cloudflare 托管人机质询**（实测响应头 `cf-mitigated: challenge`，403 + "Just a moment…" HTML；数据中心出口与访客住宅浏览器直连均被拦，前端表现为直连 fetch "Failed to fetch" + 代理 403 HTML）；v1.6 将 403 误判为「Key 被拒」触发无意义刷新重试并把整页 HTML 抛给用户。v1.7 修复: Worker 代理检测质询归一化为 502 `{error:{code:'upstream_challenge'}}`，前端识别后**快速失败**（不刷新 Gift Key、不重试、不转录 HTML 原文），轮询同提前失败；② kmage 净号直注（浏览器直连出生+住宅直连生图）亦被 403「账号使用环境异常，充值后解锁。」——**净号直注路线终结**（v1.6 交接 #11 预判应验），上游疑似将免费生图整体移至充值闸门后；v1.7 净号被拒后置 6h 冷却（`kmage_paywall_v1`）暂停自动注册避免无效消耗，终态报错明确归因与建议。工程侧不绕过人机验证/风控（沿袭反模式化原则）
 
 ## 文件清单
 
 | 文件 | 说明 |
 |---|---|
-| `gpt2-worker-kmage-v1.6.js` | **当前生产版本**。单文件 Cloudflare Worker（Service Worker 格式），在 1.5 基础上新增净号直注（Client-born Accounts）与 403 自愈链：注册改浏览器直连优先（no-cors 简单请求，出生环境=使用环境，回退代理注册），403 `account_environment_abnormal` 自动标记账号/换号/直注净号重试；号池状态列新增「环境异常」「直生」标记；修复非 JSON 错误响应日志误标 |
+| `gpt2-worker-kmage-v1.7.js` | **当前生产版本**。在 1.6 基础上新增上游人机质询归类（Worker 代理检测 `cf-mitigated: challenge`/质询页特征 → 502 `upstream_challenge` 结构化 JSON，前端快速失败：不刷新 Gift Key、不重试、不转录 HTML 原文，轮询同提前失败）与 kmage 充值闸门 6h 冷却（净号直注亦被 403 环境异常拒绝后，6h 内自愈链跳过自动注册，终态报错明确归因；签到/额度类不受影响） |
+| `gpt2-worker-kmage-v1.6.js` | v1.6 留档（净号直注版）。单文件 Cloudflare Worker（Service Worker 格式），在 1.5 基础上新增净号直注（Client-born Accounts）与 403 自愈链：注册改浏览器直连优先（no-cors 简单请求，出生环境=使用环境，回退代理注册），403 `account_environment_abnormal` 自动标记账号/换号/直注净号重试；号池状态列新增「环境异常」「直生」标记；修复非 JSON 错误响应日志误标 |
 | `gpt2-worker-kmage-v1.5.js` | v1.5 留档（直连优先：生图类请求浏览器直连上游，Worker 代理降级为自动回退；修复 2026-09-23 双上游拉黑数据中心出口 IP 导致的双通道生图全拒） |
 | `gpt2-worker-kmage-v1.4.js` | v1.4 留档（导航统一 + 设置三分区 + 界面记忆 + PWA） |
 | `gpt2-worker-kdr-v1.2.js` | 旧 kdr 独立版留档（上游 2026-09 改版后瘫死，已被 kmage-kdr-1.2 修复复活取代） |
 | `gpt2-worker-kdr-v1.1.js` | 旧 kdr 独立版留档（日额度计数 + 多自定义 Key 轮换） |
 | `gpt2-worker-kdr-v1.0.js` | 旧 kdr 独立版留档（单通道 + Gift Key 自动轮换） |
-|  `todo-gpt2-full-0923-2250.md` | 任务交接文档（0722~0819 历史交接全文 + 0913/0923 增量交接日志，每次增量后按 GMT+8 完工时间重命名） |
+|  `todo-gpt2-full-1008-0025.md` | 任务交接文档（0722~1008 历史交接全文 + 各次增量交接日志，每次增量后按 GMT+8 完工时间重命名） |
 
 > 原 `CHANGELOG.md` 已全文并入本文件文末「完整迭代时间线」节；原 `TODO-full.md` 已与各次增量交接日志合并为 todo 文件。更早的 kmage v1.0~v1.3 与马良 v27.2 留档已随仓库瘦身移除（变更细节见时间线与 todo 文档历史部分）。
 
-## 架构速览（kmage-kdr-1.6）
+## 架构速览（kmage-kdr-1.7）
 
 **路由**（Cloudflare Worker `ai-image`，无状态，无 KV 依赖）：
 
@@ -129,8 +131,8 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 ① `GET /about` 确认版本、通道端点与真实上游（v1.5 起亦为浏览器直连的地址来源）；② 打开「控制台」导出日志，定位首个非 2xx 上游请求（日志带 [kmage]/[kdr] 前缀并标注「直连/代理」路径，直连失败自动回退代理亦有专门日志）；③ 排障时注意本机出口 IP 属性：数据中心 IP 上直连或经 Worker 代理的生图请求都会被上游风控拦截（详见下方常见错误），住宅 IP 浏览器直连为预期正常路径。
 
 常见错误：
-- kmage：401 会话/Key 失效（自动重登重建）、402 积分不足（自动换号）、429 限流（5s 退避）、5xx 网关错误（4s 后同号+换号重试，失败自动返还积分）、180s 超时、403 `account_environment_abnormal`（按生图请求出口 IP 判定环境，数据中心出口一律被拒；**v1.5 真机实测「代理出身号 + 住宅 IP 直连」仍被拒——账号出身环境参与判定**；v1.6 起触发自愈链：标记该账号 24h 内选号跳过 → 换未标记号 → 浏览器直连注册净号重试 → 全部失败时透出错误原文与建议「更换网络/稍后再试/改用 kdr」；号池「环境异常」标记 24h 后自动失效）
-- kdr：401/403 Key 被拒（自动刷新共享 Key 重试）、**403「此 IP 已被加入免费 Key 黑名单」（2026-09-23 起上游拉黑 Cloudflare Worker 出口 IP 段的免费 Key 使用——v1.5 起浏览器直连后仅当访客自身出口 IP 被拉黑时出现）**、404 任务失效、轮询超时 180s（免费通道不扣费）
+- kmage：401 会话/Key 失效（自动重登重建）、402 积分不足（自动换号）、429 限流（5s 退避）、5xx 网关错误（4s 后同号+换号重试，失败自动返还积分）、180s 超时、403 `account_environment_abnormal`（按生图请求出口 IP 判定环境，数据中心出口一律被拒；**v1.5 真机实测「代理出身号 + 住宅 IP 直连」仍被拒——账号出身环境参与判定**；v1.6 起触发自愈链：标记该账号 24h 内选号跳过 → 换未标记号 → 浏览器直连注册净号重试 → 全部失败时透出错误原文与建议「更换网络/稍后再试/改用 kdr」；号池「环境异常」标记 24h 后自动失效；**2026-10-07 真机实测净号直注亦被同拒「充值后解锁」——净号直注路线终结（v1.6 交接 #11 预判应验），上游疑似将免费生图整体移至充值闸门后，v1.7 净号被拒后 6h 冷却期内跳过自动注册）**
+- kdr：401/403 Key 被拒（自动刷新共享 Key 重试）、**403「此 IP 已被加入免费 Key 黑名单」（2026-09-23 起上游拉黑 Cloudflare Worker 出口 IP 段的免费 Key 使用——v1.5 起浏览器直连后仅当访客自身出口 IP 被拉黑时出现）**、404 任务失效、轮询超时 180s（免费通道不扣费）；**403 "Just a moment…" 人机质询页（2026-10-07 起上游 /api/* 全端点启用 Cloudflare 托管质询，直连与代理均被拦——v1.7 已归类 `upstream_challenge` 快速失败，不刷新 Key 不重试，多为临时风控可稍后/换网络重试；探活方式: GET /api/gift-key 返回 "Just a moment…" HTML 即质询生效）**
 - 号池/设置可导出 JSON 离线分析；上游探活：kmage 站点直接访问首页（注册无验证码，签到接口账号未满 24h 返回 403；**注意本机若为数据中心 IP，凭有效 Key 直接调 /v1 生图也会 403 环境异常，属上游风控而非契约变化**）；kdr 站点 `GET /api/gift-key` 应返回 key/alias
 
 工程坑防守（历史教训，改代码前必读）：
@@ -145,7 +147,7 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 
 ## 完整迭代时间线（原 CHANGELOG.md 全文 · 按实际日期正序）
 
-页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点」表述）；本文档为维护者视角，保留真实上游地址。当前生产：`kmage-kdr-1.6`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
+页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点」表述）；本文档为维护者视角，保留真实上游地址。当前生产：`kmage-kdr-1.7`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
 
 ---
 ## 阶段一：马良渠道（2026-07 上旬及以前，本地迭代 v0.x → v27.2）
@@ -295,6 +297,16 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 - 部署 `ai-image`（CF API PUT，metadata `{"body_part":"worker.js"}`，HTTP 200）
 - 生产端到端：**kdr 免费 Gift Key 真实出图 27.6s**，历史条目含上游存储 URL 与本地缩略图；SW 注册激活正常，`beforeinstallprompt` 触发
 - 备份：`0913-gpt2/gpt2-worker-kmage-v1.4.js`（约 166 KB）
+
+## kmage-kdr-1.7 (2026-10-08) — 质询归类 + 充值闸门冷却：10-07 双上游再度收紧的工程侧应对（本版）
+
+- **故障 1（kdr 全断）**：用户回传真机日志（268 条，2026-10-07 23:53 导出）显示 kdr 通道 23:52 起全断——直连 fetch 全部 "Failed to fetch"，回退 Worker 代理后全部 403 + "Just a moment…" HTML；v1.6 误判为「Key 被拒」触发强制刷新 Gift Key 重试（2 秒内连打两轮无意义请求），最终把整页 HTML 当错误信息抛出。容器实测归因: kdr 上游对 `/api/*` **全端点**启用 Cloudflare 托管人机质询（响应头 `cf-mitigated: challenge`，403 + text/html；数据中心 IP 与浏览器 UA 同拦；同日 11:44 直连仍 200，为午后起的新变更）
+- **修复 1（质询归类，全链路）**：Worker 端 `isChallengeUpstream()`（`cf-mitigated: challenge` 头优先，兜底 403+text/html 正文特征）接入 `handleKdrProxy` 与 `handleV1Proxy`，命中即归一化返回 502 `{error:{code:'upstream_challenge',message:…}}`（不再透传 HTML）；前端 `isChallengeResp()` 识别后: 提交环节快速失败（不刷新 Gift Key、不重试——Key 与参数无涉）、轮询环节提前失败（不再空转 8 次）、`ensureGiftKey` 被质询时沿用缓存 Key 且不误报、直连+代理双路被拦时日志明确「人机质询确认，非 Key/参数问题」；错误文案给出诚实指引（临时风控可稍后/换网络重试，本工具不绕过人机验证）
+- **故障 2（kmage 充值闸门）**：同日志 23:53 显示 kmage 代理出身号与净号直注新号（浏览器直连出生，2.2s 内）均被 403 `account_environment_abnormal`「账号使用环境异常，充值后解锁。」——v1.6 交接 #11 的终结判定应验，净号直注路线终结；结合注册响应 `recharge_entry_enabled:true` 与错误文案，判断上游疑似将免费生图整体移至充值闸门后
+- **修复 2（充值闸门 6h 冷却）**：净号（bornDirect）亦被 403 环境异常拒绝时置 `kmage_paywall_v1` 时间戳，**6 小时内自愈链跳过自动注册**（避免一次会话连续白烧注册名额，到期自动恢复尝试；手动注册/生图不受限）；终态报错更新为明确归因（上游闸门，非本站可修复）与建议（改用 kdr/等待放松/充值）；签到/额度类功能不受影响（10-07 实测仍正常）
+- **自描述与文档**：/about 新增 `notes_v1_7`（kdr_challenge/kmage_paywall 双条目）与通道 mode 更新；页面关于排障指引 ③④ 与时间线、README（本文件）同步
+- **验证**：node --check 整文件 + 4 段内嵌 script 全过；vm 冒烟 13/13（healthz/about/页面版本、kdr 质询→502 结构化、kdr 正常→透传、kmage /v1 质询→502 结构化、页面含 isChallengeResp/paywallSuspected/时间线 v1.7）；CF API PUT 部署 200（16:19:12Z）；生产验证: 双域名 `/healthz` 1.7、`/about` 1.7+notes、页面标题 1.7、SW 缓存名 1.7、`/api/kdr/gift-key` 返回 502 `upstream_challenge` 结构化 JSON（workers.dev 与 gpt2.lishuhang.com 双域）、kmage `/v1` 假 key 401 JSON 正常透传、会话代理正常（边缘传播延迟约 1 分钟后全量生效）
+- 部署 `ai-image`（CF API PUT，HTTP 200）；备份：`0913-gpt2/gpt2-worker-kmage-v1.7.js`
 
 ## kmage-kdr-1.6 (2026-09-23) — 净号直注（Client-born Accounts）+ 403 自愈链：kmage 住宅直连仍被拒的根因定位与修复（本版）
 
