@@ -1,0 +1,182 @@
+AI生图 运行日志（全部）
+导出时间: 2026/10/8 11:54:18
+版本: kmage-kdr-1.8
+通道: kmage
+页面: https://gpt2.lishuhang.com/
+UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0
+条数: 174
+
+[22:44:07.572] [INFO] [Rmue7riflljf] ====== 生图开始 Rmue7riflljf（通道 kmage）======
+[22:44:07.572] [INFO] [Rmue7riflljf] 参数: 通道=kmage model=gpt-image-2.5-sunburst 比例=3:4 quality=high 参考图=0张 prompt="做一个一图说明ai公司对放缓ai开发的态度的信息图，中美top公司都要有，优雅一些的设计不要太大众，字数说明白问题即可不要太多"
+[22:44:07.575] [INFO] [Rmue7riflljf] [kmage] 选中账号 k***@gmail.com（积分 3，注册于 2026/9/13 15:55:12）
+[22:44:07.575] [INFO] [Rmue7riflljf] [kmage] POST /v1/images/generations（k***@gmail.com，超时 180s）
+[22:44:09.512] [WARN] [Rmue7riflljf] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (1937ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[22:44:09.512] [WARN] [Rmue7riflljf] [kmage] 上游环境风控拒绝该账号（403 环境异常），进入自愈链
+[22:44:09.512] [INFO] [Rmue7riflljf] [kmage] 自愈①: 切换到 k***@gmail.com（积分 2）
+[22:44:09.512] [INFO] [Rmue7riflljf] [kmage] POST /v1/images/generations（k***@gmail.com，超时 180s）
+[22:44:10.537] [WARN] [Rmue7riflljf] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (1024ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[22:44:10.538] [WARN] [Rmue7riflljf] [kmage] 换号后仍被环境风控拒绝，标记 k***@gmail.com
+[22:44:10.539] [INFO] [Rmue7riflljf] [kmage] 注册新账号 c***@gmail.com（浏览器直连注册: 出生环境=使用环境）
+[22:44:11.253] [INFO] [Rmue7riflljf] [kmage] 登录 c***@gmail.com
+[22:44:12.994] [INFO] [Rmue7riflljf] [kmage] [c***@gmail.com] POST /api/auth/login → HTTP 200 (1741ms)
+[22:44:13.947] [INFO] [Rmue7riflljf] [kmage] [c***@gmail.com] GET /api/auth/me → HTTP 200 (953ms)
+[22:44:14.631] [INFO] [Rmue7riflljf] [kmage] [c***@gmail.com] POST /api/api-keys → HTTP 201 (684ms)
+[22:44:14.631] [OK  ] [Rmue7riflljf] [kmage] 注册完成 c***@gmail.com（1 分，浏览器直连出生，24h 后可签到）
+[22:44:14.632] [INFO] [Rmue7riflljf] [kmage] 自愈②: 净号 c***@gmail.com 就绪（浏览器直连出生），重试生图
+[22:44:14.632] [INFO] [Rmue7riflljf] [kmage] POST /v1/images/generations（c***@gmail.com，超时 180s）
+[22:46:13.819] [OK  ] [Rmue7riflljf] [kmage] POST /v1/images/generations（直连）→ HTTP 200 (119187ms)
+[22:46:13.819] [OK  ] [Rmue7riflljf] [kmage] 上游受理成功，耗时 119.2s
+[22:46:13.833] [OK  ] [Rmue7riflljf] ====== 生图结束（成功，上游耗时 78.3s，c***@gmail.com 剩 0 分）======
+[10:00:59.210] [INFO] [-] 页面加载完成（kmage-kdr-1.6，通道 kmage，主题 system，日志 21 条，历史 14 条已恢复）
+[10:00:59.352] [INFO] [-] PWA: Service Worker 已注册
+[10:00:59.848] [INFO] [-] [core] 直连模式就绪: kmage ✓ / kdr ✓（自 /about 获取，637ms）
+[10:00:59.848] [INFO] [-] PWA: 浏览器已就绪可安装（beforeinstallprompt）
+[10:01:01.049] [INFO] [-] [kmage] 批量签到开始 ×8
+[10:01:01.735] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (684ms)
+[10:01:02.134] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (399ms)
+[10:01:02.134] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[10:01:03.605] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (313ms)
+[10:01:03.991] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (386ms)
+[10:01:03.991] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[10:01:05.426] [INFO] [-] [kmage] [n***@gmail.com] GET /api/checkin → HTTP 200 (318ms)
+[10:01:05.815] [INFO] [-] [kmage] [n***@gmail.com] POST /api/checkin → HTTP 200 (389ms)
+[10:01:05.815] [OK  ] [-] [kmage] 签到成功 n***@gmail.com +1 分
+[10:01:08.798] [INFO] [-] [kmage] [z***@gmail.com] GET /api/checkin → HTTP 200 (348ms)
+[10:01:09.173] [INFO] [-] [kmage] [z***@gmail.com] POST /api/checkin → HTTP 200 (375ms)
+[10:01:09.173] [OK  ] [-] [kmage] 签到成功 z***@gmail.com +1 分
+[10:01:11.016] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (307ms)
+[10:01:11.405] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (389ms)
+[10:01:11.405] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[10:01:13.439] [INFO] [-] [kmage] [c***@gmail.com] GET /api/checkin → HTTP 200 (319ms)
+[10:01:13.842] [INFO] [-] [kmage] [c***@gmail.com] POST /api/checkin → HTTP 200 (403ms)
+[10:01:13.842] [OK  ] [-] [kmage] 签到成功 c***@gmail.com +1 分
+[10:01:16.107] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (314ms)
+[10:01:16.476] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (369ms)
+[10:01:16.476] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[10:01:18.052] [INFO] [-] [kmage] [d***@gmail.com] GET /api/checkin → HTTP 200 (314ms)
+[10:01:18.433] [INFO] [-] [kmage] [d***@gmail.com] POST /api/checkin → HTTP 200 (380ms)
+[10:01:18.433] [OK  ] [-] [kmage] 签到成功 d***@gmail.com +1 分
+[10:01:19.494] [OK  ] [-] [kmage] 批量签到结束: 成功 8，已签 0，待激活 0，失败 0
+[10:04:19.811] [INFO] [-] 切换通道 → kdr
+[10:04:20.804] [INFO] [-] [kdr] GET /api/gift-key（直连）→ HTTP 200 (993ms)
+[10:04:20.804] [OK  ] [-] [kdr] Gift Key 已更新: www-97api-com
+[10:04:32.613] [INFO] [Rmum19skiznp] ====== 生图开始 Rmum19skiznp（通道 kdr）======
+[10:04:32.613] [INFO] [Rmum19skiznp] 参数: 通道=kdr model=gpt-image-2 比例=16:9 档=1K quality=high 参考图=1张 prompt="用参考图里的字体，写几个字：【测试AI字体生成能力】，下一行【Work by ChatGPT】，居中显示，黄底黑字；注意其中英文和数字的风格参考图中【2025】"
+[10:04:32.614] [INFO] [Rmum19skiznp] [kdr] 生效参数: 免费 Gift Key(www-97api-com) host=www.97api.com model=gpt-image-2 size=1K（免费档锁定 1K）
+[10:04:32.614] [INFO] [Rmum19skiznp] [kdr] 图生图模式：1 张参考图（multipart /edits）
+[10:04:32.621] [INFO] [Rmum19skiznp] [kdr] POST /api/image-tasks/edits（multipart，1 张参考图，key/host 入表单）
+[10:04:33.766] [INFO] [Rmum19skiznp] [kdr] POST /api/image-tasks/edits（直连）→ HTTP 202 (1145ms)
+[10:04:33.766] [OK  ] [Rmum19skiznp] [kdr] 任务已受理 id=dde5b747-ac70-4d48-a5e3-46de70ca6305
+[10:04:37.753] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (674ms)
+[10:04:41.377] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (288ms)
+[10:04:45.370] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (289ms)
+[10:04:49.370] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (293ms)
+[10:04:53.388] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (301ms)
+[10:04:57.389] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (302ms)
+[10:05:01.408] [INFO] [Rmum19skiznp] [kdr] GET /api/image-tasks/dde5b747-ac70-4d48-a5e3-46de70ca6305（直连）→ HTTP 200 (320ms)
+[10:05:01.408] [INFO] [Rmum19skiznp] [kdr] 出图完成，经代理拉取结果图转 base64
+[10:05:02.228] [INFO] [Rmum19skiznp] [kdr] 直连图床 GET → HTTP 200 (819ms)
+[10:05:03.268] [OK  ] [Rmum19skiznp] ====== 生图结束（成功，总耗时 30.7s，kdr 通道）======
+[10:09:08.153] [INFO] [Rmum1fp6e3p8] ====== 生图开始 Rmum1fp6e3p8（通道 kdr）======
+[10:09:08.153] [INFO] [Rmum1fp6e3p8] 参数: 通道=kdr model=gpt-image-2 比例=16:9 档=1K quality=high 参考图=1张 prompt="用参考图里的字体，写几个字：【测试AI字体生成能力】，下一行【Work by ChatGPT】，居中显示，黄底(#FCDA0E)黑字"
+[10:09:08.154] [INFO] [Rmum1fp6e3p8] [kdr] 生效参数: 免费 Gift Key(www-97api-com) host=www.97api.com model=gpt-image-2 size=1K（免费档锁定 1K）
+[10:09:08.154] [INFO] [Rmum1fp6e3p8] [kdr] 图生图模式：1 张参考图（multipart /edits）
+[10:09:08.161] [INFO] [Rmum1fp6e3p8] [kdr] POST /api/image-tasks/edits（multipart，1 张参考图，key/host 入表单）
+[10:09:09.343] [INFO] [Rmum1fp6e3p8] [kdr] POST /api/image-tasks/edits（直连）→ HTTP 202 (1182ms)
+[10:09:09.343] [OK  ] [Rmum1fp6e3p8] [kdr] 任务已受理 id=b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1
+[10:09:12.662] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (315ms)
+[10:09:15.944] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (282ms)
+[10:09:19.476] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (521ms)
+[10:09:23.360] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (284ms)
+[10:09:27.543] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (468ms)
+[10:09:31.467] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (382ms)
+[10:09:35.381] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (298ms)
+[10:09:39.383] [INFO] [Rmum1fp6e3p8] [kdr] GET /api/image-tasks/b635f5b1-5a52-4ca2-b4e9-bb0b86736bd1（直连）→ HTTP 200 (303ms)
+[10:09:39.383] [INFO] [Rmum1fp6e3p8] [kdr] 出图完成，经代理拉取结果图转 base64
+[10:09:39.896] [INFO] [Rmum1fp6e3p8] [kdr] 直连图床 GET → HTTP 200 (513ms)
+[10:09:40.999] [OK  ] [Rmum1fp6e3p8] ====== 生图结束（成功，总耗时 32.8s，kdr 通道）======
+[09:07:24.769] [INFO] [-] 页面加载完成（kmage-kdr-1.7，通道 kdr，主题 system，日志 89 条，历史 16 条已恢复）
+[09:07:24.912] [INFO] [-] PWA: Service Worker 已注册
+[09:07:25.281] [INFO] [-] PWA: 浏览器已就绪可安装（beforeinstallprompt）
+[09:07:25.869] [INFO] [-] [core] 直连模式就绪: kmage ✓ / kdr ✓（自 /about 获取，1100ms）
+[09:07:27.071] [INFO] [-] [kmage] 批量签到开始 ×8
+[09:07:27.938] [WARN] [-] [kdr] 直连上游失败（Failed to fetch），自动回退 Worker 代理
+[09:07:28.396] [ERR ] [-] [kdr] GET /api/gift-key（代理）→ HTTP 502 (458ms) || 上游 Cloudflare 人机质询页（Worker 已归类 upstream_challenge，HTML 原文不转录）
+[09:07:28.398] [WARN] [-] [kdr] 上游 Cloudflare 人机质询确认: 直连 fetch 与 Worker 代理均被拦（质询页 cf-mitigated:challenge），非 Key/参数问题
+[09:07:28.398] [WARN] [-] [kdr] Gift Key 获取被上游人机质询拦截（非 Key 问题），沿用现有/回退 Key
+[09:07:28.574] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (1502ms)
+[09:07:29.218] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (644ms)
+[09:07:29.219] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[09:07:31.870] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (972ms)
+[09:07:34.409] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (2539ms)
+[09:07:34.409] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[09:07:42.881] [INFO] [-] 切换通道 → kmage
+[09:07:43.962] [INFO] [-] [kmage] [d***@gmail.com] GET /api/checkin → HTTP 200 (6775ms)
+[09:07:44.942] [INFO] [-] [kmage] [d***@gmail.com] POST /api/checkin → HTTP 200 (980ms)
+[09:07:44.942] [OK  ] [-] [kmage] 签到成功 d***@gmail.com +1 分
+[09:07:47.992] [INFO] [-] [kmage] [n***@gmail.com] GET /api/checkin → HTTP 200 (620ms)
+[09:07:48.934] [INFO] [-] [kmage] [n***@gmail.com] POST /api/checkin → HTTP 200 (938ms)
+[09:07:48.938] [OK  ] [-] [kmage] 签到成功 n***@gmail.com +1 分
+[09:07:51.103] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (637ms)
+[09:07:51.973] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (866ms)
+[09:07:51.978] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[09:07:56.006] [INFO] [-] [kmage] [k***@gmail.com] GET /api/checkin → HTTP 200 (2376ms)
+[09:07:58.339] [INFO] [-] [kmage] [k***@gmail.com] POST /api/checkin → HTTP 200 (2328ms)
+[09:07:58.342] [OK  ] [-] [kmage] 签到成功 k***@gmail.com +1 分
+[09:08:01.204] [INFO] [-] [kmage] [z***@gmail.com] GET /api/checkin → HTTP 200 (773ms)
+[09:08:02.032] [INFO] [-] [kmage] [z***@gmail.com] POST /api/checkin → HTTP 200 (819ms)
+[09:08:02.036] [OK  ] [-] [kmage] 签到成功 z***@gmail.com +1 分
+[10:35:23.683] [INFO] [-] 页面加载完成（kmage-kdr-1.8，通道 kmage，主题 system，日志 120 条，历史 16 条已恢复）
+[10:35:23.714] [INFO] [-] PWA: Service Worker 已注册
+[10:35:23.991] [INFO] [-] PWA: 浏览器已就绪可安装（beforeinstallprompt）
+[10:35:24.026] [INFO] [-] [core] 直连模式就绪: kmage ✓ / kdr ✓（自 /about 获取，343ms）
+[11:51:13.414] [INFO] [-] 切换通道 → kdr
+[11:51:13.989] [WARN] [-] [kdr] 直连上游失败（Failed to fetch），自动回退 Worker 代理
+[11:51:14.545] [ERR ] [-] [kdr] GET /api/gift-key（代理）→ HTTP 502 (556ms) || 上游 Cloudflare 人机质询页（Worker 已归类 upstream_challenge，HTML 原文不转录）
+[11:51:14.545] [WARN] [-] [kdr] 上游 Cloudflare 人机质询确认: 直连 fetch 与 Worker 代理均被拦（质询页 cf-mitigated:challenge），非 Key/参数问题
+[11:51:14.547] [WARN] [-] [kdr] Gift Key 获取被上游人机质询拦截（非 Key 问题），沿用现有/回退 Key
+[11:52:19.445] [INFO] [Rmuz032epps2] ====== 生图开始 Rmuz032epps2（通道 kdr）======
+[11:52:19.445] [INFO] [Rmuz032epps2] 参数: 通道=kdr model=gpt-image-2 比例=3:4 档=1K quality=high 参考图=1张 prompt="把这张图片上面每一个楼都打上中国拆迁时候 刷的红漆一个圈里面一个大大的 拆 字"
+[11:52:19.515] [WARN] [Rmuz032epps2] [kdr] 直连上游失败（Failed to fetch），自动回退 Worker 代理
+[11:52:19.560] [ERR ] [Rmuz032epps2] [kdr] GET /api/gift-key（代理）→ HTTP 502 (45ms) || 上游 Cloudflare 人机质询页（Worker 已归类 upstream_challenge，HTML 原文不转录）
+[11:52:19.561] [WARN] [Rmuz032epps2] [kdr] 上游 Cloudflare 人机质询确认: 直连 fetch 与 Worker 代理均被拦（质询页 cf-mitigated:challenge），非 Key/参数问题
+[11:52:19.561] [WARN] [Rmuz032epps2] [kdr] Gift Key 获取被上游人机质询拦截（非 Key 问题），沿用现有/回退 Key
+[11:52:19.561] [INFO] [Rmuz032epps2] [kdr] 生效参数: 免费 Gift Key(www-97api-com) host=www.97api.com model=gpt-image-2 size=1K（免费档锁定 1K）
+[11:52:19.562] [INFO] [Rmuz032epps2] [kdr] 图生图模式：1 张参考图（multipart /edits）
+[11:52:19.574] [INFO] [Rmuz032epps2] [kdr] POST /api/image-tasks/edits（multipart，1 张参考图，key/host 入表单）
+[11:52:19.662] [WARN] [Rmuz032epps2] [kdr] 直连上游失败（Failed to fetch），自动回退 Worker 代理
+[11:52:19.774] [ERR ] [Rmuz032epps2] [kdr] POST /api/image-tasks/edits（代理）→ HTTP 502 (112ms) || 上游 Cloudflare 人机质询页（Worker 已归类 upstream_challenge，HTML 原文不转录）
+[11:52:19.774] [WARN] [Rmuz032epps2] [kdr] 上游 Cloudflare 人机质询确认: 直连 fetch 与 Worker 代理均被拦（质询页 cf-mitigated:challenge），非 Key/参数问题
+[11:52:19.774] [WARN] [Rmuz032epps2] [kdr] 提交被上游人机质询拦截，发起人工验证中继（由用户完成勾选）
+[11:52:55.225] [WARN] [Rmuz032epps2] [kdr] 人机验证未完成: 用户取消
+[11:52:55.225] [ERR ] [Rmuz032epps2] 生图失败: kdr 上游人机验证未完成——直连与代理均被质询拦截。可稍后重试并在弹窗内完成勾选（验证由你本人完成，本工具不代解不绕过）；Gift Key 与本错误无关，无需刷新
+[11:52:55.226] [ERR ] [Rmuz032epps2] ====== 生图结束（失败，耗时 35.8s）======
+[11:52:56.559] [INFO] [Rmuz032epps2] 切换通道 → kmage
+[11:52:58.018] [INFO] [Rmuz03w664bq] ====== 生图开始 Rmuz03w664bq（通道 kmage）======
+[11:52:58.018] [INFO] [Rmuz03w664bq] 参数: 通道=kmage model=gpt-image-2.5-sunburst 比例=3:4 quality=high 参考图=1张 prompt="把这张图片上面每一个楼都打上中国拆迁时候 刷的红漆一个圈里面一个大大的 拆 字"
+[11:52:58.020] [INFO] [Rmuz03w664bq] [kmage] 选中账号 k***@gmail.com（积分 5，注册于 2026/9/13 15:55:12）
+[11:52:58.020] [INFO] [Rmuz03w664bq] [kmage] POST /v1/images/generations（k***@gmail.com，超时 180s）
+[11:53:03.819] [WARN] [Rmuz03w664bq] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (5798ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[11:53:03.819] [WARN] [Rmuz03w664bq] [kmage] 上游环境风控拒绝该账号（403 环境异常），进入自愈链
+[11:53:05.894] [INFO] [Rmuz03w664bq] [kmage] [k***@gmail.com] DELETE /api/api-keys/EgzG2DcEPToYzQsJchCzCk1g → HTTP 204 (2073ms)
+[11:53:05.894] [INFO] [Rmuz03w664bq] [kmage] 旧 Key 删除: HTTP 204（已清除）
+[11:53:06.787] [INFO] [Rmuz03w664bq] [kmage] [k***@gmail.com] POST /api/api-keys → HTTP 201 (893ms)
+[11:53:06.787] [OK  ] [Rmuz03w664bq] [kmage] 已在号内重建 API Key（k***@gmail.com，Hint kmage_sZS-...096E）
+[11:53:06.787] [INFO] [Rmuz03w664bq] [kmage] POST /v1/images/generations（k***@gmail.com，超时 180s）
+[11:53:09.178] [WARN] [Rmuz03w664bq] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (2389ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[11:53:09.178] [WARN] [Rmuz03w664bq] [kmage] 自愈⓪: 重建 Key 后仍被拒（HTTP 403），继续自愈链
+[11:53:09.178] [INFO] [Rmuz03w664bq] [kmage] 自愈①: 切换到 k***@gmail.com（积分 4）
+[11:53:09.179] [INFO] [Rmuz03w664bq] [kmage] POST /v1/images/generations（k***@gmail.com，超时 180s）
+[11:53:10.941] [WARN] [Rmuz03w664bq] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (1760ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[11:53:10.942] [WARN] [Rmuz03w664bq] [kmage] 换号后仍被环境风控拒绝，标记 k***@gmail.com
+[11:53:10.944] [INFO] [Rmuz03w664bq] [kmage] 注册新账号 d***@gmail.com（浏览器直连注册: 出生环境=使用环境）
+[11:53:12.007] [INFO] [Rmuz03w664bq] [kmage] 登录 d***@gmail.com
+[11:53:13.621] [INFO] [Rmuz03w664bq] [kmage] [d***@gmail.com] POST /api/auth/login → HTTP 200 (1614ms)
+[11:53:14.459] [INFO] [Rmuz03w664bq] [kmage] [d***@gmail.com] GET /api/auth/me → HTTP 200 (833ms)
+[11:53:15.313] [INFO] [Rmuz03w664bq] [kmage] [d***@gmail.com] POST /api/api-keys → HTTP 201 (854ms)
+[11:53:15.313] [OK  ] [Rmuz03w664bq] [kmage] 注册完成 d***@gmail.com（1 分，浏览器直连出生，24h 后可签到）
+[11:53:15.314] [INFO] [Rmuz03w664bq] [kmage] 自愈②: 净号 d***@gmail.com 就绪（浏览器直连出生），重试生图
+[11:53:15.314] [INFO] [Rmuz03w664bq] [kmage] POST /v1/images/generations（d***@gmail.com，超时 180s）
+[11:53:17.095] [WARN] [Rmuz03w664bq] [kmage] POST /v1/images/generations（直连）→ HTTP 403 (1779ms) || {"error":{"message":"账号使用环境异常，充值后解锁。","type":"permission_error","code":"account_environment_abnormal"}}
+[11:53:17.095] [ERR ] [Rmuz03w664bq] 生图失败: 账号使用环境异常，充值后解锁。；自愈链全量用尽（v1.8 已先在号内重建 API Key 重试、仍被拒）——净号（浏览器直连出生）亦被同拒，结合上游错误文案「充值后解锁」判断，上游疑似已将免费生图整体移至充值闸门后（2026-10-08 实测），非本站可修复。建议: 改用 kdr 通道（遇质询可在弹窗内完成人工验证）、等待上游策略放松，或在上游充值解锁；自动注册净号已进入 6 小时冷却，到期自动恢复尝试
+[11:53:17.095] [ERR ] [Rmuz03w664bq] ====== 生图结束（失败，耗时 19.1s）======
