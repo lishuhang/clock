@@ -187,14 +187,14 @@ const HTML = `<!DOCTYPE html>
   'use strict';
 
   /* ---------- 端点解析 ---------- */
-  // 默认代理端点（Cloudflare Worker，已部署）：GitHub Pages / 本地打开时经此代理上传。
+  // 默认代理端点（Cloudflare Worker，已部署）：GitHub Pages / 自定义域 / 本地打开时经此代理上传。
   // 页面本身部署在 Worker 上时自动改用同域相对路径，此值不生效。
   var DEFAULT_API = '';
 
   function currentApi(){
     try{
-      // 1) 页面本身部署在 Worker 上（workers.dev 或自定义域）→ 同域相对路径
-      if(location.protocol === 'https:' && !isLocalFile() && !onGithubPages()){
+      // 1) 页面本身部署在 Worker 上（workers.dev 或 Worker 自定义域）→ 同域相对路径
+      if(location.protocol === 'https:' && /(\\.workers\\.dev|imagebed-hx\\.lishuhang\\.me)$/.test(location.hostname)){
         return '';
       }
     }catch(e){}
@@ -202,11 +202,9 @@ const HTML = `<!DOCTYPE html>
     var saved = null;
     try{ saved = localStorage.getItem('hx-imagebed-api'); }catch(e){}
     if(saved) return saved.replace(/\\/+$/,'');
-    // 3) 内置默认
+    // 3) 内置默认（GitHub Pages / 任意静态托管 / 本地打开都走已部署的 Worker 代理）
     return (DEFAULT_API || '').replace(/\\/+$/,'');
   }
-  function isLocalFile(){ return location.protocol === 'file:'; }
-  function onGithubPages(){ return /\\.github\\.io$/.test(location.hostname); }
 
   function uploadEndpoint(){ var b = currentApi(); return (b ? b + '/upload' : '/upload'); }
   function refreshApiNow(){
