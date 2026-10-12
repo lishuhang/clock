@@ -94,3 +94,30 @@ Stage Summary:
 - 上传行为与 cookie 无关：前端零 cookie，三渠道登录态全部在 Worker secrets 服务端注入；图片 URL 无 token 有效期
 - AI Agent 可作为 skill 直接调用：POST /upload（字段 img+channel）返回 JSON；GET /api、GET /llms.txt 提供机器可读清单
 - cookies 更新方式：重新导出对应站点 cookies.txt 后重跑 scripts/deploy_imgbd.py（huxiu 本地备份 assets/huxiu-cookies.txt，jm/pph 在仓库目录，均不入 git 提交内容审查通过）
+
+---
+Task ID: 1012-4
+Agent: Super Z (main)
+Task: 图床 v1.2 — 界面去品牌化（渠道更名 HX/JM/PP）+ Agent 文档域名统一 + 部署验证
+
+Work Log:
+- 产品名改为「图床」：title/h1 更名，左上角新增版本徽标 v1.2，副标题仅保留「上传即得 永久 CDN 直链」
+- 设置面板精简：仅保留「上传代理端点（Cloudflare Worker 地址，留空使用默认）」标签 + 输入框 + 保存；删除 workers.dev 默认值外显（placeholder）与「当前端点/同域说明」整段 setnote（含 refreshApiNow 代码）
+- 渠道选择改为简单单选框（radio HX/JM/PP），标签行「选择上传渠道：HX（PNG/JPG）/ JM（PNG/JPG/GIF）/ PP」；删除渠道卡片与 img.huxiucdn.com / img.jiemian.com / OSS 直链等域名说明
+- Agent 调用说明重写：所有示例域名 workers.dev → imgbd.lishuhang.com；渠道名 HX/JM/PP；渠道差异表删除「图片域名」列；响应示例 url 改为 https://...（去除 jiemian 域名）；「网页 <img> 引用建议加 referrerpolicy="no-referrer"」（去"虎嗅"二字）移入渠道差异表 HX 行「限制」单元格；删除页面上方 chhint2 提示条
+- 页脚仅保留「仅供学习研究，请勿滥用」；删除 v1.1 的版本/通道来源/部署说明行
+- 代码渠道名全面更名 HX/JM/PP：前端 CHANNELS/data-ch/CH_META/GIF 拒绝文案/JM 排队注释/succeed 渠道标签/HTML 复制按钮 isHx 判断；localStorage 旧值（huxiu/jiemian/thepaper）自动迁移
+- Worker：pickChannel 规范化为 HX/JM/PP（大小写不敏感，兼容旧名 huxiu/jiemian/thepaper/pph/paper/pengpai 及查询参数 ?channel=/?c=）；响应 channel 字段返回 HX/JM/PP；API_MANIFEST 与 LLMS_TXT 同步重写（v1.2、无 url_host、lishuhang.com 域名）；错误消息去品牌名（HX/JM/PP 渠道 + 对应站点 cookies 措辞）；具体上传实现代码（uploadHuxiu/uploadJiemian/uploadThepaper、上游 URL、secrets 名）按用户要求暂不混淆
+- 附带加固：PP 凭证接口（paiapi）偶发 CF 520 → getPphSts 改为最多 2 次尝试 + 800ms 退避，JSON 解析失败不再裸抛
+- 构建：build_imgbd.py WORKER_URL 改为 https://imgbd.lishuhang.com（standalone 默认端点）；修复 deploy 脚本 workers.dev 地址打印笔误
+- 部署：imgbd worker 重新上传（secrets 原样重绑），workers.dev 与自定义域 imgbd.lishuhang.com 均 200
+- E2E（HTTP，scripts/e2e_v12.py）：28/28 通过 —— 页面文案 14 项、/api 4 项、/llms.txt 3 项、上传 6 项（PP PNG/GIF、默认 HX、旧名 thepaper→PP、JM、小写 hx→HX）、URL 可访问性
+- E2E（浏览器，scripts/e2e_v12_ui.py）：11/11 通过 —— v1.2 元素/单选框切换/JM 排队提示/粘贴上传（自定义域 PP + 本地 file:// HX 跨域经默认端点）/无 JS 错误
+- 发现并记录：Cloudflare 全球规则拦截裸 Python-urllib UA（workers.dev 与自定义域均 403）；python-requests/curl/Go/okhttp/浏览器 UA 均 200，对 Agent 调用无影响（文档示例即 python-requests）
+- 存档：download/imagebed-v1.2.html + download/imgbd-worker-v1.2.js；推送前安全审计通过（无 token/cookie 入库）
+
+Stage Summary:
+- 图床 v1.2 上线：https://imgbd.lishuhang.com/（= https://imgbd.lishuhang.workers.dev/）
+- 界面全面去品牌化：渠道对外仅称 HX/JM/PP，无上游站点名/图片域名外显；设置与页脚极简化
+- Agent API 向后兼容：channel 字段接受 HX/JM/PP（大小写不敏感）与旧名，响应返回 HX/JM/PP；GET /api 与 /llms.txt 均为 v1.2 无域名泄漏版本
+- PP 渠道上游偶发 520 已加重试；全部 39 项 E2E 断言通过

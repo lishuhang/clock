@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>图床 ImgBD</title>
-<meta name="description" content="多渠道图床（虎嗅/界面/澎湃）：上传图片获取永久 CDN 外链。支持点击/拖拽/粘贴，并提供 HTTP API 供 AI Agent 直接调用（GET /api 与 /llms.txt 可获取机器可读接口说明）。">
+<title>图床</title>
+<meta name="description" content="图床：上传图片，即刻获得永久 CDN 直链。支持点击/拖拽/粘贴与多张批量上传，并提供 HTTP API 供 AI Agent 直接调用（GET /api、GET /llms.txt）。">
 <style>
   :root{
     --bg:#f7f7f8; --card:#ffffff; --text:#1c1e21; --muted:#8a8f98;
@@ -20,7 +20,10 @@
   .wrap{max-width:680px;margin:0 auto}
   header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
   h1{font-size:24px;font-weight:700;letter-spacing:.5px}
-  h1 .dot{color:var(--accent)}
+  h1 .ver{
+    font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);
+    border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:3px;letter-spacing:.3px;
+  }
   .sub{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.6}
   .sub b{color:var(--text);font-weight:600}
   .gear{
@@ -47,22 +50,16 @@
     border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;
     font-size:13px;cursor:pointer;font-family:inherit;flex:none;
   }
-  .setnote{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.6}
-  .setnote code{background:var(--bg);padding:1px 5px;border-radius:4px;font-size:11px}
-
-  .chlabel{font-size:12.5px;color:var(--muted);margin:0 2px 8px}
-  .channels{display:flex;gap:8px;margin-bottom:16px}
+  .chlabel{font-size:12.5px;color:var(--muted);margin:0 2px 8px;line-height:1.7}
+  .channels{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
   .ch{
-    flex:1;border:1px solid var(--border);background:var(--card);border-radius:10px;
-    padding:9px 10px;cursor:pointer;text-align:left;font-family:inherit;transition:.13s;
+    display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--card);
+    border-radius:10px;padding:8px 16px;cursor:pointer;font-size:13.5px;font-weight:600;
+    font-family:inherit;transition:.13s;user-select:none;
   }
   .ch:hover{border-color:#c5c8cf}
-  .ch .n{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px}
-  .ch .d{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
-  .ch.on{border-color:var(--accent);background:var(--accent-soft)}
-  .ch.on .n{color:var(--accent)}
-  .ch .tick{width:8px;height:8px;border-radius:50%;background:#c9cad0;flex:none}
-  .ch.on .tick{background:var(--accent)}
+  .ch input{margin:0;width:15px;height:15px;accent-color:var(--accent);flex:none}
+  .ch.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 
   #chhint{display:none;font-size:12px;color:#9a6b00;background:#fff6e5;border-radius:8px;
     padding:8px 12px;margin-bottom:14px;line-height:1.6}
@@ -153,7 +150,6 @@
   details.api code{background:var(--bg);border-radius:4px;padding:1px 5px;font-size:11.5px;
     font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
 
-  .hint{font-size:12px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.8}
   footer{
     text-align:center;color:#b3b7be;font-size:11.5px;margin-top:30px;line-height:1.7;
   }
@@ -161,8 +157,6 @@
     body{padding:20px 10px 48px}
     #drop{padding:38px 14px}
     .thumb{width:60px;height:60px}
-    .channels{flex-wrap:wrap}
-    .ch{min-width:calc(50% - 4px)}
   }
 </style>
 </head>
@@ -170,8 +164,8 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>图床 ImgBD<span class="dot">.</span></h1>
-      <div class="sub">多渠道图片外链：虎嗅 · 界面 · 澎湃，上传即得 <b>永久 CDN 直链</b></div>
+      <h1>图床<span class="ver">v1.2</span></h1>
+      <div class="sub">上传即得 <b>永久 CDN 直链</b></div>
     </div>
     <button class="gear" id="gear" title="接口端点设置">⚙</button>
   </header>
@@ -179,29 +173,16 @@
   <div id="settings">
     <label>上传代理端点（Cloudflare Worker 地址，留空使用默认）</label>
     <div class="setrow">
-      <input id="apiInput" type="url" placeholder="https://imgbd.lishuhang.workers.dev" spellcheck="false">
+      <input id="apiInput" type="url" spellcheck="false">
       <button id="apiSave">保存</button>
-    </div>
-    <div class="setnote">
-      当前端点：<code id="apiNow">（自动）</code><br>
-      说明：三个渠道均不接受浏览器跨域直连，需经 Worker 代理。本页部署在 Worker 上时自动同域，无需修改。
     </div>
   </div>
 
-  <div class="chlabel">选择上传渠道：</div>
+  <div class="chlabel">选择上传渠道：HX（PNG/JPG）/ JM（PNG/JPG/GIF）/ PP</div>
   <div class="channels" id="channels">
-    <button class="ch on" data-ch="huxiu" type="button">
-      <div class="n"><span class="tick"></span>虎嗅</div>
-      <div class="d">img.huxiucdn.com<br>PNG / JPG</div>
-    </button>
-    <button class="ch" data-ch="jiemian" type="button">
-      <div class="n"><span class="tick"></span>界面</div>
-      <div class="d">img.jiemian.com<br>PNG / JPG / GIF</div>
-    </button>
-    <button class="ch" data-ch="thepaper" type="button">
-      <div class="n"><span class="tick"></span>澎湃</div>
-      <div class="d">thepaper OSS 直链<br>全格式 · 无防盗链</div>
-    </button>
+    <label class="ch" data-ch="HX"><input type="radio" name="imgbd-ch" value="HX">HX</label>
+    <label class="ch" data-ch="JM"><input type="radio" name="imgbd-ch" value="JM">JM</label>
+    <label class="ch" data-ch="PP"><input type="radio" name="imgbd-ch" value="PP">PP</label>
   </div>
   <div id="chhint"></div>
 
@@ -224,44 +205,38 @@
         <tr><th>方法</th><td><code>POST /upload</code></td></tr>
         <tr><th>Content-Type</th><td><code>multipart/form-data</code></td></tr>
         <tr><th>字段 <code>img</code></th><td>图片文件（必需；亦接受 <code>file</code> / <code>upfile</code>）</td></tr>
-        <tr><th>字段 <code>channel</code></th><td>可选渠道：<code>huxiu</code>（默认）/ <code>jiemian</code> / <code>thepaper</code></td></tr>
+        <tr><th>字段 <code>channel</code></th><td>可选渠道：<code>HX</code>（默认）/ <code>JM</code> / <code>PP</code></td></tr>
       </table>
       <h4>调用示例</h4>
-      <pre>curl -F "img=@photo.png" -F "channel=thepaper" https://imgbd.lishuhang.workers.dev/upload
+      <pre>curl -F "img=@photo.png" -F "channel=PP" https://imgbd.lishuhang.com/upload
 
 # Python
 import requests
-r = requests.post("https://imgbd.lishuhang.workers.dev/upload",
+r = requests.post("https://imgbd.lishuhang.com/upload",
     files={"img": open("photo.png","rb")},
-    data={"channel": "thepaper"})
+    data={"channel": "PP"})
 print(r.json()["url"])   # -> 永久外链</pre>
       <h4>响应（JSON）</h4>
-      <pre>{"result": 1, "msg": "文件上传成功", "url": "https://img.jiemian.com/...", "channel": "jiemian"}
+      <pre>{"result": 1, "msg": "文件上传成功", "url": "https://...", "channel": "PP"}
 # 失败: {"result": 0, "msg": "原因..."}</pre>
       <h4>渠道差异</h4>
       <table>
-        <tr><th>channel</th><th>图片域名</th><th>支持格式</th><th>限制</th></tr>
-        <tr><td><code>huxiu</code></td><td>img.huxiucdn.com</td><td>PNG / JPG</td><td>≤10MB；少数站点外链需 <code>referrerpolicy="no-referrer"</code></td></tr>
-        <tr><td><code>jiemian</code></td><td>img.jiemian.com</td><td>PNG / JPG / GIF</td><td>≤10MB；无防盗链；有频率限制（约 10 秒 1 张）</td></tr>
-        <tr><td><code>thepaper</code></td><td>*.aliyuncs.com（澎湃 OSS）</td><td>PNG / JPG / GIF / WebP / BMP</td><td>≤10MB；无防盗链</td></tr>
+        <tr><th>channel</th><th>支持格式</th><th>限制</th></tr>
+        <tr><td><code>HX</code></td><td>PNG / JPG</td><td>≤10MB；网页 &lt;img&gt; 引用建议加 <code>referrerpolicy="no-referrer"</code></td></tr>
+        <tr><td><code>JM</code></td><td>PNG / JPG / GIF</td><td>≤10MB；无防盗链；有频率限制（约 10 秒 1 张）</td></tr>
+        <tr><td><code>PP</code></td><td>PNG / JPG / GIF / WebP / BMP</td><td>≤10MB；无防盗链</td></tr>
       </table>
       <p>机器可读接口清单：<code>GET /api</code>（JSON）· <code>GET /llms.txt</code>（纯文本）。Agent 可将其注册为图片上传 skill：输入本地图片文件，输出可公开访问的图片 URL。</p>
     </div>
   </details>
 
-  <div class="hint" id="chhint2">
-    💡 虎嗅渠道外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>；界面 / 澎湃渠道直链无任何防盗链
-  </div>
-  <footer>
-    图床 ImgBD v1.1 · 上传通道模拟自虎嗅 / 界面 / 澎湃投稿编辑器 · 单文件 HTML · 可部署于 GitHub Pages / Cloudflare Workers<br>
-    仅供学习研究，请勿滥用
-  </footer>
+  <footer>仅供学习研究，请勿滥用</footer>
 </div>
 
 <script type="application/json" id="imgbd-api-manifest">
 {
-  "name": "ImgBD 图床",
-  "version": "1.1",
+  "name": "图床",
+  "version": "1.2",
   "description": "多渠道图片外链床。上传图片文件，返回可公开访问、无 token、长期有效的图片直链。支持 AI Agent / 程序通过 HTTP 直接调用，无需浏览器操作。",
   "skill_usage": "输入：本地图片文件（PNG/JPG/GIF/WebP/BMP）。输出：永久公开图片 URL。调用方式见 upload 字段。",
   "upload": {
@@ -270,21 +245,21 @@ print(r.json()["url"])   # -> 永久外链</pre>
     "content_type": "multipart/form-data",
     "fields": {
       "img": "图片文件（file，必需；兼容 file / upfile 字段名）",
-      "channel": "上传渠道（可选）：huxiu | jiemian | thepaper，默认 huxiu"
+      "channel": "上传渠道（可选）：HX | JM | PP，默认 HX"
     }
   },
   "channels": {
-    "huxiu":    { "url_host": "img.huxiucdn.com", "formats": ["png","jpg"], "max_mb": 10, "note": "少数站点外链需 referrerpolicy=no-referrer" },
-    "jiemian":  { "url_host": "img.jiemian.com", "formats": ["png","jpg","gif"], "max_mb": 10, "note": "无防盗链；有上传频率限制（约 10 秒 1 张）" },
-    "thepaper": { "url_host": "prod-thepaper-pai-bucket.oss-cn-shanghai.aliyuncs.com", "formats": ["png","jpg","gif","webp","bmp"], "max_mb": 10, "note": "无防盗链，链接无有效期" }
+    "HX": { "formats": ["png","jpg"], "max_mb": 10, "note": "网页 img 引用建议加 referrerpolicy=no-referrer" },
+    "JM": { "formats": ["png","jpg","gif"], "max_mb": 10, "note": "无防盗链；有上传频率限制（约 10 秒 1 张）" },
+    "PP": { "formats": ["png","jpg","gif","webp","bmp"], "max_mb": 10, "note": "无防盗链，链接无有效期" }
   },
   "response": {
-    "success": { "result": 1, "msg": "文件上传成功", "url": "https://...", "channel": "..." },
+    "success": { "result": 1, "msg": "文件上传成功", "url": "https://...", "channel": "PP" },
     "failure": { "result": 0, "msg": "失败原因" }
   },
   "machine_readable": ["GET /api", "GET /llms.txt"],
   "examples": {
-    "curl": "curl -F img=@a.png -F channel=thepaper https://imgbd.lishuhang.workers.dev/upload"
+    "curl": "curl -F img=@a.png -F channel=PP https://imgbd.lishuhang.com/upload"
   }
 }
 </script>
@@ -296,7 +271,7 @@ print(r.json()["url"])   # -> 永久外链</pre>
   /* ---------- 端点解析 ---------- */
   // 默认代理端点（Cloudflare Worker，已部署）：GitHub Pages / 自定义域 / 本地打开时经此代理上传。
   // 页面本身部署在 Worker 上时自动改用同域相对路径，此值不生效。
-  var DEFAULT_API = 'https://imgbd.lishuhang.workers.dev';
+  var DEFAULT_API = 'https://imgbd.lishuhang.com';
 
   function currentApi(){
     try{
@@ -314,48 +289,40 @@ print(r.json()["url"])   # -> 永久外链</pre>
   }
 
   function uploadEndpoint(){ var b = currentApi(); return (b ? b + '/upload' : '/upload'); }
-  function refreshApiNow(){
-    var el = document.getElementById('apiNow');
-    var b = currentApi();
-    el.textContent = b ? (b + '/upload') : '/upload（同域）';
-  }
 
   /* ---------- 渠道 ---------- */
-  var CHANNELS = ['huxiu','jiemian','thepaper'];
-  var channel = 'huxiu';
+  var CHANNELS = ['HX','JM','PP'];
+  var channel = 'HX';
   try{
     var savedCh = localStorage.getItem('imgbd-channel');
+    var LEGACY_CH = {huxiu:'HX', jiemian:'JM', thepaper:'PP'};  // 旧版渠道名迁移
+    if(savedCh && LEGACY_CH[savedCh]) savedCh = LEGACY_CH[savedCh];
     if(CHANNELS.indexOf(savedCh) > -1) channel = savedCh;
   }catch(e){}
 
   var chEls = document.querySelectorAll('.ch');
   var chhint = document.getElementById('chhint');
-  var chhint2 = document.getElementById('chhint2');
   var dropHint = document.getElementById('dropHint');
 
   var CH_META = {
-    huxiu:    { hint: '', drop: '支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传' },
-    jiemian:  { hint: '⏳ 界面渠道有上传频率限制：批量上传将自动按 12 秒间隔排队，请耐心等待', drop: '支持 PNG · JPG · GIF（WebP/BMP 自动转 PNG），多张批量上传' },
-    thepaper: { hint: '', drop: '支持 PNG · JPG · GIF · WebP · BMP，原样直传，多张批量上传' }
+    HX: { hint: '', drop: '支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传' },
+    JM: { hint: '⏳ JM 渠道有上传频率限制：批量上传将自动按 12 秒间隔排队，请耐心等待', drop: '支持 PNG · JPG · GIF（WebP/BMP 自动转 PNG），多张批量上传' },
+    PP: { hint: '', drop: '支持 PNG · JPG · GIF · WebP · BMP，原样直传，多张批量上传' }
   };
 
   function setChannel(ch){
     channel = ch;
     try{ localStorage.setItem('imgbd-channel', ch); }catch(e){}
     for(var i = 0; i < chEls.length; i++){
-      chEls[i].classList.toggle('on', chEls[i].getAttribute('data-ch') === ch);
+      var on = chEls[i].getAttribute('data-ch') === ch;
+      chEls[i].classList.toggle('on', on);
+      var radio = chEls[i].querySelector('input[type=radio]');
+      if(radio) radio.checked = on;
     }
     var m = CH_META[ch];
     chhint.textContent = m.hint;
     chhint.classList.toggle('show', !!m.hint);
     dropHint.textContent = m.drop;
-    if(ch === 'huxiu'){
-      chhint2.innerHTML = '💡 虎嗅渠道外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>；界面 / 澎湃渠道直链无任何防盗链';
-    }else if(ch === 'jiemian'){
-      chhint2.innerHTML = '💡 界面渠道直链（img.jiemian.com）无防盗链、无有效期，任意站点均可直接引用';
-    }else{
-      chhint2.innerHTML = '💡 澎湃渠道直链（阿里云 OSS）无防盗链、无有效期，任意站点均可直接引用';
-    }
   }
   for(var i = 0; i < chEls.length; i++){
     (function(el){
@@ -383,7 +350,6 @@ print(r.json()["url"])   # -> 永久外链</pre>
       var saved = null;
       try{ saved = localStorage.getItem('imgbd-api'); }catch(e){}
       apiInput.value = saved || '';
-      refreshApiNow();
     }
   });
   apiSave.addEventListener('click', function(){
@@ -392,7 +358,6 @@ print(r.json()["url"])   # -> 永久外链</pre>
       if(v){ localStorage.setItem('imgbd-api', v); }
       else{ localStorage.removeItem('imgbd-api'); }
     }catch(e){}
-    refreshApiNow();
     apiSave.textContent = '已保存';
     setTimeout(function(){ apiSave.textContent = '保存'; }, 1200);
   });
@@ -443,9 +408,9 @@ print(r.json()["url"])   # -> 永久外链</pre>
   }
 
   // 各渠道支持的直传格式：
-  //  huxiu    仅 PNG / JPEG（GIF 不支持，WebP/BMP 转 PNG）
-  //  jiemian  PNG / JPEG / GIF（WebP/BMP 转 PNG）
-  //  thepaper 全部直传（服务端无格式校验）
+  //  HX  仅 PNG / JPEG（GIF 不支持，WebP/BMP 转 PNG）
+  //  JM  PNG / JPEG / GIF（WebP/BMP 转 PNG）
+  //  PP  全部直传（服务端无格式校验）
   function prepareAndUpload(file){
     if(!isImage(file)){
       addCard({name: file.name || '剪贴板图片', fail: '不是图片文件（' + (file.type || '未知类型') + '）'});
@@ -456,16 +421,16 @@ print(r.json()["url"])   # -> 永久外链</pre>
       return;
     }
     var t = file.type || '';
-    if(channel === 'huxiu' && t === 'image/gif'){
-      addCard({name: file.name, fail: '虎嗅渠道不支持 GIF 动图，请切换到界面 / 澎湃渠道，或转存为 PNG / JPG'});
+    if(channel === 'HX' && t === 'image/gif'){
+      addCard({name: file.name, fail: 'HX 渠道不支持 GIF 动图，请切换到 JM / PP 渠道，或转存为 PNG / JPG'});
       return;
     }
     if(t === 'image/png' || t === 'image/jpeg' || t === 'image/gif' || /\.(png|jpe?g|gif)$/i.test(file.name || '')){
       dispatch(file);
       return;
     }
-    if(channel === 'thepaper' && (t === 'image/webp' || t === 'image/bmp' || /\.(webp|bmp)$/i.test(file.name || ''))){
-      dispatch(file);  // 澎湃 OSS 无格式校验，原样直传
+    if(channel === 'PP' && (t === 'image/webp' || t === 'image/bmp' || /\.(webp|bmp)$/i.test(file.name || ''))){
+      dispatch(file);  // PP 渠道服务端无格式校验，原样直传
       return;
     }
     // 其余格式（webp/bmp 等）→ canvas 转 PNG
@@ -497,12 +462,12 @@ print(r.json()["url"])   # -> 永久外链</pre>
     });
   }
 
-  // 界面渠道：服务端限频，前端串行排队，间隔 12 秒
+  // JM 渠道：服务端限频，前端串行排队，间隔 12 秒
   var jmQueue = Promise.resolve();
   var jmLastAt = 0;
   var JM_GAP = 12000;
   function dispatch(file){
-    if(channel === 'jiemian'){
+    if(channel === 'JM'){
       var run = function(){
         var wait = Math.max(0, jmLastAt + JM_GAP - Date.now());
         return sleep(wait).then(function(){ return uploadOne(file); });
@@ -595,7 +560,7 @@ print(r.json()["url"])   # -> 永久外链</pre>
     var body = card.querySelector('.body');
     body.innerHTML = '';
 
-    var chName = {huxiu:'虎嗅', jiemian:'界面', thepaper:'澎湃'}[(data && data.channel) || channel] || '';
+    var chName = {HX:'HX', JM:'JM', PP:'PP', huxiu:'HX', jiemian:'JM', thepaper:'PP'}[(data && data.channel) || channel] || '';
     var name = el('div', 'name', (data && data.width ? data.width + '×' + data.height + ' · ' : '') + fileNameOf(url) + (chName ? '  ·  ' + chName : ''));
     body.appendChild(name);
 
@@ -608,7 +573,7 @@ print(r.json()["url"])   # -> 永久外链</pre>
     urlbox.appendChild(input);
     body.appendChild(urlbox);
 
-    var isHx = (data && data.channel) ? data.channel === 'huxiu' : channel === 'huxiu';
+    var isHx = (data && data.channel) ? String(data.channel).toLowerCase() === 'hx' : channel === 'HX';
 
     var acts = el('div', 'acts');
 
@@ -681,8 +646,6 @@ print(r.json()["url"])   # -> 永久外链</pre>
       fallback();
     }
   }
-
-  refreshApiNow();
 })();
 </script>
 </body>
