@@ -1,0 +1,646 @@
+
+/* ============================================================
+ * imagebed-hx-worker — Cloudflare Worker
+ * GET  /          -> serve the single-file imagebed HTML (same origin)
+ * POST /upload    -> reverse-proxy upload to huxiu contribute editor API
+ *                    (server-side fetch carries no Origin/Referer browser
+ *                     fingerprint, WAF-safe) and returns CORS-open JSON
+ * Env secrets:
+ *   HUXIU_COOKIE     - login cookie string (REQUIRED, keeps repo/html clean)
+ *   HUXIU_HASH_CODE  - page hash code (optional, has default)
+ * Deploy:
+ *   wrangler deploy  (or upload via CF API, see deploy script)
+ * ============================================================ */
+
+const HUXIU_UPLOAD_URL = 'https://api-brief.huxiu.com/club/uploadImage';
+
+const HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>虎嗅图床</title>
+<meta name="description" content="上传图片到虎嗅 CDN，获取 img.huxiucdn.com 永久直链">
+<style>
+  :root{
+    --bg:#f7f7f8; --card:#ffffff; --text:#1c1e21; --muted:#8a8f98;
+    --accent:#e83828; --accent-soft:#fdeeed; --border:#e6e7eb;
+    --ok:#0a7d43; --err:#c0392b; --radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh; padding:32px 16px 64px;
+  }
+  .wrap{max-width:680px;margin:0 auto}
+  header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+  h1{font-size:24px;font-weight:700;letter-spacing:.5px}
+  h1 .dot{color:var(--accent)}
+  .sub{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.6}
+  .sub b{color:var(--text);font-weight:600}
+  .gear{
+    border:1px solid var(--border);background:var(--card);color:var(--muted);
+    width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:16px;line-height:1;
+    display:flex;align-items:center;justify-content:center;transition:.15s;flex:none;
+  }
+  .gear:hover{color:var(--accent);border-color:var(--accent)}
+  .gear.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+
+  #settings{
+    display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px 16px;margin-bottom:18px;font-size:13px;
+  }
+  #settings.open{display:block}
+  #settings label{display:block;color:var(--muted);margin-bottom:8px}
+  .setrow{display:flex;gap:8px}
+  .setrow input{
+    flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;
+    font-family:inherit;outline:none;min-width:0;
+  }
+  .setrow input:focus{border-color:var(--accent)}
+  .setrow button{
+    border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;
+    font-size:13px;cursor:pointer;font-family:inherit;flex:none;
+  }
+  .setnote{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.6}
+  .setnote code{background:var(--bg);padding:1px 5px;border-radius:4px;font-size:11px}
+
+  #drop{
+    background:var(--card);border:2px dashed var(--border);border-radius:16px;
+    padding:52px 20px;text-align:center;cursor:pointer;transition:.15s;user-select:none;
+  }
+  #drop:hover{border-color:#c9cad0}
+  #drop.over{border-color:var(--accent);background:var(--accent-soft)}
+  #drop .icon{font-size:34px;line-height:1;margin-bottom:14px;opacity:.9}
+  #drop .t1{font-size:16px;font-weight:600}
+  #drop .t1 em{font-style:normal;color:var(--accent)}
+  #drop .t2{font-size:12.5px;color:var(--muted);margin-top:8px}
+  kbd{
+    background:#eceef1;border:1px solid #d6d9de;border-bottom-width:2px;border-radius:5px;
+    padding:1px 6px;font-size:11px;font-family:inherit;
+  }
+
+  #stats{display:none;font-size:12.5px;color:var(--muted);margin:16px 2px 10px}
+  #stats.show{display:block}
+
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px;display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;
+    animation:fadein .25s ease;
+  }
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .thumb{
+    width:76px;height:76px;border-radius:10px;background:var(--bg);flex:none;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .thumb img{max-width:100%;max-height:100%;display:block}
+  .body{flex:1;min-width:0}
+  .name{
+    font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;margin-bottom:8px;
+  }
+  .urlbox{
+    display:flex;gap:8px;margin-bottom:10px;
+  }
+  .urlbox input{
+    flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;background:var(--bg);
+    padding:8px 10px;font-size:12.5px;color:var(--text);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    outline:none;cursor:text;
+  }
+  .urlbox input:focus{border-color:var(--accent);background:#fff}
+  .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .acts button{
+    border:1px solid var(--border);background:#fff;color:var(--text);border-radius:8px;
+    padding:5px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;transition:.12s;
+  }
+  .acts button:hover{border-color:var(--accent);color:var(--accent)}
+  .acts button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .acts button.primary:hover{background:#d0301f;color:#fff}
+  .acts button.copied{background:var(--ok);border-color:var(--ok);color:#fff}
+  .badge{font-size:11.5px;padding:3px 8px;border-radius:5px;font-weight:500}
+  .badge.wait{background:#fff6e5;color:#9a6b00}
+  .badge.fail{background:#fdecea;color:var(--err)}
+  .spin{
+    width:22px;height:22px;border:3px solid #ecd2cf;border-top-color:var(--accent);
+    border-radius:50%;animation:rot .8s linear infinite;
+  }
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .errmsg{font-size:12.5px;color:var(--err);margin-top:4px;word-break:break-all}
+  .hint{
+    font-size:12px;color:var(--muted);text-align:center;margin-top:22px;line-height:1.8;
+  }
+  .hint a{color:var(--muted)}
+  footer{
+    text-align:center;color:#b3b7be;font-size:11.5px;margin-top:34px;line-height:1.7;
+  }
+  @media (max-width:480px){
+    body{padding:20px 10px 48px}
+    #drop{padding:38px 14px}
+    .thumb{width:60px;height:60px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>虎嗅图床<span class="dot">.</span></h1>
+      <div class="sub">图片直传虎嗅 CDN（<b>img.huxiucdn.com</b>），无需登录，链接长期有效</div>
+    </div>
+    <button class="gear" id="gear" title="接口端点设置">⚙</button>
+  </header>
+
+  <div id="settings">
+    <label>上传代理端点（Cloudflare Worker 地址，留空使用默认）</label>
+    <div class="setrow">
+      <input id="apiInput" type="url" placeholder="https://your-worker.workers.dev" spellcheck="false">
+      <button id="apiSave">保存</button>
+    </div>
+    <div class="setnote">
+      当前端点：<code id="apiNow">（自动）</code><br>
+      说明：虎嗅接口不接受浏览器跨域直连，需经 Worker 代理。本页部署在 Worker 上时自动同域，无需修改。
+    </div>
+  </div>
+
+  <div id="drop" title="点击选择图片">
+    <div class="icon">🖼️</div>
+    <div class="t1">点击选择 / 拖拽图片到此处 / 按 <em>Ctrl+V</em> 粘贴</div>
+    <div class="t2">支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传</div>
+  </div>
+  <input type="file" id="file" accept="image/*" multiple hidden>
+
+  <div id="stats"></div>
+  <div id="list"></div>
+
+  <div class="hint">
+    💡 外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>，微信/微博可直接引用
+  </div>
+  <footer>
+    上传通道模拟自虎嗅投稿编辑器 · 单文件 HTML · 可部署于 GitHub Pages / Cloudflare Workers<br>
+    仅供学习研究，请勿滥用
+  </footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- 端点解析 ---------- */
+  // 默认代理端点（Cloudflare Worker，已部署）：GitHub Pages / 本地打开时经此代理上传。
+  // 页面本身部署在 Worker 上时自动改用同域相对路径，此值不生效。
+  var DEFAULT_API = '';
+
+  function currentApi(){
+    try{
+      // 1) 页面本身部署在 Worker 上（workers.dev 或自定义域）→ 同域相对路径
+      if(location.protocol === 'https:' && !isLocalFile() && !onGithubPages()){
+        return '';
+      }
+    }catch(e){}
+    // 2) 用户自定义
+    var saved = null;
+    try{ saved = localStorage.getItem('hx-imagebed-api'); }catch(e){}
+    if(saved) return saved.replace(/\\/+$/,'');
+    // 3) 内置默认
+    return (DEFAULT_API || '').replace(/\\/+$/,'');
+  }
+  function isLocalFile(){ return location.protocol === 'file:'; }
+  function onGithubPages(){ return /\\.github\\.io$/.test(location.hostname); }
+
+  function uploadEndpoint(){ var b = currentApi(); return (b ? b + '/upload' : '/upload'); }
+  function refreshApiNow(){
+    var el = document.getElementById('apiNow');
+    var b = currentApi();
+    el.textContent = b ? (b + '/upload') : '/upload（同域）';
+  }
+
+  /* ---------- DOM ---------- */
+  var drop = document.getElementById('drop');
+  var fileInput = document.getElementById('file');
+  var list = document.getElementById('list');
+  var stats = document.getElementById('stats');
+  var gear = document.getElementById('gear');
+  var settings = document.getElementById('settings');
+  var apiInput = document.getElementById('apiInput');
+  var apiSave = document.getElementById('apiSave');
+
+  var doneCount = 0, failCount = 0;
+
+  gear.addEventListener('click', function(){
+    settings.classList.toggle('open');
+    gear.classList.toggle('on');
+    if(settings.classList.contains('open')){
+      var saved = null;
+      try{ saved = localStorage.getItem('hx-imagebed-api'); }catch(e){}
+      apiInput.value = saved || '';
+      refreshApiNow();
+    }
+  });
+  apiSave.addEventListener('click', function(){
+    var v = apiInput.value.trim().replace(/\\/+$/,'');
+    try{
+      if(v){ localStorage.setItem('hx-imagebed-api', v); }
+      else{ localStorage.removeItem('hx-imagebed-api'); }
+    }catch(e){}
+    refreshApiNow();
+    apiSave.textContent = '已保存';
+    setTimeout(function(){ apiSave.textContent = '保存'; }, 1200);
+  });
+
+  /* ---------- 选择 / 拖拽 / 粘贴 ---------- */
+  drop.addEventListener('click', function(){ fileInput.click(); });
+  fileInput.addEventListener('change', function(){
+    handleFiles(fileInput.files);
+    fileInput.value = '';
+  });
+
+  ['dragenter','dragover'].forEach(function(ev){
+    document.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    document.addEventListener(ev, function(e){
+      e.preventDefault();
+      if(ev === 'dragleave' && e.relatedTarget && e.relatedTarget !== drop) return;
+      drop.classList.remove('over');
+    });
+  });
+  document.addEventListener('drop', function(e){
+    if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+      handleFiles(e.dataTransfer.files);
+    }
+  });
+
+  document.addEventListener('paste', function(e){
+    if(!e.clipboardData) return;
+    var items = e.clipboardData.items || [];
+    var files = [];
+    for(var i = 0; i < items.length; i++){
+      if(items[i].kind === 'file' && items[i].type.indexOf('image/') === 0){
+        var f = items[i].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(files.length){ e.preventDefault(); handleFiles(files); }
+  });
+
+  /* ---------- 上传流程 ---------- */
+  function handleFiles(files){
+    for(var i = 0; i < files.length; i++){ prepareAndUpload(files[i]); }
+  }
+
+  function isImage(f){
+    return f && (f.type ? f.type.indexOf('image/') === 0 : /\\.(png|jpe?g|gif|bmp|webp)$/i.test(f.name || ''));
+  }
+
+  // 虎嗅接口仅收 PNG / JPEG；WebP、BMP 等静态图自动经 canvas 转 PNG，GIF 提示不支持（转存会丢动画）
+  function prepareAndUpload(file){
+    if(!isImage(file)){
+      addCard({name: file.name || '剪贴板图片', fail: '不是图片文件（' + (file.type || '未知类型') + '）'});
+      return;
+    }
+    if(file.size > 10 * 1024 * 1024){
+      addCard({name: file.name, fail: '图片超过 10MB，请压缩后再试'});
+      return;
+    }
+    var t = file.type || '';
+    if(t === 'image/gif'){
+      addCard({name: file.name, fail: '虎嗅接口不支持 GIF 动图，请转存为 PNG / JPG 后再上传'});
+      return;
+    }
+    if(t === 'image/png' || t === 'image/jpeg' || /\\.jpe?g$/i.test(file.name || '')){
+      uploadOne(file);
+      return;
+    }
+    // 其余格式（webp/bmp 等）→ canvas 转 PNG
+    convertToPng(file).then(uploadOne, function(){
+      addCard({name: file.name, fail: '该格式无法转换，请另存为 PNG / JPG 后重试'});
+    });
+  }
+
+  function convertToPng(file){
+    return new Promise(function(resolve, reject){
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function(){
+        try{
+          var c = document.createElement('canvas');
+          c.width = img.naturalWidth || img.width;
+          c.height = img.naturalHeight || img.height;
+          c.getContext('2d').drawImage(img, 0, 0);
+          var done = false;
+          c.toBlob(function(blob){
+            URL.revokeObjectURL(url);
+            if(blob && !done){ done = true; resolve(new File([blob], (file.name || 'image').replace(/\\.[^.]+$/, '') + '.png', {type: 'image/png'})); }
+            else if(!done){ done = true; reject(); }
+          }, 'image/png');
+        }catch(e){ URL.revokeObjectURL(url); reject(); }
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(); };
+      img.src = url;
+    });
+  }
+
+  function uploadOne(file){
+    if(!isImage(file)){
+      addCard({name: file.name || '剪贴板图片', fail: '不是图片文件（' + (file.type || '未知类型') + '）'});
+      return;
+    }
+    if(file.size > 10 * 1024 * 1024){
+      addCard({name: file.name, fail: '图片超过 10MB，请压缩后再试'});
+      return;
+    }
+
+    var previewUrl = URL.createObjectURL(file);
+    var card = addCard({name: file.name || ('剪贴板_' + Date.now() + '.png'), waiting: true, preview: previewUrl});
+
+    var fd = new FormData();
+    fd.append('img', file, file.name || ('clipboard_' + Date.now() + '.png'));
+
+    fetch(uploadEndpoint(), { method: 'POST', body: fd })
+      .then(function(res){
+        if(!res.ok){ throw new Error('HTTP ' + res.status); }
+        return res.json();
+      })
+      .then(function(data){
+        if(data && (data.result === 1 || data.state === 'SUCCESS') && (data.url || (data.list && data.list[0] && data.list[0].url))){
+          var url = data.url || data.list[0].url;
+          if(url.indexOf('/') === 0){ url = 'https://www.huxiu.com' + url; }
+          succeed(card, url, data);
+        }else{
+          throw new Error((data && (data.msg || data.message)) || '上传失败');
+        }
+      })
+      .catch(function(err){
+        fail(card, '上传失败：' + err.message + '（端点不可达或代理失效，可在 ⚙ 中检查）');
+      });
+  }
+
+  /* ---------- 卡片渲染 ---------- */
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+
+  function addCard(opt){
+    var card = el('div', 'card');
+
+    var thumb = el('div', 'thumb');
+    if(opt.preview){
+      var img = el('img');
+      img.src = opt.preview;
+      img.alt = '';
+      thumb.appendChild(img);
+    }else if(opt.waiting){
+      thumb.appendChild(el('div', 'spin'));
+    }else{
+      thumb.appendChild(el('span', 'badge fail', '!'));
+    }
+    card.appendChild(thumb);
+
+    var body = el('div', 'body');
+    body.appendChild(el('div', 'name', opt.name));
+
+    if(opt.fail){
+      body.appendChild(el('div', 'errmsg', opt.fail));
+      card.appendChild(body);
+      list.insertBefore(card, list.firstChild);
+      failCount++; updateStats();
+      return card;
+    }
+
+    if(opt.waiting){
+      body.appendChild(el('div', 'badge wait', '上传中…'));
+      card.appendChild(body);
+      list.insertBefore(card, list.firstChild);
+      return card;
+    }
+    card.appendChild(body);
+    list.insertBefore(card, list.firstChild);
+    return card;
+  }
+
+  function succeed(card, url, data){
+    var body = card.querySelector('.body');
+    body.innerHTML = '';
+
+    var name = el('div', 'name', (data && data.width ? data.width + '×' + data.height + ' · ' : '') + fileNameOf(url));
+    body.appendChild(name);
+
+    var urlbox = el('div', 'urlbox');
+    var input = el('input');
+    input.readOnly = true;
+    input.value = url;
+    input.title = url;
+    input.addEventListener('click', function(){ input.select(); });
+    urlbox.appendChild(input);
+    body.appendChild(urlbox);
+
+    var acts = el('div', 'acts');
+
+    var btnCopy = el('button', 'primary', '复制链接');
+    btnCopy.addEventListener('click', function(){ copyText(url, btnCopy); });
+    acts.appendChild(btnCopy);
+
+    var btnMd = el('button', null, 'Markdown');
+    btnMd.addEventListener('click', function(){ copyText('![' + fileNameOf(url) + '](' + url + ')', btnMd); });
+    acts.appendChild(btnMd);
+
+    var btnHtml = el('button', null, 'HTML');
+    btnHtml.addEventListener('click', function(){
+      copyText('<img src="' + url + '" referrerpolicy="no-referrer" alt="">', btnHtml);
+    });
+    acts.appendChild(btnHtml);
+
+    var btnOpen = el('button', null, '打开');
+    btnOpen.addEventListener('click', function(){ window.open(url, '_blank'); });
+    acts.appendChild(btnOpen);
+
+    body.appendChild(acts);
+    card.classList.add('ok');
+    doneCount++; updateStats();
+  }
+
+  function fail(card, msg){
+    var body = card.querySelector('.body');
+    body.innerHTML = '';
+    body.appendChild(el('div', 'name', '上传失败'));
+    body.appendChild(el('div', 'errmsg', msg));
+    var thumb = card.querySelector('.thumb');
+    thumb.innerHTML = '';
+    thumb.appendChild(el('span', 'badge fail', '!'));
+    failCount++; updateStats();
+  }
+
+  function fileNameOf(url){
+    var m = String(url).split('/').pop() || 'image';
+    return decodeURIComponent(m);
+  }
+
+  function updateStats(){
+    stats.classList.add('show');
+    stats.textContent = '本次会话：成功 ' + doneCount + ' 张' + (failCount ? (' · 失败 ' + failCount + ' 张') : '');
+  }
+
+  /* ---------- 复制 ---------- */
+  function copyText(text, btn){
+    function mark(){
+      var old = btn.textContent;
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('copied'); }, 1400);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try{ ok = document.execCommand('copy'); }catch(e){}
+      ta.remove();
+      if(ok){ mark(); }else{ window.prompt('请手动复制：', text); }
+    }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(mark, fallback);
+    }else{
+      fallback();
+    }
+  }
+
+  refreshApiNow();
+})();
+</script>
+</body>
+</html>
+`;
+
+const CORS_HEADERS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, OPTIONS',
+  'access-control-allow-headers': '*',
+  'access-control-max-age': '86400',
+};
+
+function jsonResponse(obj, status) {
+  return new Response(JSON.stringify(obj), {
+    status: status || 200,
+    headers: Object.assign({ 'content-type': 'application/json; charset=utf-8' }, CORS_HEADERS),
+  });
+}
+
+async function handleUpload(request, env) {
+  let inFd;
+  try {
+    inFd = await request.formData();
+  } catch (e) {
+    return jsonResponse({ result: 0, msg: '请求体不是有效的 multipart 表单' }, 400);
+  }
+
+  const file = inFd.get('img') || inFd.get('file') || inFd.get('upfile');
+  if (!file || typeof file === 'string') {
+    return jsonResponse({ result: 0, msg: '未收到图片文件（需要 multipart 字段 img）' }, 400);
+  }
+
+  const out = new FormData();
+  const name = file.name || ('clipboard_' + Date.now() + '.png');
+  out.append('image', file, name);
+  out.append('platform', 'www');
+
+  const cookie = (env.HUXIU_COOKIE || '').trim();
+  // IMPORTANT: huxiu WAF blocks any POST carrying Origin/Referer headers.
+  // Verified minimal passing header set = User-Agent + Cookie (+ Accept).
+  const headers = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
+    'accept': 'application/json, text/javascript, */*; q=0.01',
+  };
+  if (cookie) headers['cookie'] = cookie;
+
+  let resp, text;
+  try {
+    resp = await fetch(HUXIU_UPLOAD_URL, { method: 'POST', headers: headers, body: out });
+    text = await resp.text();
+  } catch (e) {
+    return jsonResponse({ result: 0, msg: '代理请求失败: ' + (e && e.message || String(e)) }, 502);
+  }
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    const blocked = /405|blocked|阻断/.test(text);
+    return jsonResponse({
+      result: 0,
+      msg: (blocked ? '上游 WAF 拦截（请求过频或特征异常），请稍后重试。' : '上游返回异常: ') + text.slice(0, 140),
+    }, 502);
+  }
+
+  // normalize huxiu api-brief club upload response -> {result, url, width?, height?}
+  if (data && data.success === true && data.data && data.data.image_url) {
+    return jsonResponse({
+      result: 1,
+      msg: '文件上传成功',
+      url: data.data.image_url,
+      width: data.data.width || 0,
+      height: data.data.height || 0,
+    });
+  }
+
+  // normalize common upstream errors
+  const msgMap = {
+    '此操作需要登录': '代理登录态（HUXIU_COOKIE）已过期，请到虎嗅投稿页重新导出 cookies 并更新 Worker Secret',
+    'platform类型不正确': '上游参数异常',
+    '只允许上传jpg、jpeg、png格式的文件': '虎嗅接口仅支持 PNG / JPG（JPEG），GIF、BMP、WebP 请先转存为 PNG',
+  };
+  if (data && (data.message || data.msg) && msgMap[(data.message || data.msg)]) {
+    data.msg = msgMap[(data.message || data.msg)];
+  } else if (data && !data.msg && data.message) {
+    data.msg = data.message;
+  }
+  data = data || {};
+  if (data.result === undefined) data.result = 0;
+  return jsonResponse(data);
+}
+
+export default {
+  async fetch(request, env, ctx) {
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+    const url = new URL(request.url);
+    if (url.pathname === '/upload') {
+      if (request.method !== 'POST') {
+        return jsonResponse({ result: 0, msg: '仅支持 POST' }, 405);
+      }
+      return handleUpload(request, env);
+    }
+    // serve the app for any other GET path
+    if (request.method === 'GET') {
+      if (url.pathname === '/debug') {
+        const r = await fetch('https://httpbin.org/anything', {
+          method: 'POST',
+          headers: {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
+            'accept': 'application/json, text/javascript, */*; q=0.01',
+            'cdn-loop': '',
+            'cf-worker': '',
+            'cf-ew-via': '',
+          },
+          body: 'x=1',
+        });
+        const t = await r.text();
+        return new Response(t, { status: 200, headers: Object.assign({ 'content-type': 'application/json; charset=utf-8' }, CORS_HEADERS) });
+      }
+      return new Response(HTML, {
+        status: 200,
+        headers: Object.assign({
+          'content-type': 'text/html; charset=utf-8',
+          'cache-control': 'public, max-age=300',
+        }, CORS_HEADERS),
+      });
+    }
+    return jsonResponse({ result: 0, msg: 'Not Found' }, 404);
+  },
+};
