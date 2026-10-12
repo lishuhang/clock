@@ -59,6 +59,16 @@ CF Worker imagebed-hx（CORS: *，serve HTML + 代理）
 - D 粘贴 GIF → 友好拒绝提示 ✅
 - URL 稳定性：12/12 200，`cache-control: public, max-age=31536000`
 
+## 2026-10-12 — v1.0.1 修复 GitHub Pages 自定义域端点误判
+
+- **问题**：仓库 Pages 绑定自定义域 `lishuhang.me`（非 *.github.io），旧逻辑"非 github.io 且 https 即同域模式"导致上传请求打到 `lishuhang.me/clock/.../upload` → 404。
+- **修复**：同域模式收紧为 `*.workers.dev`（或 Worker 自定义域）；GitHub Pages / 任意静态托管 / 本地打开一律走默认 Worker 代理（`DEFAULT_API`）。
+- 用户在旧版（www 通道，被 WAF 拦）测试截图中的 HTTP 502 属部署切换期问题，v1.0（api-brief 通道）已解决。
+- **最终三端验证全部通过**：
+  - workers.dev（同域）✅ → https://img.huxiucdn.com/img/club/...png
+  - GH Pages `https://lishuhang.me/clock/1012-imagebed/imagebed-hx.html`（Worker 代理）✅
+  - 本地 file://（Worker 代理）✅
+
 ### 维护
 - **登录态过期**（`HUXIU_016a_expire_time` 约一周，实际以服务端为准）：上传会返回"代理登录态已过期"。到虎嗅投稿页重新导出 cookies，然后更新 Worker Secret：
   ```
