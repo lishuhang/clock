@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>虎嗅图床</title>
-<meta name="description" content="上传图片到虎嗅 CDN，获取 img.huxiucdn.com 永久直链">
+<title>图床 ImgBD</title>
+<meta name="description" content="多渠道图床（虎嗅/界面/澎湃）：上传图片获取永久 CDN 外链。支持点击/拖拽/粘贴，并提供 HTTP API 供 AI Agent 直接调用（GET /api 与 /llms.txt 可获取机器可读接口说明）。">
 <style>
   :root{
     --bg:#f7f7f8; --card:#ffffff; --text:#1c1e21; --muted:#8a8f98;
-    --accent:#e83828; --accent-soft:#fdeeed; --border:#e6e7eb;
+    --accent:#2b5fd9; --accent-soft:#eef2fd; --border:#e6e7eb;
     --ok:#0a7d43; --err:#c0392b; --radius:12px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -18,7 +18,7 @@
     background:var(--bg); color:var(--text); min-height:100vh; padding:32px 16px 64px;
   }
   .wrap{max-width:680px;margin:0 auto}
-  header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+  header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
   h1{font-size:24px;font-weight:700;letter-spacing:.5px}
   h1 .dot{color:var(--accent)}
   .sub{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.6}
@@ -33,7 +33,7 @@
 
   #settings{
     display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:14px 16px;margin-bottom:18px;font-size:13px;
+    padding:14px 16px;margin-bottom:16px;font-size:13px;
   }
   #settings.open{display:block}
   #settings label{display:block;color:var(--muted);margin-bottom:8px}
@@ -49,6 +49,24 @@
   }
   .setnote{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.6}
   .setnote code{background:var(--bg);padding:1px 5px;border-radius:4px;font-size:11px}
+
+  .chlabel{font-size:12.5px;color:var(--muted);margin:0 2px 8px}
+  .channels{display:flex;gap:8px;margin-bottom:16px}
+  .ch{
+    flex:1;border:1px solid var(--border);background:var(--card);border-radius:10px;
+    padding:9px 10px;cursor:pointer;text-align:left;font-family:inherit;transition:.13s;
+  }
+  .ch:hover{border-color:#c5c8cf}
+  .ch .n{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .ch .d{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+  .ch.on{border-color:var(--accent);background:var(--accent-soft)}
+  .ch.on .n{color:var(--accent)}
+  .ch .tick{width:8px;height:8px;border-radius:50%;background:#c9cad0;flex:none}
+  .ch.on .tick{background:var(--accent)}
+
+  #chhint{display:none;font-size:12px;color:#9a6b00;background:#fff6e5;border-radius:8px;
+    padding:8px 12px;margin-bottom:14px;line-height:1.6}
+  #chhint.show{display:block}
 
   #drop{
     background:var(--card);border:2px dashed var(--border);border-radius:16px;
@@ -84,9 +102,7 @@
     font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;
     text-overflow:ellipsis;margin-bottom:8px;
   }
-  .urlbox{
-    display:flex;gap:8px;margin-bottom:10px;
-  }
+  .urlbox{display:flex;gap:8px;margin-bottom:10px}
   .urlbox input{
     flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;background:var(--bg);
     padding:8px 10px;font-size:12.5px;color:var(--text);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
@@ -100,28 +116,53 @@
   }
   .acts button:hover{border-color:var(--accent);color:var(--accent)}
   .acts button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .acts button.primary:hover{background:#d0301f;color:#fff}
+  .acts button.primary:hover{background:#1f4cc0;color:#fff}
   .acts button.copied{background:var(--ok);border-color:var(--ok);color:#fff}
   .badge{font-size:11.5px;padding:3px 8px;border-radius:5px;font-weight:500}
   .badge.wait{background:#fff6e5;color:#9a6b00}
   .badge.fail{background:#fdecea;color:var(--err)}
   .spin{
-    width:22px;height:22px;border:3px solid #ecd2cf;border-top-color:var(--accent);
+    width:22px;height:22px;border:3px solid #ccd7f0;border-top-color:var(--accent);
     border-radius:50%;animation:rot .8s linear infinite;
   }
   @keyframes rot{to{transform:rotate(360deg)}}
   .errmsg{font-size:12.5px;color:var(--err);margin-top:4px;word-break:break-all}
-  .hint{
-    font-size:12px;color:var(--muted);text-align:center;margin-top:22px;line-height:1.8;
+
+  details.api{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    margin-top:26px;font-size:13px;
   }
-  .hint a{color:var(--muted)}
+  details.api summary{
+    cursor:pointer;padding:13px 16px;font-weight:600;list-style:none;
+    display:flex;align-items:center;gap:8px;user-select:none;
+  }
+  details.api summary::-webkit-details-marker{display:none}
+  details.api summary .arr{transition:.15s;color:var(--muted);font-size:11px}
+  details.api[open] summary .arr{transform:rotate(90deg)}
+  details.api .api-body{padding:2px 16px 16px;color:var(--text);line-height:1.75}
+  details.api h4{font-size:13px;margin:14px 0 6px}
+  details.api p{color:var(--muted);font-size:12.5px}
+  details.api pre{
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;
+    font-size:11.5px;line-height:1.6;overflow-x:auto;margin:6px 0;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#2a2d33;
+  }
+  details.api table{border-collapse:collapse;width:100%;font-size:12px;margin:6px 0}
+  details.api th,details.api td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+  details.api th{background:var(--bg);font-weight:600}
+  details.api code{background:var(--bg);border-radius:4px;padding:1px 5px;font-size:11.5px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+  .hint{font-size:12px;color:var(--muted);text-align:center;margin-top:18px;line-height:1.8}
   footer{
-    text-align:center;color:#b3b7be;font-size:11.5px;margin-top:34px;line-height:1.7;
+    text-align:center;color:#b3b7be;font-size:11.5px;margin-top:30px;line-height:1.7;
   }
   @media (max-width:480px){
     body{padding:20px 10px 48px}
     #drop{padding:38px 14px}
     .thumb{width:60px;height:60px}
+    .channels{flex-wrap:wrap}
+    .ch{min-width:calc(50% - 4px)}
   }
 </style>
 </head>
@@ -129,8 +170,8 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>虎嗅图床<span class="dot">.</span></h1>
-      <div class="sub">图片直传虎嗅 CDN（<b>img.huxiucdn.com</b>），无需登录，链接长期有效</div>
+      <h1>图床 ImgBD<span class="dot">.</span></h1>
+      <div class="sub">多渠道图片外链：虎嗅 · 界面 · 澎湃，上传即得 <b>永久 CDN 直链</b></div>
     </div>
     <button class="gear" id="gear" title="接口端点设置">⚙</button>
   </header>
@@ -138,33 +179,115 @@
   <div id="settings">
     <label>上传代理端点（Cloudflare Worker 地址，留空使用默认）</label>
     <div class="setrow">
-      <input id="apiInput" type="url" placeholder="https://your-worker.workers.dev" spellcheck="false">
+      <input id="apiInput" type="url" placeholder="https://imgbd.lishuhang.workers.dev" spellcheck="false">
       <button id="apiSave">保存</button>
     </div>
     <div class="setnote">
       当前端点：<code id="apiNow">（自动）</code><br>
-      说明：虎嗅接口不接受浏览器跨域直连，需经 Worker 代理。本页部署在 Worker 上时自动同域，无需修改。
+      说明：三个渠道均不接受浏览器跨域直连，需经 Worker 代理。本页部署在 Worker 上时自动同域，无需修改。
     </div>
   </div>
+
+  <div class="chlabel">选择上传渠道：</div>
+  <div class="channels" id="channels">
+    <button class="ch on" data-ch="huxiu" type="button">
+      <div class="n"><span class="tick"></span>虎嗅</div>
+      <div class="d">img.huxiucdn.com<br>PNG / JPG</div>
+    </button>
+    <button class="ch" data-ch="jiemian" type="button">
+      <div class="n"><span class="tick"></span>界面</div>
+      <div class="d">img.jiemian.com<br>PNG / JPG / GIF</div>
+    </button>
+    <button class="ch" data-ch="thepaper" type="button">
+      <div class="n"><span class="tick"></span>澎湃</div>
+      <div class="d">thepaper OSS 直链<br>全格式 · 无防盗链</div>
+    </button>
+  </div>
+  <div id="chhint"></div>
 
   <div id="drop" title="点击选择图片">
     <div class="icon">🖼️</div>
     <div class="t1">点击选择 / 拖拽图片到此处 / 按 <em>Ctrl+V</em> 粘贴</div>
-    <div class="t2">支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传</div>
+    <div class="t2" id="dropHint">支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传</div>
   </div>
   <input type="file" id="file" accept="image/*" multiple hidden>
 
   <div id="stats"></div>
   <div id="list"></div>
 
-  <div class="hint">
-    💡 外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>，微信/微博可直接引用
+  <details class="api" id="apidoc">
+    <summary><span class="arr">▶</span>API · AI Agent 调用说明</summary>
+    <div class="api-body">
+      <p>本站提供纯 HTTP 上传接口：AI Agent / 脚本<b>无需打开或操作本页面</b>，直接 POST 即可获取永久图片外链。无需登录、无需 Cookie、无 token。</p>
+      <h4>接口定义</h4>
+      <table>
+        <tr><th>方法</th><td><code>POST /upload</code></td></tr>
+        <tr><th>Content-Type</th><td><code>multipart/form-data</code></td></tr>
+        <tr><th>字段 <code>img</code></th><td>图片文件（必需；亦接受 <code>file</code> / <code>upfile</code>）</td></tr>
+        <tr><th>字段 <code>channel</code></th><td>可选渠道：<code>huxiu</code>（默认）/ <code>jiemian</code> / <code>thepaper</code></td></tr>
+      </table>
+      <h4>调用示例</h4>
+      <pre>curl -F "img=@photo.png" -F "channel=thepaper" https://imgbd.lishuhang.workers.dev/upload
+
+# Python
+import requests
+r = requests.post("https://imgbd.lishuhang.workers.dev/upload",
+    files={"img": open("photo.png","rb")},
+    data={"channel": "thepaper"})
+print(r.json()["url"])   # -> 永久外链</pre>
+      <h4>响应（JSON）</h4>
+      <pre>{"result": 1, "msg": "文件上传成功", "url": "https://img.jiemian.com/...", "channel": "jiemian"}
+# 失败: {"result": 0, "msg": "原因..."}</pre>
+      <h4>渠道差异</h4>
+      <table>
+        <tr><th>channel</th><th>图片域名</th><th>支持格式</th><th>限制</th></tr>
+        <tr><td><code>huxiu</code></td><td>img.huxiucdn.com</td><td>PNG / JPG</td><td>≤10MB；少数站点外链需 <code>referrerpolicy="no-referrer"</code></td></tr>
+        <tr><td><code>jiemian</code></td><td>img.jiemian.com</td><td>PNG / JPG / GIF</td><td>≤10MB；无防盗链；有频率限制（约 10 秒 1 张）</td></tr>
+        <tr><td><code>thepaper</code></td><td>*.aliyuncs.com（澎湃 OSS）</td><td>PNG / JPG / GIF / WebP / BMP</td><td>≤10MB；无防盗链</td></tr>
+      </table>
+      <p>机器可读接口清单：<code>GET /api</code>（JSON）· <code>GET /llms.txt</code>（纯文本）。Agent 可将其注册为图片上传 skill：输入本地图片文件，输出可公开访问的图片 URL。</p>
+    </div>
+  </details>
+
+  <div class="hint" id="chhint2">
+    💡 虎嗅渠道外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>；界面 / 澎湃渠道直链无任何防盗链
   </div>
   <footer>
-    上传通道模拟自虎嗅投稿编辑器 · 单文件 HTML · 可部署于 GitHub Pages / Cloudflare Workers<br>
+    图床 ImgBD v1.1 · 上传通道模拟自虎嗅 / 界面 / 澎湃投稿编辑器 · 单文件 HTML · 可部署于 GitHub Pages / Cloudflare Workers<br>
     仅供学习研究，请勿滥用
   </footer>
 </div>
+
+<script type="application/json" id="imgbd-api-manifest">
+{
+  "name": "ImgBD 图床",
+  "version": "1.1",
+  "description": "多渠道图片外链床。上传图片文件，返回可公开访问、无 token、长期有效的图片直链。支持 AI Agent / 程序通过 HTTP 直接调用，无需浏览器操作。",
+  "skill_usage": "输入：本地图片文件（PNG/JPG/GIF/WebP/BMP）。输出：永久公开图片 URL。调用方式见 upload 字段。",
+  "upload": {
+    "method": "POST",
+    "path": "/upload",
+    "content_type": "multipart/form-data",
+    "fields": {
+      "img": "图片文件（file，必需；兼容 file / upfile 字段名）",
+      "channel": "上传渠道（可选）：huxiu | jiemian | thepaper，默认 huxiu"
+    }
+  },
+  "channels": {
+    "huxiu":    { "url_host": "img.huxiucdn.com", "formats": ["png","jpg"], "max_mb": 10, "note": "少数站点外链需 referrerpolicy=no-referrer" },
+    "jiemian":  { "url_host": "img.jiemian.com", "formats": ["png","jpg","gif"], "max_mb": 10, "note": "无防盗链；有上传频率限制（约 10 秒 1 张）" },
+    "thepaper": { "url_host": "prod-thepaper-pai-bucket.oss-cn-shanghai.aliyuncs.com", "formats": ["png","jpg","gif","webp","bmp"], "max_mb": 10, "note": "无防盗链，链接无有效期" }
+  },
+  "response": {
+    "success": { "result": 1, "msg": "文件上传成功", "url": "https://...", "channel": "..." },
+    "failure": { "result": 0, "msg": "失败原因" }
+  },
+  "machine_readable": ["GET /api", "GET /llms.txt"],
+  "examples": {
+    "curl": "curl -F img=@a.png -F channel=thepaper https://imgbd.lishuhang.workers.dev/upload"
+  }
+}
+</script>
 
 <script>
 (function(){
@@ -173,18 +296,18 @@
   /* ---------- 端点解析 ---------- */
   // 默认代理端点（Cloudflare Worker，已部署）：GitHub Pages / 自定义域 / 本地打开时经此代理上传。
   // 页面本身部署在 Worker 上时自动改用同域相对路径，此值不生效。
-  var DEFAULT_API = 'https://imagebed-hx.lishuhang.workers.dev';
+  var DEFAULT_API = 'https://imgbd.lishuhang.workers.dev';
 
   function currentApi(){
     try{
       // 1) 页面本身部署在 Worker 上（workers.dev 或 Worker 自定义域）→ 同域相对路径
-      if(location.protocol === 'https:' && /(\.workers\.dev|imagebed-hx\.lishuhang\.me)$/.test(location.hostname)){
+      if(location.protocol === 'https:' && /(\.workers\.dev|imgbd\.lishuhang\.com)$/.test(location.hostname)){
         return '';
       }
     }catch(e){}
     // 2) 用户自定义
     var saved = null;
-    try{ saved = localStorage.getItem('hx-imagebed-api'); }catch(e){}
+    try{ saved = localStorage.getItem('imgbd-api'); }catch(e){}
     if(saved) return saved.replace(/\/+$/,'');
     // 3) 内置默认（GitHub Pages / 任意静态托管 / 本地打开都走已部署的 Worker 代理）
     return (DEFAULT_API || '').replace(/\/+$/,'');
@@ -196,6 +319,50 @@
     var b = currentApi();
     el.textContent = b ? (b + '/upload') : '/upload（同域）';
   }
+
+  /* ---------- 渠道 ---------- */
+  var CHANNELS = ['huxiu','jiemian','thepaper'];
+  var channel = 'huxiu';
+  try{
+    var savedCh = localStorage.getItem('imgbd-channel');
+    if(CHANNELS.indexOf(savedCh) > -1) channel = savedCh;
+  }catch(e){}
+
+  var chEls = document.querySelectorAll('.ch');
+  var chhint = document.getElementById('chhint');
+  var chhint2 = document.getElementById('chhint2');
+  var dropHint = document.getElementById('dropHint');
+
+  var CH_META = {
+    huxiu:    { hint: '', drop: '支持 PNG · JPG（WebP/BMP 自动转 PNG），多张批量上传' },
+    jiemian:  { hint: '⏳ 界面渠道有上传频率限制：批量上传将自动按 12 秒间隔排队，请耐心等待', drop: '支持 PNG · JPG · GIF（WebP/BMP 自动转 PNG），多张批量上传' },
+    thepaper: { hint: '', drop: '支持 PNG · JPG · GIF · WebP · BMP，原样直传，多张批量上传' }
+  };
+
+  function setChannel(ch){
+    channel = ch;
+    try{ localStorage.setItem('imgbd-channel', ch); }catch(e){}
+    for(var i = 0; i < chEls.length; i++){
+      chEls[i].classList.toggle('on', chEls[i].getAttribute('data-ch') === ch);
+    }
+    var m = CH_META[ch];
+    chhint.textContent = m.hint;
+    chhint.classList.toggle('show', !!m.hint);
+    dropHint.textContent = m.drop;
+    if(ch === 'huxiu'){
+      chhint2.innerHTML = '💡 虎嗅渠道外链提示：网页 &lt;img&gt; 引用建议加 <b>referrerpolicy="no-referrer"</b>；界面 / 澎湃渠道直链无任何防盗链';
+    }else if(ch === 'jiemian'){
+      chhint2.innerHTML = '💡 界面渠道直链（img.jiemian.com）无防盗链、无有效期，任意站点均可直接引用';
+    }else{
+      chhint2.innerHTML = '💡 澎湃渠道直链（阿里云 OSS）无防盗链、无有效期，任意站点均可直接引用';
+    }
+  }
+  for(var i = 0; i < chEls.length; i++){
+    (function(el){
+      el.addEventListener('click', function(){ setChannel(el.getAttribute('data-ch')); });
+    })(chEls[i]);
+  }
+  setChannel(channel);
 
   /* ---------- DOM ---------- */
   var drop = document.getElementById('drop');
@@ -214,7 +381,7 @@
     gear.classList.toggle('on');
     if(settings.classList.contains('open')){
       var saved = null;
-      try{ saved = localStorage.getItem('hx-imagebed-api'); }catch(e){}
+      try{ saved = localStorage.getItem('imgbd-api'); }catch(e){}
       apiInput.value = saved || '';
       refreshApiNow();
     }
@@ -222,8 +389,8 @@
   apiSave.addEventListener('click', function(){
     var v = apiInput.value.trim().replace(/\/+$/,'');
     try{
-      if(v){ localStorage.setItem('hx-imagebed-api', v); }
-      else{ localStorage.removeItem('hx-imagebed-api'); }
+      if(v){ localStorage.setItem('imgbd-api', v); }
+      else{ localStorage.removeItem('imgbd-api'); }
     }catch(e){}
     refreshApiNow();
     apiSave.textContent = '已保存';
@@ -275,7 +442,10 @@
     return f && (f.type ? f.type.indexOf('image/') === 0 : /\.(png|jpe?g|gif|bmp|webp)$/i.test(f.name || ''));
   }
 
-  // 虎嗅接口仅收 PNG / JPEG；WebP、BMP 等静态图自动经 canvas 转 PNG，GIF 提示不支持（转存会丢动画）
+  // 各渠道支持的直传格式：
+  //  huxiu    仅 PNG / JPEG（GIF 不支持，WebP/BMP 转 PNG）
+  //  jiemian  PNG / JPEG / GIF（WebP/BMP 转 PNG）
+  //  thepaper 全部直传（服务端无格式校验）
   function prepareAndUpload(file){
     if(!isImage(file)){
       addCard({name: file.name || '剪贴板图片', fail: '不是图片文件（' + (file.type || '未知类型') + '）'});
@@ -286,16 +456,20 @@
       return;
     }
     var t = file.type || '';
-    if(t === 'image/gif'){
-      addCard({name: file.name, fail: '虎嗅接口不支持 GIF 动图，请转存为 PNG / JPG 后再上传'});
+    if(channel === 'huxiu' && t === 'image/gif'){
+      addCard({name: file.name, fail: '虎嗅渠道不支持 GIF 动图，请切换到界面 / 澎湃渠道，或转存为 PNG / JPG'});
       return;
     }
-    if(t === 'image/png' || t === 'image/jpeg' || /\.jpe?g$/i.test(file.name || '')){
-      uploadOne(file);
+    if(t === 'image/png' || t === 'image/jpeg' || t === 'image/gif' || /\.(png|jpe?g|gif)$/i.test(file.name || '')){
+      dispatch(file);
+      return;
+    }
+    if(channel === 'thepaper' && (t === 'image/webp' || t === 'image/bmp' || /\.(webp|bmp)$/i.test(file.name || ''))){
+      dispatch(file);  // 澎湃 OSS 无格式校验，原样直传
       return;
     }
     // 其余格式（webp/bmp 等）→ canvas 转 PNG
-    convertToPng(file).then(uploadOne, function(){
+    convertToPng(file).then(dispatch, function(){
       addCard({name: file.name, fail: '该格式无法转换，请另存为 PNG / JPG 后重试'});
     });
   }
@@ -323,34 +497,46 @@
     });
   }
 
-  function uploadOne(file){
-    if(!isImage(file)){
-      addCard({name: file.name || '剪贴板图片', fail: '不是图片文件（' + (file.type || '未知类型') + '）'});
-      return;
+  // 界面渠道：服务端限频，前端串行排队，间隔 12 秒
+  var jmQueue = Promise.resolve();
+  var jmLastAt = 0;
+  var JM_GAP = 12000;
+  function dispatch(file){
+    if(channel === 'jiemian'){
+      var run = function(){
+        var wait = Math.max(0, jmLastAt + JM_GAP - Date.now());
+        return sleep(wait).then(function(){ return uploadOne(file); });
+      };
+      jmQueue = jmQueue.then(run, run);
+      jmQueue = jmQueue.then(function(){ jmLastAt = Date.now(); return null; }, function(){ jmLastAt = Date.now(); return null; });
+    }else{
+      uploadOne(file);
     }
-    if(file.size > 10 * 1024 * 1024){
-      addCard({name: file.name, fail: '图片超过 10MB，请压缩后再试'});
-      return;
-    }
+  }
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
+  function uploadOne(file){
     var previewUrl = URL.createObjectURL(file);
-    var card = addCard({name: file.name || ('剪贴板_' + Date.now() + '.png'), waiting: true, preview: previewUrl});
+    var card = addCard({name: file.name || ('剪贴板_' + Date.now() + '.png'), waiting: true, preview: previewUrl, ch: channel});
 
     var fd = new FormData();
     fd.append('img', file, file.name || ('clipboard_' + Date.now() + '.png'));
+    fd.append('channel', channel);
 
     fetch(uploadEndpoint(), { method: 'POST', body: fd })
       .then(function(res){
-        if(!res.ok){ throw new Error('HTTP ' + res.status); }
-        return res.json();
+        return res.text().then(function(txt){
+          var data = null;
+          try{ data = JSON.parse(txt); }catch(e){}
+          if(!res.ok && !data){ throw new Error('HTTP ' + res.status); }
+          return data || {};
+        });
       })
       .then(function(data){
-        if(data && (data.result === 1 || data.state === 'SUCCESS') && (data.url || (data.list && data.list[0] && data.list[0].url))){
-          var url = data.url || data.list[0].url;
-          if(url.indexOf('/') === 0){ url = 'https://www.huxiu.com' + url; }
-          succeed(card, url, data);
+        if(data && data.result === 1 && data.url){
+          succeed(card, data.url, data);
         }else{
-          throw new Error((data && (data.msg || data.message)) || '上传失败');
+          throw new Error((data && data.msg) || '上传失败');
         }
       })
       .catch(function(err){
@@ -383,7 +569,8 @@
     card.appendChild(thumb);
 
     var body = el('div', 'body');
-    body.appendChild(el('div', 'name', opt.name));
+    var nameTxt = opt.name + (opt.ch ? '  ·  ' + opt.ch : '');
+    body.appendChild(el('div', 'name', nameTxt));
 
     if(opt.fail){
       body.appendChild(el('div', 'errmsg', opt.fail));
@@ -408,7 +595,8 @@
     var body = card.querySelector('.body');
     body.innerHTML = '';
 
-    var name = el('div', 'name', (data && data.width ? data.width + '×' + data.height + ' · ' : '') + fileNameOf(url));
+    var chName = {huxiu:'虎嗅', jiemian:'界面', thepaper:'澎湃'}[(data && data.channel) || channel] || '';
+    var name = el('div', 'name', (data && data.width ? data.width + '×' + data.height + ' · ' : '') + fileNameOf(url) + (chName ? '  ·  ' + chName : ''));
     body.appendChild(name);
 
     var urlbox = el('div', 'urlbox');
@@ -419,6 +607,8 @@
     input.addEventListener('click', function(){ input.select(); });
     urlbox.appendChild(input);
     body.appendChild(urlbox);
+
+    var isHx = (data && data.channel) ? data.channel === 'huxiu' : channel === 'huxiu';
 
     var acts = el('div', 'acts');
 
@@ -432,7 +622,7 @@
 
     var btnHtml = el('button', null, 'HTML');
     btnHtml.addEventListener('click', function(){
-      copyText('<img src="' + url + '" referrerpolicy="no-referrer" alt="">', btnHtml);
+      copyText('<img src="' + url + '"' + (isHx ? ' referrerpolicy="no-referrer"' : '') + ' alt="">', btnHtml);
     });
     acts.appendChild(btnHtml);
 
