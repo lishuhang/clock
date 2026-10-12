@@ -1,0 +1,14 @@
+# Netscape HTTP Cookie File
+# https://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file! Do not edit.
+
+.jiemian.com	TRUE	/	TRUE	1820281979	__utrace	c3749ee601328a09ec814d57ff3392ce
+a.jiemian.com	FALSE	/	FALSE	0	SERVERID	res125
+.jiemian.com	TRUE	/	TRUE	1791798917	_authCode	39a9b2cafddd336d8aaedee988e61207
+.jiemian.com	TRUE	/	TRUE	1793008233	_jm_ppt_id	WPLNkDBlepHjltI3pKdUHmk6-GnNmxB3D_PEhyO22Coaf7ICjBGaYUwsAqHsaDQYUEWoUwor1RszIn7zP8-R2V9189_0lLPAMKdzU2YAEeW7lv_Pe2vGQaFD
+.jiemian.com	TRUE	/	TRUE	0	uid	100048917
+a.jiemian.com	FALSE	/	TRUE	0	_jm_unique_id	455c023b5f9d83d691e505b65a74c699
+.jiemian.com	TRUE	/	TRUE	0	yz	7821472c7b1d1086f2deedaa7c527d4f35b72a30
+.jiemian.com	TRUE	/	TRUE	0	im	_66_9_100048917-1550669201.jpg
+.jiemian.com	TRUE	/	TRUE	0	nike	%E8%88%AA%E9%80%9A%E7%A4%BE
+a.jiemian.com	FALSE	/	TRUE	0	gcv:admin:roles100048917	2
