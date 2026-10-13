@@ -1,0 +1,30 @@
+# cruise-bot — Cloudflare Worker 部署配置
+# 部署：wrangler deploy（或 README 中的 CF REST API 方式）
+# ★ 所有敏感值用 `wrangler secret put <NAME>` 写入，严禁写入本文件或任何入库文件
+
+name = "cruise-bot"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+# KV：会话/配置/待发队列。先 `wrangler kv namespace create CRUISE_KV`，
+# 然后把返回的 id 填到下面。
+[[kv_namespaces]]
+binding = "CKV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+# 非敏感默认值（可按需修改）
+DEFAULT_CITY = "上海"        # 早报默认天气城市（也可发「天气 米克诺斯」临时查）
+# GLM_BASE / GLM_MODEL 可选：默认 https://open.bigmodel.cn + glm-4-flash
+# 敏感 secrets 清单（全部 wrangler secret put）：
+#   META_TOKEN            Meta 系统用户永久 token
+#   META_PHONE_NUMBER_ID  WhatsApp 电话号码 ID
+#   META_APP_SECRET       Meta 应用密钥（webhook 签名校验）
+#   META_VERIFY_TOKEN     webhook 验证串（自定随机字符串）
+#   GLM_API_KEY           智谱开放平台 key（glm-4-flash 免费）
+#   AGENT_KEY             内部 API 口令（自定随机长串，Actions 用）
+#   OWNER_WA              老公 WhatsApp 号（E.164，如 +8613...）
+#   WIFE_WA               老婆 WhatsApp 号（E.164）
+#   BB_BASE               BlueBubbles Tunnel 域名（https://imsg.xxx.com）
+#   BB_PASSWORD           BlueBubbles API 密码
+#   WIFE_IGUID            iMessage chatGuid（iMessage;+;+8613...）

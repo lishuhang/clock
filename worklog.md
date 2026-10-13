@@ -363,3 +363,12 @@ Stage Summary:
 Stage Summary:
 - origin/main = 4f3627c：AniShort 11 课程 md + 1.07G 共享媒体池已上库
 - 11 平台教程全部离线可读；全仓 0 断链；保留在线的 17 个大视频均有注明
+
+### 2026-10-13 — cruise-bot v1.0（新项目：邮轮五日文字内容 Bot）
+- **背景**：夫人邮轮 5 天，不购互联网套餐时仅 WhatsApp/iMessage 可收发文字；要求交钥匙 bot 方案（CF Worker + GitHub Actions + GLM-4-Flash 免费 + 全零费用），做到"需要凭据为止"
+- **目录**：`cruise-bot/`（worker.js 886 行 + wrangler.toml + actions/ 4 脚本 + mac-bluebubbles/ + win365-wxauto/ + README 交钥匙文档）+ 仓库根 `.github/workflows/cruise-bot.yml`
+- **三通道**：主=WhatsApp Cloud API（service 对话 24h 窗口内免费，webhook 签名校验）；备=iMessage（她 Mac BlueBubbles + CF Tunnel，同 Apple ID 自发闭环，无窗口主动推送，🤖 前缀防自环）；Phase 2=Windows 365 wxauto 微信桥（复用 /send 与 KV outbox）
+- **内容服务**：早报/晚安包（Actions cron→GLM 汇总 RSS+open-meteo）、搜（Bing RSS→DDG Lite fallback）、小红书特化（尽力抓+诚实降级）、链接摘要/全文分节、wiki、天气、热榜、古腾堡公版书分章、连载小说、猜谜、翻译、聊天兜底、广播/回老公、时区/订阅开关、KV 待发队列补发
+- **安全**：白名单外拒答、HMAC-SHA256 webhook 验签、AGENT_KEY 内部 API、凭据全走 secrets（扫描 0 命中）
+- **验证**：node --check（ESM）+ py_compile + bash -n 全通过；凭据扫描 0 命中
+- **待办（需用户提供）**：Meta App/WABA/永久 token/能收码的 bot 号码、GLM key、部署 Worker+secrets、配 webhook、Actions secrets、（可选）她 Mac 装 BlueBubbles、邮轮时区校准 cron

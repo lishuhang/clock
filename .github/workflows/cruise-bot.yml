@@ -1,0 +1,108 @@
+# cruise-bot 定时推送（早报 / 晚安包 / 突发新闻速览）
+#
+# cron 是 UTC 时间。换算：
+#   北京/船上（UTC+8）07:40 = UTC 23:40（前一天）  → 早报
+#   北京/船上（UTC+8）21:30 = UTC 13:30           → 晚安包
+#   每 4 小时检查一次突发
+#
+# ★ 邮轮若在不同时区（如地中海 UTC+2/+3），把 cron 相应平移即可。
+#
+# 所需仓库 secrets（Settings → Secrets and variables → Actions）：
+#   CRUISE_WORKER_URL  https://cruise-bot.<你的子域>.workers.dev
+#   CRUISE_AGENT_KEY   与 Worker secret AGENT_KEY 相同的口令
+#   GLM_API_KEY        智谱开放平台 key（glm-4-flash 免费档）
+
+name: cruise-bot
+
+on:
+  schedule:
+    - cron: '40 23 * * *'   # 早报（UTC+8 07:40）
+    - cron: '30 13 * * *'   # 晚安包（UTC+8 21:30）
+    - cron: '0 */4 * * *'   # 突发新闻检查（每 4h）
+  workflow_dispatch:
+    inputs:
+      task:
+        description: '手动任务：morning / evening / flash / test'
+        required: true
+        default: 'test'
+
+concurrency:
+  group: cruise-bot
+  cancel-in-progress: false
+
+jobs:
+  morning:
+    if: (github.event_name == 'schedule' && github.event.schedule == '40 23 * * *') || github.event.inputs.task == 'morning'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: 推送早报
+        working-directory: cruise-bot/actions
+        env:
+          CRUISE_WORKER_URL: ${{ secrets.CRUISE_WORKER_URL }}
+          CRUISE_AGENT_KEY: ${{ secrets.CRUISE_AGENT_KEY }}
+          GLM_API_KEY: ${{ secrets.GLM_API_KEY }}
+          GLM_BASE: ${{ vars.GLM_BASE }}
+          GLM_MODEL: ${{ vars.GLM_MODEL }}
+          CITY: ${{ vars.CITY }}
+          TZ_OFFSET: ${{ vars.TZ_OFFSET }}
+        run: node morning.mjs
+
+  evening:
+    if: (github.event_name == 'schedule' && github.event.schedule == '30 13 * * *') || github.event.inputs.task == 'evening'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: 推送晚安包
+        working-directory: cruise-bot/actions
+        env:
+          CRUISE_WORKER_URL: ${{ secrets.CRUISE_WORKER_URL }}
+          CRUISE_AGENT_KEY: ${{ secrets.CRUISE_AGENT_KEY }}
+          GLM_API_KEY: ${{ secrets.GLM_API_KEY }}
+          GLM_BASE: ${{ vars.GLM_BASE }}
+          GLM_MODEL: ${{ vars.GLM_MODEL }}
+        run: node evening.mjs
+
+  flash:
+    if: (github.event_name == 'schedule' && github.event.schedule == '0 */4 * * *') || github.event.inputs.task == 'flash'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: 突发新闻检查
+        working-directory: cruise-bot/actions
+        env:
+          CRUISE_WORKER_URL: ${{ secrets.CRUISE_WORKER_URL }}
+          CRUISE_AGENT_KEY: ${{ secrets.CRUISE_AGENT_KEY }}
+          GLM_API_KEY: ${{ secrets.GLM_API_KEY }}
+          GLM_BASE: ${{ vars.GLM_BASE }}
+          GLM_MODEL: ${{ vars.GLM_MODEL }}
+        run: node flash.mjs
+
+  test:
+    if: github.event.inputs.task == 'test'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: 连通性测试（health + 一条测试消息）
+        env:
+          CRUISE_WORKER_URL: ${{ secrets.CRUISE_WORKER_URL }}
+          CRUISE_AGENT_KEY: ${{ secrets.CRUISE_AGENT_KEY }}
+        run: |
+          echo "== /health =="
+          curl -s "$CRUISE_WORKER_URL/health" && echo
+          echo "== /send 测试消息 =="
+          curl -s -X POST "$CRUISE_WORKER_URL/send" \
+            -H "content-type: application/json" -H "x-agent-key: $CRUISE_AGENT_KEY" \
+            -d '{"text":"🚢 cruise-bot 测试消息：连通正常！收到这条说明 Worker→发送链路 OK。","who":"wife"}'
