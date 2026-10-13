@@ -16,7 +16,7 @@
  *   对后续自动化操作的合法授权（收到什么发什么、抓取哪些公开源、调用免费模型）。
  */
 
-const VERSION = 'cruise-bot-1.0';
+const VERSION = 'cruise-bot-1.1';
 
 /* ============================ 通用小工具 ============================ */
 
@@ -240,12 +240,20 @@ async function deliver(env, text, opts = {}) {
   return { sent, log };
 }
 
-async function enqueuePending(env, who, text) {
+async function enqueuePending(env, who, text, note = '') {
   const key = `pending:${who}`;
   const list = await kvGetJson(env, key, []);
-  list.push({ t: nowSec(), text: clampStr(text, 3500) });
+  list.push({ t: nowSec(), text: clampStr(text, 3500), note });
   while (list.length > 20) list.shift();
   await kvPutJson(env, key, list, 10 * 86400);
+  // 窗口外未送达：知会岸上（若 owner 窗口活着），让老公随手转发或提醒她发任意消息解锁补发
+  if (who !== 'owner' && env.META_TOKEN && env.OWNER_WA) {
+    try {
+      if (await windowAlive(env, 'owner')) {
+        await sendWhatsApp(env, env.OWNER_WA, `⚠️ 有 1 条内容暂未能送达她（24h 窗口外），已排队待补发。开头：${clampStr(text, 120)}\n\n让她随手发个「早」即可解锁补发；或你直接转发以上内容给她。`);
+      }
+    } catch {}
+  }
 }
 async function flushPending(env, who) {
   const key = `pending:${who}`;
@@ -253,7 +261,7 @@ async function flushPending(env, who) {
   if (!list.length) return '';
   await kvDel(env, key);
   const lines = list.map(x => `⏳${new Date(x.t * 1000).toISOString().slice(5, 16).replace('T', ' ')} ${clampStr(x.text, 1200)}`);
-  return `📮 离线期间没能送达的 ${list.length} 条内容：\n\n` + lines.join('\n\n');
+  return `📮 离线期间没能送达的 ${list.length} 条内容：\n\n` + lines.join('\n\n') + (list.some(x => x.note) ? `\n\n（备注：${[...new Set(list.map(x => x.note).filter(Boolean)).values()].join('；')}）` : '');
 }
 
 /* ============================ 内容服务（全部免费源） ============================ */
