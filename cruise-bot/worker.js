@@ -177,6 +177,19 @@ async function sendWhatsApp(env, to, text) {
   return { ok: results.every(x => x.ok), parts: parts.length, results };
 }
 
+// 模板消息发送（如 hello_world）：绕开 24h 窗口限制，用于账户封锁探测与“门铃”提醒
+async function sendWhatsAppTemplate(env, to, name, lang) {
+  const url = `https://graph.facebook.com/v23.0/${env.META_PHONE_NUMBER_ID}/messages`;
+  const r = await fetchT(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${env.META_TOKEN}` },
+    body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'template', template: { name, language: { code: lang } } }),
+  }, 30000);
+  let body = null; try { body = await r.json(); } catch {}
+  if (!r.ok) return { ok: false, status: r.status, err: body };
+  return { ok: true, id: (body?.messages?.[0]?.id) || '', to: (body?.contacts?.[0]?.input) || to };
+}
+
 // iMessage 发送（BlueBubbles over Cloudflare Tunnel）；带 🤖 前缀用于 webhook 自环过滤
 async function sendIMessage(env, text) {
   if (!env.BB_BASE || !env.BB_PASSWORD || !env.WIFE_IGUID) return { ok: false, skipped: true, reason: 'imessage 未配置' };
@@ -828,6 +841,13 @@ function agentOk(env, req) { return !!(env.AGENT_KEY && req.headers.get('x-agent
 
 async function handleSend(env, req) {
   const body = await req.json();
+  // 模板探测模式：{"who":"owner","template":"hello_world","lang":"en_US"}
+  if (body.template) {
+    const to = body.who === 'owner' ? env.OWNER_WA : env.WIFE_WA;
+    const r = await sendWhatsAppTemplate(env, to, String(body.template), String(body.lang || 'en_US'));
+    await kvPutJson(env, `sendlog:${nowSec()}`, { t: nowSec(), who: body.who === 'owner' ? 'owner' : 'wife', pref: 'tmpl', attempts: [{ ch: 'wa', ok: r.ok, tmpl: String(body.template), err: r.ok ? undefined : clampStr(JSON.stringify(r.err || {}), 300) }], sent: r.ok }, 86400);
+    return jresp({ ok: r.ok, detail: r });
+  }
   const text = String(body.text || '').trim();
   if (!text) return jresp({ error: 'text required' }, 400);
   const r = await deliver(env, text, { who: body.who || 'wife', channel: body.channel });
@@ -926,6 +946,10 @@ export default {
             const r = await fetchT(`https://graph.facebook.com/v23.0/${env.WABA_ID}/subscribed_apps?access_token=${env.META_TOKEN}`);
             out.subscribed_apps = await r.json();
           } catch (e) { out.sub_apps_err = e.message; }
+          try {
+            const r2 = await fetchT(`https://graph.facebook.com/v23.0/${env.WABA_ID}?fields=id,name,account_review_status,business_verification_status,health_status&access_token=${env.META_TOKEN}`);
+            out.waba = await r2.json();
+          } catch (e) { out.waba_err = e.message; }
         }
         if (env.META_APP_ID && env.META_APP_SECRET) {
           try {

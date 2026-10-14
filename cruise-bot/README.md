@@ -202,3 +202,21 @@ iMessage 备选包保留在 `mac-bluebubbles/`（仅当未来 Mac 需要常驻�
   长文分节、链接给纯 URL，回港再看图。
 - **流量/token 会被陌生人刷爆吗？** 白名单外一律拒答；GLM-4-Flash 免费档无额度焦虑。
 - **回港后要清理吗？** 保留即长期可用（家人日常用也顺手）；停用只需 Actions 禁用 + Worker 删项目。
+
+## 九、排障实录（1014 深夜实战，接手者必读）
+
+错误码是分层的，外层错误会掩盖内层错误——看到 sent:true 不代表送达，必须看 wastat 异步回执：
+
+| 错误码 | 含义 | 实战结论 |
+|---|---|---|
+| 131047 | Re-engagement message | 24h 窗口未开时发自由文本，Graph 收下但投递必败（异步回 failed） |
+| 131031 | Business Account locked | 账户级封锁（本例根源），窗口开了也会被它挡 |
+| 141006 | Payment method error（/diag health_status 可见） | WABA 无有效支付方式 → **连测试号免费消息也全挡**（模板+自由文本都 fail） |
+| 141010 | Business not verified | BUSINESS 级 LIMITED；测试号使用不强制过验证，先解决 141006 |
+
+关键结论（1014 实测）：
+- **测试号窗口规则与正式号一致**：对已验证收件人窗口外发自由文本照样 131047；dashboard 的 hello_world 能发是模板豁免。旧结论"测试号可窗口外自由发送"作废。
+- **新 WABA 必须在 business.facebook.com 加支付方式**（测试号消息免费、不会被扣费，但账户要求挂一张有效支付方式），否则 141006 → 全部消息 131031 打回。
+- **两个易混淆的号码**：发验证码的 "WhatsApp Business" 官方号（+1 646 段）只是 Meta 验证服务号，永不回复；真正的测试号是 dashboard 里那个 +1 555 段虚拟号（如 555-662-3883），只跟它聊。
+- 排障端点：/diag（Meta 侧自查：phone/WABA health/subscriptions）、/state?prefix=seen:（入站时间戳）、/state?prefix=wastat:（投递回执）、/state?prefix=sendlog:（发送日志）。/send 支持 {"template":"hello_world"} 模板探测。
+- webhook 链路实测：她发"帮助"→ 2 秒内 markSeen + 回复出站（若账户未封锁即秒回菜单）。
