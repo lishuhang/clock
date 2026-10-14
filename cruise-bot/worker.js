@@ -16,7 +16,7 @@
  *   对后续自动化操作的合法授权（收到什么发什么、抓取哪些公开源、调用免费模型）。
  */
 
-const VERSION = 'cruise-bot-1.1';
+const VERSION = 'cruise-bot-1.3';
 
 /* ============================ 通用小工具 ============================ */
 
@@ -169,8 +169,9 @@ async function sendWhatsApp(env, to, text) {
       headers: { 'content-type': 'application/json', authorization: `Bearer ${env.META_TOKEN}` },
       body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'text', text: { preview_url: false, body: p } }),
     }, 30000);
-    if (!r.ok) results.push({ ok: false, status: r.status, body: clampStr(await r.text(), 300) });
-    else results.push({ ok: true });
+    let body = null; try { body = await r.json(); } catch {}
+    if (!r.ok) results.push({ ok: false, status: r.status, body: clampStr(JSON.stringify(body || {}), 300) });
+    else results.push({ ok: true, id: (body?.messages?.[0]?.id) || '', to: (body?.contacts?.[0]?.input) || to });
     if (parts.length > 1) await sleep(1200); // 分条节流，避免卫星链路乱序
   }
   return { ok: results.every(x => x.ok), parts: parts.length, results };
@@ -212,7 +213,9 @@ async function deliver(env, text, opts = {}) {
   const tryWA = async () => {
     if (!env.META_TOKEN || !env.META_PHONE_NUMBER_ID || !to) { log.attempts.push({ ch: 'wa', skip: '未配置' }); return false; }
     const r = await sendWhatsApp(env, to, text);
-    log.attempts.push({ ch: 'wa', ok: r.ok, parts: r.parts });
+    // ⚠️ 实测：窗口外发自由文本，Graph 会收下（HTTP 200）但投递必败（异步回传 131047）。
+    // 所以 ok:true ≠ 送达，窗口预检必须在 tryWA 之前完成。
+    log.attempts.push({ ch: 'wa', ok: r.ok, parts: r.parts, id: (r.results && r.results[0] && r.results[0].id) || '' });
     return r.ok;
   };
   const tryIM = async () => {
@@ -222,12 +225,15 @@ async function deliver(env, text, opts = {}) {
   };
 
   let sent = false;
-  if (pref === 'wa') sent = await tryWA();
+  if (pref === 'wa') {
+    // 显式指定 WA：也必须窗口活才发，否则宁可进队列（否则会被 131047 静默丢弃）
+    if (await windowAlive(env, who)) sent = await tryWA();
+  }
   else if (pref === 'im') sent = await tryIM();
   else {
     if (await windowAlive(env, who)) sent = await tryWA();
     if (!sent) sent = await tryIM();
-    if (!sent) sent = await tryWA(); // 最后再试一次 WA（窗口可能刚被她刷新）
+    // 不再“最后再试一次 WA”：窗口外发送 = Graph 收下但投递必败且无法进队列，等于丟消息
   }
 
   log.sent = sent;
@@ -745,7 +751,11 @@ async function handleWhatsAppPost(env, req) {
   const values = payload?.entry?.[0]?.changes?.[0]?.value || {};
   if (values.statuses?.length) {
     const st = values.statuses[0];
-    await kvPutJson(env, `wastat:${nowSec()}`, { id: st.id, status: st.status, t: nowSec() }, 86400);
+    await kvPutJson(env, `wastat:${nowSec()}`, {
+      id: st.id, status: st.status, to: st.recipient_id || '', ts: st.timestamp || '',
+      errors: (st.errors || []).map(e => ({ code: e.code, title: e.title, message: clampStr(e.message || '', 200) })),
+      t: nowSec(),
+    }, 86400);
     return jresp({ ok: true });
   }
   const msgs = values.messages || [];
@@ -827,6 +837,24 @@ async function handleSend(env, req) {
 async function handleState(env, req, url) {
   if (req.method === 'GET') {
     const key = url.searchParams.get('key');
+    const prefix = url.searchParams.get('prefix');
+    if (prefix) {
+      // 前缀枚举：调试用（如 prefix=wastat: / sendlog: / pending:）
+      try {
+        const out = [];
+        let cursor = undefined, complete = true, guard = 0;
+        do {
+          const res = await env.CKV.list({ prefix, limit: 25, cursor });
+          for (const k of (res.keys || [])) out.push({ key: k.name, value: await kvGet(env, k.name) });
+          complete = !!res.list_complete;
+          cursor = res.cursor;
+          guard++;
+        } while (!complete && cursor && guard < 3);
+        return jresp({ prefix, count: out.length, complete, items: out });
+      } catch (e2) {
+        return jresp({ prefix, list_error: String(e2 && e2.message || e2), stack: clampStr(String(e2 && e2.stack || ''), 500) }, 500);
+      }
+    }
     if (!key) return jresp({ error: 'key required' }, 400);
     return jresp({ key, value: await kvGet(env, key) });
   }
@@ -883,6 +911,29 @@ export default {
       if (path === '/cfg' && request.method === 'GET') {
         if (!agentOk(env, request)) return jresp({ error: 'unauthorized' }, 401);
         return jresp(await cfgGet(env));
+      }
+      if (path === '/diag' && request.method === 'GET') {
+        if (!agentOk(env, request)) return jresp({ error: 'unauthorized' }, 401);
+        const out = {};
+        if (env.META_TOKEN && env.META_PHONE_NUMBER_ID) {
+          try {
+            const r = await fetchT(`https://graph.facebook.com/v23.0/${env.META_PHONE_NUMBER_ID}?fields=display_phone_number,verified_name,quality_rating,code_verification_status&access_token=${env.META_TOKEN}`);
+            out.phone = await r.json();
+          } catch (e) { out.phone_err = e.message; }
+        }
+        if (env.WABA_ID && env.META_TOKEN) {
+          try {
+            const r = await fetchT(`https://graph.facebook.com/v23.0/${env.WABA_ID}/subscribed_apps?access_token=${env.META_TOKEN}`);
+            out.subscribed_apps = await r.json();
+          } catch (e) { out.sub_apps_err = e.message; }
+        }
+        if (env.META_APP_ID && env.META_APP_SECRET) {
+          try {
+            const r = await fetchT(`https://graph.facebook.com/v23.0/${env.META_APP_ID}/subscriptions?access_token=${env.META_APP_ID}%7C${env.META_APP_SECRET}`);
+            out.app_subscriptions = await r.json();
+          } catch (e) { out.app_sub_err = e.message; }
+        }
+        return jresp(out);
       }
 
       return tresp('not found', 404);
