@@ -1,9 +1,13 @@
 # iMessage 通道部署（她的 Mac + BlueBubbles + Cloudflare Tunnel）
 
+> ✅ **1014 起为主通道**（原"备通道"定位作废）。触发时机：WhatsApp 因支付方式封锁冻结。
+> ⚠️ 域名勘误：CF 账号内活动 zone 为 **lishuhang.com**（非 .me），隧道主机名统一用 `imsg.lishuhang.com`。
+> 服务端现状：Worker 收发代码早已就绪；隧道需在 Mac 端创建（CF API token 无 Tunnel 写权限，已实测）。
+> 全局上下文与收尾清单见 `../todo.md` 第四、六节。
+
 ## 原理与定位
 
-- **用途**：iMessage 备通道。WhatsApp 24h 服务窗口关闭时（她超过 23 小时没发消息），
-  主动推送自动降级走这里——**iMessage 没有 24h 窗口，随时可推**，这是早报不漏发的主力保险。
+- **用途**：**主通道**。iMessage 没有 24h 窗口、无商业账户门槛，随时可推；
 - **原理**：BlueBubbles（开源，https://bluebubbles.app ）在 Mac 上驱动 macOS 自带 Messages.app 收发 iMessage。
   Mac 与她 iPhone 登录**同一 Apple ID**：bot 从 Mac 发出的 iMessage 同步显示在她的 iPhone；
   她在 iPhone 上的回复也会同步回 Mac，被 BlueBubbles webhook 推给 Worker 处理——闭环完成。
@@ -14,8 +18,8 @@
 ## 前提
 
 - 她的 Mac：macOS 12+，接电源，iMessage 已登录 Apple ID 且能正常收发
-- Mac 上 Messages.app 至少与她 iPhone 有一次 iMessage 会话（用于取 chatGuid）
-- 一个 Cloudflare 账号（老公的即可），域名已托管 Cloudflare（lishuhang.me 可用）
+- Mac 上 Messages.app 已登录她的 Apple ID（自聊线程的 chatGuid 即目标，见步骤 2）
+- 一个 Cloudflare 账号（老公的即可），域名已托管 Cloudflare（**lishuhang.com**，已验证 active）
 
 ## 步骤（约 20 分钟）
 
@@ -37,7 +41,8 @@ curl -s "http://localhost:1234/api/v1/chat?password=你的密码" | python3 -m j
 ```
 
 找到与她 iPhone 号码对应的 chatGuid（形如 `iMessage;+;+8613xxxxxxxxx` 或 `iMessage;-;+8613...`）。
-**记下来** → Worker secret `WIFE_IGUID`。
+**同 Apple ID 自聊方案下：找她本人 handle（自己的手机号/邮箱）对应的那条线程**（即"发给自己"会话；
+若列表里还没有，先用下一步的自测命令给她本人发一条即可生成）。**记下来** → Worker secret `WIFE_IGUID`。
 
 自测发送：
 
@@ -55,7 +60,7 @@ curl -s -X POST "http://localhost:1234/api/v1/message/text?password=你的密码
 brew install cloudflared
 cloudflared tunnel login          # 浏览器授权
 cloudflared tunnel create cruise-imsg
-cloudflared tunnel route dns cruise-imsg imsg.lishuhang.me   # 子域随意
+cloudflared tunnel route dns cruise-imsg imsg.lishuhang.com   # 域名用 lishuhang.com（CF 账号内活动 zone）
 ```
 
 写配置 `~/.cloudflared/config.yml`：
@@ -64,7 +69,7 @@ cloudflared tunnel route dns cruise-imsg imsg.lishuhang.me   # 子域随意
 tunnel: cruise-imsg
 credentials-file: /Users/你的用户名/.cloudflared/xxxx.json   # create 命令输出的路径
 ingress:
-  - hostname: imsg.lishuhang.me
+  - hostname: imsg.lishuhang.com
     service: http://localhost:1234
   - service: http_status:404
 ```
@@ -73,7 +78,7 @@ ingress:
 
 ```bash
 cloudflared tunnel run cruise-imsg &
-curl -s "https://imsg.lishuhang.me/api/v1/server/info?password=你的密码" | head -c 300
+curl -s "https://imsg.lishuhang.com/api/v1/server/info?password=你的密码" | head -c 300
 ```
 
 注册为系统服务（开机自启）：
