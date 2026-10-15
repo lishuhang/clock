@@ -1,0 +1,44 @@
+#!/bin/bash
+# v15 VLM批量识别 v2：从image4开始（image1/3已完成），每张加timeout
+set -u
+DOCX_MEDIA="/home/z/my-project/materials/下篇-1015/media/media"
+EVID="/home/z/my-project/evidence/v15-team-check"
+OUT="/home/z/my-project/tool-results/v15-vlm-all2.txt"
+CAND="10家候选：小云雀(剪映/字节系)、纳逗Pro(爱奇艺)、ShotLab(新片场)、万兴剧厂、Seko(商汤)、TapNow、LibTV(哩布)、巨日禄、OiiOii、AniShort"
+> "$OUT"
+
+run() {
+  local img="$1" label="$2" prompt="$3"
+  echo "[$(date +%H:%M:%S)] 识别: $label"
+  {
+    echo ""
+    echo "########## $img ($label) ##########"
+    timeout 150 z-ai vision -p "$prompt" -i "$img" 2>&1 || echo "[TIMEOUT/FAIL: $label]"
+  } >> "$OUT"
+}
+
+run "$DOCX_MEDIA/image4.png" "IMG270-原文问谁家什么功能" "这是某AI视频/漫剧画布工作台产品的界面截图（$CAND）。请仔细读图：1)品牌名/logo/水印/产品名是什么？2)这是什么功能界面（例如剧本创作/分镜表/参数面板等）？3)列出界面主要文字标签原文。看不清就说看不清。"
+
+run "$DOCX_MEDIA/image5.png" "IMG271-原文说不是动图,疑似纳逗" "这张截图可能来自某产品教程（$CAND）。请核实：1)品牌名/logo/水印/产品名是什么？是否纳逗Pro？2)界面展示什么功能（例如分镜参数/剧本/宫格设定图等）？3)列出界面主要文字标签原文，越具体越好（用于回溯教程出处）。看不清就说看不清。"
+
+run "$DOCX_MEDIA/image19.png" "IMG280-原文问谁家的广告剧生成向导" "这张截图按原文是某家的「广告剧生成向导」（候选：万兴剧厂、小云雀等）。请核实：1)界面上的品牌名/logo/水印/产品名是什么？2)是否是广告剧/商品信息→剧情方案→成片之类的向导界面？3)列出界面主要文字标签原文（例如商品、方案、剧情等）。看不清就说看不清。"
+
+run "$EVID/r2-reelmate-path-mcp-cli.png" "万兴宣传页-MCP&CLI" "这是万兴剧厂(reelmate.cn)相关页面截图（可能来自官方宣传/功能页）。请仔细读图：1)页面标题/板块名是什么？2)页面上提到哪些功能（特别找：多光标同屏/多人协作/团队看板/用量管理/子账号管理/MCP/CLI/团队管理）？3)逐条列出页面可见文字原文。看不清就说看不清。"
+
+run "$EVID/r2-reelmate-path-member.png" "万兴宣传页-成员" "这是万兴剧厂(reelmate.cn)相关页面截图。请仔细读图：1)页面标题/板块名是什么？2)是否提到成员管理/子账号/席位/团队？3)逐条列出页面可见文字原文。"
+
+run "$EVID/r2-reelmate-path-subscription.png" "万兴宣传页-订阅" "这是万兴剧厂(reelmate.cn)相关页面截图。请仔细读图：1)页面标题/板块名是什么？2)是否提到订阅/会员/团队版档位？3)逐条列出页面可见文字原文。"
+
+run "$EVID/r2-seko-sub.png" "Seko订阅页" "这是Seko(seko.sensetime.com,商汤)订阅/会员页截图。请仔细读图：1)确认品牌名；2)列出个人版与团队版所有档位名；3)【重点】逐条列出团队/企业相关功能原文（席位、积分、管理、看板、多人协作、1对1服务等）；4)个人订阅档位的功能点也逐条列出。看不清就说看不清。"
+
+run "$EVID/r2-tapnow-enterprise.png" "TapNow企业版页" "这是TapNow(tapnow.ai)企业版/pricing页截图。请仔细读图：1)确认品牌名；2)列出档位名；3)【重点】逐条列出团队/企业功能原文（席位、SSO、用量管控、看板、MCP、CLI、模板定制等）；4)有没有多人同屏/多光标、CLI、MCP字样？"
+
+run "$EVID/r2-anishort-recharge.png" "AniShort充值页" "这是AniShort(anishort.ai)充值/订阅页截图。请仔细读图：1)确认品牌名；2)列出个人与团队档位名（注意：有没有'标准版/进阶版/高级版/豪华版/至尊版'个人档位？）；3)【重点】逐条列出功能原文（席位、团队积分管控、并发、CLI、多人协同、3D导演台、智能分镜、9/4/25宫格、全能视频Agent、多模态主体库、720度全景等）。"
+
+run "$EVID/r2-libtv-vip.png" "LibTV会员页" "这是LibTV(liblib.tv)会员/VIP页截图。请仔细读图：1)确认品牌名；2)列出个人与团队档位名（注意：个人档位是不是'标准版/进阶版/高级版/豪华版/至尊版'？）；3)【重点】逐条列出功能原文（多人画布协作、席位、积分、看板、CLI、Plugin、全能视频Agent、3D导演台、智能分镜Kling3.0/O3、9/4/25宫格生成、宫格切分、镜头聚焦、多模态主体库、视频剪辑、720度全景——这些词哪些出现了？）。"
+
+run "$EVID/r3-jurilu-project.png" "巨日禄项目页" "这是巨日禄(video.jurilu.com)项目管理相关页面截图。请仔细读图：1)确认品牌名；2)这是什么界面（项目管理/任务/看板）？3)逐条列出可见文字（栏目名、按钮、数据项）；4)有没有多人协作/成员/席位/数据看板类功能？"
+
+run "$EVID/r3-reelmate-team.png" "万兴团队页" "这是万兴剧厂(reelmate.cn)团队/团队管理页截图。请仔细读图：1)确认品牌名；2)这是什么界面？3)逐条列出可见文字（成员管理、席位、子账号、用量、看板等）；4)有没有多光标同屏、协作、权限等字样？"
+
+echo "[$(date +%H:%M:%S)] ALL DONE"
