@@ -1,0 +1,526 @@
+{
+  "contract": "YZ-INFOGRAPHIC-V3.1",
+  "scope": "artifact-a",
+  "state": "compliant",
+  "summary": {
+    "passed": 103,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "check": "source-data.csv",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "source-data-readable",
+      "ok": true,
+      "detail": "rows=320"
+    },
+    {
+      "check": "html-output",
+      "ok": true,
+      "detail": "count=11"
+    },
+    {
+      "check": "png-output",
+      "ok": true,
+      "detail": "count=11"
+    },
+    {
+      "check": "contract:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img2-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img2-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img2-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img2-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img3-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img3-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img3-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img3-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img4-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img4-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img4-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img4-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img5-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img5-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img5-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img5-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img6-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img6-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img6-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img6-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img7-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img7-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img7-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img7-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img8-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img8-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img8-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img8-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img9-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img9-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img9-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img9-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:imgS-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:imgS-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:imgS-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:imgS-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
