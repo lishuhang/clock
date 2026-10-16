@@ -372,3 +372,5 @@ Stage Summary:
 - **安全**：白名单外拒答、HMAC-SHA256 webhook 验签、AGENT_KEY 内部 API、凭据全走 secrets（扫描 0 命中）
 - **验证**：node --check（ESM）+ py_compile + bash -n 全通过；凭据扫描 0 命中
 - **待办（需用户提供）**：Meta App/WABA/永久 token/能收码的 bot 号码、GLM key、部署 Worker+secrets、配 webhook、Actions secrets、（可选）她 Mac 装 BlueBubbles、邮轮时区校准 cron
+
+### 2026-10-16 上午11点50，人工手动调整了一些文件夹的配置，接手工作在这个时间点之后的请以实际探测到的repo目录结构为准。
