@@ -1,0 +1,57 @@
+{
+ "ztw": {
+  "query": "电影抓特务海报 冯小刚",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d92d6bfa832a.png",
+  "file": "posters/ztw.jpg"
+ },
+ "jfyf": {
+  "query": "甲方乙方电影海报 1997",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/587b97f6c246.jpg",
+  "file": "posters/jfyf.jpg"
+ },
+ "y1942": {
+  "query": "一九四二电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b7f98602a63e.jpg",
+  "file": "posters/y1942.jpg"
+ },
+ "srdz": {
+  "query": "私人订制电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/84407d35fe6f.jpg",
+  "file": "posters/srdz.jpg"
+ },
+ "shouji": {
+  "query": "电影手机海报 2003 冯小刚",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/6d3e3b799629.jpg",
+  "file": "posters/shouji.jpg"
+ },
+ "tzwz": {
+  "query": "天下无贼电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e3d6da175b99.jpg",
+  "file": "posters/tzwz.jpg"
+ },
+ "yeyan": {
+  "query": "夜宴电影海报 冯小刚",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/62b33487b9c9.png",
+  "file": "posters/yeyan.jpg"
+ },
+ "jjh": {
+  "query": "集结号电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f8b1103ca898.jpg",
+  "file": "posters/jjh.jpg"
+ },
+ "tsdq": {
+  "query": "唐山大地震电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/bd8a9918482c.jpg",
+  "file": "posters/tsdq.jpg"
+ },
+ "pjlian": {
+  "query": "我不是潘金莲电影海报",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b801bb43c35e.jpg",
+  "file": "posters/pjlian.jpg"
+ },
+ "fengp": {
+  "query": "冯小刚导演肖像照片",
+  "url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c641539ac4a2.jpg",
+  "file": "posters/fengp.jpg"
+ }
+}
