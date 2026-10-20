@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- 娱乐资本论信息图 v3.1 / C。复制已批准 B，只增加逐元素动效。16s / 30fps / 480帧。 -->
+<html lang="zh-CN" data-yz-contract="3.1.0" data-yz-mode="c">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Style C</title>
+<style>
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-regular.ttf') format('truetype');font-weight:400;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-bold.ttf') format('truetype');font-weight:700;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-black.ttf') format('truetype');font-weight:900;font-display:block}
+:root{--a:#fc8166;--ad:#e55b46;--t:#312e2e;--s:#6b6666;--m:#9a9595;--l:#e7e3e1}
+*{box-sizing:border-box}html,body{margin:0;background:#fff;color:var(--t);font-family:AliPuHui,sans-serif}body{width:1080px;height:1080px;overflow:hidden}
+.chart-container{width:1080px;height:1080px;display:flex;flex-direction:column;overflow:hidden;padding:58px 64px 42px;background:#fff}.chart-header{height:142px;display:grid;grid-template-columns:80% 20%;align-items:start;flex:none}.chart-title{margin:0;padding:4px 30px 0 0;font-size:48px;line-height:1.16;font-weight:900;letter-spacing:-.8px}.logo-icon{display:block;width:134px;height:90px;object-fit:contain;justify-self:end}
+.chart-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:40px;line-height:1.32}.chart-body strong,.yz-emphasis{font-weight:700;color:var(--ad)}.yz-aux{font-size:28px;line-height:1.3;color:var(--s)}
+.chart-footer{height:78px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:28px;flex:none;padding-top:15px;border-top:1px solid var(--l)}.chart-source{font-size:27px;line-height:1.25;color:var(--m)}.chart-part{font-size:24px;line-height:1.2;color:var(--m);white-space:nowrap}
+.yz-placeholder{display:grid;place-items:center;width:100%;height:100%;border:2px dashed var(--l);color:var(--m)}.yz-avatar{display:block;width:168px;height:168px;border-radius:50%;object-fit:cover;object-position:center;background:#f4f1ef}.yz-avatar-item{display:grid;justify-items:center;gap:13px;min-width:190px}.yz-avatar-name{font-size:40px;font-weight:700}.yz-avatar-value{font-size:28px;color:var(--ad)}table{width:100%;border-collapse:collapse;font-size:40px}th,td{padding:18px 12px;border-bottom:1px solid var(--l);text-align:left}th{font-weight:700;color:var(--s)}[data-yz-motion]{will-change:transform,opacity}
+</style></head>
+<body><main class="chart-container" data-yz-footer-logo="none"><header class="chart-header">
+<!-- YZ_EDIT_1_BEGIN：复制 B 标题 --><h1 class="chart-title" data-yz-stage="title" data-yz-motion="row">《抓特务》上线流媒体后，观众更关注电影本身质量</h1><!-- YZ_EDIT_1_END --><img class="logo-icon" data-yz-stage="logo" data-yz-motion="bubble" src="assets/logo-icon.svg" alt="娱乐资本论河豚图标"></header>
+<!-- YZ_EDIT_2_BEGIN：复制 B 主体；仅给独立元素添加 stage/motion/order --><section class="chart-body"><div style="display:flex;flex-direction:column;width:100%;height:100%;min-height:0">
+<style>
+.yz-legend{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;font-size:28px;color:var(--s);margin-bottom:16px}
+.yz-chip{display:inline-block;width:26px;height:26px;border-radius:7px;vertical-align:-4px;margin-right:8px}
+.yz-note{font-size:28px;line-height:1.4;color:var(--m);margin-top:14px}
+</style>
+
+<div class="yz-legend" data-yz-stage="body" data-yz-motion="row" data-yz-order="0">
+  <span style="display:inline-flex;align-items:center"><svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="#fff" stroke="#fc8166" stroke-width="4"/></svg>&nbsp;院线期</span>
+  <span style="display:inline-flex;align-items:center"><svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#e55b46"/></svg>&nbsp;流媒体期</span>
+  <span style="color:var(--m)">空圈为院线期，实心点为流媒体期</span>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="1">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">制作专业度</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="0"/>
+    <line x1="330" y1="30" x2="401" y2="30" stroke="#fc8166" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="1"/>
+    <polygon points="352,20 375,30 352,40" fill="#fc8166"/>
+    <circle cx="330" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="1"/>
+    <circle cx="401" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="2"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">46.1</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M2 7 H16 L16 1 L25 11 L16 21 L16 15 H2 Z" fill="#fc8166"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">56.0</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="2">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">角色与人品</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="2"/>
+    <line x1="65" y1="30" x2="27" y2="30" stroke="#c9c4c2" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="3"/>
+    <polygon points="53,20 43,30 53,40" fill="#9a9595"/>
+    <circle cx="65" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="3"/>
+    <circle cx="27" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="4"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">9.1</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M24 7 H10 L10 1 L1 11 L10 21 L10 15 H24 Z" fill="#9a9595"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">3.7</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="3">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">民族政治</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="4"/>
+    <line x1="72" y1="30" x2="99" y2="30" stroke="#fc8166" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="5"/>
+    <polygon points="94,20 73,30 94,40" fill="#fc8166"/>
+    <circle cx="72" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="5"/>
+    <circle cx="99" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="6"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">10.0</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M2 7 H16 L16 1 L25 11 L16 21 L16 15 H2 Z" fill="#fc8166"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">13.8</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="4">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">商业资本</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="6"/>
+    <line x1="15" y1="30" x2="12" y2="30" stroke="#c9c4c2" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="7"/>
+    <polygon points="38,20 -7,30 38,40" fill="#9a9595"/>
+    <circle cx="15" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="7"/>
+    <circle cx="12" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="8"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">2.1</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M24 7 H10 L10 1 L1 11 L10 21 L10 15 H24 Z" fill="#9a9595"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">1.7</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="5">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">社会价值观</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="8"/>
+    <line x1="56" y1="30" x2="65" y2="30" stroke="#fc8166" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="9"/>
+    <polygon points="78,20 39,30 78,40" fill="#fc8166"/>
+    <circle cx="56" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="9"/>
+    <circle cx="65" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="10"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">7.8</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M2 7 H16 L16 1 L25 11 L16 21 L16 15 H2 Z" fill="#fc8166"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">9.1</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:20px;margin-bottom:14px" data-yz-stage="body" data-yz-motion="row" data-yz-order="6">
+  <div style="width:212px;font-size:40px;flex:none;line-height:1.2">时代回看</div>
+  <svg width="430" height="60" viewBox="0 0 430 60" style="flex:none">
+    <line x1="2" y1="30" x2="428" y2="30" stroke="#f0eceb" stroke-width="3" data-yz-stage="body" data-yz-motion="line" data-yz-order="10"/>
+    <line x1="181" y1="30" x2="112" y2="30" stroke="#c9c4c2" stroke-width="7" data-yz-stage="body" data-yz-motion="line" data-yz-order="11"/>
+    <polygon points="138,20 159,30 138,40" fill="#9a9595"/>
+    <circle cx="181" cy="30" r="14" fill="#fff" stroke="#fc8166" stroke-width="5" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="11"/>
+    <circle cx="112" cy="30" r="16" fill="#e55b46" data-yz-stage="body" data-yz-motion="bubble" data-yz-order="12"/>
+  </svg>
+  <div style="flex:1;white-space:nowrap;text-align:right"><span style="font-size:40px;color:#6b6666">25.2</span><svg width="26" height="22" viewBox="0 0 26 22" style="vertical-align:-3px;margin:0 8px" aria-hidden="true"><path d="M24 7 H10 L10 1 L1 11 L10 21 L10 15 H24 Z" fill="#9a9595"/></svg><span style="font-size:40px;font-weight:700;color:#e55b46">15.6</span></div>
+</div></div>
+<div class="yz-note" data-yz-stage="body" data-yz-motion="text" data-yz-order="9">注：数值为该维度评价占比（%），左为院线期、右为流媒体期。院线期为8月28日及以前的豆瓣短评抽样；流媒体期为8月28日至9月20日豆瓣短评与腾讯视频评论区抽样。</div>
+</div></section><!-- YZ_EDIT_2_END -->
+<footer class="chart-footer" data-yz-stage="chrome" data-yz-motion="row"><!-- YZ_EDIT_3_BEGIN --><div class="chart-source">数据来源：豆瓣短评，娱乐资本论整理</div><!-- YZ_EDIT_3_END --><!-- YZ_EDIT_4_BEGIN --><div class="chart-part">1/1</div><!-- YZ_EDIT_4_END --></footer></main>
+<script>
+const YZ_TIMELINE=Object.freeze({duration:16000,fps:30,frames:480,entranceEnd:6000,holdEnd:10000,stage:{logo:0,title:1500,chrome:3000,body:4500}});let yzAnimations=[],yzReadyPromise=null;
+function yzFrame(type,on,hold=false){if(type==='bar')return{opacity:on?1:0,transform:`scaleX(${on?(hold?1.01:1):0})`,transformOrigin:'left center'};if(type==='cell')return{opacity:on?1:0,transform:`scale(${on?(hold?1.025:1):.55})`};if(type==='line')return{opacity:on?1:0,strokeDashoffset:on?'0px':'var(--yz-line-length)'};if(type==='text')return{opacity:on?1:0,transform:`translateY(${on?(hold?-2:0):18}px)`};if(type==='bubble')return{opacity:on?1:0,transform:`translateY(${on?(hold?-8:54):54}px) scale(${on?(hold?1.035:1):.25})`};return{opacity:on?1:0,transform:`translateY(${on?(hold?-2:38):38}px)`}}
+function yzBuild(){yzAnimations.forEach(a=>a.cancel());yzAnimations=[];const nodes=[...document.querySelectorAll('[data-yz-motion]')],body=nodes.filter(n=>(n.dataset.yzStage||'body')==='body');for(const n of nodes){const type=n.dataset.yzMotion||'row',stage=n.dataset.yzStage||'body',peers=stage==='body'?body:nodes.filter(x=>(x.dataset.yzStage||'body')===stage),index=Math.max(0,peers.indexOf(n)),order=Number.isFinite(Number(n.dataset.yzOrder))?Number(n.dataset.yzOrder):index,start=Math.min(5600,YZ_TIMELINE.stage[stage]+order*(stage==='body'?130:80)),end=Math.min(6000,start+(stage==='body'?720:680)),reverseStart=16000-end,reverseEnd=16000-start;if(type==='line'&&typeof n.getTotalLength==='function'){const length=Math.ceil(n.getTotalLength());n.style.setProperty('--yz-line-length',length+'px');n.style.strokeDasharray=length+'px'}const off=yzFrame(type,false),on=yzFrame(type,true),hold=yzFrame(type,true,true),frames=[{...off,offset:0},{...off,offset:start/16000,easing:'cubic-bezier(.18,.78,.2,1)'},{...on,offset:end/16000},{...on,offset:6000/16000},{...hold,offset:8000/16000},{...on,offset:10000/16000},{...on,offset:reverseStart/16000,easing:'cubic-bezier(.4,0,.8,.2)'},{...off,offset:reverseEnd/16000},{...off,offset:1}],a=n.animate(frames,{duration:16000,iterations:1,fill:'both',easing:'linear'});a.pause();a.currentTime=0;yzAnimations.push(a)}return yzAnimations}
+function yzReady(){if(!yzReadyPromise)yzReadyPromise=(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?Promise.resolve():i.decode()));yzBuild();return true})();return yzReadyPromise}async function yzStart(){await yzReady();yzAnimations.forEach(a=>{a.currentTime=0;a.play()})}async function yzSetTime(ms){await yzReady();const t=Math.max(0,Math.min(16000,Number(ms)||0));yzAnimations.forEach(a=>{a.pause();a.currentTime=t});await new Promise(requestAnimationFrame);return t}
+async function yzCheck(){await yzReady();const c=document.querySelector('.chart-container'),t=document.querySelector('.chart-title'),e=[],r=c.getBoundingClientRect(),motion=[...document.querySelectorAll('[data-yz-motion]')];if(document.documentElement.dataset.yzContract!=='3.1.0'||document.documentElement.dataset.yzMode!=='c')e.push('contract');if(Math.round(r.width)!==1080||Math.round(r.height)!==1080)e.push('canvas');if(YZ_TIMELINE.duration!==16000||YZ_TIMELINE.fps!==30||YZ_TIMELINE.frames!==480)e.push('timeline');if(parseFloat(getComputedStyle(t).fontSize)!==48)e.push('title');if(!document.fonts.check('900 48px AliPuHui')||!document.fonts.check('400 40px AliPuHui'))e.push('font');if(document.images.length<1||[...document.images].some(i=>!i.naturalWidth))e.push('image');if(motion.filter(n=>(n.dataset.yzStage||'body')==='body').length<1)e.push('body-motion');if(motion.some(n=>!['bar','cell','line','text','bubble','row'].includes(n.dataset.yzMotion)))e.push('motion-type');if(/【(?:TITLE|CHART_BODY|SOURCE|PART)_HERE】/.test(document.body.textContent))e.push('placeholder');if(c.scrollWidth>c.clientWidth||c.scrollHeight>c.clientHeight)e.push('overflow');if([...document.querySelectorAll('*')].some(n=>getComputedStyle(n).boxShadow!=='none'))e.push('shadow');const o={contract:'YZ-INFOGRAPHIC-V3.1',mode:'c',state:e.length?'noncompliant_fallback':'compliant',errors:e};console[e.length?'error':'log'](o);return o}Object.assign(window,{YZ_TIMELINE,yzReady,yzStart,yzSetTime,yzCheck});addEventListener('load',()=>yzStart(),{once:true});
+</script></body></html>
