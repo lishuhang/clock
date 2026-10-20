@@ -1,0 +1,5411 @@
+{
+ "canvas_config": {
+  "width": 1080,
+  "height": 1920,
+  "ratio": "original"
+ },
+ "color_space": 0,
+ "duration": 183700000,
+ "fps": 30,
+ "keyframe_graph_list": [],
+ "keyframes": {
+  "Adjustment": [],
+  "Alpha": [],
+  "Audio": []
+ },
+ "materials": {
+  "ai_translates": [],
+  "audio_balances": [],
+  "audio_effects": [],
+  "audio_fades": [],
+  "audios": [
+   {
+    "id": "94F9F845DE4140359BB9CB7F",
+    "material_name": "hanhong_open_audio.wav",
+    "path": "assets/hanhong_open_audio.wav",
+    "duration": 6200000,
+    "type": "extract_music",
+    "name": "韩红原声"
+   },
+   {
+    "id": "88C6B178E15569352ABB1AB2",
+    "material_name": "voice_fixed.wav",
+    "path": "assets/voice_fixed.wav",
+    "duration": 173978458,
+    "type": "extract_music",
+    "name": "解说配音"
+   }
+  ],
+  "beats": [],
+  "canvases": [
+   {
+    "id": "FCC790C72A86190DE1B549D0",
+    "type": "canvas_color",
+    "color": "#0A0A0A",
+    "render_index": 0
+   }
+  ],
+  "chromas": [],
+  "color_curves": [],
+  "digital_zooms": [],
+  "effects": [],
+  "filters": [],
+  "handwrites": [],
+  "hsl": [],
+  "loudnesses": [],
+  "mask": [],
+  "material_animations": [],
+  "material_colors": [],
+  "shapes": [],
+  "smart_crops": [],
+  "smart_relights": [],
+  "sound_channel_mappings": [],
+  "speed_changes": [],
+  "stickers": [],
+  "tail_leaders": [],
+  "text_templates": [],
+  "texts": [
+   {
+    "id": "809D4580AAED41565ABC38D5",
+    "type": "text",
+    "content": "韩红这次宣发，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕001"
+   },
+   {
+    "id": "83F1535F99AB0BF4E9D02DFD",
+    "type": "text",
+    "content": "可能是中国电影史上",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕002"
+   },
+   {
+    "id": "0F826A89CF68C399C5F4CF32",
+    "type": "text",
+    "content": "帮倒忙最严重的一次。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕003"
+   },
+   {
+    "id": "0B8854AD38F0A6C65807928D",
+    "type": "text",
+    "content": "抓特务成本1.65亿，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕004"
+   },
+   {
+    "id": "1051527638B9DA6FE99E4242",
+    "type": "text",
+    "content": "档期两个月，票房只有1.19亿。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕005"
+   },
+   {
+    "id": "DF2184F4B46DE3DDF02F74FB",
+    "type": "text",
+    "content": "但8月28日上线流媒体，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕006"
+   },
+   {
+    "id": "A77CCA9BD375665B36F4239E",
+    "type": "text",
+    "content": "第二天鹅厂热度近两万，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕007"
+   },
+   {
+    "id": "3685708FD594A6861AA73F18",
+    "type": "text",
+    "content": "爱奇艺和优酷也冲到7000多。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕008"
+   },
+   {
+    "id": "531A93A176DF5BDE70902ADA",
+    "type": "text",
+    "content": "弹幕都说“欠冯导一张电影票”。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕009"
+   },
+   {
+    "id": "82F696175C08FE04CD4BF221",
+    "type": "text",
+    "content": "抓特务的口碑怎么就反转了？",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕010"
+   },
+   {
+    "id": "AF7DA95E0BA5FF3C49B5C11D",
+    "type": "text",
+    "content": "娱乐资本论",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕011"
+   },
+   {
+    "id": "4787FE8AE24C12988DB6B8DB",
+    "type": "text",
+    "content": "拆了1997年以来",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕012"
+   },
+   {
+    "id": "A461D688D013E47C4010387E",
+    "type": "text",
+    "content": "冯小刚13部电影的",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕013"
+   },
+   {
+    "id": "991924D4AC643FAC373B6734",
+    "type": "text",
+    "content": "3292条短评，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕014"
+   },
+   {
+    "id": "01993059F0F2EB1FEF51F0BF",
+    "type": "text",
+    "content": "发现影片下档以后口碑反转，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕015"
+   },
+   {
+    "id": "3F0F862B0C65D1B8910B3C92",
+    "type": "text",
+    "content": "在他身上并不少见。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕016"
+   },
+   {
+    "id": "8916879D1CFB675CFEA1A988",
+    "type": "text",
+    "content": "《抓特务》上线流媒体之后，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕017"
+   },
+   {
+    "id": "7376DF083061151BF9B26EDB",
+    "type": "text",
+    "content": "虽然豆瓣评分依然7.4，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕018"
+   },
+   {
+    "id": "7E78BCF4EF7A89F5F2C8AC73",
+    "type": "text",
+    "content": "但抗议性的一星差评",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕019"
+   },
+   {
+    "id": "FC439D82332E8B116DEB9C61",
+    "type": "text",
+    "content": "基本消失，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕020"
+   },
+   {
+    "id": "5D6424C9B6B70862A5F8F2E0",
+    "type": "text",
+    "content": "从12%降至3.4%，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕021"
+   },
+   {
+    "id": "9C1B6F896457F01432DD4E3F",
+    "type": "text",
+    "content": "而4星打分上升近10%，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕022"
+   },
+   {
+    "id": "20D768D19213B8C2EE28B2BD",
+    "type": "text",
+    "content": "更多观众认为它值得一看。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕023"
+   },
+   {
+    "id": "9128523DA3369445833E0DBC",
+    "type": "text",
+    "content": "相比之下，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕024"
+   },
+   {
+    "id": "81398F3B940BF8DE44C8F831",
+    "type": "text",
+    "content": "院线期占比最高的",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕025"
+   },
+   {
+    "id": "AFD857E0E3DCD1E0DC927B01",
+    "type": "text",
+    "content": "是46.5%的混合型评价，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕026"
+   },
+   {
+    "id": "9328824F3EA657EE8CB78417",
+    "type": "text",
+    "content": "夸导演和剧本，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕027"
+   },
+   {
+    "id": "2F93FAC7CBDF7B79D4DADCD8",
+    "type": "text",
+    "content": "但又不满意演员、节奏。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕028"
+   },
+   {
+    "id": "037441D7B3AC819EC6692D6A",
+    "type": "text",
+    "content": "小娱进一步将评论拆分为",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕029"
+   },
+   {
+    "id": "C1CB2E58088DE9CDE872DCAA",
+    "type": "text",
+    "content": "六种语义框架后发现，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕030"
+   },
+   {
+    "id": "18D3E6E01D0EF91DB64A356A",
+    "type": "text",
+    "content": "流媒体上线以后，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕031"
+   },
+   {
+    "id": "739C1F796625F577FE7A475E",
+    "type": "text",
+    "content": "围绕导演能力、演员表演等",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕032"
+   },
+   {
+    "id": "C4D6C95D9B1E3E2057D02E0E",
+    "type": "text",
+    "content": "展开的“专业能力”评价，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕033"
+   },
+   {
+    "id": "BCA7A63E81593EC40CA1C23F",
+    "type": "text",
+    "content": "由46.1%上升至56%，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕034"
+   },
+   {
+    "id": "C13503DA405D92C0875C3955",
+    "type": "text",
+    "content": "涉及人物道德、公众形象等，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕035"
+   },
+   {
+    "id": "FC4352A5C7041E8AC541B06F",
+    "type": "text",
+    "content": "则从9.1%下降至3.7%。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕036"
+   },
+   {
+    "id": "38FC8883C21B426EFE4BC83E",
+    "type": "text",
+    "content": "越来越多的评论写道，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕037"
+   },
+   {
+    "id": "9DBAC8EE44A4060A4F8BB32F",
+    "type": "text",
+    "content": "很多人是压根没看懂影片",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕038"
+   },
+   {
+    "id": "8514497C588F231D07CCC380",
+    "type": "text",
+    "content": "真正要表达的，才黑它，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕039"
+   },
+   {
+    "id": "9E76E2CAB1E3ACDC01F01324",
+    "type": "text",
+    "content": "这剧其实让韩大炮给耽误了。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕040"
+   },
+   {
+    "id": "BD7DB2B42AD358867D043D28",
+    "type": "text",
+    "content": "再加上院线期间类型预期错位，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕041"
+   },
+   {
+    "id": "686602507775DD3CF3506BEB",
+    "type": "text",
+    "content": "片名《抓特务》像谍战片，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕042"
+   },
+   {
+    "id": "6F700379D78B358CD6A9ED3E",
+    "type": "text",
+    "content": "实际是北京胡同的生活变迁，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕043"
+   },
+   {
+    "id": "64F70F4B18E58C162FE90DAC",
+    "type": "text",
+    "content": "流媒体没那么多人“必须值回票价”。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕044"
+   },
+   {
+    "id": "0FAEC2273F68206F0EE3DCB8",
+    "type": "text",
+    "content": "此外，真活在那个年代的观众，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕045"
+   },
+   {
+    "id": "33597B692B34D6F033E625F2",
+    "type": "text",
+    "content": "如今也老了，在家看",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕046"
+   },
+   {
+    "id": "A85994CA4BB329D4DBFB81C1",
+    "type": "text",
+    "content": "还是比去趟电影院方便。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕047"
+   },
+   {
+    "id": "94500E58E0501327D159B778",
+    "type": "text",
+    "content": "有意思的是，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕048"
+   },
+   {
+    "id": "4FB0680B846FB0361664069B",
+    "type": "text",
+    "content": "这种“非院线期口碑反转”，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕049"
+   },
+   {
+    "id": "28A03ACDBC0D95FB34E37F81",
+    "type": "text",
+    "content": "几乎贯穿了冯小刚",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕050"
+   },
+   {
+    "id": "DE05066AE2F33FBD14752C66",
+    "type": "text",
+    "content": "在各个历史时期的作品。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕051"
+   },
+   {
+    "id": "60FB553995A8E1684FDC795D",
+    "type": "text",
+    "content": "2012年《一九四二》，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕052"
+   },
+   {
+    "id": "2C8539315206D4BC4DA95F67",
+    "type": "text",
+    "content": "豆瓣只有6.1分，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕053"
+   },
+   {
+    "id": "1EE2B83DF338BFA8956A9866",
+    "type": "text",
+    "content": "近年涨到8.3。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕054"
+   },
+   {
+    "id": "3B14A23DA081F74D1D7819AA",
+    "type": "text",
+    "content": "《私人订制》当年被骂，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕055"
+   },
+   {
+    "id": "7C9E037B89BC180825EFA838",
+    "type": "text",
+    "content": "如今却有人说",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕056"
+   },
+   {
+    "id": "B6BB79F26D7026D1EF3E84A2",
+    "type": "text",
+    "content": "“当年的讽刺现在才看懂”。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕057"
+   },
+   {
+    "id": "D5C5AD289C6CEEF5B02C99DA",
+    "type": "text",
+    "content": "在冯导职业生涯初期，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕058"
+   },
+   {
+    "id": "D330D870347F810482FF5F92",
+    "type": "text",
+    "content": "1997年《甲方乙方》",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕059"
+   },
+   {
+    "id": "DC6C9E89AE92C7CBBF704176",
+    "type": "text",
+    "content": "600万成本拿下3600万票房，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕060"
+   },
+   {
+    "id": "940969EC6A01D76FDC88749C",
+    "type": "text",
+    "content": "贺岁喜剧让观众",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕061"
+   },
+   {
+    "id": "65427DFADE1736D62138AB2B",
+    "type": "text",
+    "content": "先认准了他的专业能力。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕062"
+   },
+   {
+    "id": "0326FF27C0DEEC65872C4C6B",
+    "type": "text",
+    "content": "此后《手机》《天下无贼》",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕063"
+   },
+   {
+    "id": "83B80BBFDED279DCB7EAEA56",
+    "type": "text",
+    "content": "《夜宴》等类型突围，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕064"
+   },
+   {
+    "id": "A5FD639915EB62DD16EFF053",
+    "type": "text",
+    "content": "关于冯导的讨论",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕065"
+   },
+   {
+    "id": "3C9669EC5DFC422167EBEB04",
+    "type": "text",
+    "content": "逐渐转向道德、人格、",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕066"
+   },
+   {
+    "id": "B680AE0416E9A524457D0036",
+    "type": "text",
+    "content": "社会文化层面。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕067"
+   },
+   {
+    "id": "2F210199C98AF9B921E71CA8",
+    "type": "text",
+    "content": "2018年冯小刚宣布",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕068"
+   },
+   {
+    "id": "ABFB43BA259ED72C85DEAE3A",
+    "type": "text",
+    "content": "《手机2》开拍，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕069"
+   },
+   {
+    "id": "18E911438FB6093C27848F0D",
+    "type": "text",
+    "content": "15年前因为第一部",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕070"
+   },
+   {
+    "id": "4A2CEB700B06F8163C71F1E2",
+    "type": "text",
+    "content": "与其闹翻的崔永元",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕071"
+   },
+   {
+    "id": "6DB3E19967EF7F09F8840986",
+    "type": "text",
+    "content": "随即公开回应，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕072"
+   },
+   {
+    "id": "050B33BE48B2E3BA59613F0E",
+    "type": "text",
+    "content": "双方矛盾不断升级，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕073"
+   },
+   {
+    "id": "D2EF4B11AD1B766C339E442F",
+    "type": "text",
+    "content": "进一步牵出“阴阳合同”等风波。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕074"
+   },
+   {
+    "id": "1476CFDBE86F106FE9D9F156",
+    "type": "text",
+    "content": "这就是为什么《手机》",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕075"
+   },
+   {
+    "id": "DB5465B8714CD61A36DD665B",
+    "type": "text",
+    "content": "是在2003年上映，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕076"
+   },
+   {
+    "id": "9D995C648C84FC298E553E9B",
+    "type": "text",
+    "content": "但是评价却集中在2018年。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕077"
+   },
+   {
+    "id": "5CD130197D4A14CE99859B23",
+    "type": "text",
+    "content": "《集结号》《唐山大地震》",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕078"
+   },
+   {
+    "id": "96BE72C53EE9FE14CCB36738",
+    "type": "text",
+    "content": "《一九四二》《我不是潘金莲》",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕079"
+   },
+   {
+    "id": "EF0DB5891FB6EAB9D2FB81D3",
+    "type": "text",
+    "content": "接连带入公共议题，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕080"
+   },
+   {
+    "id": "72C5F00EAD745EAF50262926",
+    "type": "text",
+    "content": "《私人订制》被当成还债之作，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕081"
+   },
+   {
+    "id": "A99E84F7A61FB7F2E48C038F",
+    "type": "text",
+    "content": "评论说“以前挺接地气一导演，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕082"
+   },
+   {
+    "id": "9F6DC64C75A4535B6D4AEE64",
+    "type": "text",
+    "content": "现在俩脚不沾地儿了”。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕083"
+   },
+   {
+    "id": "CCB034BC8582687A30568D0A",
+    "type": "text",
+    "content": "上映时，大家拿眼前的",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕084"
+   },
+   {
+    "id": "3600027A80E5D7789ED97A43",
+    "type": "text",
+    "content": "现实舆论和消费预期去衡量。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕085"
+   },
+   {
+    "id": "A9CD6BF435D5F6F6A59A0FAB",
+    "type": "text",
+    "content": "加上冯小刚长期处在舆论中心，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕086"
+   },
+   {
+    "id": "DA1E3386E5A70FE135D5945F",
+    "type": "text",
+    "content": "性格强势，习惯公开回应争议，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕087"
+   },
+   {
+    "id": "0F7D8672FED51D033B388349",
+    "type": "text",
+    "content": "也让部分观众感觉不舒服。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕088"
+   },
+   {
+    "id": "0B0B408972A28C4C32F8B567",
+    "type": "text",
+    "content": "几年十几年后，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕089"
+   },
+   {
+    "id": "610213A17B2CAAE4B27C37E8",
+    "type": "text",
+    "content": "当年的现实变成历史，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕090"
+   },
+   {
+    "id": "68AE4EB994D3C8D16785ED19",
+    "type": "text",
+    "content": "同一部电影又获得新的解读。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕091"
+   },
+   {
+    "id": "6BB410BB91825932AE6AFE2D",
+    "type": "text",
+    "content": "评论说，“有的电影存在的",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕092"
+   },
+   {
+    "id": "9CA03F57E3EF96BCC84AFC7E",
+    "type": "text",
+    "content": "意义就是记录时代，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕093"
+   },
+   {
+    "id": "84D0DBC52770A7B6AAF83F01",
+    "type": "text",
+    "content": "看一部少一部了。”",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕094"
+   },
+   {
+    "id": "42AB74039E5741451706BBD6",
+    "type": "text",
+    "content": "过去三十年，冯小刚几乎",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕095"
+   },
+   {
+    "id": "A4EB2AE78D3F4A287B701DD3",
+    "type": "text",
+    "content": "完整经历了国产商业片",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕096"
+   },
+   {
+    "id": "E32AB400E908DB8F23C2B47E",
+    "type": "text",
+    "content": "从贺岁档崛起、",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕097"
+   },
+   {
+    "id": "B12B815AF9DE5CE50888D7B1",
+    "type": "text",
+    "content": "大片时代、主旋律扩张、",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕098"
+   },
+   {
+    "id": "26FBA22280319B8F68F56433",
+    "type": "text",
+    "content": "现实题材扩张等多个环节。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕099"
+   },
+   {
+    "id": "400510FAC4E520868D8D4FDA",
+    "type": "text",
+    "content": "观众看待他的标准，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕100"
+   },
+   {
+    "id": "0D147AC5C9DAF6935DACACBE",
+    "type": "text",
+    "content": "也从单一的专业能力，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕101"
+   },
+   {
+    "id": "F058168C85A1648EC67760BE",
+    "type": "text",
+    "content": "逐渐延伸到他的",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕102"
+   },
+   {
+    "id": "99170AE477C2C9E88CAB9667",
+    "type": "text",
+    "content": "立场、人格、资本关系，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕103"
+   },
+   {
+    "id": "9FDA6D9A5DB5DE277CF33D6F",
+    "type": "text",
+    "content": "以及他所代表的时代。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕104"
+   },
+   {
+    "id": "17583B34F30C3C4ADD07055F",
+    "type": "text",
+    "content": "冯小刚在公众眼中的身份，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕105"
+   },
+   {
+    "id": "5A8419DC51FEFCED139933BB",
+    "type": "text",
+    "content": "也从最懂观众的贺岁喜剧导演，",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕106"
+   },
+   {
+    "id": "4684925F76C467BCAD3D2771",
+    "type": "text",
+    "content": "一步步走向了时代的记录者。",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕107"
+   },
+   {
+    "id": "2759E6D6F418AB208EDBD217",
+    "type": "text",
+    "content": "你怎么看《抓特务》这次反转？",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕108"
+   },
+   {
+    "id": "BCC7E83435C9F88091B8923E",
+    "type": "text",
+    "content": "评论区聊聊吧！",
+    "text_style": {
+     "alignment": 1,
+     "bold": true,
+     "color": "#FFFFFF",
+     "stroke_color": "#000000",
+     "stroke_width": 0.08,
+     "font_size": 9,
+     "font_name": "思源黑体 CN",
+     "background_color": "#00000000"
+    },
+    "material_name": "字幕109"
+   }
+  ],
+  "transitions": [],
+  "video_effects": [],
+  "videos": [
+   {
+    "id": "F9748FC6B316618F0C61ABA1",
+    "material_name": "ztw_pv_open.mp4",
+    "path": "assets/ztw_pv_open.mp4",
+    "duration": 24000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "EAF67942557C439CEF103874",
+    "material_name": "ztw_pv_tension.mp4",
+    "path": "assets/ztw_pv_tension.mp4",
+    "duration": 32000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "CDCD0479B34C2263F956B26A",
+    "material_name": "ztw_clip_hutong.mp4",
+    "path": "assets/ztw_clip_hutong.mp4",
+    "duration": 24000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "6F3CF1083A6178DB8B9E3C03",
+    "material_name": "img01-part1.mp4",
+    "path": "assets/img01-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "DD864014C373DF34EF22519F",
+    "material_name": "img03-part1.mp4",
+    "path": "assets/img03-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "EF59854E9692922184BE0F1F",
+    "material_name": "img05-part1.mp4",
+    "path": "assets/img05-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "E58EE937FAE6507D119928AC",
+    "material_name": "ztw_clip_face.mp4",
+    "path": "assets/ztw_clip_face.mp4",
+    "duration": 30000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "0CE1AE7D3A8121FAB34E80F1",
+    "material_name": "img01-part2.mp4",
+    "path": "assets/img01-part2.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "3D45AA67D24689761D71FF8A",
+    "material_name": "img06-part1.mp4",
+    "path": "assets/img06-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "356316FD7DFC49F22F0684B3",
+    "material_name": "ztw_lei_mix.mp4",
+    "path": "assets/ztw_lei_mix.mp4",
+    "duration": 29000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "BEEF7ED99DDA446B484D1FED",
+    "material_name": "img08-part1.mp4",
+    "path": "assets/img08-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "F0E7FC47F6B7376F6D188EBF",
+    "material_name": "ztw_clip_room.mp4",
+    "path": "assets/ztw_clip_room.mp4",
+    "duration": 24000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "CFB4896B616EB25C9BC4AA07",
+    "material_name": "ztw_drink_open.mp4",
+    "path": "assets/ztw_drink_open.mp4",
+    "duration": 26000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "5A5BB4CE7AE3A39F4B71A7B6",
+    "material_name": "y1942_pv_open.mp4",
+    "path": "assets/y1942_pv_open.mp4",
+    "duration": 32020000,
+    "width": 854,
+    "height": 356,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "9F8D42E75F05084411B5F4D9",
+    "material_name": "y1942_pv_mid.mp4",
+    "path": "assets/y1942_pv_mid.mp4",
+    "duration": 32020000,
+    "width": 854,
+    "height": 356,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "56DDDCAC527E3E8E9F02603E",
+    "material_name": "srdz_pv.mp4",
+    "path": "assets/srdz_pv.mp4",
+    "duration": 54729002,
+    "width": 720,
+    "height": 404,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "25AE108C0B18865B5890F2FD",
+    "material_name": "jfyf_pv.mp4",
+    "path": "assets/jfyf_pv.mp4",
+    "duration": 38000000,
+    "width": 720,
+    "height": 404,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "9CCEDCEF66F3AA040FC0C0C9",
+    "material_name": "shouji_kaihui.mp4",
+    "path": "assets/shouji_kaihui.mp4",
+    "duration": 28000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "7C3F42FB6DB4256B48E91FD5",
+    "material_name": "tzwz_pv.mp4",
+    "path": "assets/tzwz_pv.mp4",
+    "duration": 18000000,
+    "width": 854,
+    "height": 426,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "A11A0E0C077FC305ECC839E6",
+    "material_name": "yeyan_mv_open.mp4",
+    "path": "assets/yeyan_mv_open.mp4",
+    "duration": 58005000,
+    "width": 640,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "AA7779257E23F80D3F8AA2F1",
+    "material_name": "shouji2_feng.mp4",
+    "path": "assets/shouji2_feng.mp4",
+    "duration": 34017007,
+    "width": 720,
+    "height": 406,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "DF16704CDF20C34D988C7C67",
+    "material_name": "cui_talk1.mp4",
+    "path": "assets/cui_talk1.mp4",
+    "duration": 36013991,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "2391ED43B3F661D9212CFB5F",
+    "material_name": "shouji2_news2.mp4",
+    "path": "assets/shouji2_news2.mp4",
+    "duration": 46020998,
+    "width": 720,
+    "height": 406,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "193D3F77F2E725D10EF598C1",
+    "material_name": "img11-part1.mp4",
+    "path": "assets/img11-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "252E32714A927958652A3072",
+    "material_name": "jjh_pv.mp4",
+    "path": "assets/jjh_pv.mp4",
+    "duration": 52000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "6FA0A9BE0F2A81075E8B6171",
+    "material_name": "tsdq_family.mp4",
+    "path": "assets/tsdq_family.mp4",
+    "duration": 40000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "27365F8E07BB557D6BE43149",
+    "material_name": "pjlian_pv_open.mp4",
+    "path": "assets/pjlian_pv_open.mp4",
+    "duration": 32000000,
+    "width": 852,
+    "height": 480,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "77AD5589678142915536A0E6",
+    "material_name": "feng_angry.mp4",
+    "path": "assets/feng_angry.mp4",
+    "duration": 30000000,
+    "width": 352,
+    "height": 288,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "48C2674C2F96738055B856F3",
+    "material_name": "feng_talk.mp4",
+    "path": "assets/feng_talk.mp4",
+    "duration": 37000000,
+    "width": 352,
+    "height": 288,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "6EDB557F51DB9CF1A58DCEE7",
+    "material_name": "img12-part1.mp4",
+    "path": "assets/img12-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "BA63EDE1DC22A79951D49C17",
+    "material_name": "feng_interview2013.mp4",
+    "path": "assets/feng_interview2013.mp4",
+    "duration": 32031999,
+    "width": 720,
+    "height": 406,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "D124B6439272510FCF024055",
+    "material_name": "img10-part1.mp4",
+    "path": "assets/img10-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "C440A7520BC519DCB03409D9",
+    "material_name": "img14-part1.mp4",
+    "path": "assets/img14-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "FAD6BFB08B8F00EC25829940",
+    "material_name": "img16-part1.mp4",
+    "path": "assets/img16-part1.mp4",
+    "duration": 11000000,
+    "width": 1080,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "32DE0FA807463BC202405729",
+    "material_name": "竖屏Credits.png",
+    "path": "assets/竖屏Credits.png",
+    "duration": 3000000,
+    "width": 1080,
+    "height": 1920,
+    "type": "photo",
+    "has_audio": false,
+    "material_radius": 0.0
+   },
+   {
+    "id": "4E4EFAA151B04ADD16317E1E",
+    "material_name": "hanhong_open_video.mp4",
+    "path": "assets/hanhong_open_video.mp4",
+    "duration": 6200000,
+    "width": 1920,
+    "height": 1080,
+    "type": "video",
+    "has_audio": false
+   }
+  ],
+  "vocal_beautifys": [],
+  "voice_translates": []
+ },
+ "mutable_config": {},
+ "name": "剪映工程_抓特务口碑反转",
+ "platform": {
+  "os": "linux"
+ },
+ "render_index_track_mode": 0,
+ "retouch_cover": "",
+ "source": "default",
+ "static_cover_image_path": "",
+ "tracks": [
+  {
+   "type": "text",
+   "segments": [
+    {
+     "id": "608B1EC58C4992A7956524BF",
+     "material_id": "809D4580AAED41565ABC38D5",
+     "target_timerange": {
+      "start": 6200000,
+      "duration": 1027058
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "3D8CB1A35E353E3AB57E1617",
+     "material_id": "83F1535F99AB0BF4E9D02DFD",
+     "target_timerange": {
+      "start": 7227058,
+      "duration": 1320504
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "A3D2F277AEA7D476DFD2FBC8",
+     "material_id": "0F826A89CF68C399C5F4CF32",
+     "target_timerange": {
+      "start": 8547563,
+      "duration": 1467226
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "08D74924E3CC39813AA8D26A",
+     "material_id": "0B8854AD38F0A6C65807928D",
+     "target_timerange": {
+      "start": 10014789,
+      "duration": 1613949
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "AB704BE40762B98FF424BEC8",
+     "material_id": "1051527638B9DA6FE99E4242",
+     "target_timerange": {
+      "start": 11628739,
+      "duration": 2347563
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "630249895ED074EFF39093A8",
+     "material_id": "DF2184F4B46DE3DDF02F74FB",
+     "target_timerange": {
+      "start": 13976302,
+      "duration": 1760672
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "8281EA1CED46F7C0AB251FB7",
+     "material_id": "A77CCA9BD375665B36F4239E",
+     "target_timerange": {
+      "start": 15736974,
+      "duration": 1613949
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "A8BEBEA09987E57B63103E7E",
+     "material_id": "3685708FD594A6861AA73F18",
+     "target_timerange": {
+      "start": 17350924,
+      "duration": 2200840
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "9FDEF3AF625B7765B105574B",
+     "material_id": "531A93A176DF5BDE70902ADA",
+     "target_timerange": {
+      "start": 19551764,
+      "duration": 2200840
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "B803B0DA2A2C678AF27A0D26",
+     "material_id": "82F696175C08FE04CD4BF221",
+     "target_timerange": {
+      "start": 21752605,
+      "duration": 1907394
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "236A057C737F458588960963",
+     "material_id": "AF7DA95E0BA5FF3C49B5C11D",
+     "target_timerange": {
+      "start": 23660000,
+      "duration": 774621
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "84DB2C8AFEACB9B8ACB69C46",
+     "material_id": "4787FE8AE24C12988DB6B8DB",
+     "target_timerange": {
+      "start": 24434621,
+      "duration": 1394318
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "535E51C1056A0C035FDC4C9E",
+     "material_id": "A461D688D013E47C4010387E",
+     "target_timerange": {
+      "start": 25828939,
+      "duration": 1394318
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F871F294198BBD26E0BF5D4E",
+     "material_id": "991924D4AC643FAC373B6734",
+     "target_timerange": {
+      "start": 27223257,
+      "duration": 1239393
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "05794CB2C69311775F8F46B8",
+     "material_id": "01993059F0F2EB1FEF51F0BF",
+     "target_timerange": {
+      "start": 28462651,
+      "duration": 2014015
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "90C4A47E16913BBFB00AE2A1",
+     "material_id": "3F0F862B0C65D1B8910B3C92",
+     "target_timerange": {
+      "start": 30476666,
+      "duration": 1394318
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "9FB5A1775E2D976BC905CDA8",
+     "material_id": "8916879D1CFB675CFEA1A988",
+     "target_timerange": {
+      "start": 31870984,
+      "duration": 2014015
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "CDDB6C768662E8912EB4EA9A",
+     "material_id": "7376DF083061151BF9B26EDB",
+     "target_timerange": {
+      "start": 33885000,
+      "duration": 1859090
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "36818059E2BAA375DC14DCC9",
+     "material_id": "7E78BCF4EF7A89F5F2C8AC73",
+     "target_timerange": {
+      "start": 35744090,
+      "duration": 1394318
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "5B04A0116312E31320D085FC",
+     "material_id": "FC439D82332E8B116DEB9C61",
+     "target_timerange": {
+      "start": 37138409,
+      "duration": 774621
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "63A9CDFEE4E59980EFDFD7D7",
+     "material_id": "5D6424C9B6B70862A5F8F2E0",
+     "target_timerange": {
+      "start": 37913030,
+      "duration": 1704166
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "9C8AA13DC230704208F7AD61",
+     "material_id": "9C1B6F896457F01432DD4E3F",
+     "target_timerange": {
+      "start": 39617196,
+      "duration": 1859090
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "41B559E9E5F8B53155A5B575",
+     "material_id": "20D768D19213B8C2EE28B2BD",
+     "target_timerange": {
+      "start": 41476287,
+      "duration": 1859090
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "70A229B2DE8EC60FCFB7F61F",
+     "material_id": "9128523DA3369445833E0DBC",
+     "target_timerange": {
+      "start": 43335378,
+      "duration": 774621
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "9C62D6E754D21285D00C021E",
+     "material_id": "81398F3B940BF8DE44C8F831",
+     "target_timerange": {
+      "start": 44110000,
+      "duration": 1483389
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "3614FD11FEACF360D32E3D02",
+     "material_id": "AFD857E0E3DCD1E0DC927B01",
+     "target_timerange": {
+      "start": 45593389,
+      "duration": 2410508
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "0332BE16BCC865CC03FDC9B9",
+     "material_id": "9328824F3EA657EE8CB78417",
+     "target_timerange": {
+      "start": 48003898,
+      "duration": 1297966
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "53255C1F407B6E1AA06820FC",
+     "material_id": "2F93FAC7CBDF7B79D4DADCD8",
+     "target_timerange": {
+      "start": 49301864,
+      "duration": 2039661
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "D294FEF304951C1096847AFA",
+     "material_id": "037441D7B3AC819EC6692D6A",
+     "target_timerange": {
+      "start": 51341525,
+      "duration": 2039661
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "E715E305369F1DDBBA08A1D5",
+     "material_id": "C1CB2E58088DE9CDE872DCAA",
+     "target_timerange": {
+      "start": 53381186,
+      "duration": 1854237
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "BB8D95AA48F76991DCEADAB5",
+     "material_id": "18D3E6E01D0EF91DB64A356A",
+     "target_timerange": {
+      "start": 55235423,
+      "duration": 1483389
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "066BFDDC2B96C39E860A0CEB",
+     "material_id": "739C1F796625F577FE7A475E",
+     "target_timerange": {
+      "start": 56718813,
+      "duration": 2225084
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "47E468524BFFEC25C8DF6D6E",
+     "material_id": "C4D6C95D9B1E3E2057D02E0E",
+     "target_timerange": {
+      "start": 58943898,
+      "duration": 2225084
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "369A816A48BD671F6B2334B9",
+     "material_id": "BCA7A63E81593EC40CA1C23F",
+     "target_timerange": {
+      "start": 61168983,
+      "duration": 2410508
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "17B43AE2C95ACF8AF1237E83",
+     "material_id": "C13503DA405D92C0875C3955",
+     "target_timerange": {
+      "start": 63579491,
+      "duration": 2410508
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "8B4610BF47AF3321578A8347",
+     "material_id": "FC4352A5C7041E8AC541B06F",
+     "target_timerange": {
+      "start": 65989999,
+      "duration": 2021884
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "373E93EC337D120469F724FB",
+     "material_id": "38FC8883C21B426EFE4BC83E",
+     "target_timerange": {
+      "start": 68011884,
+      "duration": 1444202
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "23B147414A22EF0126EBF810",
+     "material_id": "9DBAC8EE44A4060A4F8BB32F",
+     "target_timerange": {
+      "start": 69456086,
+      "duration": 1588623
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "B7D1F8971670B04B25DA9F4B",
+     "material_id": "8514497C588F231D07CCC380",
+     "target_timerange": {
+      "start": 71044710,
+      "duration": 1588623
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "88E5CC5E0B4B82B062B0EEE3",
+     "material_id": "9E76E2CAB1E3ACDC01F01324",
+     "target_timerange": {
+      "start": 72633333,
+      "duration": 1877463
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "A57B9725EC44B2724A1422FF",
+     "material_id": "BD7DB2B42AD358867D043D28",
+     "target_timerange": {
+      "start": 74510797,
+      "duration": 2021884
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "C9978F570CCA7CBCBF7B1C7C",
+     "material_id": "686602507775DD3CF3506BEB",
+     "target_timerange": {
+      "start": 76532681,
+      "duration": 1733043
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "DB867274564879D70C080363",
+     "material_id": "6F700379D78B358CD6A9ED3E",
+     "target_timerange": {
+      "start": 78265724,
+      "duration": 1877463
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "558DD23061585E0AC5CD2724",
+     "material_id": "64F70F4B18E58C162FE90DAC",
+     "target_timerange": {
+      "start": 80143188,
+      "duration": 2455144
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "C84C03D033E4B8751557A7E8",
+     "material_id": "0FAEC2273F68206F0EE3DCB8",
+     "target_timerange": {
+      "start": 82598333,
+      "duration": 2021884
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F3D078DCED71BBB581CC619F",
+     "material_id": "33597B692B34D6F033E625F2",
+     "target_timerange": {
+      "start": 84620217,
+      "duration": 1299782
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "A07D094952821BC353A9E1B8",
+     "material_id": "A85994CA4BB329D4DBFB81C1",
+     "target_timerange": {
+      "start": 85920000,
+      "duration": 1752584
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "7EA80FE30FD329C5A3C0CC27",
+     "material_id": "94500E58E0501327D159B778",
+     "target_timerange": {
+      "start": 87672584,
+      "duration": 955955
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "FB94B64FEE9463EAAF548833",
+     "material_id": "4FB0680B846FB0361664069B",
+     "target_timerange": {
+      "start": 88628539,
+      "duration": 2071235
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "599768BC8E0745F7D2A81C16",
+     "material_id": "28A03ACDBC0D95FB34E37F81",
+     "target_timerange": {
+      "start": 90699775,
+      "duration": 1274606
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "1F8922FC838608B097D0F19F",
+     "material_id": "DE05066AE2F33FBD14752C66",
+     "target_timerange": {
+      "start": 91974382,
+      "duration": 1752584
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "2ADBDEC4CE898A25DFFC3139",
+     "material_id": "60FB553995A8E1684FDC795D",
+     "target_timerange": {
+      "start": 93726966,
+      "duration": 1911910
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "7BD671064C748CB87B524CD0",
+     "material_id": "2C8539315206D4BC4DA95F67",
+     "target_timerange": {
+      "start": 95638876,
+      "duration": 1433932
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "927FA271F3DC1FE195429826",
+     "material_id": "1EE2B83DF338BFA8956A9866",
+     "target_timerange": {
+      "start": 97072808,
+      "duration": 1274606
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "D7C135EBE7F79F5583024F47",
+     "material_id": "3B14A23DA081F74D1D7819AA",
+     "target_timerange": {
+      "start": 98347415,
+      "duration": 1752584
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F395DDE1C0A0CE73BBE9D1E0",
+     "material_id": "7C9E037B89BC180825EFA838",
+     "target_timerange": {
+      "start": 100100000,
+      "duration": 924999
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "8D222FDEA4AC1258202AC81A",
+     "material_id": "B6BB79F26D7026D1EF3E84A2",
+     "target_timerange": {
+      "start": 101025000,
+      "duration": 2004166
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "B258C35A0D5324AE0D055763",
+     "material_id": "D5C5AD289C6CEEF5B02C99DA",
+     "target_timerange": {
+      "start": 103029166,
+      "duration": 1541666
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "D451CF1444E82FC13CF07D62",
+     "material_id": "D330D870347F810482FF5F92",
+     "target_timerange": {
+      "start": 104570833,
+      "duration": 1695833
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F087C622F7803F95F69E4C4A",
+     "material_id": "DC6C9E89AE92C7CBBF704176",
+     "target_timerange": {
+      "start": 106266666,
+      "duration": 2466666
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "42238485FCB01D9FD066025A",
+     "material_id": "940969EC6A01D76FDC88749C",
+     "target_timerange": {
+      "start": 108733333,
+      "duration": 1079166
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "A6B34D83C9F6B1A9FBBD37F9",
+     "material_id": "65427DFADE1736D62138AB2B",
+     "target_timerange": {
+      "start": 109812500,
+      "duration": 1695833
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "7539BEF93F5CD08910ECA6DE",
+     "material_id": "0326FF27C0DEEC65872C4C6B",
+     "target_timerange": {
+      "start": 111508333,
+      "duration": 1849999
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "CEA47A633EE893C9AC713AE9",
+     "material_id": "83B80BBFDED279DCB7EAEA56",
+     "target_timerange": {
+      "start": 113358333,
+      "duration": 1541666
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "FE3E5D702EE67A1144CE33A7",
+     "material_id": "A5FD639915EB62DD16EFF053",
+     "target_timerange": {
+      "start": 114900000,
+      "duration": 1197777
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "C443FA1CF7592D7BD6B36F2F",
+     "material_id": "3C9669EC5DFC422167EBEB04",
+     "target_timerange": {
+      "start": 116097777,
+      "duration": 1711111
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "E59AD34F4392D4CFDD9F592B",
+     "material_id": "B680AE0416E9A524457D0036",
+     "target_timerange": {
+      "start": 117808888,
+      "duration": 1197777
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "45A443404440B92CC62C6C5B",
+     "material_id": "2F210199C98AF9B921E71CA8",
+     "target_timerange": {
+      "start": 119006666,
+      "duration": 1711111
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "BDACBAF2011184B924931E60",
+     "material_id": "ABFB43BA259ED72C85DEAE3A",
+     "target_timerange": {
+      "start": 120717777,
+      "duration": 1368888
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "112CEDBC7578F32ED7B2BF88",
+     "material_id": "18E911438FB6093C27848F0D",
+     "target_timerange": {
+      "start": 122086666,
+      "duration": 1539999
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "75AB8D5D47D99B826569EAF6",
+     "material_id": "4A2CEB700B06F8163C71F1E2",
+     "target_timerange": {
+      "start": 123626666,
+      "duration": 1368888
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "8DA2EC1C124ED3CBB5C21B78",
+     "material_id": "6DB3E19967EF7F09F8840986",
+     "target_timerange": {
+      "start": 124995555,
+      "duration": 1197777
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "2E9A493D7FEBDD58361248A7",
+     "material_id": "050B33BE48B2E3BA59613F0E",
+     "target_timerange": {
+      "start": 126193333,
+      "duration": 1539999
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "136755052B36904E838458AA",
+     "material_id": "D2EF4B11AD1B766C339E442F",
+     "target_timerange": {
+      "start": 127733333,
+      "duration": 2566666
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "09705FE7C3743520605EEF07",
+     "material_id": "1476CFDBE86F106FE9D9F156",
+     "target_timerange": {
+      "start": 130299999,
+      "duration": 1441984
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "704338FF628A3A914FAAE738",
+     "material_id": "DB5465B8714CD61A36DD665B",
+     "target_timerange": {
+      "start": 131741984,
+      "duration": 1441984
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F5EE9BFDC2AA8DF4A06DC96A",
+     "material_id": "9D995C648C84FC298E553E9B",
+     "target_timerange": {
+      "start": 133183969,
+      "duration": 2018778
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "EB58041121D316C5146FFF19",
+     "material_id": "5CD130197D4A14CE99859B23",
+     "target_timerange": {
+      "start": 135202748,
+      "duration": 1730381
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "3B9DF0A8EB212ABEA9CC024D",
+     "material_id": "96BE72C53EE9FE14CCB36738",
+     "target_timerange": {
+      "start": 136933129,
+      "duration": 2018778
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F7A891324A1E1955343B8D0F",
+     "material_id": "EF0DB5891FB6EAB9D2FB81D3",
+     "target_timerange": {
+      "start": 138951908,
+      "duration": 1297786
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "36151433C13639A3D9715DEA",
+     "material_id": "72C5F00EAD745EAF50262926",
+     "target_timerange": {
+      "start": 140249694,
+      "duration": 2018778
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "5E933830C5C900E7EA8A4119",
+     "material_id": "A99E84F7A61FB7F2E48C038F",
+     "target_timerange": {
+      "start": 142268473,
+      "duration": 2018778
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "1EE7A275C66CA0F14DC0FC76",
+     "material_id": "9F6DC64C75A4535B6D4AEE64",
+     "target_timerange": {
+      "start": 144287251,
+      "duration": 1586183
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "2E6E0B9C22FB3004760E5375",
+     "material_id": "CCB034BC8582687A30568D0A",
+     "target_timerange": {
+      "start": 145873435,
+      "duration": 1441984
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "604171FE8D9380B980EAC485",
+     "material_id": "3600027A80E5D7789ED97A43",
+     "target_timerange": {
+      "start": 147315419,
+      "duration": 1874580
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "B36AE959BDE69ADB039991F7",
+     "material_id": "A9CD6BF435D5F6F6A59A0FAB",
+     "target_timerange": {
+      "start": 149190000,
+      "duration": 2353513
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "80DB52E23F05648A87006CDD",
+     "material_id": "DA1E3386E5A70FE135D5945F",
+     "target_timerange": {
+      "start": 151543513,
+      "duration": 2353513
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "CAAA998C42AC0898FCC9097B",
+     "material_id": "0F7D8672FED51D033B388349",
+     "target_timerange": {
+      "start": 153897027,
+      "duration": 2017297
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "90B181A7D794E66F493DFB49",
+     "material_id": "0B0B408972A28C4C32F8B567",
+     "target_timerange": {
+      "start": 155914324,
+      "duration": 1176756
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "90118D4BF4278153349A23FA",
+     "material_id": "610213A17B2CAAE4B27C37E8",
+     "target_timerange": {
+      "start": 157091081,
+      "duration": 1681081
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "427AC5DFBBDFDACF59AB9D46",
+     "material_id": "68AE4EB994D3C8D16785ED19",
+     "target_timerange": {
+      "start": 158772162,
+      "duration": 2185405
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "68DC182C80020DE130A521C1",
+     "material_id": "6BB410BB91825932AE6AFE2D",
+     "target_timerange": {
+      "start": 160957567,
+      "duration": 2017297
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "FBBFDAC48908D35D252803C9",
+     "material_id": "9CA03F57E3EF96BCC84AFC7E",
+     "target_timerange": {
+      "start": 162974864,
+      "duration": 1512972
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "CC1E9D928E4D9E50441F5072",
+     "material_id": "84D0DBC52770A7B6AAF83F01",
+     "target_timerange": {
+      "start": 164487837,
+      "duration": 1512972
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "9BB0FB80D4704E14CA237C8B",
+     "material_id": "42AB74039E5741451706BBD6",
+     "target_timerange": {
+      "start": 166000810,
+      "duration": 1849189
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "CA894D2CE1C1676D9808391C",
+     "material_id": "A4EB2AE78D3F4A287B701DD3",
+     "target_timerange": {
+      "start": 167850000,
+      "duration": 668686
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "12E9BB96800CEEAF0E0F8261",
+     "material_id": "E32AB400E908DB8F23C2B47E",
+     "target_timerange": {
+      "start": 168518686,
+      "duration": 468080
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "3B505E90D77B619F0457FCB8",
+     "material_id": "B12B815AF9DE5CE50888D7B1",
+     "target_timerange": {
+      "start": 168986767,
+      "duration": 735555
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "1D63EC67EDBCD23C381FAC31",
+     "material_id": "26FBA22280319B8F68F56433",
+     "target_timerange": {
+      "start": 169722323,
+      "duration": 802424
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "C01B5549B56932C59D96ABA8",
+     "material_id": "400510FAC4E520868D8D4FDA",
+     "target_timerange": {
+      "start": 170524747,
+      "duration": 601818
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "F1E06F4493915047D54173E8",
+     "material_id": "0D147AC5C9DAF6935DACACBE",
+     "target_timerange": {
+      "start": 171126565,
+      "duration": 668686
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "6A5AD16D73FF6B25377E4C8E",
+     "material_id": "F058168C85A1648EC67760BE",
+     "target_timerange": {
+      "start": 171795252,
+      "duration": 468080
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "DB2129DC42CAFA1C65B2D4AF",
+     "material_id": "99170AE477C2C9E88CAB9667",
+     "target_timerange": {
+      "start": 172263333,
+      "duration": 735555
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "212F269A2CE67D8E48EAA37C",
+     "material_id": "9FDA6D9A5DB5DE277CF33D6F",
+     "target_timerange": {
+      "start": 172998888,
+      "duration": 668686
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "B929FF6ABACF32B74FF3A905",
+     "material_id": "17583B34F30C3C4ADD07055F",
+     "target_timerange": {
+      "start": 173667575,
+      "duration": 802424
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "8CE00323DEC802E73DC8EC0F",
+     "material_id": "5A8419DC51FEFCED139933BB",
+     "target_timerange": {
+      "start": 174470000,
+      "duration": 1665416
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "0229CDF41A3B504F8CDA2D94",
+     "material_id": "4684925F76C467BCAD3D2771",
+     "target_timerange": {
+      "start": 176135416,
+      "duration": 1546458
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "41D94F0218C42A0108C37C10",
+     "material_id": "2759E6D6F418AB208EDBD217",
+     "target_timerange": {
+      "start": 177681875,
+      "duration": 1665416
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    },
+    {
+     "id": "97B4EE9B1008C51C0B4B343C",
+     "material_id": "BCC7E83435C9F88091B8923E",
+     "target_timerange": {
+      "start": 179347291,
+      "duration": 832708
+     },
+     "clip": {
+      "transform": {
+       "x": 0.0,
+       "y": -0.72
+      },
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "type": "audio",
+   "segments": [
+    {
+     "id": "87340E18F4A02F7B7D0E1736",
+     "material_id": "94F9F845DE4140359BB9CB7F",
+     "target_timerange": {
+      "start": 0,
+      "duration": 6200000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 6200000
+     },
+     "volume": 1.0,
+     "invisible_clip": false
+    },
+    {
+     "id": "C9F31AFEBC2E92A729CE370C",
+     "material_id": "88C6B178E15569352ABB1AB2",
+     "target_timerange": {
+      "start": 6200000,
+      "duration": 173978458
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 173978458
+     },
+     "volume": 1.0,
+     "invisible_clip": false
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "segments": [
+    {
+     "id": "37F40AC08BE4E6FE328096E6",
+     "material_id": "4E4EFAA151B04ADD16317E1E",
+     "target_timerange": {
+      "start": 0,
+      "duration": 6200000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 6200000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "B4723770788E0B98CAF51860",
+     "material_id": "F9748FC6B316618F0C61ABA1",
+     "target_timerange": {
+      "start": 6200000,
+      "duration": 5499999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5499999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "09580886C5E1D8E5BDA3B6D0",
+     "material_id": "EAF67942557C439CEF103874",
+     "target_timerange": {
+      "start": 11700000,
+      "duration": 5500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "3AA19339CE254BE96677A915",
+     "material_id": "CDCD0479B34C2263F956B26A",
+     "target_timerange": {
+      "start": 17200000,
+      "duration": 6460000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 6460000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "05ACB929F1B1B36400A97D88",
+     "material_id": "6F3CF1083A6178DB8B9E3C03",
+     "target_timerange": {
+      "start": 23660000,
+      "duration": 4539999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4539999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "CE192DFB4C785C65A0A0FDED",
+     "material_id": "DD864014C373DF34EF22519F",
+     "target_timerange": {
+      "start": 28200000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "56F234B39EF7CE50307277D8",
+     "material_id": "EF59854E9692922184BE0F1F",
+     "target_timerange": {
+      "start": 32700000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "5E8BE04951599CB1753B1D29",
+     "material_id": "E58EE937FAE6507D119928AC",
+     "target_timerange": {
+      "start": 37200000,
+      "duration": 6909999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 6909999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "3EFB8E60399EFECC3BED0995",
+     "material_id": "0CE1AE7D3A8121FAB34E80F1",
+     "target_timerange": {
+      "start": 44110000,
+      "duration": 4590000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4590000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "01DA1C7A5327B4BD88F089B7",
+     "material_id": "3D45AA67D24689761D71FF8A",
+     "target_timerange": {
+      "start": 48700000,
+      "duration": 5000000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5000000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "1A8D2E4E48C1142EBA18C91F",
+     "material_id": "3D45AA67D24689761D71FF8A",
+     "target_timerange": {
+      "start": 53700000,
+      "duration": 5000000
+     },
+     "source_timerange": {
+      "start": 5000000,
+      "duration": 5000000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "31F8602C32E66520D9291800",
+     "material_id": "356316FD7DFC49F22F0684B3",
+     "target_timerange": {
+      "start": 58700000,
+      "duration": 7289999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 7289999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "208B3CEC5F7500B02A4F74B8",
+     "material_id": "BEEF7ED99DDA446B484D1FED",
+     "target_timerange": {
+      "start": 65989999,
+      "duration": 4710000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4710000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "F3EC5B2AF2CD7EE5CB95EBB8",
+     "material_id": "CDCD0479B34C2263F956B26A",
+     "target_timerange": {
+      "start": 70700000,
+      "duration": 5500000
+     },
+     "source_timerange": {
+      "start": 6500000,
+      "duration": 5500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "BCF4861BD9FD3C2CBCF7A600",
+     "material_id": "F0E7FC47F6B7376F6D188EBF",
+     "target_timerange": {
+      "start": 76200000,
+      "duration": 5000000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5000000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "6E01F3F1AE52C938E4F9ECE4",
+     "material_id": "CFB4896B616EB25C9BC4AA07",
+     "target_timerange": {
+      "start": 81200000,
+      "duration": 4719999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4719999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "4E2F0E77E109D0362716DB1A",
+     "material_id": "5A5BB4CE7AE3A39F4B71A7B6",
+     "target_timerange": {
+      "start": 85920000,
+      "duration": 4780000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4780000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "709BAA0A84BCC7E54655B42F",
+     "material_id": "9F8D42E75F05084411B5F4D9",
+     "target_timerange": {
+      "start": 90700000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "2EB3DFAA0347CB7E2216958B",
+     "material_id": "56DDDCAC527E3E8E9F02603E",
+     "target_timerange": {
+      "start": 95200000,
+      "duration": 4900000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4900000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "F782DB587F17DD17EA3563E9",
+     "material_id": "25AE108C0B18865B5890F2FD",
+     "target_timerange": {
+      "start": 100100000,
+      "duration": 4000000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4000000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "D6C5019309A0830FC36D4AF2",
+     "material_id": "9CCEDCEF66F3AA040FC0C0C9",
+     "target_timerange": {
+      "start": 104100000,
+      "duration": 3699999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 3699999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "4B99B3374C85563010507A16",
+     "material_id": "7C3F42FB6DB4256B48E91FD5",
+     "target_timerange": {
+      "start": 107800000,
+      "duration": 3700000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 3700000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "5510FF2307D7C2C867D78A38",
+     "material_id": "A11A0E0C077FC305ECC839E6",
+     "target_timerange": {
+      "start": 111500000,
+      "duration": 3400000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 3400000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "4EBD9795295D132EA5870DED",
+     "material_id": "AA7779257E23F80D3F8AA2F1",
+     "target_timerange": {
+      "start": 114900000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "B54D223D720D5EC443B11AB7",
+     "material_id": "DF16704CDF20C34D988C7C67",
+     "target_timerange": {
+      "start": 119400000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "A32BA0FA96C053F85FDF2FCB",
+     "material_id": "2391ED43B3F661D9212CFB5F",
+     "target_timerange": {
+      "start": 123900000,
+      "duration": 6399999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 6399999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "81F68187C34A801A197D75F1",
+     "material_id": "193D3F77F2E725D10EF598C1",
+     "target_timerange": {
+      "start": 130299999,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "20AB3AFBBD3C9FE841E5E627",
+     "material_id": "252E32714A927958652A3072",
+     "target_timerange": {
+      "start": 134799999,
+      "duration": 4000000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4000000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "48618A12ADE8F3B18061CD4B",
+     "material_id": "6FA0A9BE0F2A81075E8B6171",
+     "target_timerange": {
+      "start": 138799999,
+      "duration": 4400000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4400000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "0DB952904C9B00DDF66A94CA",
+     "material_id": "27365F8E07BB557D6BE43149",
+     "target_timerange": {
+      "start": 143200000,
+      "duration": 5990000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5990000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "78620C8D49C66821D35934B1",
+     "material_id": "77AD5589678142915536A0E6",
+     "target_timerange": {
+      "start": 149190000,
+      "duration": 4810000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4810000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "6E99BCEFC24FD970EAC65A6E",
+     "material_id": "48C2674C2F96738055B856F3",
+     "target_timerange": {
+      "start": 154000000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "D29751E98ECF24D532A4D113",
+     "material_id": "6EDB557F51DB9CF1A58DCEE7",
+     "target_timerange": {
+      "start": 158500000,
+      "duration": 4500000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4500000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "3996F84DD1CCAB1BC4CCFF36",
+     "material_id": "BA63EDE1DC22A79951D49C17",
+     "target_timerange": {
+      "start": 163000000,
+      "duration": 4849999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 4849999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "6487B43A0B7B31C00B68B20F",
+     "material_id": "D124B6439272510FCF024055",
+     "target_timerange": {
+      "start": 167850000,
+      "duration": 3349999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 3349999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "103472E4B82312BD516A3A83",
+     "material_id": "C440A7520BC519DCB03409D9",
+     "target_timerange": {
+      "start": 171200000,
+      "duration": 3270000
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 3270000
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "3706C0CE3A824945214FF0CD",
+     "material_id": "FAD6BFB08B8F00EC25829940",
+     "target_timerange": {
+      "start": 174470000,
+      "duration": 5709999
+     },
+     "source_timerange": {
+      "start": 0,
+      "duration": 5709999
+     },
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    },
+    {
+     "id": "93F533FCCBECF1A8D852B76A",
+     "material_id": "32DE0FA807463BC202405729",
+     "target_timerange": {
+      "start": 180179999,
+      "duration": 3520000
+     },
+     "source_timerange": null,
+     "extra_material_refs": [
+      "FCC790C72A86190DE1B549D0"
+     ],
+     "clip": {
+      "alpha": 1.0,
+      "flip": {
+       "horizontal": false,
+       "vertical": false
+      },
+      "rotation": 0.0,
+      "scale": {
+       "x": 1.0,
+       "y": 1.0
+      },
+      "transform": {
+       "x": 0.0,
+       "y": 0.0
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "update_time": 0,
+ "version": 3700000,
+ "draft_fold_path": "",
+ "draft_id": "",
+ "new_version": "6.9.0"
+}

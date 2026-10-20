@@ -1,0 +1,291 @@
+{
+ "draft_fold_path": "",
+ "draft_id": "1020feng",
+ "draft_name": "剪映工程_抓特务口碑反转",
+ "draft_timeline_materials_size_": 0,
+ "tm_draft_create": 0,
+ "tm_draft_modified": 0,
+ "tm_duration": 183700000,
+ "cloud_completed_duration": 0,
+ "cloud_materials": [],
+ "draft_is_ai_shorts": false,
+ "draft_is_article_video_draft": false,
+ "draft_is_from_deeplink": "false",
+ "draft_materials": [
+  {
+   "type": 0,
+   "value": [
+    {
+     "file_Path": "assets/ztw_pv_open.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 24,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_pv_tension.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 32,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_clip_hutong.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 24,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img01-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img03-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img05-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_clip_face.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 30,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img01-part2.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img06-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_lei_mix.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 29,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img08-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_clip_room.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 24,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/ztw_drink_open.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 26,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/y1942_pv_open.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 32,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/y1942_pv_mid.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 32,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/srdz_pv.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 54,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/jfyf_pv.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 38,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/shouji_kaihui.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 28,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/tzwz_pv.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 18,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/yeyan_mv_open.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 58,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/shouji2_feng.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 34,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/cui_talk1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 36,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/shouji2_news2.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 46,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img11-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/jjh_pv.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 52,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/tsdq_family.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 40,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/pjlian_pv_open.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 32,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/feng_angry.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 30,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/feng_talk.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 37,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img12-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/feng_interview2013.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 32,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img10-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img14-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/img16-part1.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 11,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/竖屏Credits.png",
+     "width": 1080,
+     "height": 1920,
+     "duration": 3,
+     "remote_url": ""
+    },
+    {
+     "file_Path": "assets/hanhong_open_video.mp4",
+     "width": 1080,
+     "height": 1920,
+     "duration": 6,
+     "remote_url": ""
+    }
+   ]
+  },
+  {
+   "type": 1,
+   "value": [
+    {
+     "file_Path": "assets/hanhong_open_audio.wav",
+     "duration": 6
+    },
+    {
+     "file_Path": "assets/voice_fixed.wav",
+     "duration": 173
+    }
+   ]
+  }
+ ],
+ "canvas_size": {
+  "width": 1080,
+  "height": 1920
+ },
+ "duration": 183700000
+}

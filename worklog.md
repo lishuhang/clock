@@ -396,3 +396,21 @@ Stage Summary:
 - materials/：41视频片段(100MB)+14海报+韩红音画2件+指南2篇，全部对应SRT分段可查清单
 - 验证码求解器、B站下载管线、审看/剪辑脚本全部持久化在scripts/可复用
 - 关键经验：B站一切走真实浏览器上下文；验证码点击后等8秒再判定；CDN坏包重下即愈
+
+---
+Task ID: feng-video-edit
+Agent: Super Z (main)
+Task: 1020-feng-video 剪辑：配音修正+成品mp4+剪映工程
+
+Work Log:
+- 3句重录TTS替换：滑窗ASR定位主配音错读位置(46.5%读成"四十六百分之五"等)，能量极小值扫描定精切点，5ms交叉淡化拼接 -> voice_fixed.wav(174.0s)，ASR复验三处均干净
+- SRT时间轴校准：silencedetect全量静音图 vs SRT边界对照(误差≤0.5s)，修正段3实际起点37.91s(原文档40.55)
+- 韩红开场定位：视频自带字幕VLM读帧(非ASR，避开限流)，金句"走个面"锁定182.7-188.9s，预切开场片段
+- 分镜总装：38镜头数据驱动(EDITS)，1080x1920竖屏硬切，电影片段4:3中心裁切+图表1:1居中+黑底，109条docx行级字幕(思源黑体白字黑边)烧录
+- 成品：抓特务口碑反转_成品_v1.mp4(180.7s/21MB)，VLM抽帧验收5个时间点全部正常(画面/字幕/内容对应)
+- 剪映工程：draft_content.json+meta(视频38段/音频2轨/文本109条，微秒时间轴，assets文件夹38文件76MB自包含)，README含导入与重链说明；JSON引用与时间轴连续性校验通过
+
+Stage Summary:
+- output/：成品mp4 + 剪映工程(自包含assets可一次性重链) + 字幕srt + 分镜json + 修正配音wav，共112MB
+- 全流程脚本持久化：splice_voice.py / assemble_video.py / make_jianying.py
+- 剪映工程schema为6.x兼容尽力而为版，导入若有兼容问题以成品mp4为准，素材与时间轴数据齐全可快速重建
