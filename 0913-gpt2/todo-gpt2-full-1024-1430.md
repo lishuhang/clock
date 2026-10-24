@@ -1,6 +1,51 @@
-# GPT-Image-2 生图项目 — 完整工作交接文档（1008-1230 版）
+# GPT-Image-2 生图项目 — 完整工作交接文档（1024-1430 版）
 
-# 第一部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
+# 第一部分：1024 增量交接日志（2026-10-24 1430，双渠道失效排障 → site:v2ex.com 新通道检索 → rapi 第三通道接入 → v2.0 → 文档合并）
+
+## TL;DR（供短上下文 Agent 快速阅读）
+
+**项目现状**：生产版本 `kmage-kdr-rapi-2.0`（单文件 Cloudflare Worker「AI生图」，kmage + kdr + rapi 三通道）。本次迭代由用户 10-24 报告「两个渠道都生成不了了」驱动，自主排障结论：双渠道失效均为上游策略变更而非本工具缺陷——① kdr 免费生图转入会员登录制（提交 401「请先登录会员后使用免费额度」，/api/auth/* 无公开注册端点，Gift Key 端点返回占位符 GO-ON-GOODLUCK）；② kmage 免费生图在充值闸门后（v1.7 已归类，签到/额度类契约未变，上游存活）。按用户指示两通道代码/端点/中继**全量保留不封闭**。按用户后续指示以 site:v2ex.com 检索试用推广帖，命中「Canvas 站点」RouterAPI（t/1240321）并接入为第三通道 rapi：试用 Key 换发 credential（JWT）→ /async/v1/images/* 异步生图，端到端实测通过后发版。备份分支 backup/pre-rapi-2.0-20261024 已推送（随时可回滚）。
+
+## 用户指示与落地对照（接手者必读）
+
+1. **「帮我看看 gpt2.lishuhang.com 为什么两个渠道都生成不了了，帮我自主排障……在 clock repo 里有之前的工作记录」→ 证据驱动排障**：先读 README/todo 恢复上下文（kdr=Gift Key 渠道、kmage=号池渠道），再实测——kdr 侧 `/api/kdr/gift-key` 经 worker 返回 200 但内容为占位符 `GO-ON-GOODLUCK`（非真实 Key），提交实测 401「请先登录会员后使用免费额度」，逆向 kdr 前端 bundle 证实会员态按 member.remaining/dailyLimit 控制额度且无公开注册端点；kmage 侧假 key 实测 401 invalid_api_key（契约未变，上游存活，v1.7 充值闸门结论延续）。结论：上游策略变更，非本工具缺陷。
+2. **「任何的对工作环境的修改都要及时在 github 备份，随时允许回滚」→ 备份先行**：开发 v2.0 前先建 `backup/pre-rapi-2.0-20261024` 分支推送 GitHub（旧 remote 内嵌 token 已 401，改用用户新 PAT 重置 remote URL 后推送成功）；v1.9 文件原样保留在 main，回滚 = git revert 或重传 v1.9 文件重部署。
+3. **「通过 site:v2ex.com 搜索语法找找有没有新的通道可以利用……之前你测试有效的渠道不要封闭，觉得可以的话，就直接修改现场环境，备份脚本，并生成脚本的新版本」→ 检索→实测→接入→发版**：v2ex 检索命中 kdr 原帖（t/1222012，确认其免费模式已转会员制）与 RouterAPI 推广帖（t/1240321，作者 ShawnShi，new-api 二开，帖内互动活跃至 10 月中旬）；端点逆向 + 端到端实测通过后直接修改现场环境（CF 部署）+ GitHub 备份 + v2.0 发版；kmage/kdr 通道代码零删减。
+4. **「credential 即访客身份」的实机教训**：首版部署把 credential 仅存 isolate 内存——CF Workers 多 isolate 并发导致提交/轮询可能落在不同 isolate，各自换发不同 credential（JWT jti 不同）→ 轮询返回 `missing`（任务归属其他身份）。修复 = Cookie 持久化访客身份（rapi_trial，7 天，等价上游 Canvas localStorage 语义），401/403 自动轮换重试并更新 Cookie。**接手者务必保持该语义**。
+
+## v2.0 变更清单
+
+- 后端新增：`RAPI_UPSTREAM/RAPI_CANVAS/RAPI_TRIAL_KEY/RAPI_CRED_TTL/RAPI_COOKIE` 常量；`rapiBaseHeaders`（Origin/Referer 置 Canvas 站点——trial web 校验所需，服务端 fetch 可置 Origin，浏览器跨域不可伪造，故本通道无直连路径）；`rapiEnsureCred`（换发+缓存）；`rapiCookieCred/rapiSetCookieValue`（身份 Cookie）；`handleRapiProxy`（/api/rapi/{trial-session,generations,tasks/batch} 白名单代理 + 三级身份策略 + 401/403 重取重试 + trial-session 透传顺带同步身份）；`handleRapiImage`（/rapi/img 兑底代理）
+- 前端新增：通道选择器「rapi」选项；KMODELS_RAPI（gpt-image-2 / 2.5 系列）；rapiSizeFor 比例→size 映射；rapiApi/rapiPollTask/rapiFetchB64/generateRapi 全流程（提交→3s 轮询 180s 超时→直连图床优先转 b64→展示/入册/通知）；暂仅文生图（参考图忽略并提示）；applyChannel/switchChannel/histEntry/下载前缀/通道白名单同步
+- 关键发现（CF 1003）：结果图床为裸 IP 直链（223.113.x.x:12589）——Worker fetch 出站经 Cloudflare 边缘，裸 IP Host 命中 1003 Direct IP Access Not Allowed（代理 403）；实测图床 CORS 全开（ACAO *）不校验 Referer → 前端改浏览器直连优先，/rapi/img 仅作兑底
+- 文档：/about 新增 channels.rapi + notes_v2_0；healthz 加 rapi_upstream + 三通道；页面关于页三通道说明/架构端点/排障（⑤ rapi 常见错误）/时间线 v2.0 节同步；kdr 相关文案标注「上游转会员制，通道待命」；VERSION 7 处 kmage-kdr-rapi-2.0
+
+## 接手者最需要知道的事（在 1008-1230 清单 23~26 条基础上增量）
+
+27. **rapi 通道的免费额度语义**：试用 Key 为上游推广帖公开共享 Key（非用户私有凭据，写入代码常量合规）；共享池每日重置（次日 6-8 点），单次 1 张、并发 5；额度耗尽/Key 停发时上游错误原文透传（trial_web_only / trial_credential_expired 等），前端不做无意义重试。若上游停发试用 Key，通道报「试用会话获取失败」，等作者在帖内续发后无需改代码（Key 为常量，如作者轮换 Key 字符串才需更新 RAPI_TRIAL_KEY 常量）。
+28. **rapi 的身份与 cookie**：浏览器 Cookie rapi_trial 7 天 = 访客身份（上游按身份隔离任务与额度）；清 Cookie = 新身份（旧任务 missing 属预期，与 Canvas 清 localStorage 同语义）；401/403 自动轮换并 Set-Cookie。isolate 缓存仅作无 Cookie 首请求的省 RTT 兜底，不是持久存储。
+29. **rapi 暂仅文生图**：上游 async 接口仅 generations（无 edits/multipart）；前端带参考图时忽略并提示。若上游后续开放 edits 端点，在 KMODELS_RAPI/rapiApi 层扩展即可。
+30. **kdr 复活条件**：上游重新开放免费通道（ Gift Key 端点返回真实 Key）或用户提供 kdr 会员凭据——届时走既有通道代码即可，无需发版（免费档 gift.key 路径原样可用；会员制则需在 kdrApi 层加会话头）。
+31. **迭代纪律**（沿袭）：本地静态检查 → vm 冒烟（本版 33/33，scripts/smoke_test_v20.js）→ 生产部署（scripts/deploy_v20.sh）→ 双域端点验证 → 文档三处对齐 → 单次 commit 推送。部署脚本凭据一律从 scripts/.cruise_secrets.env 读取（CF_TOKEN/CF_ACC），token 严禁入 repo。
+
+## 生产环境现状（1024-1430 完工时点）
+
+- Worker `ai-image` = `kmage-kdr-rapi-2.0`（CF API PUT 200，2026-10-24T06:18:31Z = GMT+8 14:18）；/healthz 双域返回 2.0 + rapi_upstream + channels 三通道；/about 2.0 + channels.rapi + notes_v2_0；页面标题/前端 VERSION 2.0；SW 缓存名 2.0。
+- 生产端到端实测两单：22s（a small red apple…，1024x1024）与 42s（lighthouse watercolor）——提交 202 → 轮询 completed → 图床 URL → 直连回传 PNG（1.7MB / 2.9MB）有效。
+- rapi 通道识别：trial credential JWT（aud=image-trial-visitor），Cookie rapi_trial 固化访客身份；提交/轮询全经 Worker 代理（Origin/Referer 伪装 Canvas 站点）。
+- kdr 现状：gift-key 端点 200（占位符 GO-ON-GOODLUCK）；提交 401「请先登录会员后使用免费额度」；质询已解除（时段性，与 10-08 观察一致）。
+- kmage 现状：上游存活；假 key 401 invalid_api_key 契约未变；免费生图仍在充值闸门后（v1.7 归类延续）。
+
+## 未完成事项与下一步建议
+
+1. **真机回归（唯一关键路径）**：用户在浏览器打开 gpt2.lishuhang.com → 切 rapi 通道 → 生成（全链路自动，无需任何配置）；观察 Cookie 固化与直连图床回传。
+2. **观察项**：rapi 共享池额度耗尽时段（错误原文透传可观测）；上游试用 Key 停发信号（「试用会话获取失败」）；kdr 会员制变化（是否重新开放注册）；kmage 闸门放松信号（403 文案变化）。
+3. **明确不做**（沿袭重申）：不伪造质询信号（勾选由人工完成）；IP/指纹伪造；老虎机自动化；链式邀请。
+4. **迭代纪律**（沿袭）：见须知 #31。
+
+---
+
+# 第二部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -47,7 +92,7 @@
 
 ---
 
-# 第二部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
+# 第三部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -112,7 +157,7 @@
 
 ---
 
-# 第三部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
+# 第四部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -162,7 +207,7 @@
 ---
 
 
-# 第四部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
+# 第五部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -210,7 +255,7 @@
 
 ---
 
-# 第五部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
+# 第六部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -269,7 +314,7 @@
 
 ---
 
-# 第六部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
+# 第七部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -339,7 +384,7 @@
 
 ---
 
-# 第七部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
+# 第八部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
 
 > 以下为 2026-08-25 生成的交接文档（TODO-0826-1200.md）原文，覆盖 2026-07-22 至 2026-08-19。本次合并仅去除了原文件中的行号转录格式（`Read "..."` 头与行号前缀），内容未作任何改动；文中提及的路径（如 `0722-gpt2/`）、版本与结论均为当时状态，最新状态以第一部分与 `README.md` 为准。
 
