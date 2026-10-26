@@ -31,3 +31,32 @@
 
 ## 状态
 v1.0 完成。
+
+---
+## img2 · 测试用提示词调整 对比图（2026-10-27）
+
+### 1. 任务
+用户下达本批次第二张图：《测试用提示词调整》表（4 行 T1–T4 × 调整前（第1抽）/调整后（2~4抽）/参考图音频的调整 三列），继续用 skill-A 工作流制作。
+
+### 2. 设计
+- 版式：900×1350（A 上限宽高比内）；标题《测试用提示词调整》；4 个提示词区块，每块行头（T 码+片名+类型标签）+ 三列对比格。
+- 视觉分层（调色板内）：调整前=灰底左灰条；调整后=浅橙红底左深橙条（最醒目）；参考资产=白底描边左浅橙条；三列列头即原表列名。
+- 内容口径：逐格提炼要点 35 条，保留全部事实（平台家数 7家/6平台/3家/2家/2家、@图3/7/9/10/17/18/19/20/21/22、@音频1/2、图数变化 4→2+1 / 6→3+1 / 11→9+1 / 19→16+1、替换前后措辞）；特殊符号 →⤴↗↙⊕° 按原文保留。
+
+### 3. 构建与渲染
+- deliverables-v1.0/img2-styled.html：模板区与 img1 逐字一致（含 yzCheck），附加三列样式 + 溢出自检脚本 window.__yzAdjust（溢出时一次性启用 compact，修掉了初版的无限递归 bug）。
+- render.mjs a 一次通过：rc=0，yzCheck=compliant（browser-validation-img2.json）。
+- 自检数据：containerH=scrollH=1350 无溢出；行高 216/216/236/236；末行距页脚 34px；compact 未启用；liCount=35。
+
+### 4. 质检
+- PIL：900×1350 RGB，色彩 4702，着墨率 36.6%。
+- VLM 版式质检 7/7 过（含特殊符号无 tofu）；VLM 数据忠实性抽查 7/7 过。
+- validate.py --mode a 目录级（img1+img2）：compliant 22/22。
+- source-data.csv 追加 13 行（12 格+口径行）→ 129 行，无重复，img1 116 行原样。
+
+### 5. 交付与推送
+- deliverables-v1.0/ 新增 img2-styled.html/png、browser-validation-img2.json，更新 source-data.csv/README/validation.json。
+- 单次 commit + push。
+
+## 状态
+v1.0（img1+img2）完成。

@@ -1,8 +1,10 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26 · 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
 
 ## 一、图表内容
+
+### img1 · 测试用提示词与加/扣分项 桑基图
 
 将《测试用提示词与加/扣分项》两张主表合并为一张桑基图（`img1-styled.png`，900×1350）：
 
@@ -15,16 +17,29 @@
 - **涉及平台列**：平台名称一律替换为附件 favicon（18px 方形图标，hairline 描边），"（T1第1抽）"等抽次标注按用户要求**忽略不加**；表中留空的平台格保持留空；
 - 加分项（B0/C0）以浅橙编号块 + "加分"标签标识，连线按"四条均涉及"归入淡显下层。
 
+### img2 · 测试用提示词调整 对比图
+
+将《测试用提示词调整》表做成三列对比信息图（`img2-styled.png`，900×1350）：
+
+- **结构**：4 条提示词区块（T1–T4，行头含片名与类型标签"文戏/武戏 × 少参/多参"），每块横排三列——**调整前（第1抽）→ 调整后（2~4抽）→ 参考图/音频的调整**，忠实沿用原表三列列名；
+- **视觉分层**（调色板内）：调整前＝灰底左灰条（问题列）；调整后＝浅橙红底左深橙条（修正列，全图最醒目）；参考资产＝白底描边左浅橙条；三列列头着色与之一致；
+- **内容口径**：逐格提炼要点，**保留全部事实**——平台家数（7家/6平台/3家/2家/2家）、@图/@音频编号（@图3/7/9/10/17/18/19/20/21/22、@音频1/2）、图数变化（4→2+1、6→3+1、11→9+1、19→16+1）与替换前后措辞（"簧片"→"主轴咬合游丝"、"泄出"→"透出"等）；特殊符号 →、⤴、↗/↙、⊕、180° 按原文保留（渲染无 tofu）；
+- 共 35 条要点（T1–T4 各 8/9/8/10 条，其中 T3 调整后仅 2 条系原文即两点）；
+- 页脚：资料来源：娱乐资本论整理 + 横版 Logo。
+
 ## 二、目录结构
 
 ```
 deliverables-v1.0/
 ├── img1-styled.html        # A 版源文件（模板 + 桑基布局构建脚本）
 ├── img1-styled.png         # 成品 900×1350
-├── source-data.csv         # 116 行级溯源（4提示词+24项目+75连线+10favicon+3口径）
-├── browser-validation.json # render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 报告（13/13 通过）
-└── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10
+├── img2-styled.html        # A 版源文件（模板 + 三列对比布局 + 溢出自检脚本）
+├── img2-styled.png         # 成品 900×1350
+├── source-data.csv         # 129 行级溯源（img1 116 行 + img2 13 行）
+├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
+├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（22/22 通过）
+└── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
 ## 三、数据裁定记录（两处表间不一致）
@@ -38,10 +53,21 @@ deliverables-v1.0/
 
 ## 四、验证链
 
+### img1（桑基图）
+
 1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（contract/canvas/title/body/font/logo/watermark/external/shadow 全过）；
 2. 内嵌几何自检：faint=56、prom=19，合计 75 条连线与数据矩阵一致，左右列均无溢出；
 3. VLM 视觉质检：版式 6 项全过；连线数据抽查 8 项全过（D4→仅T1、C4→仅T3、E1→仅T2、A4→T1+T4、A1→全四条淡线、B0/C0→淡线、E3→T1/T3/T4 不连T2、连线均锚定卡片边缘）；
 4. `validate.py --mode a` → **compliant，13/13**（含敏感信息扫描为零，GitHub token 未进入任何产物）。
+
+### img2（提示词调整对比图）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img2.json，errors=[]）；
+2. 内嵌溢出自检 `window.__yzAdjust`：containerH=scrollH=1350 **无溢出**，compact 未启用（字号保持 14px），4 行行高 216–236px，末行与页脚间距 34px 无大块空白，liCount=35；
+3. PIL 验证：900×1350 RGB，色彩数 4702，着墨率 36.6%，无空白图；
+4. VLM 视觉质检 **7/7 全过**：标题无前缀、4 区块三列结构、三列视觉区分、页脚来源+Logo、无截断溢出重叠、特殊符号无 tofu；
+5. VLM 数据忠实性抽查 **7/7 全过**：T2 六平台/纯Foley置顶、T2 参考列 6图→3图+1音频与剔除@图17/18/20、T3 三家红线两家同侧、T3 参考 11图→9图+1音频与新增@图9、T4 真人重绘与石膏人、T1 参考 4图→2图+1音频与@音频1、四行头类型标签；
+6. `validate.py --mode a`（目录级，覆盖 img1+img2）→ **compliant，22/22**（敏感信息扫描为零）。
 
 ## 五、版本规则
 
