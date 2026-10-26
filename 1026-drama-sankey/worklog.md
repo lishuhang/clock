@@ -89,3 +89,33 @@ v1.0（img1+img2）完成。
 
 ## 状态
 v1.0（img1+img2+img3）完成。
+
+---
+## img4 · 模型缩水：2.5 还是 2.0 还是 Lite？ 扣分对比表（2026-10-27）
+
+### 1. 任务
+用户提供《模型缩水》平台扣分表（10平台×8列），要求"不自我发挥，用我的输入来生成"：逐字引用全部单元格、图例、排序说明；扣分相同按拼音排序；页脚含"数据截至2026年10月23日"。
+
+### 2. 排障记录（本次关键事件）
+- 首次渲染失败：assets 字体/logo 缺失 → 根因为昨日 img3 推送时的 stash→rebase→pop 触发 sparse-checkout 剪除 1026 目录未修改文件 → `git sparse-checkout add 1026-drama-sankey` 修复并永久纳入 cone。
+- 渲染通过后发现坐标验证全偏：DOM 量测（getBoundingClientRect）与 PNG 实际绘制不一致 → 多轮像素扫描+VLM 裁图定位判定：**Chromium 对含 writing-mode 竖排单元格的 table-layout:auto 表格，计算布局与绘制分裂**（A3 竖排表头绘制丢失、A5 表头截断、行高错位）。
+- 修复：`table-layout:fixed` + colgroup 定宽 + 表格自然高度垂直居中（弃 height:100% 拉伸）→ DOM 与绘制完全一致（平台列10文字带逐一落入10行DOM矩形）。
+
+### 3. 构建与渲染
+- 900×1350：标题（68px Black 两行）+ 图例行 + 排序说明 + 8列fixed表格（平台92/扣分56/A1-54/A2-40/A3-52/A4-148/A5-148/备注-166）+ 页脚两行来源。
+- A1-A5 竖排表头（writing-mode:vertical-rl，<b>码</b>+列名分段）；扣分组间加重分隔线；偶数行斑马纹；●橙红/△灰。
+- render.mjs a 通过：rc=0，yzCheck compliant；__yzTable 无溢出。
+
+### 4. 质检
+- PIL：900×1350、3334 色、着墨 8.4%。
+- VLM 整图版式 7/7 过（含竖排表头完整无截断、垂直居中留白均衡）。
+- 逐字校验：竖排表头5列全文 + 17个内容格（A5全10格、A4长文本×2、备注、平台名、扣分、A1含两个15.1s）全部与用户输入零差异；A3全角括号无tofu。
+- 排序核对：1分组 L<S<X、不扣分组 A<J<N<O<S<T<W 与用户行序一致。
+- validate.py 目录级（img1-img4）：compliant 40/40；CSV 145行无重复。
+
+### 5. 交付与推送
+- deliverables-v1.0/ 新增 img4-styled.html/png、browser-validation-img4.json，更新 source-data.csv/README/validation.json。
+- 单次 commit + push。
+
+## 状态
+v1.0（img1+img2+img3+img4）完成。

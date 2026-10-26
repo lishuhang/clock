@@ -1,6 +1,6 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
 
 ## 一、图表内容
 
@@ -37,6 +37,17 @@
 - 表格标题【剧情介绍】，脚注【资料来源：娱乐资本论整理】+ 横版 Logo；
 - 行卡片4×115px、留白节奏均匀（末行距页脚仅页脚自身 margin）。
 
+### img4 · 模型缩水：2.5 还是 2.0 还是 Lite？ 扣分对比表
+
+将《模型缩水》平台扣分表做成 8 列对比表（`img4-styled.png`，900×1350，应用户要求**逐字引用、零发挥**）：
+
+- **结构**：表头八列 **平台 | 扣分▼ | A1–A5 | 备注**，其中 A1–A5 五列为**竖排表头**（从上到下阅读，完整列名：A1 时长截断或注水 / A2 音轨缺失或完全静音 / A3 分辨率虚标（低于720P）/ A4 中文书法文字乱码 / A5 积分不退/晚退或估算错漏）；
+- **排序**：扣分相同按拼音排序——扣分1组 LibTV&lt;ShotLab&lt;小云雀（L&lt;S&lt;X），不扣分组 AniShort&lt;巨日禄&lt;纳逗Pro&lt;OiiOii&lt;Seko&lt;TapNow&lt;万兴剧厂（A&lt;J&lt;N&lt;O&lt;S&lt;T&lt;W），与用户输入行序一致，组间以加重分隔线标识；
+- **图例与说明**（逐字）：“- 不扣分 ● 可复现（每抽3-4次）△ 抽卡波动（每抽1-2次）” + “扣分相同的平台，按拼音排序”；
+- **内容口径**：全部单元格逐字引用（含 ●/△/（）/、 等符号、15.0s/15.1s、480P、备注全文）；
+- 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”；
+- **技术要点**：A1–A5 竖排表头 + 长列名在 756px 宽度下以 `table-layout:fixed` + colgroup 定宽实现；表格自然高度在内容区垂直居中（不用 height:100% 拉伸）。
+
 ## 二、目录结构
 
 ```
@@ -47,11 +58,14 @@ deliverables-v1.0/
 ├── img2-styled.png         # 成品 900×1350
 ├── img3-styled.html        # A 版源文件（模板 + 表格流程布局 + 溢出自检脚本）
 ├── img3-styled.png         # 成品 900×1080
-├── source-data.csv         # 134 行级溯源（img1 116 + img2 13 + img3 5 行）
+├── img4-styled.html        # A 版源文件（模板 + 8列fixed表格 + 竖排表头 + 自检脚本）
+├── img4-styled.png         # 成品 900×1350
+├── source-data.csv         # 145 行级溯源（img1 116 + img2 13 + img3 5 + img4 11 行）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 目录级报告（31/31 通过）
+├── browser-validation-img4.json # img4 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（40/40 通过）
 └── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
@@ -90,6 +104,16 @@ deliverables-v1.0/
 4. VLM 版式质检 **7/7 全过**（标题无前缀、三列表头、4 行卡片编号名称、3 个↓对齐编号列、简介完整段落、页脚、无截断/tofu）；
 5. **剧情逐字校验**：VLM 3x 放大转写四段简介后与原文程序化逐字比对——**四段完全一致**（首轮全图转写出现的 6 处字符差异经放大复核确认均为 VLM 对 16px 小字的误读，渲染本身无误）；
 6. `validate.py --mode a`（目录级，覆盖 img1+img2+img3）→ **compliant，31/31**（敏感信息扫描为零）。
+
+### img4（模型缩水扣分表）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img4.json，errors=[]）；
+2. **布局一致性接轴**：因含 writing-mode 竖排表头，放弃 `table-layout:auto`（Chromium 下计算布局与实际绘制分裂：A3 表头绘制丢失、行高错位，导致坐标验证全部偏移）→ 改用 **`table-layout:fixed` + colgroup 定宽 + 表格自然高度垂直居中**后，DOM 量测与像素扫描完全一致（平台列10文字带逐一落入10行DOM矩形）；
+3. PIL 验证：900×1350 RGB，色彩数 3334，着墨率 8.4%；
+4. VLM 整图版式质检 **7/7 全过**（标题/图例/排序说明/8表头/10行序/页脚/无tofu、垂直居中留白均衡）；
+5. **逐字校验**：表头竖排 5 列全文 + A4 长文本×2 + A5 列全 10 格 + AniShort 备注 + 巨日禄/万兴剧厂平台名 + 扣分首尾 + A1 四格（含两个 15.1s）——17 格 + 5 表头 **全部与用户输入逐字一致、零差异**（含 A3 全角括号无 tofu）；
+6. 排序核对：两组拼音序均与用户行序一致；
+7. `validate.py --mode a`（目录级，覆盖 img1–img4）→ **compliant，40/40**（敏感信息扫描为零）。
 
 ## 五、版本规则
 
