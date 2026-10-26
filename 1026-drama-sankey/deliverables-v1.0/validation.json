@@ -1,0 +1,76 @@
+{
+  "contract": "YZ-INFOGRAPHIC-V3.1",
+  "scope": "artifact-a",
+  "state": "compliant",
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "check": "source-data.csv",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "source-data-readable",
+      "ok": true,
+      "detail": "rows=116"
+    },
+    {
+      "check": "html-output",
+      "ok": true,
+      "detail": "count=1"
+    },
+    {
+      "check": "png-output",
+      "ok": true,
+      "detail": "count=1"
+    },
+    {
+      "check": "contract:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img1-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img1-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

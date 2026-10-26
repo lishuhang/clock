@@ -1,0 +1,117 @@
+﻿figure,part,rank,label,value,unit,source_reference,source_raw,verification_status,notes
+img1,1,1,T1 守时斋的判定（文戏、少参）,18,条连线,原文表1 T1行,A1、A2、A3、A4、A5、B1、B3、B4、C2、C3、D1、D4、E2、E3、E4、E5；B0、C0,verified,连线数按表2裁定口径（含C1/D2修正）；测试要点：原生中文渲染、5节拍自主切镜、师徒身高差、精准微动作、对白口型同步、定格动画质感
+img1,1,2,T2 发条暴走（武戏、少参）,18,条连线,原文表1 T2行,A1、A2、A3、A5、B1、B2、B3、B4、C2、C3、D1、E1、E2、E4、E5；B0、C0,verified,连线数按表2裁定口径（含C1/D2修正）；测试要点：纯提示词音画分离、高动态武戏、自主切镜、元素比例、准确理解提示词
+img1,1,3,T3 深夜取钟人（文戏、多参）,20,条连线,原文表1 T3行,A1、A2、A3、A5、B1、B2、B3、B4、C2、C3、C4、D1、D3、E2、E3、E4、E5；B0、C0,verified,连线数按表2裁定口径（含C1/D2修正）；测试要点：提示词时间戳控制、光线控制、师徒与顾客隔柜台内外面对面站位与180°正反打对视、前景玻璃钟罩遮挡
+img1,1,4,T4 齿轮惊魂：极限交锋（武戏、多参）,19,条连线,原文表1 T4行,A1、A2、A3、A4、A5、B1、B2、B3、B4、C1、C2、C3、D1、D2、E2、E3、E4；B0、C0,verified,连线数按表2裁定口径（含C1/D2修正）；测试要点：超多参考图、7人群像、3D白模、防跑脸、跨镜连续轨迹、15秒8镜快切、中文渲染
+img1,1,5,A1 时长截断或注水,4,条提示词,原文表2 A1行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,6,A2 音轨缺失或完全静音,4,条提示词,原文表2 A2行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,7,A3 分辨率虚标，低于720P,4,条提示词,原文表2 A3行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,8,A4 文字变成乱码,2,条提示词,原文表2 A4行,涉及提示词：T1、T4｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,9,A5 积分不退或晚退，估算出错,4,条提示词,原文表2 A5行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,10,B1 判违规拒审，不出片,4,条提示词,原文表2 B1行,涉及提示词：T1、T2、T3、T4｜涉及平台：LibTV、纳逗Pro、OiiOii、Seko、ShotLab、TapNow、万兴剧厂、巨日禄,verified,四条均涉及→淡显下层；favicon 8个（抽次标注按用户要求忽略）
+img1,1,11,B2 参考图不能全传，数量有限,3,条提示词,原文表2 B2行,涉及提示词：T2、T3、T4｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,12,B3 不能传参考音频,4,条提示词,原文表2 B3行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,13,B4 生成速度太慢,4,条提示词,原文表2 B4行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,14,B0（加分） 主体库 @引用 智能补全与自动连线,4,条提示词,原文表2 B0行,涉及提示词：T1、T2、T3、T4｜涉及平台：AniShort、OiiOii、万兴剧厂,verified,四条均涉及→淡显下层；favicon 3个（抽次标注按用户要求忽略）
+img1,1,15,C1 人物渲染异常（人物变成白模 / 眼冒蓝光等）,2,条提示词,原文表2 C1行,涉及提示词：T3、T4｜涉及平台：OiiOii、TapNow、巨日禄、Seko,verified,部分涉及→醒目上层；favicon 4个（抽次标注按用户要求忽略）
+img1,1,16,C2 画面里出现箭头、线或框,4,条提示词,原文表2 C2行,涉及提示词：T1、T2、T3、T4｜涉及平台：LibTV、纳逗Pro、Seko、ShotLab、TapNow、小云雀、OiiOii,verified,四条均涉及→淡显下层；favicon 7个（抽次标注按用户要求忽略）
+img1,1,17,C3 木偶跑脸变真人,4,条提示词,原文表2 C3行,涉及提示词：T1、T2、T3、T4｜涉及平台：巨日禄,verified,四条均涉及→淡显下层；favicon 1个（抽次标注按用户要求忽略）
+img1,1,18,C4 暗室被照得像白天一样,1,条提示词,原文表2 C4行,涉及提示词：T3｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,19,C0（加分） 透明公开提示词优化方式,4,条提示词,原文表2 C0行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,20,D1 不切或漏镜头，时间轴定位不准,4,条提示词,原文表2 D1行,涉及提示词：T1、T2、T3、T4｜涉及平台：（留空）,verified,四条均涉及→淡显下层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,21,D2 群演消失，衣服出错等,2,条提示词,原文表2 D2行,涉及提示词：T2、T4｜涉及平台：Seko,verified,部分涉及→醒目上层；favicon 1个（抽次标注按用户要求忽略）
+img1,1,22,D3 人物站位出错,1,条提示词,原文表2 D3行,涉及提示词：T3｜涉及平台：纳逗Pro、OiiOii,verified,部分涉及→醒目上层；favicon 2个（抽次标注按用户要求忽略）
+img1,1,23,D4 老匠忽略“轻微”二字乱摇头,1,条提示词,原文表2 D4行,涉及提示词：T1｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,24,E1 纯音效段冒出人声,1,条提示词,原文表2 E1行,涉及提示词：T2｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,25,E2 偷加BGM,4,条提示词,原文表2 E2行,涉及提示词：T1、T2、T3、T4｜涉及平台：OiiOii,verified,四条均涉及→淡显下层；favicon 1个（抽次标注按用户要求忽略）
+img1,1,26,E3 画面冒出台词字幕,3,条提示词,原文表2 E3行,涉及提示词：T1、T3、T4｜涉及平台：AniShort、纳逗Pro、ShotLab、万兴剧厂、小云雀、巨日禄、LibTV、Seko、TapNow,verified,部分涉及→醒目上层；favicon 9个（抽次标注按用户要求忽略）
+img1,1,27,E4 导出带平台水印或角标,4,条提示词,原文表2 E4行,涉及提示词：T1、T2、T3、T4｜涉及平台：纳逗Pro、小云雀,verified,四条均涉及→淡显下层；favicon 2个（抽次标注按用户要求忽略）
+img1,1,28,E5 定格木偶没有还原“抽帧感”,3,条提示词,原文表2 E5行,涉及提示词：T1、T2、T3｜涉及平台：（留空）,verified,部分涉及→醒目上层；favicon 0个（抽次标注按用户要求忽略）
+img1,1,29,T1→A1,1,条连线,原文表2 A1行“涉及提示词”列,A1: T1、T2、T3、T4,verified,
+img1,1,30,T2→A1,1,条连线,原文表2 A1行“涉及提示词”列,A1: T1、T2、T3、T4,verified,
+img1,1,31,T3→A1,1,条连线,原文表2 A1行“涉及提示词”列,A1: T1、T2、T3、T4,verified,
+img1,1,32,T4→A1,1,条连线,原文表2 A1行“涉及提示词”列,A1: T1、T2、T3、T4,verified,
+img1,1,33,T1→A2,1,条连线,原文表2 A2行“涉及提示词”列,A2: T1、T2、T3、T4,verified,
+img1,1,34,T2→A2,1,条连线,原文表2 A2行“涉及提示词”列,A2: T1、T2、T3、T4,verified,
+img1,1,35,T3→A2,1,条连线,原文表2 A2行“涉及提示词”列,A2: T1、T2、T3、T4,verified,
+img1,1,36,T4→A2,1,条连线,原文表2 A2行“涉及提示词”列,A2: T1、T2、T3、T4,verified,
+img1,1,37,T1→A3,1,条连线,原文表2 A3行“涉及提示词”列,A3: T1、T2、T3、T4,verified,
+img1,1,38,T2→A3,1,条连线,原文表2 A3行“涉及提示词”列,A3: T1、T2、T3、T4,verified,
+img1,1,39,T3→A3,1,条连线,原文表2 A3行“涉及提示词”列,A3: T1、T2、T3、T4,verified,
+img1,1,40,T4→A3,1,条连线,原文表2 A3行“涉及提示词”列,A3: T1、T2、T3、T4,verified,
+img1,1,41,T1→A4,1,条连线,原文表2 A4行“涉及提示词”列,A4: T1、T4,verified,
+img1,1,42,T4→A4,1,条连线,原文表2 A4行“涉及提示词”列,A4: T1、T4,verified,
+img1,1,43,T1→A5,1,条连线,原文表2 A5行“涉及提示词”列,A5: T1、T2、T3、T4,verified,
+img1,1,44,T2→A5,1,条连线,原文表2 A5行“涉及提示词”列,A5: T1、T2、T3、T4,verified,
+img1,1,45,T3→A5,1,条连线,原文表2 A5行“涉及提示词”列,A5: T1、T2、T3、T4,verified,
+img1,1,46,T4→A5,1,条连线,原文表2 A5行“涉及提示词”列,A5: T1、T2、T3、T4,verified,
+img1,1,47,T1→B1,1,条连线,原文表2 B1行“涉及提示词”列,B1: T1、T2、T3、T4,verified,
+img1,1,48,T2→B1,1,条连线,原文表2 B1行“涉及提示词”列,B1: T1、T2、T3、T4,verified,
+img1,1,49,T3→B1,1,条连线,原文表2 B1行“涉及提示词”列,B1: T1、T2、T3、T4,verified,
+img1,1,50,T4→B1,1,条连线,原文表2 B1行“涉及提示词”列,B1: T1、T2、T3、T4,verified,
+img1,1,51,T2→B2,1,条连线,原文表2 B2行“涉及提示词”列,B2: T2、T3、T4,verified,
+img1,1,52,T3→B2,1,条连线,原文表2 B2行“涉及提示词”列,B2: T2、T3、T4,verified,
+img1,1,53,T4→B2,1,条连线,原文表2 B2行“涉及提示词”列,B2: T2、T3、T4,verified,
+img1,1,54,T1→B3,1,条连线,原文表2 B3行“涉及提示词”列,B3: T1、T2、T3、T4,verified,
+img1,1,55,T2→B3,1,条连线,原文表2 B3行“涉及提示词”列,B3: T1、T2、T3、T4,verified,
+img1,1,56,T3→B3,1,条连线,原文表2 B3行“涉及提示词”列,B3: T1、T2、T3、T4,verified,
+img1,1,57,T4→B3,1,条连线,原文表2 B3行“涉及提示词”列,B3: T1、T2、T3、T4,verified,
+img1,1,58,T1→B4,1,条连线,原文表2 B4行“涉及提示词”列,B4: T1、T2、T3、T4,verified,
+img1,1,59,T2→B4,1,条连线,原文表2 B4行“涉及提示词”列,B4: T1、T2、T3、T4,verified,
+img1,1,60,T3→B4,1,条连线,原文表2 B4行“涉及提示词”列,B4: T1、T2、T3、T4,verified,
+img1,1,61,T4→B4,1,条连线,原文表2 B4行“涉及提示词”列,B4: T1、T2、T3、T4,verified,
+img1,1,62,T1→B0,1,条连线,原文表2 B0行“涉及提示词”列,B0: T1、T2、T3、T4,verified,
+img1,1,63,T2→B0,1,条连线,原文表2 B0行“涉及提示词”列,B0: T1、T2、T3、T4,verified,
+img1,1,64,T3→B0,1,条连线,原文表2 B0行“涉及提示词”列,B0: T1、T2、T3、T4,verified,
+img1,1,65,T4→B0,1,条连线,原文表2 B0行“涉及提示词”列,B0: T1、T2、T3、T4,verified,
+img1,1,66,T3→C1,1,条连线,原文表2 C1行“涉及提示词”列,C1: T3、T4,verified,表1 T3行未列C1；按表2“涉及提示词=T3、T4”及平台佐证（巨日禄T3第3抽C1蓝光）裁定涉及
+img1,1,67,T4→C1,1,条连线,原文表2 C1行“涉及提示词”列,C1: T3、T4,verified,
+img1,1,68,T1→C2,1,条连线,原文表2 C2行“涉及提示词”列,C2: T1、T2、T3、T4,verified,
+img1,1,69,T2→C2,1,条连线,原文表2 C2行“涉及提示词”列,C2: T1、T2、T3、T4,verified,
+img1,1,70,T3→C2,1,条连线,原文表2 C2行“涉及提示词”列,C2: T1、T2、T3、T4,verified,
+img1,1,71,T4→C2,1,条连线,原文表2 C2行“涉及提示词”列,C2: T1、T2、T3、T4,verified,
+img1,1,72,T1→C3,1,条连线,原文表2 C3行“涉及提示词”列,C3: T1、T2、T3、T4,verified,
+img1,1,73,T2→C3,1,条连线,原文表2 C3行“涉及提示词”列,C3: T1、T2、T3、T4,verified,
+img1,1,74,T3→C3,1,条连线,原文表2 C3行“涉及提示词”列,C3: T1、T2、T3、T4,verified,
+img1,1,75,T4→C3,1,条连线,原文表2 C3行“涉及提示词”列,C3: T1、T2、T3、T4,verified,
+img1,1,76,T3→C4,1,条连线,原文表2 C4行“涉及提示词”列,C4: T3,verified,
+img1,1,77,T1→C0,1,条连线,原文表2 C0行“涉及提示词”列,C0: T1、T2、T3、T4,verified,
+img1,1,78,T2→C0,1,条连线,原文表2 C0行“涉及提示词”列,C0: T1、T2、T3、T4,verified,
+img1,1,79,T3→C0,1,条连线,原文表2 C0行“涉及提示词”列,C0: T1、T2、T3、T4,verified,
+img1,1,80,T4→C0,1,条连线,原文表2 C0行“涉及提示词”列,C0: T1、T2、T3、T4,verified,
+img1,1,81,T1→D1,1,条连线,原文表2 D1行“涉及提示词”列,D1: T1、T2、T3、T4,verified,
+img1,1,82,T2→D1,1,条连线,原文表2 D1行“涉及提示词”列,D1: T1、T2、T3、T4,verified,
+img1,1,83,T3→D1,1,条连线,原文表2 D1行“涉及提示词”列,D1: T1、T2、T3、T4,verified,
+img1,1,84,T4→D1,1,条连线,原文表2 D1行“涉及提示词”列,D1: T1、T2、T3、T4,verified,
+img1,1,85,T2→D2,1,条连线,原文表2 D2行“涉及提示词”列,D2: T2、T4,verified,表1 T2行未列D2；按表2“涉及提示词=T2、T4”及平台佐证（Seko T2第2抽）裁定涉及
+img1,1,86,T4→D2,1,条连线,原文表2 D2行“涉及提示词”列,D2: T2、T4,verified,
+img1,1,87,T3→D3,1,条连线,原文表2 D3行“涉及提示词”列,D3: T3,verified,
+img1,1,88,T1→D4,1,条连线,原文表2 D4行“涉及提示词”列,D4: T1,verified,
+img1,1,89,T2→E1,1,条连线,原文表2 E1行“涉及提示词”列,E1: T2,verified,
+img1,1,90,T1→E2,1,条连线,原文表2 E2行“涉及提示词”列,E2: T1、T2、T3、T4,verified,
+img1,1,91,T2→E2,1,条连线,原文表2 E2行“涉及提示词”列,E2: T1、T2、T3、T4,verified,
+img1,1,92,T3→E2,1,条连线,原文表2 E2行“涉及提示词”列,E2: T1、T2、T3、T4,verified,
+img1,1,93,T4→E2,1,条连线,原文表2 E2行“涉及提示词”列,E2: T1、T2、T3、T4,verified,
+img1,1,94,T1→E3,1,条连线,原文表2 E3行“涉及提示词”列,E3: T1、T3、T4,verified,
+img1,1,95,T3→E3,1,条连线,原文表2 E3行“涉及提示词”列,E3: T1、T3、T4,verified,
+img1,1,96,T4→E3,1,条连线,原文表2 E3行“涉及提示词”列,E3: T1、T3、T4,verified,
+img1,1,97,T1→E4,1,条连线,原文表2 E4行“涉及提示词”列,E4: T1、T2、T3、T4,verified,
+img1,1,98,T2→E4,1,条连线,原文表2 E4行“涉及提示词”列,E4: T1、T2、T3、T4,verified,
+img1,1,99,T3→E4,1,条连线,原文表2 E4行“涉及提示词”列,E4: T1、T2、T3、T4,verified,
+img1,1,100,T4→E4,1,条连线,原文表2 E4行“涉及提示词”列,E4: T1、T2、T3、T4,verified,
+img1,1,101,T1→E5,1,条连线,原文表2 E5行“涉及提示词”列,E5: T1、T2、T3,verified,
+img1,1,102,T2→E5,1,条连线,原文表2 E5行“涉及提示词”列,E5: T1、T2、T3,verified,
+img1,1,103,T3→E5,1,条连线,原文表2 E5行“涉及提示词”列,E5: T1、T2、T3,verified,
+img1,1,104,favicon:LibTV,3,处显示,原文表2 涉及平台列,LibTV,verified,assets/favicons/libtv.jpg；平台名按用户要求替换为favicon；出现于3行
+img1,1,105,favicon:纳逗Pro,5,处显示,原文表2 涉及平台列,纳逗Pro,verified,assets/favicons/nadou.png；平台名按用户要求替换为favicon；出现于5行
+img1,1,106,favicon:OiiOii,6,处显示,原文表2 涉及平台列,OiiOii,verified,assets/favicons/oiioii.png；平台名按用户要求替换为favicon；出现于6行
+img1,1,107,favicon:Seko,5,处显示,原文表2 涉及平台列,Seko,verified,assets/favicons/seko.png；平台名按用户要求替换为favicon；出现于5行
+img1,1,108,favicon:ShotLab,3,处显示,原文表2 涉及平台列,ShotLab,verified,assets/favicons/shotlab.png；平台名按用户要求替换为favicon；出现于3行
+img1,1,109,favicon:TapNow,4,处显示,原文表2 涉及平台列,TapNow,verified,assets/favicons/tapnow.png；平台名按用户要求替换为favicon；出现于4行
+img1,1,110,favicon:万兴剧厂,3,处显示,原文表2 涉及平台列,万兴剧厂,verified,assets/favicons/wanxing.png；平台名按用户要求替换为favicon；出现于3行
+img1,1,111,favicon:巨日禄,4,处显示,原文表2 涉及平台列,巨日禄,verified,assets/favicons/jurilu.jpg；平台名按用户要求替换为favicon；出现于4行
+img1,1,112,favicon:AniShort,2,处显示,原文表2 涉及平台列,AniShort,verified,assets/favicons/anishort.png；平台名按用户要求替换为favicon；出现于2行
+img1,1,113,favicon:小云雀,3,处显示,原文表2 涉及平台列,小云雀,verified,assets/favicons/xiaoyunque.png；平台名按用户要求替换为favicon；出现于3行
+img1,1,114,口径：加/扣分项总数,24,项,原文表2,正文称“2个加分项、20个扣分项”,verified,表2实为22个扣分项+2个加分项，以表格为准
+img1,1,115,口径：连线总数,75,条,两表裁定,56淡显+19醒目,verified,"与渲染诊断（faint=56, prom=19）一致"
+img1,1,116,口径：未用favicon,2,个,drama-platforms-logos.zip,flova.png、higgsfield.png,verified,两表涉及平台中未出现，未使用

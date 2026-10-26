@@ -1,0 +1,217 @@
+<!doctype html>
+<!-- 娱乐资本论信息图 v3.1 / A。先读 SKILL.md；只改 YZ_EDIT 区。 -->
+<!-- 1026-drama-sankey：测试用提示词与加/扣分项 桑基图（提示词在左，加/扣分项在右） -->
+<html lang="zh-CN" data-yz-contract="3.1.0" data-yz-mode="a">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>测试用提示词与加/扣分项</title>
+<style>
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-regular.ttf') format('truetype');font-weight:400;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-bold.ttf') format('truetype');font-weight:700;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-black.ttf') format('truetype');font-weight:900;font-display:block}
+:root{--a:#fc8166;--ad:#e55b46;--t:#312e2e;--s:#6b6666;--m:#9a9595;--l:#e7e3e1}
+*{box-sizing:border-box}html,body{margin:0;background:#fff;color:var(--t);font-family:AliPuHui,sans-serif}body{width:max-content}
+.chart-container{position:relative;isolation:isolate;width:900px;min-height:900px;display:flex;flex-direction:column;overflow:hidden;padding:68px 72px 38px;background:#fff}
+.brand{display:flex;align-items:center}.brand img{display:block;object-fit:contain}.brand--horizontal{gap:12px;height:62px}.brand--horizontal .logo-icon{width:53px;height:62px}.brand--horizontal .logo-text{width:156px;height:auto}
+.yz-watermark{position:absolute;z-index:10;left:50%;top:50%;width:420px;transform:translate(-50%,-48%);opacity:.1;pointer-events:none}.brand--vertical{flex-direction:column;justify-content:center;gap:20px}.brand--vertical .logo-icon{width:220px;height:auto}.brand--vertical .logo-text{width:360px;height:auto}
+.chart-title,.chart-body,.chart-footer{position:relative;z-index:20}.chart-title{margin:0 0 38px;font-size:68px;line-height:1.12;font-weight:900;letter-spacing:-1.5px}.chart-body{flex:1;min-height:560px;font-size:28px;line-height:1.45}.chart-body strong,.yz-emphasis{font-weight:700;color:var(--ad)}
+.chart-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-top:34px;padding-top:20px;border-top:1px solid var(--l)}.chart-source{font-size:26px;line-height:1.35;color:var(--m)}
+.yz-placeholder{display:grid;place-items:center;min-height:560px;border:2px dashed var(--l);color:var(--m)}table{width:100%;border-collapse:collapse;font-size:28px}th,td{padding:16px 12px;border-bottom:1px solid var(--l);text-align:left}th{font-weight:700;color:var(--s)}
+</style>
+<style>
+/* ===== 1026-drama-sankey 附加样式（不改动上方模板规则） ===== */
+.chart-container{height:1350px}
+.chart-body{display:flex;flex-direction:column}
+.legend{display:flex;align-items:center;gap:30px;font-size:16.5px;color:var(--s);margin:0 0 12px;flex:0 0 auto}
+.lg{display:flex;align-items:center;white-space:nowrap}
+.sw{display:inline-block;width:26px;margin-right:8px;border-radius:2px;flex:0 0 auto}
+.sw-f{height:8px;background:rgba(154,149,149,.34)}
+.sw-p{height:10px;background:rgba(229,91,70,.92)}
+.btag{font-size:13px;color:var(--ad);border:1px solid var(--a);border-radius:999px;padding:1px 9px;margin-right:8px;line-height:1.35;white-space:nowrap;flex:0 0 auto}
+.col-heads{display:flex;flex:0 0 auto;margin-bottom:8px;align-items:baseline}
+.ch-l{width:190px;font-size:14px;color:var(--m);letter-spacing:4px;flex:0 0 auto}
+.ch-m{flex:1 1 auto}
+.ch-r{font-size:14px;color:var(--m);letter-spacing:4px;flex:0 0 auto}
+.sankey{flex:1 1 auto;min-height:0;display:flex;position:relative}
+.col-left{width:190px;flex:0 0 auto;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.flow{width:150px;flex:0 0 auto;position:relative;height:100%}
+.flow svg{position:absolute;left:0;top:0;display:block}
+.col-right{flex:1 1 auto;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.prompt-card{background:rgba(231,227,225,.4);border:1px solid var(--l);border-radius:10px;padding:12px 14px}
+.p-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.p-code{font-size:20px;font-weight:900;color:var(--ad);letter-spacing:1px}
+.p-tag{font-size:12.5px;color:var(--s);border:1px solid var(--l);background:#fff;border-radius:999px;padding:1px 9px;line-height:1.4;white-space:nowrap}
+.p-title{font-size:21px;font-weight:900;color:var(--t);line-height:1.25;margin-top:6px}
+.p-div{height:1px;background:var(--l);margin:9px 0 7px}
+.p-label{font-size:12.5px;color:var(--m)}
+.p-points{font-size:14.5px;color:var(--s);line-height:1.36;margin-top:3px}
+.item-row{padding:3px 0;flex:0 0 auto}
+.row-main{display:flex;align-items:center;flex-wrap:wrap}
+.icode{font-weight:700;font-size:17px;color:#fff;border-radius:5px;width:36px;text-align:center;padding:2px 0;flex:0 0 auto;line-height:1.2}
+.icode.f{background:var(--m)}
+.icode.p{background:var(--ad)}
+.icode.b{background:var(--a)}
+.iname{font-size:20px;color:var(--t);line-height:1.3;flex:1 1 auto;min-width:0;margin-left:9px}
+.favs{display:flex;align-items:center;gap:4px;flex:0 0 auto;margin-left:auto;padding-left:8px;flex-wrap:wrap;justify-content:flex-end}
+.fav{display:inline-block;width:18px;height:18px;border-radius:4px;background-size:contain;background-position:center;background-repeat:no-repeat;border:1px solid var(--l);flex:0 0 auto}
+.group-start{margin-top:12px}
+/* 紧凑模式：内容超出画布时由构建脚本启用 */
+.compact .item-row{padding:1px 0}
+.compact .prompt-card{padding:10px 12px}
+.compact .p-points{line-height:1.26}
+.compact .group-start{margin-top:8px}
+.compact .p-div{margin:7px 0 5px}
+</style></head>
+<body><main class="chart-container">
+<div class="yz-watermark brand brand--vertical" aria-hidden="true"><img class="logo-icon" src="assets/logo-icon.svg" alt=""><img class="logo-text" src="assets/logo-text.svg" alt=""></div>
+<!-- YZ_EDIT_1_BEGIN：只替换标题文字，不加“图N：” --><h1 class="chart-title">测试用提示词与加/扣分项</h1><!-- YZ_EDIT_1_END -->
+<!-- YZ_EDIT_2_BEGIN：用已核验图表替换占位节点 -->
+<section class="chart-body">
+  <div class="legend">
+    <span class="lg"><i class="sw sw-f"></i>四条提示词均涉及 · 淡显下层</span>
+    <span class="lg"><i class="sw sw-p"></i>部分提示词涉及 · 醒目上层</span>
+    <span class="lg"><span class="btag">加分</span>加分项</span>
+  </div>
+  <div class="col-heads"><span class="ch-l">提示词</span><span class="ch-m"></span><span class="ch-r">加/扣分项</span></div>
+  <div class="sankey">
+    <div class="col-left"></div>
+    <div class="flow"></div>
+    <div class="col-right"></div>
+  </div>
+</section><!-- YZ_EDIT_2_END -->
+<footer class="chart-footer"><!-- YZ_EDIT_3_BEGIN：只替换来源 --><div class="chart-source">资料来源：娱乐资本论整理</div><!-- YZ_EDIT_3_END --><div class="brand brand--horizontal" aria-label="娱乐资本论 Entertainment Capital"><img class="logo-icon" src="assets/logo-icon.svg" alt=""><img class="logo-text" src="assets/logo-text.svg" alt=""></div></footer>
+</main>
+<script>
+/* ===== 1026-drama-sankey 桑基布局构建（数据 → DOM → 量测 → SVG 连线） ===== */
+(function(){
+'use strict';
+var FLOW_W=150, TF=7.5, TP=10, GAP=1;
+var COLF='rgba(154,149,149,.34)', COLP='rgba(229,91,70,.92)';
+var PROMPTS=[
+ {id:'T1',title:'守时斋的判定',tags:['文戏','少参'],points:'原生中文渲染、5节拍自主切镜、师徒身高差、精准微动作、对白口型同步、定格动画质感'},
+ {id:'T2',title:'发条暴走',tags:['武戏','少参'],points:'纯提示词音画分离、高动态武戏、自主切镜、元素比例、准确理解提示词'},
+ {id:'T3',title:'深夜取钟人',tags:['文戏','多参'],points:'提示词时间戳控制、光线控制、师徒与顾客隔柜台内外面对面站位与180°正反打对视、前景玻璃钟罩遮挡'},
+ {id:'T4',title:'齿轮惊魂：极限交锋',tags:['武戏','多参'],points:'超多参考图、7人群像、3D白模、防跑脸、跨镜连续轨迹、15秒8镜快切、中文渲染'}
+];
+var ITEMS=[
+ {id:'A1',name:'时长截断或注水',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'A2',name:'音轨缺失或完全静音',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'A3',name:'分辨率虚标，低于720P',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'A4',name:'文字变成乱码',layer:'p',p:['T1','T4']},
+ {id:'A5',name:'积分不退或晚退，估算出错',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'B1',name:'判违规拒审，不出片',layer:'f',p:['T1','T2','T3','T4'],plat:['libtv.jpg','nadou.png','oiioii.png','seko.png','shotlab.png','tapnow.png','wanxing.png','jurilu.jpg']},
+ {id:'B2',name:'参考图不能全传，数量有限',layer:'p',p:['T2','T3','T4']},
+ {id:'B3',name:'不能传参考音频',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'B4',name:'生成速度太慢',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'B0',name:'主体库 @引用 智能补全与自动连线',layer:'f',bonus:true,p:['T1','T2','T3','T4'],plat:['anishort.png','oiioii.png','wanxing.png']},
+ {id:'C1',name:'人物渲染异常（人物变成白模 / 眼冒蓝光等）',layer:'p',p:['T3','T4'],plat:['oiioii.png','tapnow.png','jurilu.jpg','seko.png']},
+ {id:'C2',name:'画面里出现箭头、线或框',layer:'f',p:['T1','T2','T3','T4'],plat:['libtv.jpg','nadou.png','seko.png','shotlab.png','tapnow.png','xiaoyunque.png','oiioii.png']},
+ {id:'C3',name:'木偶跑脸变真人',layer:'f',p:['T1','T2','T3','T4'],plat:['jurilu.jpg']},
+ {id:'C4',name:'暗室被照得像白天一样',layer:'p',p:['T3']},
+ {id:'C0',name:'透明公开提示词优化方式',layer:'f',bonus:true,p:['T1','T2','T3','T4']},
+ {id:'D1',name:'不切或漏镜头，时间轴定位不准',layer:'f',p:['T1','T2','T3','T4']},
+ {id:'D2',name:'群演消失，衣服出错等',layer:'p',p:['T2','T4'],plat:['seko.png']},
+ {id:'D3',name:'人物站位出错',layer:'p',p:['T3'],plat:['nadou.png','oiioii.png']},
+ {id:'D4',name:'老匠忽略“轻微”二字乱摇头',layer:'p',p:['T1']},
+ {id:'E1',name:'纯音效段冒出人声',layer:'p',p:['T2']},
+ {id:'E2',name:'偷加BGM',layer:'f',p:['T1','T2','T3','T4'],plat:['oiioii.png']},
+ {id:'E3',name:'画面冒出台词字幕',layer:'p',p:['T1','T3','T4'],plat:['anishort.png','nadou.png','shotlab.png','wanxing.png','xiaoyunque.png','jurilu.jpg','libtv.jpg','seko.png','tapnow.png']},
+ {id:'E4',name:'导出带平台水印或角标',layer:'f',p:['T1','T2','T3','T4'],plat:['nadou.png','xiaoyunque.png']},
+ {id:'E5',name:'定格木偶没有还原“抽帧感”',layer:'p',p:['T1','T2','T3']}
+];
+var PLATN={'anishort.png':'AniShort','nadou.png':'纳逗Pro','oiioii.png':'OiiOii','seko.png':'Seko','shotlab.png':'ShotLab','tapnow.png':'TapNow','wanxing.png':'万兴剧厂','jurilu.jpg':'巨日禄','libtv.jpg':'LibTV','xiaoyunque.png':'小云雀'};
+var GROUPFIRST={'B1':1,'C1':1,'D1':1,'E1':1};
+function el(tag,cls,parent){var e=document.createElement(tag);if(cls)e.className=cls;if(parent)parent.appendChild(e);return e}
+function txt(node,s){node.appendChild(document.createTextNode(s))}
+function thick(it){return it.layer==='p'?TP:TF}
+
+function build(){
+  var colL=document.querySelector('.col-left'),colR=document.querySelector('.col-right');
+  /* 左：提示词卡片 */
+  PROMPTS.forEach(function(p){
+    var card=el('div','prompt-card',colL);
+    var head=el('div','p-head',card);
+    var code=el('span','p-code',head);txt(code,p.id);
+    p.tags.forEach(function(t){var tag=el('span','p-tag',head);txt(tag,t)});
+    var title=el('div','p-title',card);txt(title,p.title);
+    el('div','p-div',card);
+    var lab=el('div','p-label',card);txt(lab,'测试要点');
+    var pts=el('div','p-points',card);txt(pts,p.points);
+  });
+  /* 右：加/扣分项行 */
+  ITEMS.forEach(function(it){
+    var row=el('div','item-row'+(GROUPFIRST[it.id]?' group-start':''),colR);
+    var main=el('div','row-main',row);
+    var code=el('span','icode '+(it.bonus?'b':it.layer),main);txt(code,it.id);
+    if(it.bonus){var bt=el('span','btag',main);txt(bt,'加分')}
+    var name=el('span','iname',main);txt(name,it.name);
+    if(it.plat){
+      var favs=el('span','favs',main);
+      it.plat.forEach(function(f){
+        var i=el('i','fav',favs);
+        i.style.backgroundImage='url("assets/favicons/'+f+'")';
+        i.setAttribute('aria-label',PLATN[f]);i.setAttribute('title',PLATN[f]);
+      });
+    }
+  });
+}
+
+function draw(){
+  var sankey=document.querySelector('.sankey'),flow=document.querySelector('.flow');
+  var colL=document.querySelector('.col-left'),colR=document.querySelector('.col-right');
+  var skH=sankey.offsetHeight;
+  /* 超出则启用紧凑模式并复测 */
+  if(colL.scrollHeight>skH||colR.scrollHeight>skH){
+    sankey.classList.add('compact');skH=sankey.offsetHeight;
+  }
+  var flowR=flow.getBoundingClientRect();
+  var NS='http://www.w3.org/2000/svg';
+  var svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',FLOW_W);svg.setAttribute('height',Math.ceil(skH));
+  flow.appendChild(svg);
+  var gF=document.createElementNS(NS,'g'),gP=document.createElementNS(NS,'g');
+  svg.appendChild(gF);svg.appendChild(gP);
+  function relY(rect){return rect.top-flowR.top}
+  function mkPath(y0,y1,t,color,g){
+    var p=document.createElementNS(NS,'path');
+    p.setAttribute('d','M 0 '+y0.toFixed(2)+' C '+(FLOW_W*0.38).toFixed(1)+' '+y0.toFixed(2)+', '+(FLOW_W*0.62).toFixed(1)+' '+y1.toFixed(2)+', '+FLOW_W+' '+y1.toFixed(2));
+    p.setAttribute('stroke',color);p.setAttribute('stroke-width',t);
+    p.setAttribute('fill','none');p.setAttribute('stroke-linecap','butt');
+    g.appendChild(p);
+  }
+  /* 左侧端口：按右侧行序累积带宽 */
+  var cards=colL.children,leftBand={};
+  for(var ci=0;ci<cards.length;ci++){
+    var pr=PROMPTS[ci],cr=cards[ci].getBoundingClientRect();
+    var links=ITEMS.filter(function(it){return it.p.indexOf(pr.id)>=0});
+    var total=-GAP;links.forEach(function(it){total+=thick(it)+GAP});
+    var y=relY(cr)+(cr.height-total)/2;
+    links.forEach(function(it){
+      var t=thick(it);
+      leftBand[pr.id+'|'+it.id]=y+t/2;
+      y+=t+GAP;
+    });
+  }
+  /* 右侧行：按 T1→T4 序累积带宽 */
+  var rows=colR.children,nF=0,nP=0;
+  for(var ri=0;ri<rows.length;ri++){
+    var it=ITEMS[ri],rr=rows[ri].getBoundingClientRect();
+    var tot=-GAP;it.p.forEach(function(){tot+=thick(it)+GAP});
+    var yy=relY(rr)+(rr.height-tot)/2;
+    it.p.forEach(function(pid){
+      var y0=leftBand[pid+'|'+it.id],y1=yy+thick(it)/2,t=thick(it);
+      if(it.layer==='p'){mkPath(y0,y1,t,COLP,gP);nP++}else{mkPath(y0,y1,t,COLF,gF);nF++}
+      yy+=t+GAP;
+    });
+  }
+  window.__yzSankey={sankeyH:skH,faint:nF,prom:nP,compact:sankey.classList.contains('compact'),
+    leftOverflow:colL.scrollHeight>skH,rightOverflow:colR.scrollHeight>skH};
+  console.log('YZ-SANKEY',JSON.stringify(window.__yzSankey));
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){document.fonts.ready.then(function(){build();draw()})})}
+else{document.fonts.ready.then(function(){build();draw()})}
+})();
+</script>
+<script>
+async function yzCheck(){await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?Promise.resolve():i.decode()));const c=document.querySelector('.chart-container'),t=document.querySelector('.chart-title'),b=document.querySelector('.chart-body'),e=[];if(document.documentElement.dataset.yzContract!=='3.1.0'||document.documentElement.dataset.yzMode!=='a')e.push('contract');if(Math.round(c.getBoundingClientRect().width)!==900)e.push('canvas');if(parseFloat(getComputedStyle(t).fontSize)!==68)e.push('title');if(parseFloat(getComputedStyle(b).fontSize)!==28)e.push('body');if(!document.fonts.check('900 68px AliPuHui')||!document.fonts.check('400 28px AliPuHui'))e.push('font');if(document.images.length!==4||[...document.images].some(i=>!i.naturalWidth))e.push('logo');if(Math.abs(parseFloat(getComputedStyle(document.querySelector('.yz-watermark')).opacity)-.1)>.001)e.push('watermark');if(/【(?:TITLE|CHART_BODY|SOURCE)_HERE】/.test(document.body.textContent))e.push('placeholder');if(/^\s*图\s*\d+\s*[：:]/.test(t.textContent))e.push('title-prefix');if([...document.querySelectorAll('[src],[href]')].some(n=>/^https?:/i.test(n.getAttribute('src')||n.getAttribute('href')||'')))e.push('external');if([...document.querySelectorAll('*')].some(n=>getComputedStyle(n).boxShadow!=='none'))e.push('shadow');const r={contract:'YZ-INFOGRAPHIC-V3.1',mode:'a',state:e.length?'noncompliant_fallback':'compliant',errors:e};console[e.length?'error':'log'](r);return r}window.yzCheck=yzCheck;
+</script></body></html>
