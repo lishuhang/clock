@@ -1,6 +1,6 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26（img1）/ 2026-10-27（img2）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
 
 ## 一、图表内容
 
@@ -27,6 +27,16 @@
 - 共 35 条要点（T1–T4 各 8/9/8/10 条，其中 T3 调整后仅 2 条系原文即两点）；
 - 页脚：资料来源：娱乐资本论整理 + 横版 Logo。
 
+### img3 · 剧情介绍 表格流程图
+
+将原表一的"剧情"列（img1 未呈现、应用户要求单独摘出）做成三列表格流程图（`img3-styled.png`，900×1080）：
+
+- **结构**：表头三列 **编号 | 提示词名称 | 简介**；4 个表格行卡片（T1守时斋的判定 / T2发条暴走 / T3深夜取钟人 / T4齿轮惊魂：极限交锋）；
+- **流程组织**：相邻行卡片之间以**向下箭头 ↓**（3 个，对齐编号列）串联 T1→T2→T3→T4；
+- **内容口径**：简介列**逐字引用**原表剧情列全文（69/67/61/59 字，含「」、引号、！等全部标点，零缩略零改写）；
+- 表格标题【剧情介绍】，脚注【资料来源：娱乐资本论整理】+ 横版 Logo；
+- 行卡片4×115px、留白节奏均匀（末行距页脚仅页脚自身 margin）。
+
 ## 二、目录结构
 
 ```
@@ -35,10 +45,13 @@ deliverables-v1.0/
 ├── img1-styled.png         # 成品 900×1350
 ├── img2-styled.html        # A 版源文件（模板 + 三列对比布局 + 溢出自检脚本）
 ├── img2-styled.png         # 成品 900×1350
-├── source-data.csv         # 129 行级溯源（img1 116 行 + img2 13 行）
+├── img3-styled.html        # A 版源文件（模板 + 表格流程布局 + 溢出自检脚本）
+├── img3-styled.png         # 成品 900×1080
+├── source-data.csv         # 134 行级溯源（img1 116 + img2 13 + img3 5 行）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 目录级报告（22/22 通过）
+├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（31/31 通过）
 └── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
@@ -68,6 +81,15 @@ deliverables-v1.0/
 4. VLM 视觉质检 **7/7 全过**：标题无前缀、4 区块三列结构、三列视觉区分、页脚来源+Logo、无截断溢出重叠、特殊符号无 tofu；
 5. VLM 数据忠实性抽查 **7/7 全过**：T2 六平台/纯Foley置顶、T2 参考列 6图→3图+1音频与剔除@图17/18/20、T3 三家红线两家同侧、T3 参考 11图→9图+1音频与新增@图9、T4 真人重绘与石膏人、T1 参考 4图→2图+1音频与@音频1、四行头类型标签；
 6. `validate.py --mode a`（目录级，覆盖 img1+img2）→ **compliant，22/22**（敏感信息扫描为零）。
+
+### img3（剧情介绍表格流程图）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img3.json，errors=[]）；
+2. 内嵌溢出自检 `window.__yzFlow`：containerH=scrollH=1080 **无溢出**，compact 未启用，4 行行高均 115px，3 个箭头，末行距页脚 34px（仅页脚自身 margin，无大块空白）；初版底部余 105px 空隙，已修（.chart-body 设 flex 使内容区撑满、节奏均匀分布）；
+3. PIL 验证：900×1080 RGB，色彩数 3133，着墨率 38.5%；
+4. VLM 版式质检 **7/7 全过**（标题无前缀、三列表头、4 行卡片编号名称、3 个↓对齐编号列、简介完整段落、页脚、无截断/tofu）；
+5. **剧情逐字校验**：VLM 3x 放大转写四段简介后与原文程序化逐字比对——**四段完全一致**（首轮全图转写出现的 6 处字符差异经放大复核确认均为 VLM 对 16px 小字的误读，渲染本身无误）；
+6. `validate.py --mode a`（目录级，覆盖 img1+img2+img3）→ **compliant，31/31**（敏感信息扫描为零）。
 
 ## 五、版本规则
 
