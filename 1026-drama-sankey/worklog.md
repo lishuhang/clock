@@ -214,3 +214,31 @@ v1.0（img1+img2+img3+img4）完成。
 ### 6. 交付
 - 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README；新增 overrides.txt。
 - 单次 commit + push。
+
+---
+## img5 · T1第一抽平台具体错误信息 两列表（2026-10-27）
+
+### 1. 任务
+用户下达本批次第五张图：《T1第一抽平台具体错误信息》表（7 平台 × 平台|信息 两列），逐字引用；脚注日期 2026年10月19日（与 img4 的 10月23日 不同，各自按输入保留）。
+
+### 2. 设计决策
+- 沿用 img4 修订4 用户已批准基线：1200 宽画布 + 26px 统一字号 + 68px 标题单行。直接动因：本图标题 13 字 @68px≈800px，900 画布可用宽 756px 无法单行（用户既定"标题不折行"）；OVERRIDE 记录于 overrides.txt（a.canvas-1200x1200-img5）。
+- 高度按内容取 1200（宽高比 1:1）；列宽 平台 160 / 信息 896（总 1056=1200-144）；行序=用户输入原序（万兴剧厂居首，未做排序，用户输入未含排序说明则不加）；无图例（输入未含，零发挥）。
+- 信息列长句 28 字 @26px=728px < 896 单行完整显示。
+
+### 3. 构建与渲染
+- 模板区与 img1-img4 逐字一致（含 yzCheck，宽度常量 1200 与 img4 修订4 相同无需再改）；附加 2 列 fixed 表格样式 + __yzTable 自检（新增 titleH/thW 字段）。
+- render.mjs a 一次通过：rc=0，yzCheck compliant（browser-validation-img5.json）。
+
+### 4. 质检
+- img5-check.cjs（DOM 逐字比对）：标题/表头 2 格/表体 7×2 格/脚注与用户输入零差异（行序=原序）；字号全 26px（含脚注锚点）；列宽 [160,896] 精确生效；无溢出（scrollH=1200=containerH，compact 未触发，gapToFooter 89px）；标题单行 h=76px；行高 97-98px 均匀；全表零横向溢出。
+- PIL：1200×1200、2781 色、着墨 7.3%、宽高比 1:1。
+- VLM 双轮：表体 2x 逐行转写 7 行与用户输入逐字一致（含全角冒号/括号/逗号）；整图版式 7/7 过（标题单行、两列表头、7 行、脚注两行、横版 Logo、竖版水印、无截断/重叠/tofu、留白得体）。
+- validate.py 目录级（img1-img5）：compliant 49/49；source-data.csv 追加 8 行（7 平台+图级口径）→ 158 行无重复。
+
+### 5. 交付
+- deliverables-v1.0/ 新增 img5-styled.html/png、browser-validation-img5.json，更新 source-data.csv/validation.json/README/overrides.txt。
+- 单次 commit + push。
+
+## 状态
+v1.0（img1+img2+img3+img4+img5）完成。

@@ -1,6 +1,6 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4、img5）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图；img4/img5 经用户授权沿用 1200 宽画幅）
 
 ## 一、图表内容
 
@@ -53,6 +53,18 @@
 - **列宽规则（用户长期要求，后续图沿用）**：**A1–A5 等宽、备注列稍窄**（本图 137px×5 + 150px，平台 125 / 扣分 96），不介意单元格高度不齐；
 - **修订记录**（2026-10-27）：①表头竖排→横排；②A1–A5 等宽、备注稍窄；③数据五条修订（全部不扣分/删幻觉表述/A5去壳/纯拼音序）；④画幅拉宽 1200×1500、字号统一 26px、新标题单行。每轮重跑全套验证（yzCheck compliant、无溢出、DOM 80 格逐字零差异、validate.py 40/40）。
 
+### img5 · T1第一抽平台具体错误信息 两列表
+
+将《T1第一抽平台具体错误信息》表做成两列表格（`img5-styled.png`，**1200×1200**，沿用 img4 修订4 用户已批准基线：1200 宽画幅 + 26px 统一字号，OVERRIDE 见 overrides.txt）：
+
+- **标题**（逐字，68px Black 单行不折行）：T1第一抽平台具体错误信息；
+- **结构**：表头两列 **平台 | 信息**；7 个平台行——万兴剧厂/LibTV/纳逗Pro/OiiOii/Seko/ShotLab/TapNow，**按用户输入原序**（用户输入即此序，本图未做排序；用户输入未含图例与排序说明，故不加，零发挥）；
+- **内容口径**：信息列**逐字引用**全部错误信息（含全角冒号、全角括号、逗号等全部标点，零缩略零改写）——万兴剧厂“不符合平台规范”、LibTV“生成失败：生成视频的音频未通过安全审核（可能含敏感信息）”、纳逗Pro“音频敏感”、OiiOii“生成失败：生成的音频可能涉及敏感内容，建议修改输入后重试”、Seko“违规”、ShotLab“音频敏感”、TapNow“含有敏感信息”；信息列长句均单行完整显示；
+- **字号统一**（沿用 img4 修订4 规则“最小字体=脚注”）：表头/表体/脚注**全部 26px**，标题 68px 层级不变；
+- **画幅与列宽**：沿用 1200 宽（本图标题 13 字 @68px≈800px，900 画布可用宽 756px 放不下单行）；高度按内容取 1200（宽高比 1:1）；列宽 平台 160 / 信息 896（总宽 1056=1200-144）；
+- **技术要点**：`table-layout:fixed` + colgroup 定宽 + 表格在内容区垂直居中；行高 97-98px 均匀、gapToFooter 89px；compact 仅压边距不缩字号（保 26px 底线，与 img4 修订4 一致）；
+- 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月19日”（注意：与 img4 的 10月23日不同，各自按用户输入保留）。
+
 ## 二、目录结构
 
 ```
@@ -65,13 +77,16 @@ deliverables-v1.0/
 ├── img3-styled.png         # 成品 900×1080
 ├── img4-styled.html        # A 版源文件（模板 + 8列fixed表格 + 26px统一字号 + 1200宽OVERRIDE + 自检脚本）
 ├── img4-styled.png         # 成品 1200×1500（画幅拉宽+字号统一+新标题修订版）
-├── source-data.csv         # 150 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 行，含四笔修订记录）
-├── overrides.txt           # img4 OVERRIDE 记录（画布 1200×1500，用户授权，SKILL.md 纯文本例外格式）
+├── img5-styled.html        # A 版源文件（模板 + 2列fixed表格 + 26px统一字号 + 1200宽OVERRIDE沿用 + 自检脚本）
+├── img5-styled.png         # 成品 1200×1200
+├── source-data.csv         # 158 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 + img5 8 行，含四笔修订记录）
+├── overrides.txt           # img4/img5 OVERRIDE 记录（1200 宽画幅，用户授权，SKILL.md 纯文本例外格式）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img4.json # img4 render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 目录级报告（40/40 通过）
+├── browser-validation-img5.json # img5 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（49/49 通过）
 └── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
@@ -120,6 +135,14 @@ deliverables-v1.0/
 5. **逐字校验（修订4）**：**DOM 全表 80 格与用户基准程序化逐格比对零差异**；VLM 标题区 2x 逐字一致+单行确认、表体 2x 前 8 行逐行一致、末两行（万兴剧厂/小云雀）补裁 2x 逐字一致；无 tofu；compact 样式改为仅压边距不缩字号（保 26px 底线）；
 6. 排序核对：拼音序 A<J<L<N<O<Se<Sh<T<W<X 与图一致；
 7. `validate.py --mode a`（目录级，覆盖 img1–img4，修订4后复跑）→ **compliant，40/40**（敏感信息扫描为零）；source-data.csv 累计四笔修订溯源行（12/13/14/15）→ 150 行。
+
+### img5（T1第一抽错误信息表）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img5.json，errors=[]；宽度检查常量沿用 img4 修订4 已同步的 1200，OVERRIDE 记录于 overrides.txt）；
+2. 自检量测（/home/z/my-project/scripts/img5-check.cjs）：画布 **1200×1200**（宽高比 1:1）；**标题单行**（h=76px=68×1.12）；**字号程序化核对——表头/表体/脚注全部 26px**；列宽 [160,896]；`__yzTable` 无溢出（scrollH=containerH=1200，compact 未触发，gapToFooter 89px）；行高 97-98px 均匀；全表 td/th 零横向溢出；
+3. **逐字校验**：**DOM 全表 16 格（表头 2 + 表体 7×2）+ 标题 + 脚注与用户输入程序化逐字比对零差异**（行序=用户输入原序）；VLM 表体 2x 逐行转写 7 行完全一致（含全角标点）；整图版式 VLM 7/7 过（标题单行、两列表头、7 行、脚注两行、横版 Logo、竖版水印、无截断/重叠/tofu、留白得体）；
+4. PIL 验证：1200×1200 RGB，色彩数 2781，着墨率 7.3%；
+5. `validate.py --mode a`（目录级，覆盖 img1–img5）→ **compliant，49/49**（敏感信息扫描为零）；source-data.csv 追加 img5 溯源 8 行（7 平台 + 图级口径）→ 158 行。
 
 ## 五、版本规则
 
