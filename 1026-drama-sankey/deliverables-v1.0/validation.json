@@ -3,7 +3,7 @@
   "scope": "artifact-a",
   "state": "compliant",
   "summary": {
-    "passed": 76,
+    "passed": 85,
     "failed": 0
   },
   "checks": [
@@ -15,17 +15,17 @@
     {
       "check": "source-data-readable",
       "ok": true,
-      "detail": "rows=194"
+      "detail": "rows=205"
     },
     {
       "check": "html-output",
       "ok": true,
-      "detail": "count=8"
+      "detail": "count=9"
     },
     {
       "check": "png-output",
       "ok": true,
-      "detail": "count=8"
+      "detail": "count=9"
     },
     {
       "check": "contract:img1-styled.html",
@@ -69,6 +69,51 @@
     },
     {
       "check": "secret:img1-styled.html:authorization",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "contract:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "offline:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "placeholders:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "title-prefix:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "sprite:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "external-font:img10-styled.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:cookie-header",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:weibo-cookie",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "secret:img10-styled.html:authorization",
       "ok": true,
       "detail": ""
     },

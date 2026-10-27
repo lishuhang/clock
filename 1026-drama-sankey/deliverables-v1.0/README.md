@@ -1,6 +1,6 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4、img5、img6、img8、img9）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图；img4/img5/img6/img8/img9 经用户授权沿用 1200 宽画幅）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4、img5、img6、img8、img9、img10）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图；img4/img5/img6/img8/img9/img10 经用户授权沿用 1200 宽画幅）
 
 ## 一、图表内容
 
@@ -105,6 +105,20 @@
 - **画幅与列宽**：1200 宽（沿用已批准基线即用户“表格宽度可灵活拉宽”口径）；高度按内容 1600；6 列 fixed 列宽 140/138/216/216/216/130（总宽 1056=1200-144，C4 列全为“-”故最窄，C1-C3 问题文本列等宽）；
 - 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”（与 img4/img6/img8 同日期，按用户输入）。
 
+### img10 · 分镜切分与空间站位 平台×扣分▼+D1-D4 六列表
+
+将《分镜切分与空间站位》表做成 6 列对比表（`img10-styled.png`，**1200×1400**（宽高比1:1.167），沿用 img4 修订4/img5/img6/img8/img9 用户已批准基线：1200 宽画幅 + 26px 统一字号 + 68px 标题单行，OVERRIDE 见 overrides.txt；应用户系列惯例逐字引用、零发挥）：
+
+- **标题**（逐字，68px Black 单行不折行）：分镜切分与空间站位；
+- **结构**：表头六列 **平台 | 扣分▼ | D1 不切或漏镜头，时间轴定位不准 | D2 群演消失，衣服出错等 | D3 人物站位出错 | D4 老匠忽略“轻微”二字乱摇头**（D 码前缀沿用系列深橙加粗样式；扣分▼ 为居中窄列，同 img6 先例）；
+- **图例与说明**（逐字）：图例三项全套“- 不扣分 ● 可复现（每抽3-4次） △ 抽卡波动（每抽1-2次）”（与 img4/img6/img8 同套；本表体无 ● 符号，仅 4 格带 △ 前缀）+ “扣分相同的平台，按拼音排序”；
+- **行序**：**用户输入原序 = 扣分全“-”（同分组单一）→ 全表拼音升序** A<J<L<N<O<Se<Sh<T<W<X，程序化核验与用户行序一致；
+- **内容口径**：10 平台行全部逐字引用——扣分列全“-”（灰色居中，img4 修订3 先例）；4 处 △ 问题格：纳逗Pro/OiiOii D3“△ T3第1抽三人站到柜台同侧”（两家同文本同错误，与 img1 表2 D3 行涉及平台=纳逗Pro、OiiOii 互证）、Seko D2“△ T2第2抽角色轻微串脸”（与 img1 表2 D2 行涉及平台=Seko 互证）、ShotLab D2“△ T4第2、3抽画面多出未定义旁观者”（全角顿号照抄）；巨日禄 D 类四项均无扣分记录（与 img9 出错次数 4 形成对照：出错≠必然扣分）；
+- **引号方向裁定**：D4 表头“轻微”取规范弯引号方向 U+201C…U+201D——与 img1 桑基图原始数据 D4 行逐字一致（用户输入的引号方向翻转系复制意外，语义零变化）；
+- **符号配色**：D 列 △ 符号沿用系列配色（△=次级灰加粗，同 img6/img9）；
+- **画幅与列宽**：1200 宽（沿用已批准基线即用户“表格宽度可灵活拉宽”口径）；高度按内容 1400（初设即命中，无需调参）；6 列 fixed 列宽 140/88/207×4（总宽 1056=1200-144，D1-D4 同类列等宽=img4 修订2 用户长期规则，扣分列全“-”故窄至 88）；
+- 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”（与 img4/img6/img8/img9 同日期，按用户输入）。
+
 ## 二、目录结构
 
 ```
@@ -125,8 +139,10 @@ deliverables-v1.0/
 ├── img8-styled.png         # 成品 1200×1200（修订1：T4 列三处更新）
 ├── img9-styled.html        # A 版源文件（模板 + 6列fixed表格 + 26px统一字号 + 1200宽OVERRIDE沿用 + C列△符号配色 + 自检脚本）
 ├── img9-styled.png         # 成品 1200×1600
-├── source-data.csv         # 195 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 + img5 8 + img6 11 + img8 15 + img9 11 行，含五笔修订记录）
-├── overrides.txt           # img4/img5/img6/img8/img9 OVERRIDE 记录（1200 宽画幅，用户授权，SKILL.md 纯文本例外格式）
+├── img10-styled.html       # A 版源文件（模板 + 6列fixed表格 + 26px统一字号 + 1200宽OVERRIDE沿用 + D列△符号配色 + 自检脚本）
+├── img10-styled.png        # 成品 1200×1400
+├── source-data.csv         # 206 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 + img5 8 + img6 11 + img8 15 + img9 11 + img10 11 行，含五笔修订记录）
+├── overrides.txt           # img4/img5/img6/img8/img9/img10 OVERRIDE 记录（1200 宽画幅，用户授权，SKILL.md 纯文本例外格式）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
@@ -135,7 +151,8 @@ deliverables-v1.0/
 ├── browser-validation-img6.json # img6 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img8.json # img8 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img9.json # img9 render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 目录级报告（76/76 通过）
+├── browser-validation-img10.json # img10 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（85/85 通过）
 └── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
@@ -217,6 +234,14 @@ deliverables-v1.0/
 3. **逐字校验**：**DOM 全表 66 格（表头 6 + 表体 10×6）+ 标题 + 图例 1 项 + 排序说明 + 脚注与用户输入程序化逐字比对零差异**（含 △ 符号与空格、出错次数▼、全角逗号/顿号、半角连字符）；**行序双核验**：出错次数严格降序 + 同次数组内拼音升序（3次组 O<Sh<T、2次组 L<Se<X、1次组 A<N）均与用户行序一致；VLM r1 全图逐字转写程序化比对——标题/图例/排序说明/表头/10 行表体/脚注全部一致；VLM r2 整图版式 **7/7 过**（标题单行、图例排序说明无重叠、六列表头完整、表体无截断重叠、△▼ 无 tofu、页脚 Logo+来源齐全、无大块空白）；
 4. PIL 验证：1200×1600 RGB，色彩数 2941，着墨率 6.1%；
 5. `validate.py --mode a`（目录级，覆盖 img1–img9）→ **compliant，76/76**（敏感信息扫描为零）；source-data.csv 追加 img9 溯源 11 行（10 平台 + 图级口径）→ 195 行。
+
+### img10（分镜切分与空间站位六列表）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img10.json，errors=[]；宽度检查常量沿用 img4 修订4 已同步的 1200，OVERRIDE 记录于 overrides.txt）；
+2. 自检量测（/home/z/my-project/scripts/img10-check.cjs）：画布 **1200×1400**（宽高比 1:1.167；初设即命中，gapToFooter=39px 无需调参）；**标题单行**（h=76px=68×1.12）；**字号程序化核对——图例/排序说明/表头/表体/扣分列/脚注全部 26px**（11 项选择器全 26px）；列宽 [140,88,207,207,207,207]；`__yzTable` 无溢出（scrollH=containerH=1400，compact 未触发）；全表 td/th 零横向溢出；
+3. **逐字校验**：**DOM 全表 66 格（表头 6 + 表体 10×6）+ 标题 + 图例 3 项 + 排序说明 + 脚注与用户输入程序化逐字比对零差异**（含 △ 符号与空格、扣分▼、全角顿号、D4 表头弯引号）；**行序核验**：扣分全“-”同分组 → 全表拼音严格升序与用户行序一致；VLM r1 全图逐字转写程序化比对——标题/排序说明/表头/10 行表体/脚注全部一致（VLM 本次以制表符分隔单元格，比对归一化处理）；图例“可复现”VLM 两读不一（可再现/可重现，img8 修订1 同款误读模式）→ **像素级闭环**：img10 图例区域与 img8 逐像素零差异（img8 该处已经 2x VLM 复核确认正确）→ 渲染无误（DOM 层为权威）；VLM r2 版式 1-6 过、第 7 项“水印遮挡”经表格中部裁图复核“没有文字被遮挡或不可读”闭环为 VLM 误报（半透明水印=yzCheck 强制合规项、img1-img9 同款、z-index 位于表格文字下层）；
+4. PIL 验证：1200×1400 RGB，色彩数 2570，着墨率 30.6%；
+5. `validate.py --mode a`（目录级，覆盖 img1–img10）→ **compliant，85/85**（敏感信息扫描为零）；source-data.csv 追加 img10 溯源 11 行（10 平台 + 图级口径）→ 206 行。
 
 ## 五、版本规则
 
