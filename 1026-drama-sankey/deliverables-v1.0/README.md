@@ -41,12 +41,13 @@
 
 将《模型缩水》平台扣分表做成 8 列对比表（`img4-styled.png`，900×1350，应用户要求**逐字引用、零发挥**）：
 
-- **结构**：表头八列 **平台 | 扣分▼ | A1–A5 | 备注**，其中 A1–A5 五列为**竖排表头**（从上到下阅读，完整列名：A1 时长截断或注水 / A2 音轨缺失或完全静音 / A3 分辨率虚标（低于720P）/ A4 中文书法文字乱码 / A5 积分不退/晚退或估算错漏）；
+- **结构**：表头八列 **平台 | 扣分▼ | A1–A5 | 备注**，其中 A1–A5 五列为**横排表头**（窄列内自动换行、居中，完整列名：A1 时长截断或注水 / A2 音轨缺失或完全静音 / A3 分辨率虚标（低于720P）/ A4 中文书法文字乱码 / A5 积分不退/晚退或估算错漏）；
 - **排序**：扣分相同按拼音排序——扣分1组 LibTV&lt;ShotLab&lt;小云雀（L&lt;S&lt;X），不扣分组 AniShort&lt;巨日禄&lt;纳逗Pro&lt;OiiOii&lt;Seko&lt;TapNow&lt;万兴剧厂（A&lt;J&lt;N&lt;O&lt;S&lt;T&lt;W），与用户输入行序一致，组间以加重分隔线标识；
 - **图例与说明**（逐字）：“- 不扣分 ● 可复现（每抽3-4次）△ 抽卡波动（每抽1-2次）” + “扣分相同的平台，按拼音排序”；
 - **内容口径**：全部单元格逐字引用（含 ●/△/（）/、 等符号、15.0s/15.1s、480P、备注全文）；
 - 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”；
-- **技术要点**：A1–A5 竖排表头 + 长列名在 756px 宽度下以 `table-layout:fixed` + colgroup 定宽实现；表格自然高度在内容区垂直居中（不用 height:100% 拉伸）。
+- **技术要点**：A1–A5 长列名在 756px 宽度下以 `table-layout:fixed` + colgroup 定宽（92/54/56/56/70/130/134/164）实现横排换行；表格自然高度在内容区垂直居中（不用 height:100% 拉伸）。
+- **修订记录**（2026-10-27）：应用户要求，A1–A5 表头由竖排改为横排（列宽同步重排），表头文字逐字不变；表体数据/图例/排序/脚注零改动；重跑全套验证（yzCheck compliant、无溢出、VLM 表头8格+表体10行逐字一致、validate.py 40/40）。
 
 ## 二、目录结构
 
@@ -58,9 +59,9 @@ deliverables-v1.0/
 ├── img2-styled.png         # 成品 900×1350
 ├── img3-styled.html        # A 版源文件（模板 + 表格流程布局 + 溢出自检脚本）
 ├── img3-styled.png         # 成品 900×1080
-├── img4-styled.html        # A 版源文件（模板 + 8列fixed表格 + 竖排表头 + 自检脚本）
-├── img4-styled.png         # 成品 900×1350
-├── source-data.csv         # 145 行级溯源（img1 116 + img2 13 + img3 5 + img4 11 行）
+├── img4-styled.html        # A 版源文件（模板 + 8列fixed表格 + 横排表头（修订后） + 自检脚本）
+├── img4-styled.png         # 成品 900×1350（表头横排修订版）
+├── source-data.csv         # 147 行级溯源（img1 116 + img2 13 + img3 5 + img4 12 行，含修订记录行）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
@@ -105,15 +106,15 @@ deliverables-v1.0/
 5. **剧情逐字校验**：VLM 3x 放大转写四段简介后与原文程序化逐字比对——**四段完全一致**（首轮全图转写出现的 6 处字符差异经放大复核确认均为 VLM 对 16px 小字的误读，渲染本身无误）；
 6. `validate.py --mode a`（目录级，覆盖 img1+img2+img3）→ **compliant，31/31**（敏感信息扫描为零）。
 
-### img4（模型缩水扣分表）
+### img4（模型缩水扣分表 · 2026-10-27 表头横排修订）
 
-1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img4.json，errors=[]）；
-2. **布局一致性接轴**：因含 writing-mode 竖排表头，放弃 `table-layout:auto`（Chromium 下计算布局与实际绘制分裂：A3 表头绘制丢失、行高错位，导致坐标验证全部偏移）→ 改用 **`table-layout:fixed` + colgroup 定宽 + 表格自然高度垂直居中**后，DOM 量测与像素扫描完全一致（平台列10文字带逐一落入10行DOM矩形）；
-3. PIL 验证：900×1350 RGB，色彩数 3334，着墨率 8.4%；
-4. VLM 整图版式质检 **7/7 全过**（标题/图例/排序说明/8表头/10行序/页脚/无tofu、垂直居中留白均衡）；
-5. **逐字校验**：表头竖排 5 列全文 + A4 长文本×2 + A5 列全 10 格 + AniShort 备注 + 巨日禄/万兴剧厂平台名 + 扣分首尾 + A1 四格（含两个 15.1s）——17 格 + 5 表头 **全部与用户输入逐字一致、零差异**（含 A3 全角括号无 tofu）；
-6. 排序核对：两组拼音序均与用户行序一致；
-7. `validate.py --mode a`（目录级，覆盖 img1–img4）→ **compliant，40/40**（敏感信息扫描为零）。
+1. `render.mjs a`（修订后重渲）→ rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img4.json，errors=[]）；
+2. **布局一致性接轴（初版关键排障）**：因初版含 writing-mode 竖排表头，放弃 `table-layout:auto`（Chromium 下计算布局与实际绘制分裂：A3 表头绘制丢失、行高错位，导致坐标验证全部偏移）→ 改用 **`table-layout:fixed` + colgroup 定宽 + 表格自然高度垂直居中**后，DOM 量测与像素扫描完全一致（平台列10文字带逐一落入10行DOM矩形）；修订版沿用 fixed 布局，仅将 `.vh` 竖排样式替换为 `.ah` 横排样式（word-break:break-all 窄列安全换行）并重排列宽为 92/54/56/56/70/130/134/164；
+3. 修订版自检量测：`__yzTable` 无溢出（scrollH=containerH=1350）、theadH=88px、表头 8 格 computed `writing-mode` 全部为 `horizontal-tb`（无竖排残留）、单元格无横向溢出；
+4. PIL 验证（修订版）：900×1350 RGB，色彩数 3332，着墨率 7.4%；
+5. **逐字校验（修订版）**：VLM 3x 放大转写表头 8 格——平台/扣分▼/A1 时长截断或注水/A2 音轨缺失或完全静音/A3 分辨率虚标（低于720P）/A4 中文书法文字乱码/A5 积分不退/晚退或估算错漏/备注，**逐字与用户输入一致**，且确认排列方式为"每字横排、多行堆叠"；表体 10 行逐行转写数据全部一致（AniShort 备注初轮 2x 转写"保留"经 4x 复核确认为"停留"无误读，渲染正确）；无 tofu；
+6. 排序核对：两组拼音序均与用户行序一致（1分组 L&lt;S&lt;X；不扣分组 A&lt;J&lt;N&lt;O&lt;S&lt;T&lt;W）；
+7. `validate.py --mode a`（目录级，覆盖 img1–img4，修订后复跑）→ **compliant，40/40**（敏感信息扫描为零）；source-data.csv 追加修订溯源行 → 147 行。
 
 ## 五、版本规则
 

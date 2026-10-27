@@ -119,3 +119,26 @@ v1.0（img1+img2+img3）完成。
 
 ## 状态
 v1.0（img1+img2+img3+img4）完成。
+
+---
+## img4 修订 · 表头竖排→横排（2026-10-27）
+
+### 1. 任务
+用户 IM 指示：表格标题栏（第一列起）竖排文字改横排。落地为 A1–A5 五列表头全部由 writing-mode 竖排改为横排（窄列内自动换行、居中），表头文字逐字不变，表体数据/图例/排序/脚注零改动。
+
+### 2. 修改
+- `.vh`（vertical-rl）→ `.ah`（horizontal-tb，13px，word-break:break-all 安全换行，居中）；`<b>A1</b><br>列名` → `<b>A1</b> 列名`（保留码前缀粗体橙）。
+- colgroup 重排：92/54/56/56/70/130/134/164（原 92/56/54/40/52/148/148/166），总和 756 不变；compact 样式同步替换。
+- 仅动表头与列宽，模板区与 yzCheck 脚本零改动。
+
+### 3. 验证
+- render.mjs a 重渲：rc=0，yzCheck compliant。
+- 自检量测（/home/z/my-project/scripts/img4-revision-check.cjs）：无溢出（scrollH=1350=containerH）、theadH 88px、表头 8 格 computed writing-mode 全为 horizontal-tb、无单元格横向溢出；行高 70/88/69/86/53×6，gapToFooter 114px。
+- PIL：900×1350、3332 色、着墨 7.4%。
+- VLM 三轮：表头 3x 转写 8 格逐字一致 + 确认"每字横排多行堆叠"；表体 2x 逐行转写 10 行数据一致；AniShort 备注 2x 误读"保留"经 4x 复核为"停留"无误（渲染正确）。无 tofu。
+- source-data.csv：img4,4,11 备注更新（竖排→横排）+ 追加 img4,4,12 修订溯源行 → 147 行。
+- validate.py 目录级复跑：compliant 40/40。
+
+### 4. 交付
+- 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README。
+- 单次 commit + push（先 fetch 确认远端无新提交）。

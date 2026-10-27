@@ -34,8 +34,8 @@
 .dtable th{font-weight:700;color:var(--s)}
 .hz{font-size:14px;letter-spacing:2px;line-height:1.3;padding:10px 6px;border-bottom:2px solid var(--l);vertical-align:bottom}
 .hz-c{text-align:center;padding:10px 2px}
-.vh{writing-mode:vertical-rl;text-orientation:mixed;font-size:13px;letter-spacing:1px;line-height:1.25;padding:10px 0 8px;border-bottom:2px solid var(--l);vertical-align:middle;text-align:left}
-.vh b{font-weight:700;color:var(--ad);letter-spacing:0}
+.ah{font-size:13px;line-height:1.32;padding:8px 4px 10px;border-bottom:2px solid var(--l);vertical-align:middle;text-align:center;word-break:break-all;overflow-wrap:break-word}
+.ah b{font-weight:700;color:var(--ad)}
 .dtable td{padding:15px 10px;border-bottom:1px solid var(--l);vertical-align:middle;line-height:1.42}
 .pname{font-size:15.5px;font-weight:700;color:var(--t)}
 .ded{text-align:center;font-size:16px;font-weight:900;color:var(--ad);padding:11px 4px}
@@ -51,7 +51,7 @@
 .chart-source{max-width:470px}
 /* 紧凑模式：内容超出画布时由自检脚本启用 */
 .compact .dtable td{padding:8px 8px}
-.compact .dtable .vh{font-size:12px;padding:8px 0 6px}
+.compact .dtable .ah{font-size:12px;padding:6px 3px 8px}
 .compact .cell-a4,.compact .cell-a5{font-size:12.5px;line-height:1.36}
 .compact .note{font-size:12px}
 .compact .pname{font-size:14.5px}
@@ -72,16 +72,16 @@
   <div class="t-wrap">
     <table class="dtable">
       <colgroup>
-        <col style="width:92px"><col style="width:56px"><col style="width:54px"><col style="width:40px"><col style="width:52px"><col style="width:148px"><col style="width:148px"><col style="width:166px">
+        <col style="width:92px"><col style="width:54px"><col style="width:56px"><col style="width:56px"><col style="width:70px"><col style="width:130px"><col style="width:134px"><col style="width:164px">
       </colgroup>
       <thead><tr>
         <th class="hz">平台</th>
         <th class="hz hz-c">扣分▼</th>
-        <th class="vh"><b>A1</b><br>时长截断或注水</th>
-        <th class="vh"><b>A2</b><br>音轨缺失或<br>完全静音</th>
-        <th class="vh"><b>A3</b><br>分辨率虚标<br>（低于720P）</th>
-        <th class="vh"><b>A4</b><br>中文书法<br>文字乱码</th>
-        <th class="vh"><b>A5</b><br>积分不退/晚退<br>或估算错漏</th>
+        <th class="ah"><b>A1</b> 时长截断或注水</th>
+        <th class="ah"><b>A2</b> 音轨缺失或完全静音</th>
+        <th class="ah"><b>A3</b> 分辨率虚标（低于720P）</th>
+        <th class="ah"><b>A4</b> 中文书法文字乱码</th>
+        <th class="ah"><b>A5</b> 积分不退/晚退或估算错漏</th>
         <th class="hz">备注</th>
       </tr></thead>
       <tbody>
