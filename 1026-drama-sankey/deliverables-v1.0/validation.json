@@ -15,7 +15,7 @@
     {
       "check": "source-data-readable",
       "ok": true,
-      "detail": "rows=147"
+      "detail": "rows=148"
     },
     {
       "check": "html-output",

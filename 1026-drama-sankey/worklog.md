@@ -162,3 +162,24 @@ v1.0（img1+img2+img3+img4）完成。
 ### 4. 交付
 - 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README（新增"列宽规则"长期要求条目）。
 - 单次 commit + push。
+
+---
+## img4 修订3 · 数据修订（用户五条指示，2026-10-27）
+
+### 1. 任务
+用户 IM 指示五条数据修改：①所有平台均不扣分；②LibTV A5 改"即时退点"、备注写"平台标称为2小时内退还"；③删除两个平台文字错误表述（ShotLab/小云雀 A4 乱码，排查后为幻觉）；④A5 括号内容拿出不写"-"（-（即时退点）→即时退点、-（失败未扣点）→失败未扣点），小云雀与 AniShort 改"未出现抽卡失败"；⑤平台恢复按拼音排序。
+
+### 2. 修改
+- tbody 10 行重写：纯拼音序 AniShort<巨日禄<LibTV<纳逗Pro<OiiOii<Seko<ShotLab<TapNow<万兴剧厂<小云雀（A<J<L<N<O<Se<Sh<T<W<X）；扣分列全"-"；A4 全"-"；A5/A1/备注按上述口径；去除 grp-end 分组线与 ●△ 符号 span（表中已无对应符号）。
+- 图例行、排序说明、表头、脚注、列宽规则（92/54/104×5/90）零改动。
+
+### 3. 验证
+- render.mjs a：rc=0，yzCheck compliant；无溢出（scrollH=1350，gapToFooter 121px，未触发 compact）。
+- DOM 80 格与用户五条修订后的基准程序化逐格比对：**0 差异**；列宽 [92,54,104×5,90] 保持；全表零横向溢出。
+- PIL：900×1350、2551 色、着墨 7.2%。
+- VLM 表体 2x 逐行转写 10 行与修订指示完全一致（扣分全-/A4 全-/行序正确）；整图版式要素齐全、垂直居中无缺陷；无 tofu。
+- source-data.csv 追加 img4,4,13→14 修订溯源行 → 149 行；validate.py 目录级 40/40。
+
+### 4. 交付
+- 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README。
+- 单次 commit + push。
