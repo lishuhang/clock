@@ -142,3 +142,23 @@ v1.0（img1+img2+img3+img4）完成。
 ### 4. 交付
 - 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README。
 - 单次 commit + push（先 fetch 确认远端无新提交）。
+
+---
+## img4 修订2 · A1–A5 等宽 + 备注稍窄（2026-10-27）
+
+### 1. 任务（含长期规则）
+用户 IM 指示：A1–A5 几列等宽、最右备注一列稍窄、不用介意单元格高度；**后续图同此要求（不改 skill，规则记于此处与 README 沿用）**。
+
+### 2. 修改
+- colgroup：92/54/56/56/70/130/134/164 → **92/54/104/104/104/104/104/90**（总宽 756 不变，仅动 colgroup 一行，HTML 其他零改动）。
+
+### 3. 验证
+- render.mjs a：rc=0，yzCheck compliant；无溢出（scrollH=1350，未触发 compact，gapToFooter 75px）。
+- 程序化量测：列宽 [92,54,104×5,90] 精确生效；全表 td/th 零横向溢出；行高 53–123px 不齐（窄列换行，用户明示接受）。
+- PIL：900×1350、2687 色、着墨 7.3%。
+- VLM：表头 3x 确认 A1–A5 等宽、备注稍窄，8 格逐字一致；表体 2x 十行转写一致无 tofu（LibTV 行 VLM 列归属错位经 **DOM 80 格程序化逐字比对闭环：0 差异**，A4=△乱码、A5=●积分/-退点列义正确）。
+- source-data.csv 追加 img4,4,13 修订溯源行 → 148 行；validate.py 目录级 40/40。
+
+### 4. 交付
+- 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README（新增"列宽规则"长期要求条目）。
+- 单次 commit + push。

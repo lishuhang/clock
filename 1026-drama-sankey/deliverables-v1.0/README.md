@@ -46,8 +46,9 @@
 - **图例与说明**（逐字）：“- 不扣分 ● 可复现（每抽3-4次）△ 抽卡波动（每抽1-2次）” + “扣分相同的平台，按拼音排序”；
 - **内容口径**：全部单元格逐字引用（含 ●/△/（）/、 等符号、15.0s/15.1s、480P、备注全文）；
 - 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”；
-- **技术要点**：A1–A5 长列名在 756px 宽度下以 `table-layout:fixed` + colgroup 定宽（92/54/56/56/70/130/134/164）实现横排换行；表格自然高度在内容区垂直居中（不用 height:100% 拉伸）。
-- **修订记录**（2026-10-27）：应用户要求，A1–A5 表头由竖排改为横排（列宽同步重排），表头文字逐字不变；表体数据/图例/排序/脚注零改动；重跑全套验证（yzCheck compliant、无溢出、VLM 表头8格+表体10行逐字一致、validate.py 40/40）。
+- **技术要点**：A1–A5 长列名在 756px 宽度下以 `table-layout:fixed` + colgroup 定宽实现横排换行；表格自然高度在内容区垂直居中（不用 height:100% 拉伸）。
+- **列宽规则（用户长期要求，后续图沿用）**：**A1–A5 等宽 104px、备注列稍窄 90px**（平台 92 / 扣分 54 不变，总宽 756 不变），不介意单元格高度不齐（窄列多行换行属预期）。
+- **修订记录**（2026-10-27）：①应用户要求，A1–A5 表头由竖排改为横排（列宽同步重排），表头文字逐字不变；②应用户要求，A1–A5 五列等宽 104px、备注稍窄 90px；表体数据/图例/排序/脚注零改动。重跑全套验证（yzCheck compliant、无溢出、表头8格+表体80格逐字零差异、validate.py 40/40）。
 
 ## 二、目录结构
 
@@ -60,8 +61,8 @@ deliverables-v1.0/
 ├── img3-styled.html        # A 版源文件（模板 + 表格流程布局 + 溢出自检脚本）
 ├── img3-styled.png         # 成品 900×1080
 ├── img4-styled.html        # A 版源文件（模板 + 8列fixed表格 + 横排表头（修订后） + 自检脚本）
-├── img4-styled.png         # 成品 900×1350（表头横排修订版）
-├── source-data.csv         # 147 行级溯源（img1 116 + img2 13 + img3 5 + img4 12 行，含修订记录行）
+├── img4-styled.png         # 成品 900×1350（表头横排 + A1-A5 等宽修订版）
+├── source-data.csv         # 148 行级溯源（img1 116 + img2 13 + img3 5 + img4 13 行，含两笔修订记录）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
@@ -106,15 +107,15 @@ deliverables-v1.0/
 5. **剧情逐字校验**：VLM 3x 放大转写四段简介后与原文程序化逐字比对——**四段完全一致**（首轮全图转写出现的 6 处字符差异经放大复核确认均为 VLM 对 16px 小字的误读，渲染本身无误）；
 6. `validate.py --mode a`（目录级，覆盖 img1+img2+img3）→ **compliant，31/31**（敏感信息扫描为零）。
 
-### img4（模型缩水扣分表 · 2026-10-27 表头横排修订）
+### img4（模型缩水扣分表 · 2026-10-27 表头横排 + 等宽列两次修订）
 
-1. `render.mjs a`（修订后重渲）→ rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img4.json，errors=[]）；
+1. `render.mjs a`（两次修订后重渲）→ rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img4.json，errors=[]）；
 2. **布局一致性接轴（初版关键排障）**：因初版含 writing-mode 竖排表头，放弃 `table-layout:auto`（Chromium 下计算布局与实际绘制分裂：A3 表头绘制丢失、行高错位，导致坐标验证全部偏移）→ 改用 **`table-layout:fixed` + colgroup 定宽 + 表格自然高度垂直居中**后，DOM 量测与像素扫描完全一致（平台列10文字带逐一落入10行DOM矩形）；修订版沿用 fixed 布局，仅将 `.vh` 竖排样式替换为 `.ah` 横排样式（word-break:break-all 窄列安全换行）并重排列宽为 92/54/56/56/70/130/134/164；
-3. 修订版自检量测：`__yzTable` 无溢出（scrollH=containerH=1350）、theadH=88px、表头 8 格 computed `writing-mode` 全部为 `horizontal-tb`（无竖排残留）、单元格无横向溢出；
-4. PIL 验证（修订版）：900×1350 RGB，色彩数 3332，着墨率 7.4%；
-5. **逐字校验（修订版）**：VLM 3x 放大转写表头 8 格——平台/扣分▼/A1 时长截断或注水/A2 音轨缺失或完全静音/A3 分辨率虚标（低于720P）/A4 中文书法文字乱码/A5 积分不退/晚退或估算错漏/备注，**逐字与用户输入一致**，且确认排列方式为"每字横排、多行堆叠"；表体 10 行逐行转写数据全部一致（AniShort 备注初轮 2x 转写"保留"经 4x 复核确认为"停留"无误读，渲染正确）；无 tofu；
+3. 修订版自检量测：`__yzTable` 无溢出（scrollH=containerH=1350，未触发 compact，gapToFooter 75px）、表头 8 格 computed `writing-mode` 全部为 `horizontal-tb`（无竖排残留）；**列宽程序化核对 [92,54,104×5,90]——A1–A5 等宽、备注稍窄**；全表 td/th 零横向溢出；行高 53–123px 不齐系窄列换行所致（用户明示不介意单元格高度）；
+4. PIL 验证（等宽修订版）：900×1350 RGB，色彩数 2687，着墨率 7.3%；
+5. **逐字校验（修订版）**：**DOM 全表 80 格与用户输入程序化逐格比对零差异**（A4=△乱码、A5=●积分/-退点说明，列义正确）；VLM 3x 表头 8 格逐字一致且确认 A1–A5 等宽、备注稍窄；表体 2x 逐行转写数据一致（AniShort 备注"停留"正确）；无 tofu；
 6. 排序核对：两组拼音序均与用户行序一致（1分组 L&lt;S&lt;X；不扣分组 A&lt;J&lt;N&lt;O&lt;S&lt;T&lt;W）；
-7. `validate.py --mode a`（目录级，覆盖 img1–img4，修订后复跑）→ **compliant，40/40**（敏感信息扫描为零）；source-data.csv 追加修订溯源行 → 147 行。
+7. `validate.py --mode a`（目录级，覆盖 img1–img4，修订后复跑）→ **compliant，40/40**（敏感信息扫描为零）；source-data.csv 追加两笔修订溯源行（12/13）→ 148 行。
 
 ## 五、版本规则
 
