@@ -279,3 +279,22 @@ Work Log:
 Stage Summary:
 - 1026-drama-sankey v1.0 现含七张图：img1 桑基图 + img2 提示词调整对比 + img3 剧情介绍 + img4 模型缩水扣分表（1200×1500）+ img5 T1第一抽错误信息表（1200×1200）+ img6 抽卡效率影响因素扣分表（1200×1650）+ img8 @类引用自动补全两列表（1200×1200）。
 - 口径沉淀：用户 2026-10-27 重申"表格宽度可灵活拉宽+最小字号=脚注"——即 img4 修订4 基线为系列长期口径，后续表格图直接沿用（OVERRIDE 模板已备）。
+
+---
+Task ID: 8-r1
+Agent: main (Z.ai)
+Task: img8 修订1 · T4 填词耗时列三处数据更新（用户 IM："img8的最后一列稍作修改，其余不变，快速输出新版"）
+
+Work Log:
+- 修改 img8-styled.html（外科式 3 处，其余零改动）：LibTV 15→20分钟、纳逗Pro 12→15分钟、Seko 15→20分钟；HTML 头部追加修订注释。
+- 基准同步：img8-check.cjs BASE_ROWS 与 img8-vlm-compare.py expect rows 同步三处新值。
+- render.mjs a 重渲一次通过：rc=0，yzCheck compliant（browser-validation-img8.json 更新）。
+- 质检链全过：img8-check.cjs DOM 40 格+标题+图例 3 项+排序说明+脚注逐字零差异、9 项选择器字号全 26px、列宽 150/646/260 精确、无溢出、compact 未触发、gapToFooter 63（与修订前完全一致，纯数字替换不影响版式）；PIL 1200×1200/2742 色。
+- VLM r1 全图逐字转写：10 行表体三处新值全部正确（LibTV 20分钟/纳逗Pro 15分钟/Seko 20分钟）；图例"可复现"被 r1 误读为"可重现"、表头 | 分隔符漏读——两处经 2x 裁图（y 55-340 区域）VLM 复核闭环：图例"可复现"正确、表头文字完整，均为 VLM 误读而非渲染缺陷（DOM 层为权威）。
+- source-data.csv 追加修订溯源 4 行（LibTV/纳逗Pro/Seko 三行新值+图级修订口径）→ 184 行无重复；README（img8 内容口径/修订1 条目/目录结构 CSV 计数/验证链第 6 条）同步。
+- validate.py 目录级复跑：compliant 67/67。
+- fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- img8 修订1 完成：T4 列三处更新（LibTV 20/纳逗Pro 15/Seko 20 分钟），版式/字号/列宽/其余内容零变化，全套验证通过并推送 main。
+- 就地修订 v1.0 文件（沿用 img4 修订1-4 先例，git 历史留存旧版）。
