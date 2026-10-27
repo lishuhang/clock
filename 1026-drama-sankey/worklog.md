@@ -242,3 +242,21 @@ v1.0（img1+img2+img3+img4）完成。
 
 ## 状态
 v1.0（img1+img2+img3+img4+img5）完成。
+
+---
+Task ID: 7
+Agent: main (Z.ai)
+Task: skill-A 制作本批次第六张图《哪些因素影响了抽卡效率？》平台×B1-B4 扣分表（1026-drama-sankey img6）
+
+Work Log:
+- 会话恢复核对：git 状态干净（main 与 origin 同步于 4fd8aa8），deliverables-v1.0 已含 img1-img5；沿用 img4 修订4/img5 已批准基线（1200 宽+26px 统一字号+68px 标题单行）。
+- 数据核对：用户输入 10 平台行；巨日禄扣分 1 置顶，扣分 0 组拼音序 A<L<N<O<Se<Sh<T<W<X 与用户行序一致（程序化核对）；图例/排序说明与 img4 同套逐字复用；脚注数据截至 2026年10月23日。
+- 构建 img6-styled.html：模板区与 img5 逐字一致（含 yzCheck 1200 宽常量）；7 列 fixed 表格列宽 122/88/148/200/140/140/218（B2 与备注为长文本列稍宽）；B 列单元格内 ●/△ 符号沿用图例配色（●=深强调/△=次级，加粗）。
+- 画布高度按内容定 1650（初设即命中）：render rc=0 yzCheck compliant 一次通过。
+- 质检链全过：img6-check.cjs DOM 77 格（表头 7+表体 70）+标题+图例 3 项+排序说明+脚注逐字零差异、11 项选择器字号全 26px、列宽精确、无溢出、compact 未触发、gapToFooter 56、行高 [209,65,65,101,65,65,65,208,137,65]；PIL 1200×1650/2588 色/着墨 7.0%；VLM r1 全图逐字转写程序化比对全过 + r2 整图版式 7/7 无 tofu；validate.py 目录级 58/58。
+- source-data.csv 追加 11 行（10 平台+图级口径）→ 169 行无重复；README/overrides.txt（img6 OVERRIDE 行）/双 worklog 同步。
+- fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- 1026-drama-sankey v1.0 现含六张图：img1 桑基图 + img2 提示词调整对比 + img3 剧情介绍 + img4 模型缩水扣分表（1200×1500）+ img5 T1第一抽错误信息表（1200×1200）+ img6 抽卡效率影响因素扣分表（1200×1650）。
+- 约定沿用确认：B 系列表头 B 码深橙加粗样式与 img4 A 列一致；●△ 符号在单元格内沿用图例配色，符号↔图例颜色一一对应。
