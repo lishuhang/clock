@@ -260,3 +260,22 @@ Work Log:
 Stage Summary:
 - 1026-drama-sankey v1.0 现含六张图：img1 桑基图 + img2 提示词调整对比 + img3 剧情介绍 + img4 模型缩水扣分表（1200×1500）+ img5 T1第一抽错误信息表（1200×1200）+ img6 抽卡效率影响因素扣分表（1200×1650）。
 - 约定沿用确认：B 系列表头 B 码深橙加粗样式与 img4 A 列一致；●△ 符号在单元格内沿用图例配色，符号↔图例颜色一一对应。
+
+---
+Task ID: 8
+Agent: main (Z.ai)
+Task: skill-A 制作本批次第七张图《@类引用能否自动补全？》平台×B0主体库@引用智能补全与自动连线+T4填词耗时 两列表（1026-drama-sankey img8）
+
+Work Log:
+- 会话恢复核对：git 状态干净（main 与 origin 同步于 a50691b，img6 已交付）；skill 文件链全文重读（charts SKILL.md→_rules.md→playwright-css.md + yz-infographic v3.1 SKILL.md）。
+- 用户随图重申口径：skill 原表格宽度限制可适当灵活拉宽、字体不要太小、最小字号=底部脚注大小 → 与 img4 修订4 已批准基线（1200 宽+26px 统一字号+68px 标题单行）完全一致，本图沿用并记 OVERRIDE（a.canvas-1200x1200-img8）。
+- 数据核对：用户输入 10 平台行；行序=用户输入原序，两个同分组内拼音升序程序化核对一致（B0 净支持组 A<O<W<X；● 不支持组 J<L<N<Se<T；ShotLab 支持但带●可复现问题，单列于两组之间）；图例/排序说明与 img4/img6 同套逐字复用；脚注数据截至 2026年10月23日。
+- 构建 img8-styled.html：模板区与 img6 逐字一致（含 yzCheck 1200 宽常量）；3 列 fixed 表格列宽 150/646/260（B0 为长文本列最宽，总宽 1056）；画布高度按内容定 1200（宽高比 1:1，同 img5）；B0 列 ● 符号沿用图例配色（深强调加粗）；T4 耗时值加粗居中（skill"Bold 700=数值"规范）。
+- render.mjs a 一次通过：rc=0，yzCheck compliant（browser-validation-img8.json）。
+- 质检链全过：img8-check.cjs DOM 40 格（表头 3+表体 30）+标题+图例 3 项+排序说明+脚注逐字零差异、9 项选择器字号全 26px、列宽精确、无溢出、compact 未触发、gapToFooter 63、行高 65-66px 全部单行（ShotLab 23 字长文本在 646px B0 列内单行完整）、theadH 60（三列表头均单行）；PIL 1200×1200/2742 色/着墨 9.0%；VLM r1 全图逐字转写程序化比对全过（标题/图例/排序说明/表头/10 行表体/脚注）+ r2 整图版式 7/7 合格无 tofu；validate.py 目录级 67/67。
+- source-data.csv 追加 11 行（10 平台+图级口径）→ 180 行无重复；README/overrides.txt（img8 OVERRIDE 行）/双 worklog 同步。
+- fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- 1026-drama-sankey v1.0 现含七张图：img1 桑基图 + img2 提示词调整对比 + img3 剧情介绍 + img4 模型缩水扣分表（1200×1500）+ img5 T1第一抽错误信息表（1200×1200）+ img6 抽卡效率影响因素扣分表（1200×1650）+ img8 @类引用自动补全两列表（1200×1200）。
+- 口径沉淀：用户 2026-10-27 重申"表格宽度可灵活拉宽+最小字号=脚注"——即 img4 修订4 基线为系列长期口径，后续表格图直接沿用（OVERRIDE 模板已备）。

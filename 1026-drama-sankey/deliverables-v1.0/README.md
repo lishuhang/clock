@@ -1,6 +1,6 @@
 # 1026-drama-sankey · 交付说明 v1.0
 
-生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4、img5、img6）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图；img4/img5/img6 经用户授权沿用 1200 宽画幅）
+生成日期：2026-10-26（img1）/ 2026-10-27（img2、img3、img4、img5、img6、img8）· 依据：娱资 infographic skill v3.1 工作流 A（900px 静态信息图；img4/img5/img6/img8 经用户授权沿用 1200 宽画幅）
 
 ## 一、图表内容
 
@@ -78,6 +78,19 @@
 - **画幅与列宽**：1200 宽（标题 12 字 @68px≈794px，900 画布可用宽 756px 放不下单行，沿用已批准 1200 基线）；高度按内容 1650；7 列 fixed 列宽 122/88/148/200/140/140/218（总宽 1056=1200-144，B2 与备注为长文本列稍宽）；
 - 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”（与 img4 同日期，按用户输入）。
 
+### img8 · @类引用能否自动补全？ 平台×B0主体库@引用智能补全与自动连线+T4填词耗时 两列表
+
+将《@类引用能否自动补全？》表做成 3 列对比表（`img8-styled.png`，**1200×1200**（宽高比1:1，同img5），沿用 img4 修订4/img5/img6 用户已批准基线：1200 宽画幅 + 26px 统一字号 + 68px 标题单行，OVERRIDE 见 overrides.txt；应用户系列惯例逐字引用、零发挥；用户 2026-10-27 重申“skill 原表格宽度限制可根据情况适当灵活拉宽、字体不要太小、最小字号也要同底部脚注一样大”，本图即该口径落地）：
+
+- **标题**（逐字，68px Black 单行不折行）：@类引用能否自动补全？；
+- **结构**：表头三列 **平台 | B0（加分）主体库 @引用智能补全与自动连线 | T4填词耗时（粗略）**（B0/T4 码前缀沿用 img4 A 列/img6 B 列深橙加粗样式；B0 为加分项列）；
+- **图例与说明**（逐字，与 img4/img6 同套）：“- 不扣分 ● 可复现（每抽3-4次） △ 抽卡波动（每抽1-2次）” + “扣分相同的平台，按拼音排序”；
+- **行序**：**用户输入原序**——B0 净支持组拼音序 AniShort<OiiOii<万兴剧厂<小云雀（A<O<W<X）→ ShotLab（支持但带 ● 可复现问题“无法at历史上传素材”，单列于两组之间）→ ● 不支持组拼音序 巨日禄<LibTV<纳逗Pro<Seko<TapNow（J<L<N<Se<T），两个同分组内拼音升序均与用户输入行序一致（程序化核对）；
+- **内容口径**：10 平台行全部逐字引用——B0 列四种支持形态（自动识别×2/点按钮识别/自动或点按钮识别）与六行“● 不支持”（含 ShotLab“● 自动识别；在不新建主体时，无法at历史上传素材”23字长文本、Seko“● 不支持；会私自给上传的参考图重命名”，全角分号/逗号、半角 at 照抄）；T4 填词耗时（粗略）列 3/5/12/13/15 分钟七种值逐字照抄；
+- **符号配色**：B0 列 ● 符号沿用图例配色（●=深强调 #e55b46 加粗），符号↔图例颜色一一对应；本表无 -/△ 数据格；
+- **画幅与列宽**：1200 宽（900 画布可用宽 756px 内 B0 长文本列放不下 26px 单行，沿用已批准 1200 基线即用户“表格宽度可灵活拉宽”口径）；高度按内容 1200（宽高比 1:1，同 img5）；3 列 fixed 列宽 150/646/260（总宽 1056=1200-144，B0 为长文本列最宽，ShotLab 23 字长文本在 646px 列内单行完整显示）；
+- 页脚（逐字）：“资料来源：娱乐资本论整理，数据截至2026年10月23日”（与 img4/img6 同日期，按用户输入）。
+
 ## 二、目录结构
 
 ```
@@ -94,15 +107,18 @@ deliverables-v1.0/
 ├── img5-styled.png         # 成品 1200×1200
 ├── img6-styled.html        # A 版源文件（模板 + 7列fixed表格 + 26px统一字号 + 1200宽OVERRIDE沿用 + B列●△符号配色 + 自检脚本）
 ├── img6-styled.png         # 成品 1200×1650
-├── source-data.csv         # 169 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 + img5 8 + img6 11 行，含四笔修订记录）
-├── overrides.txt           # img4/img5/img6 OVERRIDE 记录（1200 宽画幅，用户授权，SKILL.md 纯文本例外格式）
+├── img8-styled.html        # A 版源文件（模板 + 3列fixed表格 + 26px统一字号 + 1200宽OVERRIDE沿用 + B0列●符号配色 + 自检脚本）
+├── img8-styled.png         # 成品 1200×1200
+├── source-data.csv         # 180 行级溯源（img1 116 + img2 13 + img3 5 + img4 15 + img5 8 + img6 11 + img8 11 行，含四笔修订记录）
+├── overrides.txt           # img4/img5/img6/img8 OVERRIDE 记录（1200 宽画幅，用户授权，SKILL.md 纯文本例外格式）
 ├── browser-validation.json     # img1 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img2.json # img2 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img3.json # img3 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img4.json # img4 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img5.json # img5 render.mjs yzCheck 报告（compliant）
 ├── browser-validation-img6.json # img6 render.mjs yzCheck 报告（compliant）
-├── validation.json         # validate.py 目录级报告（58/58 通过）
+├── browser-validation-img8.json # img8 render.mjs yzCheck 报告（compliant）
+├── validation.json         # validate.py 目录级报告（67/67 通过）
 └── assets/                 # 阿里普惠体×3 + 河豚/字标 SVG + favicons/×10（img1用）
 ```
 
@@ -167,6 +183,14 @@ deliverables-v1.0/
 3. **逐字校验**：**DOM 全表 77 格（表头 7 + 表体 10×7）+ 标题 + 图例 3 项 + 排序说明 + 脚注与用户输入程序化逐字比对零差异**（含 ●/△ 符号、全角顿号/分号/逗号、扣分“1”）；VLM r1 全图逐字转写程序化比对——标题/图例/排序说明/表头/10 行表体/脚注全部一致；VLM r2 整图版式 **7/7 过**（标题单行、图例排序说明无重叠、7 列表头完整、表体无溢出截断重叠、●△▼ 无 tofu、页脚 Logo+来源齐全、无乱码无大块空白）；
 4. PIL 验证：1200×1650 RGB，色彩数 2588，着墨率 7.0%；
 5. `validate.py --mode a`（目录级，覆盖 img1–img6）→ **compliant，58/58**（敏感信息扫描为零）；source-data.csv 追加 img6 溯源 11 行（10 平台 + 图级口径）→ 169 行。
+
+### img8（@类引用自动补全两列表）
+
+1. `render.mjs a` → rc=0，`yzCheck()` 返回 **compliant**（browser-validation-img8.json，errors=[]；宽度检查常量沿用 img4 修订4 已同步的 1200，OVERRIDE 记录于 overrides.txt）；
+2. 自检量测（/home/z/my-project/scripts/img8-check.cjs）：画布 **1200×1200**（宽高比 1:1，同 img5）；**标题单行**（h=76px=68×1.12）；**字号程序化核对——图例/排序说明/表头/表体/脚注全部 26px**（9 项选择器全 26px）；列宽 [150,646,260]；`__yzTable` 无溢出（scrollH=containerH=1200，compact 未触发，gapToFooter 63px）；行高 65-66px 全部单行（ShotLab 23 字长文本在 646px B0 列内单行完整）；theadH 60px（三列表头均单行）；全表 td/th 零横向溢出；
+3. **逐字校验**：**DOM 全表 40 格（表头 3 + 表体 10×3）+ 标题 + 图例 3 项 + 排序说明 + 脚注与用户输入程序化逐字比对零差异**（含 ● 符号与空格、全角分号/逗号、半角 at、七种耗时值）；行序=用户输入原序，B0 净支持组 A<O<W<X 与 ● 不支持组 J<L<N<Se<T 两个拼音分组核对一致；VLM r1 全图逐字转写程序化比对——标题/图例/排序说明/表头/10 行表体/脚注全部一致；VLM r2 整图版式 **7/7 过**（标题单行、图例排序说明、三列表头完整、10 行表体无截断重叠、脚注两行+横版 Logo、竖版水印、无 tofu）；
+4. PIL 验证：1200×1200 RGB，色彩数 2742，着墨率 9.0%；
+5. `validate.py --mode a`（目录级，覆盖 img1–img8）→ **compliant，67/67**（敏感信息扫描为零）；source-data.csv 追加 img8 溯源 11 行（10 平台 + 图级口径）→ 180 行。
 
 ## 五、版本规则
 
