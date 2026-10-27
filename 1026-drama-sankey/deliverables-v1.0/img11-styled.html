@@ -1,0 +1,202 @@
+<!doctype html>
+<!-- 娱乐资本论信息图 v3.1 / A。先读 SKILL.md；只改 YZ_EDIT 区。 -->
+<!-- 1026-drama-sankey img11：音画控制与后处理情况（平台×次数（除水印/角标）▼+E1-E5 七列表，10平台，画布 1200×1650；沿用 img4 修订4/img5/img6/img8/img9/img10 已批准基线：1200 宽画布+26px 统一字号+68px 标题单行；行序=次数降序+同次数组内拼音升序（5次组 巨日禄<纳逗Pro、2次组 LibTV<ShotLab<小云雀，用户输入原序程序化核验一致）；次数列数值加粗居中（Bold 700=数值，同 img9 出错次数列）；E4 两格“AI生成”引号取规范方向 U+201C…U+201D（img10 D4 先例）；图例仅“- 不扣分”1 项（同 img9）；OVERRIDE 见 overrides.txt） -->
+<html lang="zh-CN" data-yz-contract="3.1.0" data-yz-mode="a">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>音画控制与后处理情况</title>
+<style>
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-regular.ttf') format('truetype');font-weight:400;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-bold.ttf') format('truetype');font-weight:700;font-display:block}
+@font-face{font-family:AliPuHui;src:url('assets/alipuhui-black.ttf') format('truetype');font-weight:900;font-display:block}
+:root{--a:#fc8166;--ad:#e55b46;--t:#312e2e;--s:#6b6666;--m:#9a9595;--l:#e7e3e1}
+*{box-sizing:border-box}html,body{margin:0;background:#fff;color:var(--t);font-family:AliPuHui,sans-serif}body{width:max-content}
+.chart-container{position:relative;isolation:isolate;width:900px;min-height:900px;display:flex;flex-direction:column;overflow:hidden;padding:68px 72px 38px;background:#fff}
+.brand{display:flex;align-items:center}.brand img{display:block;object-fit:contain}.brand--horizontal{gap:12px;height:62px}.brand--horizontal .logo-icon{width:53px;height:62px}.brand--horizontal .logo-text{width:156px;height:auto}
+.yz-watermark{position:absolute;z-index:10;left:50%;top:50%;width:420px;transform:translate(-50%,-48%);opacity:.1;pointer-events:none}.brand--vertical{flex-direction:column;justify-content:center;gap:20px}.brand--vertical .logo-icon{width:220px;height:auto}.brand--vertical .logo-text{width:360px;height:auto}
+.chart-title,.chart-body,.chart-footer{position:relative;z-index:20}.chart-title{margin:0 0 38px;font-size:68px;line-height:1.12;font-weight:900;letter-spacing:-1.5px}.chart-body{flex:1;min-height:560px;font-size:28px;line-height:1.45}.chart-body strong,.yz-emphasis{font-weight:700;color:var(--ad)}
+.chart-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-top:34px;padding-top:20px;border-top:1px solid var(--l)}.chart-source{font-size:26px;line-height:1.35;color:var(--m)}
+.yz-placeholder{display:grid;place-items:center;min-height:560px;border:2px dashed var(--l);color:var(--m)}table{width:100%;border-collapse:collapse;font-size:28px}th,td{padding:16px 12px;border-bottom:1px solid var(--l);text-align:left}th{font-weight:700;color:var(--s)}
+</style>
+<style>
+/* ===== 1026-drama-sankey img11 附加样式（不改动上方模板文本） ===== */
+/* 沿用 img4 修订4/img5/img6/img8/img9/img10 用户已批准基线：1200 宽画布、正文/表格/图例/排序说明字号统一 26px=脚注大小、标题 68px 单行（用户 2026-10-27 重申：skill 原表格宽度限制可适当灵活拉宽、最小字号=脚注大小）；本图 10 行 7 列（平台/次数（除水印/角标）▼/E1-E5），高度按内容取 1650（初设 1560 时 gapToFooter=-6 偏紧，实测调参 +90 便上下留隙各约 39px，与 img10 已批准水准一致，尺寸同 img6）；7 列 fixed 列宽 140/188/96/163/163/145/161（总宽 1056=1200-144；内容列优先：E2/E3 最长文本列 163、E4 中等 145，E1/E5 全“-”列取剩余宽度 96/161，次数列 188=表头“次数（除水印/角标）▼”两行换行所需）；行序=次数降序+同次数组拼音升序；次数列数值加粗居中（Bold 700=数值规范，同 img9 出错次数列）；“-”=不扣分灰色（img4 修订3 先例） */
+.chart-container{width:1200px;height:1650px}
+.chart-body{display:flex;flex-direction:column}
+.chart-title{margin-bottom:26px;letter-spacing:-2px}
+.legend{display:flex;align-items:center;gap:22px;font-size:26px;color:var(--s);margin:0 0 8px;flex:0 0 auto;flex-wrap:wrap}
+.lg{display:flex;align-items:center;white-space:nowrap}
+.lg-sym{margin-right:8px;font-weight:700;flex:0 0 auto}
+.lg-dash{color:var(--m)}
+.sortnote{font-size:26px;color:var(--m);margin:0 0 16px;flex:0 0 auto}
+.t-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.dtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:26px}
+.dtable th{font-weight:700;color:var(--s)}
+.hz{font-size:26px;letter-spacing:1px;line-height:1.3;padding:12px 6px;border-bottom:3px solid var(--l);vertical-align:bottom}
+.hz-c{text-align:center;padding:12px 2px}
+.ah{font-size:26px;line-height:1.32;padding:12px 4px;border-bottom:3px solid var(--l);vertical-align:middle;text-align:center;word-break:break-all;overflow-wrap:break-word}
+.ah b{font-weight:700;color:var(--ad)}
+.dtable td{padding:14px 10px;border-bottom:1px solid var(--l);vertical-align:middle;line-height:1.38}
+.pname{font-size:26px;font-weight:700;color:var(--t)}
+.cntv{text-align:center;font-size:26px;font-weight:700;color:var(--t);padding:14px 4px}
+.cellc{font-size:26px;color:var(--t)}
+.cellc.na{color:var(--m)}
+.dtable tbody tr:nth-child(even) td{background:rgba(231,227,225,.22)}
+.chart-source{max-width:520px}
+/* 紧凑模式：仅压缩内边距，绝不缩小字号（26px 底线，与 img4 修订4 一致） */
+.compact .dtable td{padding:9px 8px}
+.compact .dtable .ah,.compact .dtable .hz{padding:9px 4px}
+</style></head>
+<body><main class="chart-container">
+<div class="yz-watermark brand brand--vertical" aria-hidden="true"><img class="logo-icon" src="assets/logo-icon.svg" alt=""><img class="logo-text" src="assets/logo-text.svg" alt=""></div>
+<!-- YZ_EDIT_1_BEGIN：只替换标题文字，不加“图N：” --><h1 class="chart-title">音画控制与后处理情况</h1><!-- YZ_EDIT_1_END -->
+<!-- YZ_EDIT_2_BEGIN：用已核验图表替换占位节点 -->
+<section class="chart-body">
+  <div class="legend">
+    <span class="lg"><span class="lg-sym lg-dash">-</span> 不扣分</span>
+  </div>
+  <div class="sortnote">扣分相同的平台，按拼音排序</div>
+  <div class="t-wrap">
+    <table class="dtable">
+      <colgroup>
+        <col style="width:140px"><col style="width:188px"><col style="width:96px"><col style="width:163px"><col style="width:163px"><col style="width:145px"><col style="width:161px">
+      </colgroup>
+      <thead><tr>
+        <th class="hz">平台</th>
+        <th class="hz hz-c">次数（除水印/角标）▼</th>
+        <th class="ah"><b>E1</b> 纯音效冒出人声</th>
+        <th class="ah"><b>E2</b> 偷加BGM</th>
+        <th class="ah"><b>E3</b> 冒出台词字幕</th>
+        <th class="ah"><b>E4</b> 导出带水印/角标</th>
+        <th class="ah"><b>E5</b> 定格木偶未还原抽帧感</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="pname">万兴剧厂</td>
+          <td class="cntv">10</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第2、4抽</td>
+          <td class="cellc">T1第2、4抽，T3第2-4抽，T4第2-4抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">OiiOii</td>
+          <td class="cntv">6</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T2第1抽，T3第2抽，T4第3抽</td>
+          <td class="cellc">T3第1抽，T4第1、3抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">巨日禄</td>
+          <td class="cntv">5</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T2第1、4抽，T3第2、3抽，T4第2抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">纳逗Pro</td>
+          <td class="cntv">5</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T1第1抽，T3第1抽，T4第1-3抽</td>
+          <td class="cellc">带有平台Logo及“AI生成”角标</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">TapNow</td>
+          <td class="cntv">4</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第4抽</td>
+          <td class="cellc">T4第1-3抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">AniShort</td>
+          <td class="cntv">3</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第2、3抽</td>
+          <td class="cellc">T1第1抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">LibTV</td>
+          <td class="cntv">2</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第3、4抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">ShotLab</td>
+          <td class="cntv">2</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第4抽</td>
+          <td class="cellc">T1第3抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">小云雀</td>
+          <td class="cntv">2</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第2抽</td>
+          <td class="cellc">T1第1抽</td>
+          <td class="cellc">“AI生成”角标</td>
+          <td class="cellc na">-</td>
+        </tr>
+        <tr>
+          <td class="pname">Seko</td>
+          <td class="cntv">1</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+          <td class="cellc">T4第3抽</td>
+          <td class="cellc na">-</td>
+          <td class="cellc na">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section><!-- YZ_EDIT_2_END -->
+<footer class="chart-footer"><!-- YZ_EDIT_3_BEGIN：只替换来源 --><div class="chart-source">资料来源：娱乐资本论整理，<br>数据截至2026年10月23日</div><!-- YZ_EDIT_3_END --><div class="brand brand--horizontal" aria-label="娱乐资本论 Entertainment Capital"><img class="logo-icon" src="assets/logo-icon.svg" alt=""><img class="logo-text" src="assets/logo-text.svg" alt=""></div></footer>
+</main>
+<script>
+/* ===== 1026-drama-sankey img11 溢出自检（量测并暴露 window.__yzTable） ===== */
+(function(){
+'use strict';
+function measure(){
+  var c=document.querySelector('.chart-container'),table=document.querySelector('.dtable');
+  var title=document.querySelector('.chart-title');
+  var rows=document.querySelectorAll('.dtable tbody tr');
+  var rh=[].map.call(rows,function(r){return Math.round(r.getBoundingClientRect().height)});
+  var lastRow=rows[rows.length-1],foot=document.querySelector('.chart-footer');
+  var gapFoot=Math.round(foot.getBoundingClientRect().top-lastRow.getBoundingClientRect().bottom);
+  var overflow=c.scrollHeight>c.clientHeight+1;
+  var theadH=Math.round(document.querySelector('.dtable thead').getBoundingClientRect().height);
+  var thW=[].map.call(document.querySelectorAll('.dtable thead th'),function(th){return Math.round(th.getBoundingClientRect().width)});
+  var thH=[].map.call(document.querySelectorAll('.dtable thead th'),function(th){return Math.round(th.getBoundingClientRect().height)});
+  window.__yzTable={containerH:c.clientHeight,scrollH:c.scrollHeight,overflow:overflow,
+    titleH:Math.round(title.getBoundingClientRect().height),
+    rowCount:rows.length,rowHeights:rh,theadH:theadH,thW:thW,thH:thH,gapToFooter:gapFoot,
+    compact:document.body.classList.contains('compact'),
+    bodyText:'音画控制与后处理情况'};
+  console.log('YZ-TABLE',JSON.stringify(window.__yzTable));
+  return overflow;
+}
+function run(){
+  var ofw=measure();
+  if(ofw){document.body.classList.add('compact');measure()}/* 只压缩一次，不递归 */
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){document.fonts.ready.then(run)})}
+else{document.fonts.ready.then(run)}
+})();
+</script>
+<script>
+async function yzCheck(){await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?Promise.resolve():i.decode()));const c=document.querySelector('.chart-container'),t=document.querySelector('.chart-title'),b=document.querySelector('.chart-body'),e=[];if(document.documentElement.dataset.yzContract!=='3.1.0'||document.documentElement.dataset.yzMode!=='a')e.push('contract');if(Math.round(c.getBoundingClientRect().width)!==1200)e.push('canvas');if(parseFloat(getComputedStyle(t).fontSize)!==68)e.push('title');if(parseFloat(getComputedStyle(b).fontSize)!==28)e.push('body');if(!document.fonts.check('900 68px AliPuHui')||!document.fonts.check('400 28px AliPuHui'))e.push('font');if(document.images.length!==4||[...document.images].some(i=>!i.naturalWidth))e.push('logo');if(Math.abs(parseFloat(getComputedStyle(document.querySelector('.yz-watermark')).opacity)-.1)>.001)e.push('watermark');if(/【(?:TITLE|CHART_BODY|SOURCE)_HERE】/.test(document.body.textContent))e.push('placeholder');if(/^\s*图\s*\d+\s*[：:]/.test(t.textContent))e.push('title-prefix');if([...document.querySelectorAll('[src],[href]')].some(n=>/^https?:/i.test(n.getAttribute('src')||n.getAttribute('href')||'')))e.push('external');if([...document.querySelectorAll('*')].some(n=>getComputedStyle(n).boxShadow!=='none'))e.push('shadow');const r={contract:'YZ-INFOGRAPHIC-V3.1',mode:'a',state:e.length?'noncompliant_fallback':'compliant',errors:e};console[e.length?'error':'log'](r);return r}window.yzCheck=yzCheck;
+</script></body></html>
