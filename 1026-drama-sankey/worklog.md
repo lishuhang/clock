@@ -298,3 +298,21 @@ Work Log:
 Stage Summary:
 - img8 修订1 完成：T4 列三处更新（LibTV 20/纳逗Pro 15/Seko 20 分钟），版式/字号/列宽/其余内容零变化，全套验证通过并推送 main。
 - 就地修订 v1.0 文件（沿用 img4 修订1-4 先例，git 历史留存旧版）。
+
+---
+Task ID: 9
+Agent: main (Z.ai)
+Task: skill-A 制作本批次第八张图《提示词改写与画面污染情况》平台×出错次数▼+C1-C4 六列表（1026-drama-sankey img9）
+
+Work Log:
+- 会话恢复核对：git 状态干净（main 与 origin 同步于 a7e32e6，img8 修订1 已交付）；沿用 img4 修订4/img5/img6/img8 已批准基线（1200 宽+26px 统一字号+68px 标题单行）。
+- 数据核对：用户输入 10 平台行；行序=用户输入原序=出错次数降序（4→0）+同次数组内拼音升序（3次组 O<Sh<T、2次组 L<Se<X、1次组 A<N，程序化双核验一致）；图例仅 1 项"- 不扣分"（本表无 ●，仅 ShotLab C1/C2 两格带 △ 前缀）；脚注数据截至 2026年10月23日（与 img4/img6/img8 同日期）。
+- 构建 img9-styled.html：模板区与 img6/img8 逐字一致（含 yzCheck 1200 宽常量）；6 列 fixed 表格列宽 140/138/216/216/216/130（总宽 1056，C4 列全为"-"故最窄，C1-C3 问题文本列等宽）；出错次数▼ 居中窄列沿用 img6 扣分▼列式（.hz-c）；出错次数数值加粗居中（Bold 700=数值，同 img8 T4）；C 列 △ 符号沿用系列配色（次级灰加粗 .st，同 img6）。
+- 画布高度按内容调参：初设 1560 时 DOM 全过但 gapToFooter=11 偏窄（theadH 128、行高 66-137 高于预估）→ 按实测调至 1600（gap=31）→ 重渲 rc=0 yzCheck compliant。
+- 质检链全过：img9-check.cjs DOM 66 格（表头 6+表体 60）+标题+图例 1 项+排序说明+脚注逐字零差异、行序双核验（降序+拼音组）、10 项选择器字号全 26px、列宽精确、无溢出、compact 未触发；PIL 1200×1600/2941 色/着墨 6.1%；VLM r1 全图逐字转写程序化比对全过（标题/图例/排序说明/表头/10 行表体/脚注）+ r2 整图版式 7/7 合格无 tofu（△▼ 均正常渲染）。
+- source-data.csv 追加 11 行（10 平台+图级口径）→ 195 行无重复；README（img9 章节/目录结构/验证链）/overrides.txt（a.canvas-1200x1600-img9）/双 worklog 同步；validation.json 刷新 76/76。
+- fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- 1026-drama-sankey v1.0 现含八张图：img1 桑基图 + img2 提示词调整对比 + img3 剧情介绍 + img4 模型缩水扣分表（1200×1500）+ img5 T1第一抽错误信息表（1200×1200）+ img6 抽卡效率影响因素扣分表（1200×1650）+ img8 @类引用自动补全两列表（1200×1200，含修订1）+ img9 提示词改写与画面污染六列表（1200×1600）。
+- 详细记录见 clock/1026-drama-sankey/worklog.md Task 9。
