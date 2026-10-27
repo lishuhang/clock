@@ -183,3 +183,34 @@ v1.0（img1+img2+img3+img4）完成。
 ### 4. 交付
 - 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README。
 - 单次 commit + push。
+
+---
+## img4 修订4 · 画幅拉宽 + 字号统一 + 新标题（2026-10-27）
+
+### 1. 任务
+用户 IM 指示四条：①画幅适度拉宽；②最小字体放大到与脚注一样大；③标题大小不变、不折行、改为【实测未检出平台疑似"模型缩水"】。
+
+### 2. 合规路径（关键决策）
+- SKILL.md 第 12 行优先级条款："用户对当前项目的明确要求 > 本文件 > HTML 模板"——用户明确要求拉宽画幅构成官方例外。
+- 画布 900×1350 → **1200×1500**（宽高比 1:1.5 → 1:1.25，"适度拉宽"）；CSS 覆盖方式（附加样式区 .chart-container{width:1200px;height:1500px}，模板文本零改动）。
+- yzCheck 宽度常量 900→1200 同步（检查逻辑保留，仅常量更新）；OVERRIDE 记录写入 overrides.txt（SKILL.md 第 148 行纯文本例外格式）。
+- 拉宽的直接动因：新标题 15 字 @68px ≈ 998px，900 画布可用宽 756px 放不下单行；1200 画布可用 1056px ✓。
+
+### 3. 字号统一（用户"最小字体=脚注大小"）
+- 图例 15px、排序说明 13.5px、表头 13px、表体 13-16px → **全部 26px**（=脚注 chart-source 26px 锚点）；标题 68px 层级不变。
+- 程序化核对 12 个选择器 computed fontSize 全部 26px。
+- compact 样式改为仅压缩内边距、绝不缩字号（保 26px 底线）。
+
+### 4. 布局
+- colgroup 重排：125/96/137×5/150（A1–A5 等宽规则保持，备注稍窄；总宽 1056=1200-144）。
+- 自检：画布 1200×1500、标题单行 h=76px、无溢出（scrollH=1500=containerH、compact 未触发、gapToFooter 35px）、全表零横向溢出；行高 65-209px 不齐（用户接受）。
+
+### 5. 验证
+- render.mjs a：rc=0，yzCheck compliant（宽度检查已同步 1200）。
+- DOM 80 格逐字零差异；VLM 标题区 2x（逐字一致+单行+图例清晰）、表体 2x 前 8 行逐行一致、末两行补裁 2x 逐字一致；无 tofu。
+- PIL：1200×1500、2588 色、着墨 7.5%、宽高比 1:1.25。
+- source-data.csv 追加修订4溯源行 → 150 行；validate.py 目录级 40/40。
+
+### 6. 交付
+- 更新 img4-styled.html/png、browser-validation-img4.json、source-data.csv、validation.json、README；新增 overrides.txt。
+- 单次 commit + push。

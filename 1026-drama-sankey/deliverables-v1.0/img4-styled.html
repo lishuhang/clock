@@ -1,9 +1,9 @@
 <!doctype html>
 <!-- 娱乐资本论信息图 v3.1 / A。先读 SKILL.md；只改 YZ_EDIT 区。 -->
-<!-- 1026-drama-sankey img4：模型缩水：2.5 还是 2.0 还是 Lite？（平台×A1-A5 扣分表，扣分相同按拼音排序） -->
+<!-- 1026-drama-sankey img4：实测未检出平台疑似“模型缩水”（平台×A1-A5 核查表，拼音序；2026-10-27 用户授权：画幅拉宽1200×1500、正文字号统一26px） -->
 <html lang="zh-CN" data-yz-contract="3.1.0" data-yz-mode="a">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>模型缩水：2.5 还是 2.0 还是 Lite？</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>实测未检出平台疑似“模型缩水”</title>
 <style>
 @font-face{font-family:AliPuHui;src:url('assets/alipuhui-regular.ttf') format('truetype');font-weight:400;font-display:block}
 @font-face{font-family:AliPuHui;src:url('assets/alipuhui-bold.ttf') format('truetype');font-weight:700;font-display:block}
@@ -18,49 +18,42 @@
 .yz-placeholder{display:grid;place-items:center;min-height:560px;border:2px dashed var(--l);color:var(--m)}table{width:100%;border-collapse:collapse;font-size:28px}th,td{padding:16px 12px;border-bottom:1px solid var(--l);text-align:left}th{font-weight:700;color:var(--s)}
 </style>
 <style>
-/* ===== 1026-drama-sankey img4 附加样式（不改动上方模板规则） ===== */
-.chart-container{height:1350px}
+/* ===== 1026-drama-sankey img4 附加样式（不改动上方模板文本） ===== */
+/* 2026-10-27 用户授权：画幅拉宽至1200×1500（宽高比1:1.25），正文/表格/图例字号统一26px=脚注大小，标题68px不变单行 */
+.chart-container{width:1200px;height:1500px}
 .chart-body{display:flex;flex-direction:column}
-.chart-title{margin-bottom:26px}
-.legend{display:flex;align-items:center;gap:26px;font-size:15px;color:var(--s);margin:0 0 7px;flex:0 0 auto;flex-wrap:wrap}
+.chart-title{margin-bottom:26px;letter-spacing:-2px}
+.legend{display:flex;align-items:center;gap:22px;font-size:26px;color:var(--s);margin:0 0 8px;flex:0 0 auto;flex-wrap:wrap}
 .lg{display:flex;align-items:center;white-space:nowrap}
-.lg-sym{margin-right:7px;font-weight:700;flex:0 0 auto}
+.lg-sym{margin-right:8px;font-weight:700;flex:0 0 auto}
 .lg-dash{color:var(--m)}
 .lg-dot{color:var(--ad)}
 .lg-tri{color:var(--s)}
-.sortnote{font-size:13.5px;color:var(--m);margin:0 0 14px;flex:0 0 auto}
+.sortnote{font-size:26px;color:var(--m);margin:0 0 16px;flex:0 0 auto}
 .t-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center}
-.dtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:14px}
+.dtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:26px}
 .dtable th{font-weight:700;color:var(--s)}
-.hz{font-size:14px;letter-spacing:2px;line-height:1.3;padding:10px 6px;border-bottom:2px solid var(--l);vertical-align:bottom}
-.hz-c{text-align:center;padding:10px 2px}
-.ah{font-size:13px;line-height:1.32;padding:8px 4px 10px;border-bottom:2px solid var(--l);vertical-align:middle;text-align:center;word-break:break-all;overflow-wrap:break-word}
+.hz{font-size:26px;letter-spacing:1px;line-height:1.3;padding:12px 6px;border-bottom:3px solid var(--l);vertical-align:bottom}
+.hz-c{text-align:center;padding:12px 2px}
+.ah{font-size:26px;line-height:1.32;padding:12px 4px;border-bottom:3px solid var(--l);vertical-align:middle;text-align:center;word-break:break-all;overflow-wrap:break-word}
 .ah b{font-weight:700;color:var(--ad)}
-.dtable td{padding:15px 10px;border-bottom:1px solid var(--l);vertical-align:middle;line-height:1.42}
-.pname{font-size:15.5px;font-weight:700;color:var(--t)}
-.ded{text-align:center;font-size:16px;font-weight:900;color:var(--ad);padding:11px 4px}
-.ded.none{font-size:14px;font-weight:400;color:var(--m)}
-.c{text-align:center;color:var(--t);font-size:14px;padding:11px 4px}
+.dtable td{padding:14px 10px;border-bottom:1px solid var(--l);vertical-align:middle;line-height:1.38}
+.pname{font-size:26px;font-weight:700;color:var(--t)}
+.ded{text-align:center;font-size:26px;font-weight:900;color:var(--ad);padding:14px 4px}
+.ded.none{font-size:26px;font-weight:400;color:var(--m)}
+.c{text-align:center;color:var(--t);font-size:26px;padding:14px 4px}
 .c.na{color:var(--m)}
-.cell-a4,.cell-a5{font-size:13.5px;color:var(--t)}
-.note{font-size:13px;color:var(--s)}
-.sy-b{color:var(--ad);font-weight:700}
-.sy-t{color:var(--s);font-weight:700}
-.grp-end{border-bottom:2px solid rgba(154,149,149,.55)}
+.cell-a5{font-size:26px;color:var(--t)}
+.note{font-size:26px;color:var(--s)}
 .dtable tbody tr:nth-child(even) td{background:rgba(231,227,225,.22)}
-.chart-source{max-width:470px}
-/* 紧凑模式：内容超出画布时由自检脚本启用 */
-.compact .dtable td{padding:8px 8px}
-.compact .dtable .ah{font-size:12px;padding:6px 3px 8px}
-.compact .cell-a4,.compact .cell-a5{font-size:12.5px;line-height:1.36}
-.compact .note{font-size:12px}
-.compact .pname{font-size:14.5px}
-.compact .legend{font-size:14px}
-.compact .sortnote{font-size:12.5px}
+.chart-source{max-width:520px}
+/* 紧凑模式：仅压缩内边距，绝不缩小字号（用户要求最小字号=脚注26px） */
+.compact .dtable td{padding:9px 8px}
+.compact .dtable .ah,.compact .dtable .hz{padding:9px 4px}
 </style></head>
 <body><main class="chart-container">
 <div class="yz-watermark brand brand--vertical" aria-hidden="true"><img class="logo-icon" src="assets/logo-icon.svg" alt=""><img class="logo-text" src="assets/logo-text.svg" alt=""></div>
-<!-- YZ_EDIT_1_BEGIN：只替换标题文字，不加“图N：” --><h1 class="chart-title">模型缩水：2.5 还是 2.0 还是 Lite？</h1><!-- YZ_EDIT_1_END -->
+<!-- YZ_EDIT_1_BEGIN：只替换标题文字，不加“图N：” --><h1 class="chart-title">实测未检出平台疑似“模型缩水”</h1><!-- YZ_EDIT_1_END -->
 <!-- YZ_EDIT_2_BEGIN：用已核验图表替换占位节点 -->
 <section class="chart-body">
   <div class="legend">
@@ -72,7 +65,7 @@
   <div class="t-wrap">
     <table class="dtable">
       <colgroup>
-        <col style="width:92px"><col style="width:54px"><col style="width:104px"><col style="width:104px"><col style="width:104px"><col style="width:104px"><col style="width:104px"><col style="width:90px">
+        <col style="width:125px"><col style="width:96px"><col style="width:137px"><col style="width:137px"><col style="width:137px"><col style="width:137px"><col style="width:137px"><col style="width:150px">
       </colgroup>
       <thead><tr>
         <th class="hz">平台</th>
@@ -166,7 +159,7 @@ function measure(){
   window.__yzTable={containerH:c.clientHeight,scrollH:c.scrollHeight,overflow:overflow,
     rowCount:rows.length,rowHeights:rh,theadH:theadH,gapToFooter:gapFoot,
     compact:document.body.classList.contains('compact'),
-    bodyText:'模型缩水：2.5 还是 2.0 还是 Lite？'};
+    bodyText:'实测未检出平台疑似“模型缩水”'};
   console.log('YZ-TABLE',JSON.stringify(window.__yzTable));
   return overflow;
 }
@@ -179,5 +172,5 @@ else{document.fonts.ready.then(run)}
 })();
 </script>
 <script>
-async function yzCheck(){await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?Promise.resolve():i.decode()));const c=document.querySelector('.chart-container'),t=document.querySelector('.chart-title'),b=document.querySelector('.chart-body'),e=[];if(document.documentElement.dataset.yzContract!=='3.1.0'||document.documentElement.dataset.yzMode!=='a')e.push('contract');if(Math.round(c.getBoundingClientRect().width)!==900)e.push('canvas');if(parseFloat(getComputedStyle(t).fontSize)!==68)e.push('title');if(parseFloat(getComputedStyle(b).fontSize)!==28)e.push('body');if(!document.fonts.check('900 68px AliPuHui')||!document.fonts.check('400 28px AliPuHui'))e.push('font');if(document.images.length!==4||[...document.images].some(i=>!i.naturalWidth))e.push('logo');if(Math.abs(parseFloat(getComputedStyle(document.querySelector('.yz-watermark')).opacity)-.1)>.001)e.push('watermark');if(/【(?:TITLE|CHART_BODY|SOURCE)_HERE】/.test(document.body.textContent))e.push('placeholder');if(/^\s*图\s*\d+\s*[：:]/.test(t.textContent))e.push('title-prefix');if([...document.querySelectorAll('[src],[href]')].some(n=>/^https?:/i.test(n.getAttribute('src')||n.getAttribute('href')||'')))e.push('external');if([...document.querySelectorAll('*')].some(n=>getComputedStyle(n).boxShadow!=='none'))e.push('shadow');const r={contract:'YZ-INFOGRAPHIC-V3.1',mode:'a',state:e.length?'noncompliant_fallback':'compliant',errors:e};console[e.length?'error':'log'](r);return r}window.yzCheck=yzCheck;
+async function yzCheck(){await document.fonts.ready;await Promise.all([...document.images].map(i=>i.complete?Promise.resolve():i.decode()));const c=document.querySelector('.chart-container'),t=document.querySelector('.chart-title'),b=document.querySelector('.chart-body'),e=[];if(document.documentElement.dataset.yzContract!=='3.1.0'||document.documentElement.dataset.yzMode!=='a')e.push('contract');if(Math.round(c.getBoundingClientRect().width)!==1200)e.push('canvas');if(parseFloat(getComputedStyle(t).fontSize)!==68)e.push('title');if(parseFloat(getComputedStyle(b).fontSize)!==28)e.push('body');if(!document.fonts.check('900 68px AliPuHui')||!document.fonts.check('400 28px AliPuHui'))e.push('font');if(document.images.length!==4||[...document.images].some(i=>!i.naturalWidth))e.push('logo');if(Math.abs(parseFloat(getComputedStyle(document.querySelector('.yz-watermark')).opacity)-.1)>.001)e.push('watermark');if(/【(?:TITLE|CHART_BODY|SOURCE)_HERE】/.test(document.body.textContent))e.push('placeholder');if(/^\s*图\s*\d+\s*[：:]/.test(t.textContent))e.push('title-prefix');if([...document.querySelectorAll('[src],[href]')].some(n=>/^https?:/i.test(n.getAttribute('src')||n.getAttribute('href')||'')))e.push('external');if([...document.querySelectorAll('*')].some(n=>getComputedStyle(n).boxShadow!=='none'))e.push('shadow');const r={contract:'YZ-INFOGRAPHIC-V3.1',mode:'a',state:e.length?'noncompliant_fallback':'compliant',errors:e};console[e.length?'error':'log'](r);return r}window.yzCheck=yzCheck;
 </script></body></html>
