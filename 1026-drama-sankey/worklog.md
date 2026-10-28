@@ -377,3 +377,24 @@ Stage Summary:
 - img9 修订2 完成：新版 img9-styled.png 已交付（巨日禄 0 次第 9 行、万兴剧厂上方），版式与基线零漂移（gapToFooter 31 不变）。
 - 58d0bd6 用户手动修订（ShotLab 去 △）文档口径补记完成，a08eb07 遗留"待用户指示"事项闭合并裁定保持去除状态。
 - 技术沉淀：①render.mjs 输出 PNG 为 1x（画布尺寸=逻辑尺寸），裁图复核需用逻辑坐标直接裁剪；②着墨率必须用系列统一口径（灰度<246，img8-pil.py），纯白比对口径会虚高（斑马纹浅灰计入）；③img9-check.cjs 本次已持久化至 scripts/ 目录（含行序双核验逻辑）。
+
+---
+Task ID: 12
+Agent: main (Z.ai)
+Task: batch2 重制重编号五表（img1-img5 = 原 img6/img8/img9/img10/img11 重构精简版）+ 竖版水印 icon 与字标等宽修正（1026-drama-sankey，用户 2026-10-28 IM：「新建batch2文件夹，重做下列表格并重新给表格编号」+「请注意水印的竖排娱资logo，河豚icon和娱乐资本论 文字 等宽。现在icon比文字小一圈」）
+
+Work Log:
+- 会话恢复：git 状态确认（clock/main 与 origin 同步于 e556e6d，img9 修订2 已交付）；skill 文件链重读（yz-infographic v3.1 SKILL.md 全文 + style-a.html 模板 + render.mjs/validate.py + img9/img8-styled.html + img9-check.cjs 校验模式 + VLM skill 调用方式）。
+- 新旧编号映射：新 img1-img5 = 原 img6 / img8（含修订1终值）/ img9 / img10 / img11。用户本次输入统一重构口径（逐字引用零发挥）：删全"-"空列（B3/B4/C4/D1/D4/E1/E4/E5）、删码前缀（img2 的 B0/T4 按输入保留）、扣分→出错次数、△ 前缀全去除（58d0bd6 先例）、图例逐图精简（img1 两项 / img2 仅●且无排序说明 / img3-5 仅-）、脚注加"；仅代表本次测试结果，仅供参考"（三行排版，br 在全角逗号与分号后）、行序=用户输入原序。
+- img3 巨日禄口径裁定：本次输入回到出错 4 次第 1 行（T4第1-4抽）——与 v1.0/img9 修订2（0 次第 9 行）相反；按系列一贯"用户当前输入为最高优先级"执行并记录 README/CSV notes，如需沿用修订2 待用户指示（一行外科式可快速重出）。
+- 水印等宽修正：附加样式区覆盖 .brand--vertical .logo-icon 220px→360px=字标宽（模板区与横版页脚 Logo 零改动，OVERRIDE 记录 overrides.txt）；双重复核=DOM 量测 360=360 + 探针全不透明渲染着墨边界 360=360；灵敏度对照：icon@220px 着墨 220px≠字标 360px 可复现用户原投诉（小一圈）。VLM r2 第 6 项五图判定互相矛盾（img1 说 icon 小 / img2-5 说 icon 大，同一水印）→ 按系列先例（img10 r2 水印遮挡误报）裁定为 10% 透明度下 VLM 误报，DOM/像素层权威。
+- 构建 batch2/img1-img5-styled.html：模板区与系列逐字一致（yzCheck 1200 常量）；5/3/5/4/4 列 fixed 表格，列宽 140-144-196-344-232 / 150-646-260 / 140-144-236-272-264 / 140-144-420-352 / 140-144-400-372；画布高度按内容调参一轮（初版两处版式缺陷修正：img1 万兴剧厂参考图格 textW 315px>内容宽 304 折行→参考图列 324→344 使其单行；出错次数列 138→144 使表头「出错次数▼」单行化——旧 img9 同款几何为 135px>134px 两行折行，本次重做顺手修正）→ 终版 gapToFooter 60/92/70/71/67。
+- render.mjs a 五图 rc=0 yzCheck compliant（browser-validation-img1..5.json）。
+- 质检链全过：batch2-check.cjs（DOM 241 格+标题+图例+排序说明+脚注逐字零差异、行序核验[出错次数降序+同次数组拼音升序/img2 耗时降序]、出错次数算术核验 10/10——img1 模型=审核违规抽次+参考图列非-记1+其他列非空且非●（加分）开头记1，img3/4/5=问题列抽次解析求和[第X抽/第X、Y抽/第X-Y抽 三形态，Seko"2-4抽改正"无第前缀不计错]、水印 icon=字标=360px 等宽+横版 icon 53px 未误改、字号全 26px、列宽精确、无溢出 compact 未触发）；PIL 五图尺寸/色彩/着墨率 8.9-10.3%（灰度<246 统一口径）；VLM r1 全图逐字转写程序化比对全过（「可复现」→「可再现」已知误读经 3x 裁图复核闭环 vlm-b2-img1-legend3x.json + img2 同字符 1x 即读对）+ r2 版式 1-5/7 项全过；validate.py 目录级 compliant 49/49（敏感信息扫描为零，validation.json）。
+- batch2 交付物：5×HTML+PNG + source-data.csv 55 行（5×[10 平台行+图级口径行]，batch2-csv.py 生成）+ README（新旧编号映射/重构口径/img3 口径裁定/水印修正与 VLM 误报闭环/验证链/目录结构）+ overrides.txt（1200 基线沿用+水印等宽两条）+ validation.json + assets（字体×3+Logo SVG×2，与 v1.0 同源复制）。
+- 双 worklog 同步；fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- batch2 交付完成：五张重构精简版表格（新编号 img1-img5：哪些因素影响了抽卡效率/@类引用能否自动补全/提示词改写与画面污染/分镜切分与空间站位/音画控制与后处理）+ 竖版水印 icon/字标等宽修正（360=360，DOM+像素双重复核）。
+- deliverables-v1.0（旧编号 img1-img11）原样保留未动；img3 巨日禄=4 次与旧 img9 修订2（0 次）口径差异已显著记录于 README/CSV，待用户指示。
+- 技术沉淀：①水印等宽像素级闭环方法（探针全不透明渲染+着墨边界量测+旧尺寸灵敏度对照）；②VLM 对 10% 透明度水印的宽度判定不可靠（五图矛盾自证），DOM/像素层权威；③出错次数列 144px=「出错次数▼」表头单行所需（135px 文字+4px 内边距）。
