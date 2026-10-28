@@ -398,3 +398,23 @@ Stage Summary:
 - batch2 交付完成：五张重构精简版表格（新编号 img1-img5：哪些因素影响了抽卡效率/@类引用能否自动补全/提示词改写与画面污染/分镜切分与空间站位/音画控制与后处理）+ 竖版水印 icon/字标等宽修正（360=360，DOM+像素双重复核）。
 - deliverables-v1.0（旧编号 img1-img11）原样保留未动；img3 巨日禄=4 次与旧 img9 修订2（0 次）口径差异已显著记录于 README/CSV，待用户指示。
 - 技术沉淀：①水印等宽像素级闭环方法（探针全不透明渲染+着墨边界量测+旧尺寸灵敏度对照）；②VLM 对 10% 透明度水印的宽度判定不可靠（五图矛盾自证），DOM/像素层权威；③出错次数列 144px=「出错次数▼」表头单行所需（135px 文字+4px 内边距）。
+
+---
+Task ID: 13
+Agent: main (Z.ai)
+Task: batch2 img6 · 测试用提示词与加/扣分项 桑基图第二版（1026-drama-sankey，用户 2026-10-28 IM：「桑基图重做第二版，是batch2的img6（将主体两个表做成桑基图，提示词在左，加扣分项在右）（布局参照第一版本图的html，但把强调连线颜色改为深灰色）……桑基图连接线需清晰可辨」+ 13 项无平台命中清单 + 平台名一律替换为 favicon）
+
+Work Log:
+- 会话恢复：git 状态确认（clock/main 与 origin 同步于 4470917，batch2 img1-img5 已交付）；v1.0 img1-styled.html 全文重读（桑基布局构建脚本：数据内嵌→fonts.ready 后建 DOM→量测→两层 SVG 贝塞尔连线，带宽按右侧行序/左卡 T 序累积零交叉；favicon 以 CSS background 避开 yzCheck img 计数）。
+- 数据裁定：①本次输入 23 项（无 C0 透明公开提示词优化方式，v1.0 为 24 项）；②两处表间不一致与 v1.0 完全相同（表1 T3 行漏列 C1、T2 行漏列 D2）→ 沿用 v1.0 裁定按表2：C1→T3、D2→T2 → 连线 71 条 = 52 浅灰 + 19 深灰（T1/T2/T3/T4 = 17/17/19/18）；佐证更新：D2→T2 有 batch2 img4 Seko T2第2抽佐证；C1→T3 的 v1.0 旧佐证（巨日禄 T3第3抽 C1 蓝光）在当前平台清单已不成立（巨日禄不在本次 C1 涉及平台），仍按表2 明示执行并记录；③13 项无平台命中（A1-A5/B3/B4/C4/D1/D4/E1/E4/E5，用户明示清单一致）不显示 favicon；④项目名称/涉及平台清单按本次输入逐字（B2 增巨日禄万兴、B0 增小云雀 ShotLab、C1 改 OiiOii/ShotLab/TapNow/AniShort、C3 增 Seko、D2 增 ShotLab、E2 扩 7 平台、E3 含 OiiOii 不含巨日禄、E4 无平台）。
+- 构建 batch2/img6-styled.html：模板区与 batch2 兄弟图逐字一致（yzCheck 1200 常量）；布局参照 v1.0 img1——左 360px 4 张提示词卡片（编号+类型标签+标题+测试要点全文）/ 中 150px SVG 贝塞尔连线 / 右 546px 23 行（编号色块+名称+28px 方形 favicon）；**核心变更：强调连线（部分涉及 10 项 A4/B2/C1/C4/D2/D3/D4/E1/E3/E5）由 v1.0 橙红 rgba(229,91,70,.92) 改为深灰 rgba(49,46,46,.9) 11px 上层**，四条均涉及 13 项浅灰 rgba(154,149,149,.34) 8px 下层；icode 色块同色系（f=灰/p=深灰#454241/b=加分橙）；图例三项「四条提示词均涉及 · 浅灰下层」「部分提示词涉及 · 深灰上层」「加分 加分项」；画布 1200×1800（1:1.5 同 v1.0 img1 比例）；水印等宽修正+三行脚注同批次口径。
+- 构建脚本增强（较 v1.0）：__yzSankey 新增 links 矩阵（71 条 [item,prompt,layer]）与 yMin/yMax 连线边界暴露，支撑程序化全量连线核验（v1.0 仅计数+faint/prom）。
+- render.mjs a 一次通过：rc=0 yzCheck compliant（browser-validation-img6.json）；量测：无溢出、compact 未触发、行高 47px×21 + B0=111（两行）/C2=75（换行）、卡片 329/292/329/329、yMin=6/yMax=1323 在 sankeyH=1329 内、gapToFooter=34。
+- 质检链全过：batch2-img6-check.cjs（DOM 层权威）标题/图例 3 项/列头/4 卡片（编号+标签+标题+要点全文）/23 行（编号+层级色块+名称+favicon aria-label 序列）/脚注逐字零差异；**71 连线矩阵与表2 裁定基准程序化逐条核对完全一致（52 浅灰+19 深灰）**；13 项无平台 0 favicon 核验；favicon 总数 48=各行列序之和；水印 icon=字标=360px 等宽+横版 icon 53 未误改；字号全≥26px（卡片标题 30px）；PIL 1200×1800/8041 色/着墨 36.3%；VLM r1 全图逐字转写比对全过（T1 要点「对白口型同步」1x 误读为「对口型同步」→ 3x 裁图复核读出正确 vlm-b2-img6-t1-3x.json，DOM 权威）+ r2 版式 8 项全过（第 5 项「浅灰细线与深灰粗线层次分明、粗线位于细线之上且清晰可辨」= 本次核心要求达成；第 8 项水印提及为 yzCheck 强制合规项非缺陷）；validate.py 目录级复跑 compliant 58/58。
+- source-data.csv 追加 img6 111 行（4 提示词+23 项+71 连线+10 favicon 映射+2 裁定+1 图级）→ 166 行无重复；README（img6 章节：布局/连线两层/连线矩阵与裁定/favicon/与 v1.0 数据差异/基线；验证链第 7 条专项；目录结构 166 行）+ overrides.txt（canvas 条目扩展 img1..img6 + 新增 a.sankey-emphasis-darkgray-batch2-img6 条目）同步。
+- 双 worklog 同步；fetch 确认远端无新提交后单次 commit + push。
+
+Stage Summary:
+- batch2 img6 交付完成：桑基图第二版 1200×1800（提示词在左/加扣分项在右/71 连线两层零交叉/强调连线深灰/浅灰下层/13 项无平台不显 favicon/48 个平台 favicon）。
+- batch2 现含六图：img1-img5 重构精简表格 + img6 桑基图第二版；CSV 166 行；validate.py 58/58。
+- 技术沉淀：桑基连线全量程序化核验方法（__yzSankey.links 矩阵 vs 表2 裁定基准逐条比对，替代 v1.0 的计数抽查+VLM 抽查）。
