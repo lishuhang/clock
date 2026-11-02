@@ -2,10 +2,13 @@ name: patent-download
 
 on:
   workflow_dispatch:
-  # 也可在 resolve 完成后由 push 触发；默认仅手动触发，避免与 resolve 叠加限流
   push:
     paths:
       - '1102-patent/resolved.json'
+
+concurrency:
+  group: patent-pipeline
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -26,6 +29,8 @@ jobs:
         run: |
           git config user.email "bot@workbuddy.local"
           git config user.name "patent-bot"
-          git add resolved.json pdf/
+          git remote set-url origin https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git
+          git add -A
           git commit -m "data(1102-patent): download real patent PDFs" || echo "nothing"
-          git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{github.ref_name}}
+          git pull --rebase origin ${{github.ref_name}} || true
+          git push origin HEAD:${{github.ref_name}}
