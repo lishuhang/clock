@@ -99,6 +99,23 @@ lines.append("对照（端点可用性 + 已知真实专利，应 FOUND）：")
 lines.append("  " + gquery("tensorflow"))     # 文本检索，端点可用时应 FOUND
 lines.append("  " + gquery("US4656098A"))      # 已知真实美国专利，应 FOUND
 
+# ---- RAW 响应样本：确认文章专利号是否真实存在 ----
+import urllib.request as _ur
+def raw(num):
+    url = "https://patents.google.com/xhr/query?url=" + urllib.parse.quote("q=" + num)
+    try:
+        req = _ur.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64) Chrome/120"})
+        with _ur.urlopen(req, timeout=30) as r:
+            return r.read().decode("utf-8", "ignore")
+    except Exception as e:
+        return f"ERR {e}"
+lines.append("")
+lines.append("=== RAW xhr 响应样本 ===")
+for n in ["CN123020788A", "US4656098A"]:
+    r = raw(n)
+    lines.append(f"--- {n} (len={len(r)}) ---")
+    lines.append(r[:500])
+
 out = "\n".join(lines)
 print(out)
 with open(os.path.join(ROOT, "probe_report.txt"), "w", encoding="utf-8") as f:
