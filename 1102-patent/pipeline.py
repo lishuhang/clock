@@ -68,23 +68,30 @@ def parse_result(p):
 def search_raw(query, num=20):
     inner = urllib.parse.urlencode({"q": query})
     url = API + "?" + urllib.parse.urlencode({"url": inner, "num": str(num)})
-    try:
-        raw = _get(url)
-        data = json.loads(raw)
-    except Exception:
-        return []
-    results = data.get("results", {})
-    items = []
-    if isinstance(results, dict):  # 新结构: results.cluster[].result[].patent
-        for cl in results.get("cluster", []):
-            for r in cl.get("result", []):
-                if isinstance(r, dict) and isinstance(r.get("patent"), dict):
-                    items.append(r["patent"])
-    elif isinstance(results, list):  # 兼容旧结构
-        for j in results:
-            if isinstance(j, dict) and j.get("patent_id"):
-                items.append(j)
-    return items
+    last_err = None
+    for attempt in range(3):  # 应对 Google 偶发空响应/限流
+        try:
+            raw = _get(url)
+            data = json.loads(raw)
+        except Exception as e:
+            last_err = str(e)
+            time.sleep(3 + attempt * 2)
+            continue
+        results = data.get("results", {})
+        items = []
+        if isinstance(results, dict):  # 新结构: results.cluster[].result[].patent
+            for cl in results.get("cluster", []):
+                for r in cl.get("result", []):
+                    if isinstance(r, dict) and isinstance(r.get("patent"), dict):
+                        items.append(r["patent"])
+        elif isinstance(results, list):  # 兼容旧结构
+            for j in results:
+                if isinstance(j, dict) and j.get("patent_id"):
+                    items.append(j)
+        if items:
+            return items
+        time.sleep(3 + attempt * 2)  # 空结果，退避后重试
+    return []
 
 
 def _title_hit(name, t):
@@ -92,34 +99,30 @@ def _title_hit(name, t):
 
 
 def resolve_one(name, kw):
-    best, cands, conf = {}, [], "none"
-    # 策略 A：自由文本「标题 + 公司关键词」—— Google 会按申请人相关性重排
-    if kw:
-        itemsA = search_raw("%s %s" % (name, kw), num=30)
-        for p in itemsA:
-            if kw and kw in (p.get("assignee") or ""):
-                return parse_result(p), [parse_result(x) for x in itemsA], "assignee"
-        for p in itemsA:
-            if _title_hit(name, p.get("title", "")):
-                return parse_result(p), [parse_result(x) for x in itemsA], "title_sub"
-        if itemsA:
-            best, cands, conf = parse_result(itemsA[0]), [parse_result(x) for x in itemsA], "freetext_top"
-    # 策略 B：仅标题，集群内按申请人过滤
-    itemsB = search_raw(name, num=30)
-    for p in itemsB:
+    # 多策略抓候选：标题+公司、仅公司、仅标题
+    gathered = []
+    for q in ([name + " " + kw, kw, name] if kw else [name]):
+        items = search_raw(q, num=30)
+        gathered.extend(items)
+        time.sleep(random.uniform(0.8, 1.8))  # 礼貌限速，避免触发限流
+    # 去重
+    seen, uniq = set(), []
+    for p in gathered:
+        pid = p.get("publication_number")
+        if pid in seen:
+            continue
+        seen.add(pid)
+        uniq.append(p)
+    # 选最优：先按申请人命中，再按标题子串，最后取首条
+    for p in uniq:
         if kw and kw in (p.get("assignee") or ""):
-            return parse_result(p), [parse_result(x) for x in itemsB], "assignee"
-    if conf == "none" and itemsB:
-        best, cands, conf = parse_result(itemsB[0]), [parse_result(x) for x in itemsB], "title"
-    # 策略 C：仅公司名，再按标题子串匹配
-    if kw:
-        itemsC = search_raw(kw, num=40)
-        for p in itemsC:
-            if _title_hit(name, p.get("title", "")):
-                return parse_result(p), [parse_result(x) for x in itemsC], "company_title"
-        if conf == "none" and itemsC:
-            best, cands, conf = parse_result(itemsC[0]), [parse_result(x) for x in itemsC], "company"
-    return best, cands, conf
+            return parse_result(p), [parse_result(x) for x in uniq[:6]], "assignee"
+    for p in uniq:
+        if _title_hit(name, p.get("title", "")):
+            return parse_result(p), [parse_result(x) for x in uniq[:6]], "title_sub"
+    if uniq:
+        return parse_result(uniq[0]), [parse_result(x) for x in uniq[:6]], "top"
+    return {}, [], "none"
     for p in cands:
         if kw and kw in (p["title"] or ""):
             return p, cands, "title"
