@@ -163,12 +163,27 @@ def do_resolve():
         kw = KW.get(applicant, "")
         print("[%d/%d] %s | kw=%s" % (i, len(patents), name[:24], kw), flush=True)
         if i == 1:
-            raw = search_raw(name)
-            sample = raw[0] if raw else {}
+            inner = urllib.parse.urlencode({"q": name})
+            url = API + "?" + urllib.parse.urlencode({"url": inner, "num": "20"})
+            try:
+                raw_text = _get(url)
+            except Exception as e:
+                raw_text = "ERR %s" % e
+            try:
+                dd = json.loads(raw_text)
+                top_keys = list(dd.keys())
+                pat = dd.get("patents")
+                if isinstance(pat, dict) and pat:
+                    k0 = list(pat.keys())[0]
+                    pat_sample = json.dumps({k0: pat[k0]}, ensure_ascii=False)[:1500]
+                else:
+                    pat_sample = "no/empty patents"
+            except Exception as e:
+                top_keys = []; pat_sample = "parse err %s" % e
             with open("debug.json", "w", encoding="utf-8") as dbg:
-                json.dump({"kw": kw, "sample_keys": list(sample.keys()),
-                           "sample": sample}, dbg, ensure_ascii=False, indent=2)
-            print("DEBUG sample keys:", list(sample.keys()), flush=True)
+                json.dump({"top_keys": top_keys, "pat_sample": pat_sample,
+                           "raw_head": raw_text[:2500]}, dbg, ensure_ascii=False, indent=2)
+            print("DEBUG top_keys:", top_keys, flush=True)
         best, cands, conf = resolve_one(name, kw)
         rec = {
             "applicant_docx": applicant,
