@@ -1,0 +1,32 @@
+name: patent-resolve
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '1102-patent/patents.json'
+      - '1102-patent/pipeline.py'
+      - '.github/workflows/resolve.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Resolve real publication numbers + abstracts
+        working-directory: 1102-patent
+        run: python3 pipeline.py resolve
+      - name: Commit resolved.json
+        working-directory: 1102-patent
+        run: |
+          git config user.email "bot@workbuddy.local"
+          git config user.name "patent-bot"
+          git add resolved.json
+          git commit -m "data(1102-patent): resolve real pub numbers + abstracts" || echo "nothing"
+          git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{github.ref_name}}
