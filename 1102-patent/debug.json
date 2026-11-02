@@ -1,21 +1,7 @@
 {
-  "kw": "爱奇艺",
-  "sample_keys": [
-    "patent_id",
-    "title",
-    "abstract",
-    "assignee",
-    "pubdate",
-    "pdf",
-    "snippet"
+  "top_keys": [
+    "results"
   ],
-  "sample": {
-    "patent_id": "google/CN115835409B",
-    "title": "",
-    "abstract": "",
-    "assignee": "",
-    "pubdate": "",
-    "pdf": "",
-    "snippet": ""
-  }
+  "pat_sample": "no/empty patents",
+  "raw_head": "{\"results\":{\"total_num_results\":124297, \"total_num_pages\":100, \"many_results\":false, \"num_page\":0, \"cluster\":[{\"result\":[{\"id\":\"patent/CN115835409B/zh\", \"rank\":0, \"patent\":{\"title\":\" 协同窗口处理方法、系统及电子设备\", \"snippet\":\" 本申请实施例提供了一种协同窗口处理方法、系统及电子设备。该方法包括：第一电子设备向第二电子设备投屏，第二电子设备上显示第一电子设备的协同窗口，其中，第一协同窗口与第一电子设备显示的界面始终相同，第二协同窗口显示的应用界面与第一协同窗口不同；用户点击第二协同窗口界面上的相机功能选项后，第一协同窗口和第一电子设备显示第一电子设备摄像头采集信息的界面；当用户操作第一电子设备完成信息采集后，第一协同窗口与第一电子设备恢复显示之前界面，第二协同窗口显示获取到采集信息后的界面。由此，在第二电子设备任一协同窗口中调起相机功能，都可以在第一电子设备上显示其摄像头采集信息的界面，方便用户操作，提升了用户体验 &hellip;\", \"priority_date\":\"2021-09-17\", \"filing_date\":\"2021-09-17\", \"grant_date\":\"2025-06-27\", \"publication_date\":\"2025-06-27\", \"inventor\":\"刘诗聪\", \"assignee\":\"荣耀终端股份有限公司\", \"publication_number\":\"CN115835409B\", \"language\":\"zh\", \"thumbnail\":\"\", \"pdf\":\"37/0c/15/fcb38eb9325fb4/CN115835409B.pdf\", \"family_metadata\":{\"aggregated\":{\"country_status\":[{\"country_code\":\"WO\", \"best_patent_stage\":{\"state\":\"NOT_ACTIVE\"}}, {\"country_code\":\"EP\", \"best_patent_stage\":{\"state\":\"ACTIVE\"}}, {\"country_code\":\"US\", \"best_patent_stage\":{\"state\":\"ACTIVE\"}}, {\"country_code\":\"CN\", \"best_patent_stage\":{\"state\":\"ACTIVE\"}}]}}}, \"is_similar_document\":false, \"entity_matches\":{\"additional\":0}, \"measure_matches\":{}}, {\"id\":\"patent/CN109472248B/zh\", \"rank\":1, \"patent\":{\"title\":\" 一种行人重识别方法、系统及电子设备和存储介质\", \"snippet\":\" 本申请公开了一种行人重识别方法、系统及一种电子设备和计算机可读存储介质，该方法包括：获取视频集，并确定目标行人图像；提取目标行人图像的目标特征，并将目标特征输入NSN中提取视频集中每一帧图像的待识别图像；利用MN网络生成相邻帧的待识别图像的光流图；将所有待识别图像和所有光流图输入LSTM网络中，得到融合多帧图像信息的融合图片；利用训练完成的人体特征提取网络提取融合图片的全局特征图和部分注意力图，并将每一部分注意力图分别与全局特征图融合为融合部分注意力特征图；通过全局平均池形成每一部分注意力融合特征图的融合特征向量，并将所有融合特征向量连接为全局特征向量，提高了行人重识别的识别准确率。\", \"priority_date\":\"2018-11-22\", \"filing_date\":\"2018-11-22\", \"grant_date\":\"2022-03-25\", \"publication_date\":\"2022-03-25\", \"inventor\":\"黄国恒\", \"assignee\":\"广东工业大学\", \"publication_number\":\"CN109472248B\", \"language\":\"zh\", \"thumbnail\":\"aa/d4/b2/33c73cd52c131e/HDA0001875817110000011.png\", \"pdf\":\"98/2e/bb/fcb950de5bc2fd/CN109472248B.pdf\", \"figures\":[{\"thumbnail\":\"3d/e5/1c/b4e00a28874c77/HDA0001875817110000011.png\", \"full\":\"8e/b5/d4/e39f1a5446a972/HDA0001875817110000011.png\"}, {\"thumbnail\":\"0d/2d/10/158a06fac2d8e0/HDA0001875817110000021.png\", \"full\":\"36/12/35/94f41f1285fe8a/HDA0001875817110000021.png\"}, {\"thumbnail\":\"41/94/31/bed50c2c9fc724/HDA0001875817110000031.png\", \"full\":\"61/58/61/c24de691b9bfbd/HDA0001875817110000031.png\"}, {\"thumbnail\":\"87/f0/2d/9bdf1a4438563b/HDA0001875817110000032.png\", \"full\":\"e0/e5/d2/ae8a0dd31f0121/HDA0001875817110000032.png\"}, {\"thumbnail\":\"59/98/af/0672b433fd8ec2/HDA00018"
 }

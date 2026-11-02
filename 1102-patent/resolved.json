@@ -375,21 +375,15 @@
       "category": "AI相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "做虚拟短片不用一帧帧手动调动画。这套创作工具打开可编辑虚拟场景，靠时间轴打点设置角色走位、动作和镜头推拉环绕。系统自动补齐中间过渡画面，直接导出片段素材。已有图片还能一键转成虚拟场景，素材再拿去二次生成新内容，大幅减少繁琐操作，普通人做虚拟视频更省事高效。",
-      "pub": "CN118051291B",
+      "pub": "",
       "title_real": "",
       "assignee_real": "",
       "abstract_real": "",
       "pubdate": "",
       "pdf_hint": "",
-      "confidence": "low",
-      "candidates": [
-        {
-          "pub": "CN118051291B",
-          "assignee": "",
-          "title": ""
-        }
-      ],
-      "ok": true,
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
