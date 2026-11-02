@@ -162,6 +162,13 @@ def do_resolve():
         applicant = p.get("applicant", "")
         kw = KW.get(applicant, "")
         print("[%d/%d] %s | kw=%s" % (i, len(patents), name[:24], kw), flush=True)
+        if i == 1:
+            raw = search_raw(name)
+            sample = raw[0] if raw else {}
+            with open("debug.json", "w", encoding="utf-8") as dbg:
+                json.dump({"kw": kw, "sample_keys": list(sample.keys()),
+                           "sample": sample}, dbg, ensure_ascii=False, indent=2)
+            print("DEBUG sample keys:", list(sample.keys()), flush=True)
         best, cands, conf = resolve_one(name, kw)
         rec = {
             "applicant_docx": applicant,
