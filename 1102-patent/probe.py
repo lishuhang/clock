@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """probe.py —— 在 runner 上探测各专利数据源的可达性（仅 GET，不下载大文件）。
 写出 probe_report.txt 供人工通过 API 读取。"""
-import os, urllib.request, urllib.error
+import os, urllib.request, urllib.error, urllib.parse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 CK = os.path.join(ROOT, ".cookies", "tyc.txt")
@@ -68,7 +68,7 @@ lines.append("")
 import re as _re
 def gquery(num):
     # Google Patents xhr query 返回 JSON（含 results），可判断专利号是否真实存在
-    url = "https://patents.google.com/xhr/query?url=" + _re.quote("q=" + num)
+    url = "https://patents.google.com/xhr/query?url=" + urllib.parse.quote("q=" + num)
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=25) as r:
