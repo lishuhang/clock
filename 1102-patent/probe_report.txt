@@ -1,0 +1,14 @@
+=== 天眼查各 host 探测（cookie 已注入）===
+api-gateway-web: HTTP 502  body='<html>\r\n<head><title>502 Bad Gateway</title></head>\r\n<body>\r\n<center><h1>502 Bad Gateway</h1></center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly '
+api.tianyancha: ERROR URLError: <urlopen error [Errno -2] Name or service not known>
+napi-huawei: HTTP 418  body='<!doctype html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport"\n          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">\n    <meta http-equiv="X-UA-Compa'
+zhuanli-root: HTTP 419  body='<!DOCTYPE html><html lang="zh-Hans-CN"><head><meta charset="utf-8"><title>天眼查-商业查询平台_企业信息查询_公司查询_工商查询_企业信用信息系统</title><link rel="dns-prefetch" href="//cdn.tianyancha.com"><meta n'
+www-root: HTTP 419  body='<!DOCTYPE html><html lang="zh-Hans-CN"><head><meta charset="utf-8"><title>天眼查-商业查询平台_企业信息查询_公司查询_工商查询_企业信用信息系统</title><link rel="dns-prefetch" href="//cdn.tianyancha.com"><meta n'
+
+=== 备选专利数据源（runner 可达性）===
+google-patents-page: HTTP 404  body='\n<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22'
+google-patentimages: HTTP 403  body="<?xml version='1.0' encoding='UTF-8'?><Error><Code>AccessDenied</Code><Message>Access denied.</Message><Details>Anonymous caller does not have storage.objects.list access to the Google Cloud Storage bucket. Permission 'storage.objects.list'"
+espacenet: HTTP 403  body='.'
+cnipa: ERROR URLError: <urlopen error [Errno -5] No address associated with hostname>
+qcc-web: HTTP 200  bytes=40992  head='<!DOCTYPE html>\n<html lang="zh-CN">\n  <head>\n    <title>企查查 - 查企业_查老板_查风险_企业信息查询系统</title>\n    <meta name="description" '
+soopat: HTTP 200  bytes=8084  head='\r\n\r\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\r\n<html xmlns="http://www.w3.org/19'
