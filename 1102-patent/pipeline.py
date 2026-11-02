@@ -87,26 +87,39 @@ def search_raw(query, num=20):
     return items
 
 
+def _title_hit(name, t):
+    return bool(name[:6] in t or t[:6] in name)
+
+
 def resolve_one(name, kw):
-    # 1) 标题 + 申请人 双重约束（最准）
-    items = search_raw('%s assignee:"%s"' % (name, kw)) if kw else []
-    if items:
-        for p in items:
-            if kw and kw in (p.get("assignee") or ""):
-                return parse_result(p), [parse_result(x) for x in items], "assignee"
-        return parse_result(items[0]), [parse_result(x) for x in items[:5]], "assignee_query"
-    # 2) 仅按申请人查，再用标题子串匹配
+    best, cands, conf = {}, [], "none"
+    # 策略 A：自由文本「标题 + 公司关键词」—— Google 会按申请人相关性重排
     if kw:
-        items2 = search_raw('assignee:"%s"' % kw)
-        for p in items2:
-            t = p.get("title", "")
-            if (name[:6] in t) or (t[:6] in name):
-                return parse_result(p), [parse_result(x) for x in items2[:5]], "assignee_title"
-    # 3) 仅标题兜底
-    items3 = search_raw(name)
-    if items3:
-        return parse_result(items3[0]), [parse_result(x) for x in items3[:5]], "title"
-    return {}, [], "none"
+        itemsA = search_raw("%s %s" % (name, kw), num=30)
+        for p in itemsA:
+            if kw and kw in (p.get("assignee") or ""):
+                return parse_result(p), [parse_result(x) for x in itemsA], "assignee"
+        for p in itemsA:
+            if _title_hit(name, p.get("title", "")):
+                return parse_result(p), [parse_result(x) for x in itemsA], "title_sub"
+        if itemsA:
+            best, cands, conf = parse_result(itemsA[0]), [parse_result(x) for x in itemsA], "freetext_top"
+    # 策略 B：仅标题，集群内按申请人过滤
+    itemsB = search_raw(name, num=30)
+    for p in itemsB:
+        if kw and kw in (p.get("assignee") or ""):
+            return parse_result(p), [parse_result(x) for x in itemsB], "assignee"
+    if conf == "none" and itemsB:
+        best, cands, conf = parse_result(itemsB[0]), [parse_result(x) for x in itemsB], "title"
+    # 策略 C：仅公司名，再按标题子串匹配
+    if kw:
+        itemsC = search_raw(kw, num=40)
+        for p in itemsC:
+            if _title_hit(name, p.get("title", "")):
+                return parse_result(p), [parse_result(x) for x in itemsC], "company_title"
+        if conf == "none" and itemsC:
+            best, cands, conf = parse_result(itemsC[0]), [parse_result(x) for x in itemsC], "company"
+    return best, cands, conf
     for p in cands:
         if kw and kw in (p["title"] or ""):
             return p, cands, "title"
