@@ -1,0 +1,26 @@
+name: gtry-patent-download
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gtry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Try Google Patents figure + PDF download
+        run: |
+          cd 1102-patent
+          python3 gtry.py
+
+      - name: Commit report
+        run: |
+          git config user.email "patent-bot@users.noreply.github.com"
+          git config user.name "patent-bot"
+          git add 1102-patent/gtry_report.txt 2>/dev/null || true
+          git diff --cached --quiet && echo "no changes" || (git commit -m "chore: test google patents download" && git push)
