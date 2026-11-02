@@ -1,0 +1,37 @@
+name: download-patents
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '1102-patent/dl.py'
+      - '1102-patent/2026年10月互联网专利盘点.md'
+      - '1102-patent/2026年10月互联网专利盘点_备选专利池.md'
+
+permissions:
+  contents: write
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write 天眼查 cookie from secret (NOT committed)
+        run: |
+          mkdir -p 1102-patent/.cookies
+          printf '%s' "${{ secrets.TYCCOOKIE }}" > 1102-patent/.cookies/tyc.txt
+          echo "cookie bytes: $(wc -c < 1102-patent/.cookies/tyc.txt)"
+
+      - name: Download figures + PDFs from 天眼查
+        run: |
+          cd 1102-patent
+          python3 dl.py
+
+      - name: Commit downloaded files (images/pdf only, never the cookie)
+        run: |
+          git config user.email "patent-bot@users.noreply.github.com"
+          git config user.name "patent-bot"
+          git add 1102-patent/img 1102-patent/pdf 1102-patent/api_probe.json 1102-patent/LOG.md 2>/dev/null || true
+          git diff --cached --quiet && echo "no changes" || (git commit -m "chore: add real patent figures & PDFs (1102-patent)" && git push)
