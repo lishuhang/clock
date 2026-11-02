@@ -398,21 +398,15 @@
       "category": "AI相关",
       "progress": "2026年10月9日授权公告",
       "summary_docx": "打游戏还能扔道具给对手 “一键变声”！这套游戏交互方案加入变声投掷、射击道具，被命中的角色直接开启变声 buff，玩家说话、系统播报语音都会自动切换成魔法音、机械音等趣味声效。界面同步提示变声类型与剩余时效，给对局增添搞笑整活效果，带动游戏语音功能更多人愿意开口使用。",
-      "pub": "CN110956966B",
+      "pub": "",
       "title_real": "",
       "assignee_real": "",
       "abstract_real": "",
       "pubdate": "",
       "pdf_hint": "",
-      "confidence": "low",
-      "candidates": [
-        {
-          "pub": "CN110956966B",
-          "assignee": "",
-          "title": ""
-        }
-      ],
-      "ok": true,
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
@@ -421,21 +415,15 @@
       "category": "AI相关",
       "progress": "2026年10月23日申请公布",
       "summary_docx": "三维模型旋转渲染总吃算力、容易卡顿？这套方案改用四元数描述旋转姿态，避开万向锁难题。借助经过数学化简的向量旋转模型，把复杂四元数连乘拆解为简单向量运算，算出旋转后的姿态向量再完成渲染。游戏角色、虚拟相机旋转更顺滑，计算量大幅下降，低配设备也能流畅跑高频旋转画面。",
-      "pub": "CN114359458B",
+      "pub": "",
       "title_real": "",
       "assignee_real": "",
       "abstract_real": "",
       "pubdate": "",
       "pdf_hint": "",
-      "confidence": "low",
-      "candidates": [
-        {
-          "pub": "CN114359458B",
-          "assignee": "",
-          "title": ""
-        }
-      ],
-      "ok": true,
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
@@ -478,21 +466,15 @@
       "category": "公益民生",
       "progress": "2026年10月27日申请公布",
       "summary_docx": "海尔给智能电视加了&quot;摸得到画面&quot;的能力。先检测手指摸在屏幕哪个位置，再用AI实时认出当前画面里有什么（人物挥手、宠物、打球、水面涟漪），最后按画面场景给触摸位置配上对应震动——摸宠物就是毛绒微振、球砸过来就是冲击震。不用片方预编码，老片和直播也能有触感，把商场里的“4D电影”搬回家。",
-      "pub": "CN110738321B",
+      "pub": "",
       "title_real": "",
       "assignee_real": "",
       "abstract_real": "",
       "pubdate": "",
       "pdf_hint": "",
-      "confidence": "low",
-      "candidates": [
-        {
-          "pub": "CN110738321B",
-          "assignee": "",
-          "title": ""
-        }
-      ],
-      "ok": true,
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
@@ -518,21 +500,15 @@
       "category": "公益民生",
       "progress": "2026年10月9日申请公布",
       "summary_docx": "美团给无人机机场的地勤人员做了一套手机作业APP。先从工单列表选一个配送任务、扫码连上无人机并自检通过，再到装卸货页拍关箱照片、填货物重量，核对不超载重、箱门已关好，最后滑动确认人员撤离、关掉安全保护，在放飞页点确认让无人机起飞。地面装货放飞全流程一步步数字化，周转更快也更安全。",
-      "pub": "CN116382349B",
+      "pub": "",
       "title_real": "",
       "assignee_real": "",
       "abstract_real": "",
       "pubdate": "",
       "pdf_hint": "",
-      "confidence": "low",
-      "candidates": [
-        {
-          "pub": "CN116382349B",
-          "assignee": "",
-          "title": ""
-        }
-      ],
-      "ok": true,
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     }
   ]

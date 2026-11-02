@@ -1,0 +1,21 @@
+{
+  "kw": "爱奇艺",
+  "sample_keys": [
+    "patent_id",
+    "title",
+    "abstract",
+    "assignee",
+    "pubdate",
+    "pdf",
+    "snippet"
+  ],
+  "sample": {
+    "patent_id": "google/CN115835409B",
+    "title": "",
+    "abstract": "",
+    "assignee": "",
+    "pubdate": "",
+    "pdf": "",
+    "snippet": ""
+  }
+}
