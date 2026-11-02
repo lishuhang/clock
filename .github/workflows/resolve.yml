@@ -8,6 +8,10 @@ on:
       - '1102-patent/pipeline.py'
       - '.github/workflows/resolve.yml'
 
+concurrency:
+  group: patent-pipeline
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -27,6 +31,8 @@ jobs:
         run: |
           git config user.email "bot@workbuddy.local"
           git config user.name "patent-bot"
-          git add resolved.json
+          git remote set-url origin https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git
+          git add -A
           git commit -m "data(1102-patent): resolve real pub numbers + abstracts" || echo "nothing"
-          git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{github.ref_name}}
+          git pull --rebase origin ${{github.ref_name}} || true
+          git push origin HEAD:${{github.ref_name}}
