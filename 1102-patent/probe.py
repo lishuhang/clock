@@ -62,6 +62,42 @@ lines.append(test("espacenet", "https://worldwide.espacenet.com/"))
 lines.append(test("cnipa", "https://pss-system.cponline.cnipa.gov.cn/"))
 lines.append(test("qcc-web", "https://www.qcc.com/"))
 lines.append(test("soopat", "https://www.soopat.com/"))
+lines.append("")
+
+# ---- 关键校验：文章里的专利号是否真实存在？用 Google Patents 搜索 API 验证 ----
+import re as _re
+def gquery(num):
+    # Google Patents xhr query 返回 JSON（含 results），可判断专利号是否真实存在
+    url = "https://patents.google.com/xhr/query?url=" + _re.quote("q=" + num)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            data = r.read().decode("utf-8", "ignore")
+        found = ('"num_results"' in data) or ('"results"' in data and 'total' in data)
+        has = "FOUND" if found else "NOT-FOUND"
+        return f"{num}: HTTP {r.status} -> {has} (len={len(data)})"
+    except urllib.error.HTTPError as e:
+        return f"{num}: HTTP {e.code}"
+    except Exception as e:
+        return f"{num}: ERROR {e}"
+
+lines.append("=== 专利号真实性校验（Google Patents 搜索 API）===")
+mdfiles = ["2026年10月互联网专利盘点.md", "2026年10月互联网专利盘点_备选专利池.md"]
+nums = []
+for mf in mdfiles:
+    try:
+        txt = open(os.path.join(ROOT, mf), encoding="utf-8").read()
+        for m in _re.finditer(r"CN\d{9}A", txt):
+            if m.group(0) not in nums:
+                nums.append(m.group(0))
+    except FileNotFoundError:
+        lines.append(f"(找不到 {mf})")
+lines.append(f"从稿件提取到 {len(nums)} 个唯一专利号，取前 10 个校验：")
+for n in nums[:10]:
+    lines.append("  " + gquery(n))
+lines.append("对照（端点可用性 + 已知真实专利，应 FOUND）：")
+lines.append("  " + gquery("tensorflow"))     # 文本检索，端点可用时应 FOUND
+lines.append("  " + gquery("US4656098A"))      # 已知真实美国专利，应 FOUND
 
 out = "\n".join(lines)
 print(out)
