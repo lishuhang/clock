@@ -7,18 +7,23 @@
       "category": "音视频相关",
       "progress": "2026年10月9日申请公布",
       "summary_docx": "想照着喜欢的片子再拍一部？先让AI拆解参考片的叙事节奏和画面风格，存成一套提示词模板，再填入用户的新故事指令拆成分镜，最后逐镜生成画面拼成成片。不懂视频制作的人给几句话就能出片，普通人也能高效拍出像样的AI短片。",
-      "pub": "CN112187619B",
-      "title_real": "一种即时通信方法及设备",
-      "assignee_real": "华为技术有限公司",
-      "abstract_real": " 本发明为一种即时通信方法及设备。一种通信系统，包括第一和第二电子设备，第一电子设备通过第二应用向第二电子设备发送第一内容的链接，第一内容为第一应用提供的内容；第二电子设备显示对应于第二应用的第三应用的第一对话界面，第一对话界面包括操作第一电子设备的用户标识和与第一内容的链接关联的第二选项；响应于对第二选项的操作，第二电子设备显示对应于第一应用的第四应用的第二界面，第二界面包括第一内容和第三选项；响应于对第三选项的操作，第二电子设备通过第三应用发送第一消息给第一电子设备。通过采用该技术方案，实现了在显示第一内容的第二界面上发送即时通信消息。",
-      "pubdate": "2021-08-03",
-      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/17/0f/23/4628353de298b5/CN112187619B.pdf",
-      "confidence": "top",
+      "pub": "EP3964933B1",
+      "title_real": "Display method and electronic device",
+      "assignee_real": "Huawei Technologies Co., Ltd.",
+      "abstract_real": " A display method, applied to an electronic device having a display screen, wherein the method comprises: displaying a first interface, wherein the first interface comprises an application window of a first application, wherein the application window of the first application occupies a first …",
+      "pubdate": "2024-09-25",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/02/dd/da/acffc0782c918b/EP3964933B1.pdf",
+      "confidence": "company",
       "candidates": [
         {
-          "pub": "CN112187619B",
-          "assignee": "华为技术有限公司",
-          "title": "一种即时通信方法及设备"
+          "pub": "EP3964933B1",
+          "assignee": "Huawei Technologies Co., Ltd.",
+          "title": "Display method and electronic device"
+        },
+        {
+          "pub": "CN111628965B",
+          "assignee": "北京奇艺世纪科技有限公司",
+          "title": "一种跨域名登录方法及装置"
         },
         {
           "pub": "CN112394891B",
@@ -26,19 +31,14 @@
           "title": "一种投屏方法及电子设备"
         },
         {
-          "pub": "CN112788012B",
-          "assignee": "深圳市欢太科技有限公司",
-          "title": "日志文件加密方法、装置、存储介质及电子设备"
+          "pub": "CN107066272B",
+          "assignee": "北京奇艺世纪科技有限公司",
+          "title": "一种页面更新方法及装置"
         },
         {
-          "pub": "CN112313929B",
+          "pub": "CN108027706B",
           "assignee": "华为技术有限公司",
-          "title": "一种自动切换蓝牙音频编码方式的方法及电子设备"
-        },
-        {
-          "pub": "CN110737386B",
-          "assignee": "华为技术有限公司",
-          "title": "一种屏幕截取方法及相关设备"
+          "title": "一种应用界面显示方法以及终端设备"
         }
       ],
       "ok": true,
@@ -179,38 +179,38 @@
       "category": "音视频相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "虚拟 LED 拍摄时，镜头拍到屏外实景就会出现穿帮，虚实画面还容易错位、色彩脱节，前期标定又费时费力。同步拿到实拍画面和渲染虚拟图，先校正几何位置消除错位，再匹配实拍光影做颜色校准。校正后的虚拟图叠加到实拍画面，遮盖屏外穿帮区域，遇到拍摄异常还能平滑过渡。无需强依赖前期标定，现场就能实时预览虚实融合效果。",
-      "pub": "CN113473896B",
-      "title_real": "分析主体",
-      "assignee_real": "躯体构成技术私人有限公司",
-      "abstract_real": " 在一个方面中，公开了一种用于使用设备12分析主体14的系统10。在一个布置和实施例中，设备12包括：控制器18；存储装置20，存储用于控制控制器18的电子程序指令；以及输入部件。在一种形式中，控制器在电子程序指令的控制下可操作使：经由该输入部件接收输入，该输入包括主体14的至少一个表示；处理输入以进行对主体14的分析并且基于分析生成输出，该处理包括使用数据库40；并且经由显示器22传送输出。在一个实施例中，输出包括从包括人类图像的表示中对个体的三维(3D)身体形状和相关联的身体测量值、成分以及健康保健风险的估计。",
-      "pubdate": "2024-12-10",
-      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/a4/6c/87/0b6b1306f7e583/CN113473896B.pdf",
-      "confidence": "top",
+      "pub": "AU2020274322B2",
+      "title_real": "Process and apparatus for estimating real-time quality of experience",
+      "assignee_real": "Canopus Networks Assets Pty Ltd",
+      "abstract_real": " 20. The apparatus of any one of claims 12 to 19, wherein the online service is a Twitch™, 20. The apparatus of any one of claims 12 to 19, wherein the online service is a TwitchTM, Facebook™ Facebook Live,or orYouTube Live, <b>YouTube</b>™ Live,Live, livelive streaming streaming service. service. 21. …",
+      "pubdate": "2025-08-07",
+      "pdf_hint": "",
+      "confidence": "company",
       "candidates": [
         {
-          "pub": "CN113473896B",
-          "assignee": "躯体构成技术私人有限公司",
-          "title": "分析主体"
+          "pub": "AU2020274322B2",
+          "assignee": "Canopus Networks Assets Pty Ltd",
+          "title": "Process and apparatus for estimating real-time quality of experience"
         },
         {
-          "pub": "CN111066060B",
-          "assignee": "资生堂株式会社",
-          "title": "虚拟面部化妆去除和模拟、快速面部检测和地标跟踪"
+          "pub": "EP3907592B1",
+          "assignee": "Huawei Technologies Co., Ltd.",
+          "title": "Method for moving application icons, and electronic device"
         },
         {
-          "pub": "CN115601671B",
-          "assignee": "奇跃公司",
-          "title": "用于向用户显示虚拟内容的系统和方法"
+          "pub": "US10979498B2",
+          "assignee": "Voxp Pte. Ltd.",
+          "title": "System, method and device for provision and management of web resource"
         },
         {
-          "pub": "CN111133365B",
-          "assignee": "奇跃公司",
-          "title": "内容到空间3d环境的匹配"
+          "pub": "CN106559677B",
+          "assignee": "华为技术有限公司",
+          "title": "终端、缓存服务器及获取视频分片的方法及装置"
         },
         {
-          "pub": "CN106999107B",
-          "assignee": "麦费兹克公司",
-          "title": "身体成像"
+          "pub": "US11256741B2",
+          "assignee": "Vertex Capital Llc",
+          "title": "Video tagging system and method"
         }
       ],
       "ok": true,
@@ -351,41 +351,15 @@
       "category": "游戏相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "玩家拖拽塔防干员挪动到可摆放区域时，系统捕捉当下候选摆放点位，结合地图通路与寻路逻辑算出该位置对应的目标点并完成数据绑定。干员身旁会出现可旋转的指向箭头，跟随拖拽实时更新指向方向。还没松手确认部署，玩家就能提前看清单位后续行进方向，有效避免摆错位置、单位跑错路线的问题。",
-      "pub": "CN111801730B",
-      "title_real": "用于人工智能驱动的自动伴侣的系统和方法",
-      "assignee_real": "暗物智能科技(广州)有限公司",
-      "abstract_real": " 本示教涉及一种用于自动对话伴侣的方法、系统和介质和实施方式。首先，接收与在对话场景中参与特定话题的对话的用户相关联的多模态输入数据，并将之用于提取对用户状态以及与对话场景相关联的相关信息进行表征的特征。基于用户状态和与对话场景相关联的相关信息，生成对话的当前状态，其中，对话的当前状态描绘对话的背景。基于与特定话题的对话对应的对话树、对话的当前状态以及基于历史对话数据与对话的当前状态学习的效用，确定对于用户的响应讯息。",
-      "pubdate": "2024-08-23",
-      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/b7/29/1d/2f8f689b9206dc/CN111801730B.pdf",
-      "confidence": "top",
-      "candidates": [
-        {
-          "pub": "CN111801730B",
-          "assignee": "暗物智能科技(广州)有限公司",
-          "title": "用于人工智能驱动的自动伴侣的系统和方法"
-        },
-        {
-          "pub": "CN208874628U",
-          "assignee": "瑞鹰公司",
-          "title": "安全相机设备和安全设备"
-        },
-        {
-          "pub": "CN120280093A",
-          "assignee": "美敦力迷你迈德公司",
-          "title": "用于食品分析、个性化推荐和健康管理的系统和方法"
-        },
-        {
-          "pub": "CN121062583A",
-          "assignee": "科大讯飞股份有限公司",
-          "title": "动物驱离方法、装置、电子设备和存储介质"
-        },
-        {
-          "pub": "CN114306367B",
-          "assignee": "赵小洋",
-          "title": "一种含有C/EBPα-saRNA的组合物"
-        }
-      ],
-      "ok": true,
+      "pub": "",
+      "title_real": "",
+      "assignee_real": "",
+      "abstract_real": "",
+      "pubdate": "",
+      "pdf_hint": "",
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
@@ -394,41 +368,15 @@
       "category": "游戏相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "先识别画面里的候选角色、绑定好目标玩家的肢体，AI实时盯着关键点；再统计关键点推理的耗时波动，判断设备当前是忙是闲；最后忙的时候降低检测频率省算力、闲的时候升频提精度。多人一起跳、一起打的体感游戏，识别又快又省电，玩家动作跟手不卡顿。",
-      "pub": "CN111460130A",
-      "title_real": "信息推荐方法、装置、设备和可读存储介质",
-      "assignee_real": "咪咕数字传媒有限公司",
-      "abstract_real": " 本发明实施例提供一种信息推荐方法、装置、电子设备和可读存储介质，确定目标用户对应的用户特征属性向量；将目标用户对应的用户特征属性向量输入至对应的推荐模型中，得到推荐模型输出的兴趣偏好分的预测结果；其中，推荐模型与对抗模型组成生成对抗网络；生成对抗网络是以用户特征属性向量样本、融合特征向量样本以及用户行为隐反馈特征向量样本作为对抗模型的输入训练得到；融合特征向量样本是基于用户行为数据样本和待推荐物品对应的物品辅助信息样本确定的。本发明实施例提供的方法，引入了待推荐物品对应的物品辅助信息，增加了模型输入数据的信息维度，能有效挖掘出用户行为和待推荐物品属性间的关系，从而提升推荐的准确率。",
-      "pubdate": "2020-07-28",
-      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/1d/c6/8c/44a83833450249/CN111460130A.pdf",
-      "confidence": "assignee",
-      "candidates": [
-        {
-          "pub": "WO2021180062A1",
-          "assignee": "华为技术有限公司",
-          "title": "意图识别方法及电子设备"
-        },
-        {
-          "pub": "CN111460130A",
-          "assignee": "咪咕数字传媒有限公司",
-          "title": "信息推荐方法、装置、设备和可读存储介质"
-        },
-        {
-          "pub": "CN107968814B",
-          "assignee": "咪咕互动娱乐有限公司",
-          "title": "一种就餐地点的推荐方法、服务器及移动终端"
-        },
-        {
-          "pub": "CN107638669B",
-          "assignee": "咪咕互动娱乐有限公司",
-          "title": "一种信息处理方法、装置及存储介质"
-        },
-        {
-          "pub": "CN107578161A",
-          "assignee": "咪咕文化科技有限公司",
-          "title": "一种产品评测方法、装置及存储介质"
-        }
-      ],
-      "ok": true,
+      "pub": "",
+      "title_real": "",
+      "assignee_real": "",
+      "abstract_real": "",
+      "pubdate": "",
+      "pdf_hint": "",
+      "confidence": "none",
+      "candidates": [],
+      "ok": false,
       "pdf_bytes": null
     },
     {
