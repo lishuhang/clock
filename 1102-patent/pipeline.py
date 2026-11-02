@@ -10,7 +10,7 @@
 - resolve 阶段快且不会卡死，先把高价值的「真实摘要」落库，再单独重试易限流的 PDF 下载。
 - download 用 http.cookiejar 维持会话、带 Referer，规避 Google Patents /PDF 端 503 限流。
 """
-import urllib.request, urllib.parse, urllib.error, re, json, os, sys, time, random
+import urllib.request, urllib.parse, urllib.error, re, json, os, sys, time, random, html
 from http.cookiejar import CookieJar
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -50,58 +50,63 @@ def _get(url, timeout=40, referer=None):
         return r.read().decode("utf-8", "ignore")
 
 
-def parse_result(j):
+def parse_result(p):
+    """p 为 Google xhr 结果里嵌套的 patent 对象。"""
     out = {}
-    pid = j.get("patent_id", "")
-    out["pub"] = pid.split("/")[-1] if pid else ""
-    out["title"] = j.get("title", "")
-    ab = j.get("abstract", "")
-    if isinstance(ab, dict):
-        ab = ab.get("text", "")
-    out["abstract"] = ab or ""
-    asg = j.get("assignee") or []
-    if isinstance(asg, str):
-        asg = [asg]
-    out["assignee"] = " / ".join(asg)
-    out["pubdate"] = j.get("pubdate", "")
-    out["pdf"] = j.get("pdf") or j.get("pdfUrl") or ""
-    out["snippet"] = j.get("snippet", "")
+    out["pub"] = p.get("publication_number", "")
+    out["title"] = (p.get("title") or "").strip()
+    ab = p.get("abstract") or p.get("snippet") or ""
+    out["abstract"] = html.unescape(ab)
+    out["assignee"] = p.get("assignee", "")
+    out["pubdate"] = p.get("publication_date", "")
+    rel = p.get("pdf", "")
+    out["pdf"] = ("https://patentimages.storage.googleapis.com/pdfs/" + rel) if rel else ""
+    out["snippet"] = html.unescape(p.get("snippet", ""))
     return out
 
 
-def search_raw(title, num=20):
-    inner = urllib.parse.urlencode({"q": title})
+def search_raw(query, num=20):
+    inner = urllib.parse.urlencode({"q": query})
     url = API + "?" + urllib.parse.urlencode({"url": inner, "num": str(num)})
     try:
         raw = _get(url)
         data = json.loads(raw)
     except Exception:
-        data = None
-    if isinstance(data, dict):
-        results = data.get("results", [])
-    elif isinstance(data, list):
-        results = data
-    else:
-        results = []
-    out = [j for j in results if isinstance(j, dict) and j.get("patent_id")]
-    if out:
-        return out
-    pubs = re.findall(r'CN\d{9}[A-Z]', raw if 'raw' in dir() else "")
-    fake = {"patent_id": "google/" + (pubs[0] if pubs else ""),
-            "title": "", "abstract": "", "assignee": "", "pubdate": "", "pdf": "", "snippet": ""}
-    return [fake] if pubs else []
+        return []
+    results = data.get("results", {})
+    items = []
+    if isinstance(results, dict):  # 新结构: results.cluster[].result[].patent
+        for cl in results.get("cluster", []):
+            for r in cl.get("result", []):
+                if isinstance(r, dict) and isinstance(r.get("patent"), dict):
+                    items.append(r["patent"])
+    elif isinstance(results, list):  # 兼容旧结构
+        for j in results:
+            if isinstance(j, dict) and j.get("patent_id"):
+                items.append(j)
+    return items
 
 
-def resolve_one(title, kw):
-    results = search_raw(title)
-    cands = []
-    for j in results:
-        p = parse_result(j)
-        if p["pub"]:
-            cands.append(p)
-    for p in cands:
-        if kw and kw in (p["assignee"] or ""):
-            return p, cands, "assignee"
+def resolve_one(name, kw):
+    # 1) 标题 + 申请人 双重约束（最准）
+    items = search_raw('%s assignee:"%s"' % (name, kw)) if kw else []
+    if items:
+        for p in items:
+            if kw and kw in (p.get("assignee") or ""):
+                return parse_result(p), [parse_result(x) for x in items], "assignee"
+        return parse_result(items[0]), [parse_result(x) for x in items[:5]], "assignee_query"
+    # 2) 仅按申请人查，再用标题子串匹配
+    if kw:
+        items2 = search_raw('assignee:"%s"' % kw)
+        for p in items2:
+            t = p.get("title", "")
+            if (name[:6] in t) or (t[:6] in name):
+                return parse_result(p), [parse_result(x) for x in items2[:5]], "assignee_title"
+    # 3) 仅标题兜底
+    items3 = search_raw(name)
+    if items3:
+        return parse_result(items3[0]), [parse_result(x) for x in items3[:5]], "title"
+    return {}, [], "none"
     for p in cands:
         if kw and kw in (p["title"] or ""):
             return p, cands, "title"
@@ -162,28 +167,6 @@ def do_resolve():
         applicant = p.get("applicant", "")
         kw = KW.get(applicant, "")
         print("[%d/%d] %s | kw=%s" % (i, len(patents), name[:24], kw), flush=True)
-        if i == 1:
-            inner = urllib.parse.urlencode({"q": name})
-            url = API + "?" + urllib.parse.urlencode({"url": inner, "num": "20"})
-            try:
-                raw_text = _get(url)
-            except Exception as e:
-                raw_text = "ERR %s" % e
-            try:
-                dd = json.loads(raw_text)
-                top_keys = list(dd.keys())
-                pat = dd.get("patents")
-                if isinstance(pat, dict) and pat:
-                    k0 = list(pat.keys())[0]
-                    pat_sample = json.dumps({k0: pat[k0]}, ensure_ascii=False)[:1500]
-                else:
-                    pat_sample = "no/empty patents"
-            except Exception as e:
-                top_keys = []; pat_sample = "parse err %s" % e
-            with open("debug.json", "w", encoding="utf-8") as dbg:
-                json.dump({"top_keys": top_keys, "pat_sample": pat_sample,
-                           "raw_head": raw_text[:2500]}, dbg, ensure_ascii=False, indent=2)
-            print("DEBUG top_keys:", top_keys, flush=True)
         best, cands, conf = resolve_one(name, kw)
         rec = {
             "applicant_docx": applicant,
