@@ -75,14 +75,24 @@ def search_raw(title, num=20):
         return [], str(e)
     try:
         data = json.loads(raw)
-        return data.get("results", []), None
     except Exception:
-        # 正则兜底
-        pubs = re.findall(r'CN\d{9}[A-Z]', raw)
-        fake = {"patent_id": "google/" + (pubs[0] if pubs else ""),
-                "title": "", "abstract": "", "assignee": "", "pubdate": "",
-                "pdf": "", "snippet": raw[:200]}
-        return [fake] if pubs else [], None
+        data = None
+    if isinstance(data, dict):
+        results = data.get("results", [])
+    elif isinstance(data, list):
+        results = data
+    else:
+        results = []
+    # Google xhr/query 的 results 里夹带少量非 dict 元素，仅保留含 patent_id 的 dict
+    out = [j for j in results if isinstance(j, dict) and j.get("patent_id")]
+    if out:
+        return out, None
+    # 正则兜底
+    pubs = re.findall(r'CN\d{9}[A-Z]', raw)
+    fake = {"patent_id": "google/" + (pubs[0] if pubs else ""),
+            "title": "", "abstract": "", "assignee": "", "pubdate": "",
+            "pdf": "", "snippet": raw[:200]}
+    return [fake] if pubs else [], None
 
 
 def resolve(title, kw):
