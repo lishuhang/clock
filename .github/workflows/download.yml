@@ -1,0 +1,31 @@
+name: patent-download
+
+on:
+  workflow_dispatch:
+  # 也可在 resolve 完成后由 push 触发；默认仅手动触发，避免与 resolve 叠加限流
+  push:
+    paths:
+      - '1102-patent/resolved.json'
+
+permissions:
+  contents: write
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download real patent PDFs
+        working-directory: 1102-patent
+        run: python3 pipeline.py download
+      - name: Commit PDFs
+        working-directory: 1102-patent
+        run: |
+          git config user.email "bot@workbuddy.local"
+          git config user.name "patent-bot"
+          git add resolved.json pdf/
+          git commit -m "data(1102-patent): download real patent PDFs" || echo "nothing"
+          git push https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{github.ref_name}}
