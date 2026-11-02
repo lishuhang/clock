@@ -94,7 +94,11 @@ def search_raw(title, num=20):
 
 def resolve_one(title, kw):
     results = search_raw(title)
-    cands = [parse_result(j) for j in results if j.get("pub")]
+    cands = []
+    for j in results:
+        p = parse_result(j)
+        if p["pub"]:
+            cands.append(p)
     for p in cands:
         if kw and kw in (p["assignee"] or ""):
             return p, cands, "assignee"
