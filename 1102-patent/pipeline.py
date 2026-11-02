@@ -90,7 +90,7 @@ def search_raw(query, num=20):
                     items.append(j)
         if items:
             return items
-        time.sleep(3 + attempt * 2)  # 空结果，退避后重试
+        time.sleep(4 + attempt * 3)  # 空结果，退避后重试
     return []
 
 
@@ -99,29 +99,29 @@ def _title_hit(name, t):
 
 
 def resolve_one(name, kw):
-    # 多策略抓候选：标题+公司、仅公司、仅标题
-    gathered = []
-    for q in ([name + " " + kw, kw, name] if kw else [name]):
-        items = search_raw(q, num=30)
-        gathered.extend(items)
-        time.sleep(random.uniform(0.8, 1.8))  # 礼貌限速，避免触发限流
-    # 去重
-    seen, uniq = set(), []
-    for p in gathered:
-        pid = p.get("publication_number")
-        if pid in seen:
-            continue
-        seen.add(pid)
-        uniq.append(p)
-    # 选最优：先按申请人命中，再按标题子串，最后取首条
-    for p in uniq:
+    # 主搜索：标题 + 公司关键词（自由文本，一次请求）
+    primary = search_raw((name + " " + kw) if kw else name, num=20)
+    time.sleep(random.uniform(4, 7))  # 礼貌限速，避免触发 Google 限流
+    for p in primary:
         if kw and kw in (p.get("assignee") or ""):
-            return parse_result(p), [parse_result(x) for x in uniq[:6]], "assignee"
-    for p in uniq:
+            return parse_result(p), [parse_result(x) for x in primary], "assignee"
+    for p in primary:
         if _title_hit(name, p.get("title", "")):
-            return parse_result(p), [parse_result(x) for x in uniq[:6]], "title_sub"
-    if uniq:
-        return parse_result(uniq[0]), [parse_result(x) for x in uniq[:6]], "top"
+            return parse_result(p), [parse_result(x) for x in primary], "title_sub"
+    # 兜底：仅公司名，按申请人/标题命中挑选
+    if kw:
+        comp = search_raw(kw, num=40)
+        time.sleep(random.uniform(6, 10))
+        for p in comp:
+            if kw and kw in (p.get("assignee") or ""):
+                return parse_result(p), [parse_result(x) for x in comp], "assignee"
+        for p in comp:
+            if _title_hit(name, p.get("title", "")):
+                return parse_result(p), [parse_result(x) for x in comp], "company_title"
+        if comp:
+            return parse_result(comp[0]), [parse_result(x) for x in comp], "company"
+    if primary:
+        return parse_result(primary[0]), [parse_result(x) for x in primary], "top"
     return {}, [], "none"
     for p in cands:
         if kw and kw in (p["title"] or ""):
