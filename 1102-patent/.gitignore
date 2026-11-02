@@ -1,0 +1,6 @@
+# 天眼查登录凭据，仅通过 GitHub Actions Secret(TYCCOOKIE) 注入 runner，绝不入库
+.cookies/
+
+# Python 运行产物（可选）
+__pycache__/
+*.pyc
