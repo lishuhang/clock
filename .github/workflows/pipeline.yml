@@ -6,7 +6,7 @@ on:
     paths:
       - '1102-patent/patents.json'
       - '1102-patent/pipeline.py'
-      - '1102-patent/pipeline.yml'
+      - '.github/workflows/pipeline.yml'
 
 permissions:
   contents: write
