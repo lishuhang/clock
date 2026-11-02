@@ -1,0 +1,32 @@
+name: probe-patent-sources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write 天眼查 cookie from secret
+        run: |
+          mkdir -p 1102-patent/.cookies
+          printf '%s' "${{ secrets.TYCCOOKIE }}" > 1102-patent/.cookies/tyc.txt
+          echo "cookie bytes: $(wc -c < 1102-patent/.cookies/tyc.txt)"
+
+      - name: Probe data sources from runner
+        run: |
+          cd 1102-patent
+          python3 probe.py
+
+      - name: Commit probe report
+        run: |
+          git config user.email "patent-bot@users.noreply.github.com"
+          git config user.name "patent-bot"
+          git add 1102-patent/probe_report.txt 2>/dev/null || true
+          git diff --cached --quiet && echo "no changes" || (git commit -m "chore: probe patent data sources" && git push)
