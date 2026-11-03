@@ -1,0 +1,2 @@
+STEP 目标: https://www.youtube.com/watch?v=EkdIZXDnRK8 | Context-Aware Coding: Give AI Agents the | 394s
+RESULT[youtube] FAIL: 提取失败: p/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extract (重试: --planb)

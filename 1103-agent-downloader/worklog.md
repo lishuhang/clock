@@ -136,3 +136,27 @@
   - `method=guest playurl(platform=html5,high_quality=1, qn=64)`
 - conclusion: B站视频下载成功
 - next: 下一平台: youtube
+`2026-11-03T18:47:01+08:00` **[youtube][discover]** ytsearch10:AI agent 命中 Zqno_vux6d8 dur=509s title=AI agents explained: Build your first agent in 8 minutes
+`2026-11-03T18:47:04+08:00` **[youtube][fail]** yt-dlp -J 失败: ERROR: [youtube] Zqno_vux6d8: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extract
+
+## [W013] 2026-11-03T18:47:04+08:00 | task=youtube-download | status=FAIL
+- cmd: `python3 tools/dl_youtube.py`
+- raw: logs/youtube_001.txt
+- key_facts (verbatim):
+  - `target=https://www.youtube.com/watch?v=Zqno_vux6d8`
+  - `extractor_args=youtube:player_client=ios,web_safari`
+  - `yt-dlp -J 失败: ERROR: [youtube] Zqno_vux6d8: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass `
+- conclusion: yt-dlp 提取失败(疑似bot-check)
+- next: 重试: --planb; 未探索: bgutil POT provider(node) / burner cookies
+`2026-11-03T18:47:19+08:00` **[youtube][discover]** ytsearch10:AI agent 命中 EkdIZXDnRK8 dur=394s title=Context-Aware Coding: Give AI Agents the Right Context
+`2026-11-03T18:47:21+08:00` **[youtube][fail]** yt-dlp -J 失败: ERROR: [youtube] EkdIZXDnRK8: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extract
+
+## [W014] 2026-11-03T18:47:21+08:00 | task=youtube-download | status=FAIL
+- cmd: `python3 tools/dl_youtube.py --planb`
+- raw: logs/youtube_001.txt
+- key_facts (verbatim):
+  - `target=https://www.youtube.com/watch?v=EkdIZXDnRK8`
+  - `extractor_args=youtube:player_client=web,android_vr,tv_downgraded`
+  - `yt-dlp -J 失败: ERROR: [youtube] EkdIZXDnRK8: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass `
+- conclusion: yt-dlp 提取失败(疑似bot-check)
+- next: 重试: --planb; 未探索: bgutil POT provider(node) / burner cookies
