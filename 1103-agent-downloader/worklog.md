@@ -89,3 +89,37 @@
 - key_facts: findings/00-04 五篇 + README/RESUME/state/todo/worklog + tools/5脚本 + logs/5原始日志
 - conclusion: 调研轮完成；下轮按 todo.md Phase 1 顺序实抓，从微博开始
 - next: 实抓轮（todo.md Phase 0 → Phase 1）
+`2026-11-03T18:43:15+08:00` **[weibo][discover]** uid=2656274875(央视新闻) page=1 ok=-100 msg=None http=200
+`2026-11-03T18:43:15+08:00` **[weibo][discover]** uid=2656274875(央视新闻) page=2 ok=-100 msg=None http=200
+`2026-11-03T18:43:15+08:00` **[weibo][discover]** uid=2803301701(人民日报) page=1 ok=-100 msg=None http=200
+`2026-11-03T18:43:15+08:00` **[weibo][discover]** uid=2803301701(人民日报) page=2 ok=-100 msg=None http=200
+
+## [W009] 2026-11-03T18:43:15+08:00 | task=weibo-download | status=FAIL
+- cmd: `python3 tools/dl_weibo.py`
+- raw: logs/weibo_001.txt
+- key_facts (verbatim):
+  - `容器API getIndex 两账号×两页 均未命中视频微博`
+- conclusion: 自发现失败
+- next: 需人工提供 m.weibo.cn/status/<bid> 后 --planb 重试
+`2026-11-03T18:44:33+08:00` **[weibo][planB]** 改用 yt-dlp WeiboUser extractor 自发现(央视新闻 u/2656274875)
+`2026-11-03T18:44:36+08:00` **[weibo][planB-discover]** entries=0 ids=[] err=.passport.weibo.cn/visitor/visitor?entry=sinawap&a=enter&url=https%3A%2F%2Fm.weibo.cn%2Fu%2F2656274875&domain=.weibo.cn&sudaref=&ua=php-sso_sdk_client-0.6.36&_rand=1793702675.2485
+
+## [W010] 2026-11-03T18:44:36+08:00 | task=weibo-download | status=FAIL
+- cmd: `python3 tools/dl_weibo.py --planb`
+- raw: logs/weibo_001.txt
+- key_facts (verbatim):
+  - `entries=0 前5条均非视频或下载失败`
+- conclusion: WeiboUser 通路失败
+- next: 未探索: 修XSRF cookie走容器API / gallery-dl weibo / 用户给URL
+`2026-11-03T18:45:23+08:00` **[weibo][planB]** 使用给定URL: https://weibo.com/2656274875/5266679128920856
+
+## [W011] 2026-11-03T18:45:37+08:00 | task=weibo-download | status=OK
+- cmd: `python3 tools/dl_weibo.py --planb`
+- raw: logs/weibo_001.txt
+- key_facts (verbatim):
+  - `target=https://weibo.com/2656274875/5266679128920856`
+  - `author=央视新闻`
+  - `file=weibo_5266679128920856.mp4 size=4051221 res=540x960 dur=34`
+  - `method=planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd`
+- conclusion: 微博视频下载成功
+- next: 下一平台: bilibili

@@ -1,0 +1,17 @@
+{
+  "platform": "weibo",
+  "status": "ok",
+  "source_url": "https://weibo.com/2656274875/5266679128920856",
+  "author": "央视新闻",
+  "title": "周深的祝福张口就来",
+  "summary": "【#周深的祝福张口就来#[哈哈]】今年是#周深第5次上央视春晚#，他希望有更多机会陪伴大家过年。@卡布叻_周深 解锁“马上红火”徽章，送出马年祝福：“祝大家马年生活越来越红火，红红火火过大年！”#马年春晚等着你# http://t.cn/AXt6IXPx ​​​",
+  "publish_time": null,
+  "duration_sec": 34,
+  "resolution": "540x960",
+  "size_bytes": 4051221,
+  "file": "weibo_5266679128920856.mp4",
+  "view_count": 816375,
+  "like_count": 47996,
+  "method": "planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd",
+  "discover": "yt-dlp WeiboUser extractor (m.weibo.cn/u/2656274875, 免登录)"
+}

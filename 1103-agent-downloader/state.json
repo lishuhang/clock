@@ -1,8 +1,8 @@
 {
   "task_id": "1103-agent-downloader",
   "goal": "从 YouTube/Instagram/X/Threads/微博/抖音/小红书/B站 各成功下载1个视频，并获取准确的来源URL、作者、标题、摘要",
-  "phase": "research_round_complete",
-  "updated": "2026-11-03T11:05:00+08:00",
+  "phase": "download_round_running",
+  "updated": "2026-11-03T18:45:37+08:00",
   "next_task": "按 todo.md Phase 1 顺序实抓：微博(最低风险)→B站→YouTube→X→Threads→小红书→Instagram→抖音；每平台先 --simulate/--dump-json 拿元数据再下载",
   "environment": {
     "sandbox": "Debian 13 trixie, 2C/4G, egress=HK Alibaba Cloud 8.212.10.159",
@@ -17,14 +17,61 @@
     "repo_local": "/home/z/my-project/clock (sparse clone, 工作目录=1103-agent-downloader/)"
   },
   "platform_status": {
-    "weibo":      {"feasibility": "high",   "primary": "yt-dlp Weibo extractor(自动游客cookie,公开视频免登录最高4K)", "cookies_needed": "no(公开)/粉丝可见内容需登录", "tested": "network+extractor存在性"},
-    "bilibili":   {"feasibility": "high",   "primary": "yt-dlp+SESSDATA(720p+); 免登录480p或上轮agent-browser+__playinfo__管线", "cookies_needed": "SESSDATA(提画质,可选)", "tested": "network+extractor存在性; 上轮管线22/22成功"},
-    "youtube":    {"feasibility": "medium", "primary": "yt-dlp(2026.10.26)+player_client=ios,web_safari; 数据中心IP可能bot check→bgutil POT provider(node版)或burner cookies", "cookies_needed": "可能需要(PO token可替代)", "tested": "network; 上轮会话yt-dlp触发验证码"},
-    "x_twitter":  {"feasibility": "medium", "primary": "yt-dlp twitter(公开推文多数免cookie)", "cookies_needed": "auth_token(部分推文)", "tested": "network+extractor存在性"},
-    "threads":    {"feasibility": "medium", "primary": "tribixbite/yt-dlp-threads 插件(Googlebot UA SSR绕登录墙, 仅公开帖)", "cookies_needed": "no", "tested": "network; 插件未装未测"},
-    "xiaohongshu":{"feasibility": "medium", "primary": "yt-dlp XiaoHongShu extractor(需带xsec_token的App分享链接; 匿名720p, +匿名web_session cookie→4K)", "cookies_needed": "匿名web_session(4K用,非登录)", "tested": "network+extractor存在性"},
-    "instagram":  {"feasibility": "medium", "primary": "gallery-dl/yt-dlp + sessionid cookie(匿名重度受限)", "cookies_needed": "sessionid(基本必须)", "tested": "network+extractor存在性"},
-    "douyin":     {"feasibility": "medium", "primary": "iesdouyin.com/share/video/{aweme_id} 分享页SSR(iOS UA, /play/?ratio=default拿原片4K60, 免登录); 备选TikTokDownloader(★17.3k,当日仍在更新)", "cookies_needed": "no(分享页通路)", "tested": "network; yt-dlp内置Douyin extractor已知失效(a_bogus)"}
+    "weibo": {
+      "feasibility": "high",
+      "primary": "yt-dlp Weibo extractor(自动游客cookie,公开视频免登录最高4K)",
+      "cookies_needed": "no(公开)/粉丝可见内容需登录",
+      "tested": "network+extractor存在性",
+      "result_1103": {
+        "ok": true,
+        "file": "weibo_5266679128920856.mp4",
+        "size_mb": 4.1,
+        "resolution": "540x960",
+        "method": "planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd"
+      }
+    },
+    "bilibili": {
+      "feasibility": "high",
+      "primary": "yt-dlp+SESSDATA(720p+); 免登录480p或上轮agent-browser+__playinfo__管线",
+      "cookies_needed": "SESSDATA(提画质,可选)",
+      "tested": "network+extractor存在性; 上轮管线22/22成功"
+    },
+    "youtube": {
+      "feasibility": "medium",
+      "primary": "yt-dlp(2026.10.26)+player_client=ios,web_safari; 数据中心IP可能bot check→bgutil POT provider(node版)或burner cookies",
+      "cookies_needed": "可能需要(PO token可替代)",
+      "tested": "network; 上轮会话yt-dlp触发验证码"
+    },
+    "x_twitter": {
+      "feasibility": "medium",
+      "primary": "yt-dlp twitter(公开推文多数免cookie)",
+      "cookies_needed": "auth_token(部分推文)",
+      "tested": "network+extractor存在性"
+    },
+    "threads": {
+      "feasibility": "medium",
+      "primary": "tribixbite/yt-dlp-threads 插件(Googlebot UA SSR绕登录墙, 仅公开帖)",
+      "cookies_needed": "no",
+      "tested": "network; 插件未装未测"
+    },
+    "xiaohongshu": {
+      "feasibility": "medium",
+      "primary": "yt-dlp XiaoHongShu extractor(需带xsec_token的App分享链接; 匿名720p, +匿名web_session cookie→4K)",
+      "cookies_needed": "匿名web_session(4K用,非登录)",
+      "tested": "network+extractor存在性"
+    },
+    "instagram": {
+      "feasibility": "medium",
+      "primary": "gallery-dl/yt-dlp + sessionid cookie(匿名重度受限)",
+      "cookies_needed": "sessionid(基本必须)",
+      "tested": "network+extractor存在性"
+    },
+    "douyin": {
+      "feasibility": "medium",
+      "primary": "iesdouyin.com/share/video/{aweme_id} 分享页SSR(iOS UA, /play/?ratio=default拿原片4K60, 免登录); 备选TikTokDownloader(★17.3k,当日仍在更新)",
+      "cookies_needed": "no(分享页通路)",
+      "tested": "network; yt-dlp内置Douyin extractor已知失效(a_bogus)"
+    }
   },
   "blocked_on": [
     "Instagram: 需用户提供 burner 账号 sessionid cookie(放 /home/z/my-project/.secrets/cookies/instagram.txt)",
