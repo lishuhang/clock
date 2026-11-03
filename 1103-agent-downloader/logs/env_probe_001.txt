@@ -1,0 +1,73 @@
+
+===== DATE_UTC =====
+2026-11-03T09:53:44Z
+
+===== OS =====
+Linux 5.10.134-013.15.kangaroo.al8.x86_64
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+
+===== CPU_MEM =====
+cores=2
+               total        used        free      shared  buff/cache   available
+Mem:           4.1Gi       455Mi       3.6Gi        48Ki       177Mi       3.6Gi
+
+===== PYTHON =====
+Python 3.12.16
+/home/z/.venv/bin/python3
+
+===== NODE =====
+v24.22.2
+
+===== GIT =====
+git version 2.47.3
+
+===== CURL =====
+curl 8.14.1 (x86_64-pc-linux-gnu) libcurl/8.14.1 OpenSSL/3.5.7 zlib/1.3.1 brotli/1.1.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.2 libssh2/1.11.1 nghttp2/1.64.0 nghttp3/1.8.0 librtmp/2.3 OpenLDAP/2.6.10
+
+===== FFMPEG =====
+ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
+
+===== YT-DLP(system) =====
+MISSING
+
+===== GALLERY-DL(system) =====
+MISSING
+
+===== INSTALOADER =====
+MISSING
+
+===== YOU-GET =====
+MISSING
+
+===== LUX =====
+MISSING
+
+===== BBDOWN =====
+MISSING
+
+===== GH_CLI =====
+
+===== PIP3 =====
+pip 26.2.2 from /home/z/.venv/lib/python3.12/site-packages/pip (python 3.12)
+
+===== VENV_CAPABLE =====
+yes
+
+===== PROXY_ENV =====
+none
+
+===== PIP_PKGS_MATCH =====
+httpx                        0.28.1
+httpx-sse                    0.4.3
+playwright                   1.57.0
+requests                     2.32.5
+requests-cache               1.3.1
+safehttpx                    0.1.7
+
+===== PLAYWRIGHT_BROWSERS =====
+chromium-1200
+chromium_headless_shell-1200
+ffmpeg-1011
+
+===== CHROME_BINARIES =====
+none

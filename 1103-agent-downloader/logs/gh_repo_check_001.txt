@@ -1,0 +1,16 @@
+yt-dlp/yt-dlp                                | ★204872  pushed:2026-10-29 archived:False
+mikf/gallery-dl                              | ★20352   pushed:2026-10-31 archived:False
+JoeanAmier/TikTokDownloader                  | ★17345   pushed:2026-11-03 archived:False
+JoeanAmier/XHS-Downloader                    | ★13196   pushed:2026-10-31 archived:False
+NanmiCoder/MediaCrawler                      | ★70027   pushed:2026-10-27 archived:False
+ReaJason/xhs                                 | ★2231    pushed:2025-07-01 archived:False
+instaloader/instaloader                      | ★13765   pushed:2026-11-01 archived:False
+btjawa/BiliTools                             | ★5025    pushed:2026-07-07 archived:True
+nilaoda/BBDown                               | ★13839   pushed:2026-05-14 archived:True
+SocialSisterYi/bilibili-API-collect          | ★20146   pushed:2026-01-30 archived:True
+dataabc/weibo-crawler                        | ★4686    pushed:2026-10-26 archived:False
+zyipeng/video-downloader                     | ★31      pushed:2026-06-02 archived:False
+Brainicism/bgutil-ytdlp-pot-provider         | ★889     pushed:2026-10-07 archived:False
+yt-dlp/yt-dlp-get-pot                        | ERROR HTTP Error 404: Not Found
+junhoyeo/threads-api                         | ★1619    pushed:2023-09-08 archived:True
+EvilDecoder/Douyin_TikTok_Download_API       | ERROR HTTP Error 404: Not Found

@@ -1,0 +1,69 @@
+== pip install (quiet) ==
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: pip install --upgrade pip
+== versions ==
+yt-dlp: 2026.10.26
+gallery-dl: 1.32.19
+== yt-dlp extractor coverage ==
+total extractors: 1755
+yt-dlp | YouTube -> 21
+    web.archive:youtube
+    youtube
+    youtube:clip
+yt-dlp | Instagram -> 5
+    Instagram
+    instagram:story
+    instagram:tag
+yt-dlp | Twitter -> 6
+    twitter
+    twitter:amplify
+    twitter:broadcast
+yt-dlp | Threads -> 0
+yt-dlp | Weibo -> 3
+    Weibo
+    WeiboUser
+    WeiboVideo
+yt-dlp | Douyin -> 1
+    Douyin
+yt-dlp | TikTok -> 8
+    TikTok
+    tiktok:collection
+    tiktok:effect (CURRENTLY BROKEN)
+yt-dlp | XiaoHongShu -> 1
+    XiaoHongShu
+yt-dlp | RedNote -> 0
+yt-dlp | BiliBili -> 19
+    BiliBili
+    Bilibili category extractor
+    BilibiliAudio
+== gallery-dl extractor coverage ==
+total extractors: 4926
+gallery-dl | instagram -> 72
+    InstagramAvatarExtractor
+    Extractor for an Instagram user's avatar
+    Category: instagram - Subcategory: avatar
+    Example : https://www.instagram.com/USER/avatar/
+gallery-dl | threads -> 18
+    Base extractor for threads on FoolFuuka based boards/archives
+    Extractor for jschan threads
+    Extractor for kokonotsuba threads
+    Extractor for LynxChan threads
+gallery-dl | twitter -> 61
+    TwitterAvatarExtractor
+    Category: twitter - Subcategory: avatar
+    TwitterBackgroundExtractor
+    Category: twitter - Subcategory: background
+gallery-dl | weibo -> 32
+    WeiboAlbumExtractor
+    Extractor for weibo 'album' listings
+    Category: weibo - Subcategory: album
+    Example : https://weibo.com/USER?tabtype=album
+gallery-dl | bilibili -> 11
+    BilibiliArticleExtractor
+    Extractor for a bilibili article
+    Category: bilibili - Subcategory: article
+    Example : https://www.bilibili.com/opus/12345
+gallery-dl | douyin -> 0
+gallery-dl | xiaohongshu -> 0
+gallery-dl | rednote -> 0

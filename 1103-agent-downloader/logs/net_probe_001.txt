@@ -1,0 +1,29 @@
+https://github.com | HTTP=200 t=0.290609s ip=20.205.243.166
+https://api.github.com | HTTP=403 t=0.118735s ip=20.205.243.168
+https://raw.githubusercontent.com | HTTP=301 t=0.024999s ip=185.199.111.133
+https://www.google.com | HTTP=200 t=0.248432s ip=142.251.156.119
+https://www.youtube.com | HTTP=200 t=0.332344s ip=142.251.153.4
+https://www.instagram.com | HTTP=200 t=0.641110s ip=57.144.64.34
+https://x.com | HTTP=200 t=0.230199s ip=172.66.0.227
+https://www.threads.net | HTTP=301 t=0.194776s ip=57.144.64.192
+https://weibo.com | HTTP=302 t=0.122178s ip=36.51.224.123
+https://m.weibo.cn | HTTP=302 t=0.113051s ip=36.51.224.123
+https://www.douyin.com | HTTP=200 t=0.224567s ip=155.102.180.242
+https://www.xiaohongshu.com | HTTP=302 t=0.213412s ip=47.238.248.53
+https://www.bilibili.com | HTTP=302 t=0.156368s ip=103.151.151.134
+https://api.bilibili.com | HTTP=301 t=0.048628s ip=103.151.151.133
+https://pypi.org | HTTP=200 t=0.026045s ip=151.101.128.223
+https://ipinfo.io/json | HTTP=200 t=0.221178s ip=34.117.59.81
+---- egress_ip_location ----
+{
+  "ip": "8.212.10.159",
+  "city": "Hong Kong",
+  "region": "Hong Kong",
+  "country": "HK",
+  "loc": "22.2783,114.1747",
+  "org": "AS45102 Alibaba (US) Technology Co., Ltd.",
+  "postal": "999077",
+  "timezone": "Asia/Hong_Kong",
+  "readme": "https://ipinfo.io/missingauth"
+}
+{"code":0,"message":"OK","ttl":1,"data":{"addr":"47.57.232.232","country":"香港","isp":"阿里云","latitude":22.396428,"longitude":114.109497,"zone_id":1035993088,"country_code":852}}
