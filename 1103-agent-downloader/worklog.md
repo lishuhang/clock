@@ -205,3 +205,15 @@
   - `yt-dlp -J 失败: ERROR: [Douyin] 7557764222948478251: Fresh cookies (not necessarily logged in) are needed`
 - conclusion: 失败
 - next: 未探索: TikTokDownloader(扫码) / playwright真浏览器
+`2026-11-03T18:50:17+08:00` **[xiaohongshu][extract]** yt-dlp formats=4 选定=0 高度=1364
+
+## [W019] 2026-11-03T18:50:21+08:00 | task=xiaohongshu-download | status=OK
+- cmd: `python3 tools/dl_xhs.py`
+- raw: logs/xiaohongshu_001.txt
+- key_facts (verbatim):
+  - `target=https://www.xiaohongshu.com/explore/6ae70cc2000000000602374d`
+  - `author=None`
+  - `file=xhs_6ae70cc2000000000602374d.mp4 size=7234489 res=720x1364`
+  - `method=yt-dlp XiaoHongShu extractor(匿名) fmt=0`
+- conclusion: 小红书视频下载成功
+- next: 下一平台: douyin

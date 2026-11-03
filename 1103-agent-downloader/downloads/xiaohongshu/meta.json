@@ -1,0 +1,17 @@
+{
+  "platform": "xiaohongshu",
+  "status": "ok",
+  "source_url": "https://www.xiaohongshu.com/discovery/item/6ae70cc2000000000602374d?source=webshare&xhsshare=pc_web&xsec_token=ABkoBqM9GMVdo1NVmw_Y6JKBLjknYMEg4LoEXLOXOsQJ0=&xsec_source=pc_share",
+  "source_url_canonical": "https://www.xiaohongshu.com/explore/6ae70cc2000000000602374d",
+  "author": "🐶还是那个Fiona (来自用户分享文案; yt-dlp未返回uploader字段)",
+  "title": "谢却山这眼神谁能接的住啊🥹",
+  "summary": "不管了，不能我一个人哭[哭惹R]#檀健次[话题]# #谢却山[话题]# #路透[话题]# #破碎感男主[话题]# #颜值和演技并存[话题]# #每一个眼神都是戏[话题]# #何不同舟渡[话题]# #古装剧[话题]# #一眼沦陷[话题]#",
+  "publish_time": null,
+  "duration_sec": null,
+  "resolution": "720x1364",
+  "size_bytes": 7234489,
+  "file": "xhs_6ae70cc2000000000602374d.mp4",
+  "method": "yt-dlp XiaoHongShu extractor(匿名) fmt=0",
+  "discover": "用户提供分享链接(带xsec_token)",
+  "note": "匿名档720p; 4K档需匿名web_session cookie(未提供, 见findings B18)"
+}
