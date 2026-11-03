@@ -70,3 +70,15 @@
 | B25 | 选了已归档项目 | BBDown/BiliTools/bilibili-API-collect/junhoyeo-threads-api 已 archived，勿作为依赖（文档仍可读） | ✅本轮核查 |
 | B26 | 找 bgutil 插件 404 | 正确路径 `Brainicism/bgutil-ytdlp-pot-provider`（大写 B） | ✅本轮实测 |
 | B27 | 网页中转站（snapany 等） | 第一次解析后弹登录墙，不可靠 | 不作为主通路 | `[上轮]` |
+
+### 素材轮新坑（B站管线, 2026-11-03 W021-W023）
+| # | 现象 | 真因 | 对策 | 状态 |
+|---|---|---|---|---|
+| B28 | 游客搜索 code=0 但 result 空 | 长尾组合词风控软拦截（热点实体词命中率高） | 换社区常用词面，**仅一次**，不可穷尽 | ✅两轮22词实测 |
+| B29 | view API 412 `request was banned` | 数据中心IP+游客直连（B6 变体）；dl_bilibili 上轮靠 popular 提供cid 特意绕开 view | **pagelist 替代 view 取 cid**（游客稳）；playurl 不受影响 | ✅实测 |
+| B30 | 搜索API duration 与实际差4倍（S004 记485s 实1906s；S007 记1217s 实151s） | 搜索结果字段与分P真实时长不同源 | 期望时长一律用 pagelist 分P duration | ✅实测 |
+| B31 | playurl durl 声称1087s/9MB，实际仅前180s（S008） | 平台对游客的**试看钳制** | 体检必须含"可解码时长比对"；yt-dlp 对B站同样 412（B6 原文命中） | ✅实测 |
+| B32 | `/home/z/.venv/bin/yt-dlp` 消失 | 沙盒重启丢 venv 包（`/home/z/my-project/` 挂载卷不受影响） | 用前先 `--version` 探测，丢了 `venv pip install -U yt-dlp` | ✅实测 |
+| B33 | push 被 GitHub 拒 | 单文件 100MB 硬限 | >100MB 素材 `split -b 90m` 分卷+md5 入库；commit 前 `git status` 复核 | ✅实测 |
+| B34 | 长任务被 Bash 600s 上限杀掉留半截文件 | 单段超时（A2 变体）；半截文件 size≠durl.size 但容器 duration 元数据仍在 | 下载脚本做成**幂等续跑**（体检含字节数±2%比对）；分段重入 | ✅实测 |
+| B35 | 体检把 dts 警告当坏包（"non monotonically increasing dts to muxer"） | `ffmpeg -f null` 对部分 mp4 时间基过敏，播放实际正常 | 只拦致命错误（Invalid data/NAL/moov/corrupt/EOF），dts 警告放行 | ✅实测 |

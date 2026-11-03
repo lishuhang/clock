@@ -1,0 +1,51 @@
+{
+  "plan_updated": "2026-11-03T20:05:00+08:00",
+  "note": "大模型切题判定结果。搜索通路: B站游客wbi search(两轮,7词命中/13词空,长尾词风控软拦截已用完换法名额)。空缺画面: 至尊魔戒争议卡/中土霍比特人系列/地产大壮手游/集装箱港口供应链/孩之宝财报画面——分镜表中标注,未执行再探路径见 materials.md。",
+  "items": [
+    {
+      "seq": 1, "bvid": "BV1oQdSY2EsV", "dur": 135, "title": "孩之宝都有哪些ip?", "author": "我在马路边捡到一个币",
+      "points": ["文案2财报公司形象", "文案4 IP矩阵1900个", "文案15互动提问"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 2, "bvid": "BV1Wm421376H", "dur": 2019, "title": "拆卡实验3.0｜一盒万智牌最新最强最贵产品能回多少钱｜摩登新篇3的三盒聚珍", "author": "驱蚊蜀黍",
+      "points": ["文案1一摞卡片养活巨头", "文案3万智牌贡献38.6%", "文案6营收破6亿美元", "文案14轻资产聚焦"],
+      "fallback_bvid": "BV1ETnZ6jEhj", "fallback_dur": 267, "fallback_note": "牌本抽奖开卡4:27(体积超限或下载失败时)"
+    },
+    {
+      "seq": 3, "bvid": "BV13rja6pEm2", "dur": 600, "title": "万智牌x漫威，轮抽之夜开盒", "author": "千鹤道长通天代",
+      "points": ["文案6新系列一个接一个砸向市场", "文案8线下社交桌游死忠"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 4, "bvid": "BV1Gd4y1Y7zt", "dur": 485, "title": "一看就懂的实体万智牌现开赛指南【共创计划第三期】", "author": "真实开店钱老板",
+      "points": ["文案8桌游爱好者死忠/店赛现场"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 5, "bvid": "BV11r4y1K7vo", "dur": 461, "title": "万智牌 美版印刷和日版印刷的区别 以凯德海姆系列牌为例", "author": "Yipei",
+      "points": ["文案9印刷机疯狂开动/卡牌工业意象"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 6, "bvid": "BV1qJAGebEuX", "dur": 1700, "title": "一口气了解关税", "author": "小Lin说",
+      "points": ["文案11加征关税被驳回/出口退税", "文案13供应链海峡波及原料成本"],
+      "fallback_bvid": "BV1UP411P7kP", "fallback_dur": 916, "fallback_note": "大小国关税经济效应分析15:16(体积超限或下载失败时)"
+    },
+    {
+      "seq": 7, "bvid": "BV1NqL6z5EE1", "dur": 1217, "title": "【小马宝莉】小马的故事就此开始了～（上）", "author": "馅子爱吃螺蛳粉",
+      "points": ["文案12小马宝莉IP授权一本万利"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 8, "bvid": "BV1jFCdYYELA", "dur": 1087, "title": "佩奇的膝盖摔伤了！小猪佩奇故事全集", "author": "彩虹的花园",
+      "points": ["文案4小猪佩奇IP"],
+      "fallback_bvid": null
+    },
+    {
+      "seq": 9, "bvid": "BV1NZxx6SEuH", "dur": 712, "title": "20年前第一部变形金刚电影的周边玩具-孩之宝", "author": "大志玩模型",
+      "points": ["文案4变形金刚IP/实体玩具业务"],
+      "fallback_bvid": null
+    }
+  ]
+}

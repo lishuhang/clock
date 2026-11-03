@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 拆万智牌聚珍盒开箱；展示闪卡稀有卡；查看卡牌特写；逐包拆卡计数；卡牌铺满桌面；拆出高价卡展示；整理卡牌归类；点算回收价值；稀有卡最终盘点\nCLIP: 201-605|拆卡展示MTG产品；807-1211|卡牌生意具象化；1413-1816|回值盘点谈商业",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711948,
+  "id": "2026110321190508879653848d4a43",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "2026110321190508879653848d4a43",
+  "usage": {
+    "completion_tokens": 101,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 502,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 603
+  }
+}

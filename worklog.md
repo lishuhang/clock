@@ -432,3 +432,21 @@ Stage Summary:
 - 产物全部在 1103-agent-downloader/：README/RESUME/state.json/todo/worklog + findings×5（环境实测/8平台可行性矩阵/分平台笔记含来源/27条坑清单/持续性协议规范）+ tools×5探针脚本 + logs×5原始输出
 - 结论：8平台中7个有活跃现成通路——微博最易（yt-dlp游客4K）、抖音最难但分享页旁路免签名、Threads 靠插件；Instagram 需 sessionid cookie、小红书需带 xsec_token 的 App 分享链接（均已列入 state.json blocked_on 待用户补给）
 - 下轮执行：todo.md Phase 0（装 threads 插件/选定测试URL/建 cookie 目录）→ Phase 1 按风险从低到高实抓（微博→B站→YouTube→X→Threads→小红书→Instagram→抖音，每平台先 --dump-json 验元数据再实下）
+
+
+Agent: Super Z (main)
+Task: 8平台视频下载实抓轮（除Instagram外7平台各1条高清视频+元信息→GitHub; 用户规则: 失败最多换法重试1次）
+
+Work Log:
+- 成绩 5/7：微博540x960/B站1280x536(免登录html5 playurl 720p档,修正调研"仅480p"结论)/X 1920x1080(SpaceX官方推文,游客免cookie)/Threads 720x1280(原创方法:Googlebot UA抓threads.com主页SSR抽帖子code→插件--simulate验证带视频→下载)/小红书720x1364(用户xsec_token链+yt-dlp匿名档)
+- 微波级发现：微博"列时间线"已被访客墙挡(m.weibo.cn容器API ok=-100 + yt-dlp WeiboUser重定向passport访客流程),但"单视频提取"畅通——搜索引擎转引拿具体URL即可绕过
+- YouTube❌：ytsearch发现正常,但ios,web_safari与web,android_vr,tv_downgraded两client组合均死于同一IP级bot-check("Sign in to confirm you're not a bot"),与上轮调研B1预判一致;未探索:bgutil POT provider(node版)/burner cookies
+- 抖音❌：iesdouyin分享页SSR对匿名已只回壳数据(loaderData仅页面元信息,aweme_id出现0次,三目标交叉验证排除"目标已删"),yt-dlp报"Fresh cookies needed"如B13预判;未探索:ttwid注入/TikTokDownloader扫码/playwright
+- 全部脚本化入库(tools/dl_*.py + lib_media.py + gh_sync.sh增量推送×7次commit),ffprobe体检5/5通过,过程留痕worklog W009-W021+logs/
+- 交付物：REPORT.md(元信息总表+忠实问题记录+未探索路径表+自行检索策略三档矩阵) + skills/video-downloader(固化)
+
+Stage Summary:
+- 平台难度重排序(实测定论)：X<B站<Threads<小红书<微博<YouTube(数据中心IP)<抖音(结构性收紧)
+- "自行搜索"结论：B站热门API/YouTube ytsearch/Threads主页SSR可沙盒内自发现;X/微博靠搜索引擎转引;抖音转引收录差需热榜站或用户给链;小红书必须用户给App分享链接——详见REPORT §5
+- 下一步若续做：YouTube装bgutil POT、抖音ttwid注入是各自失败的对症解,预算各约半小时
+- 工作目录: 1103-agent-downloader/ (REPORT.md 为总入口)

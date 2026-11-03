@@ -1,8 +1,8 @@
 {
   "task_id": "1103-agent-downloader",
   "goal": "从 YouTube/Instagram/X/Threads/微博/抖音/小红书/B站 各成功下载1个视频，并获取准确的来源URL、作者、标题、摘要",
-  "phase": "download_round_complete",
-  "updated": "2026-11-03T18:57:43+08:00",
+  "phase": "material_round_complete",
+  "updated": "2026-11-03T21:21:47+08:00",
   "next_task": "实抓轮已完成 5/7 (微博/B站/X/Threads/小红书✅, YouTube/抖音❌两法用尽). 下一步可选: ①YouTube bgutil POT provider 部署 ②抖音 ttwid 注入或 TikTokDownloader ③REPORT.md 已交付, skill 已固化(skills/video-downloader)",
   "environment": {
     "sandbox": "Debian 13 trixie, 2C/4G, egress=HK Alibaba Cloud 8.212.10.159",
@@ -121,5 +121,13 @@
   "known_lost_assets": [
     "上一轮(1020-feng-video)的 geetest_beat2.py/bili_fetch.py 等8个脚本未推GitHub已随沙盒丢失——B站验证码求解器需按 findings/03 坑7-9 的设计要点重建"
   ],
-  "worklog_pointer": "worklog.md (本轮 W001-W008)"
+  "worklog_pointer": "worklog.md (本轮 W001-W008)",
+  "material_round": {
+    "goal": "为孩之宝Q3财报解说文案配切题素材并下载编号存档",
+    "search": "B站游客wbi search两轮22词, 7词命中(热点实体词高, 长尾词软拦截)",
+    "result": "9条素材724MB(8ok+1partial S008试看钳制), 编号S001-S009存materials/clips, >100MB分卷",
+    "doc": "materials/materials.md(对照表+分镜表+坑B28-B33+小红书自搜边界回答)",
+    "vlm": "9宫格复判, 分镜14镜头, 素材未切割仅标秒段",
+    "next_task": "用户确认素材后可切割; 空缺画面(至尊魔戒卡/财报/大富翁)待给定URL或再探"
+  }
 }

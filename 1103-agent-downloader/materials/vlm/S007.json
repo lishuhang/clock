@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 小马宝莉动画角色亮相；夜空月亮城堡画面；小马夜空飞翔；粉色小马城堡月夜；小马魔法光效场景；紫悦看书场景；多只小马群像画面；小马村庄城镇场景；小马城堡门前画面\nCLIP: NONE",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711964,
+  "id": "20261103211922ac7e8fbd3ef2487f",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "20261103211922ac7e8fbd3ef2487f",
+  "usage": {
+    "completion_tokens": 67,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 480,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 547
+  }
+}

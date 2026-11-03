@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 佩奇与狗医生对话；操场众人围观；医院走廊候诊；佩奇坐病床；佩奇看病床；护士微笑查房；医生与佩奇家人；佩奇病床上微笑；医生护士道别\nCLIP: NONE",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711967,
+  "id": "202611032119244a41074f1cf14c7a",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611032119244a41074f1cf14c7a",
+  "usage": {
+    "completion_tokens": 58,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 473,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 531
+  }
+}

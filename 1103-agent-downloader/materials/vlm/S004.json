@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 开场动画混剪; 开卡牌包; 整理卡牌桌面; 展示卡牌细节; 玩家操作卡牌; 桌面对局布置; 翻看卡牌选牌; 双人对局中; 卡组与对局全景\nCLIP: 190s-381s|卡牌开包生意; 571s-762s|卡牌印刷展示; 1334s-1715s|桌游店线下社交",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711955,
+  "id": "202611032119128e09c3afefda4b62",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611032119128e09c3afefda4b62",
+  "usage": {
+    "completion_tokens": 111,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 488,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 599
+  }
+}

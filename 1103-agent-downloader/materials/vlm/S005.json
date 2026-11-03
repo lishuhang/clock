@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 展示美版万智牌卡牌；手持闪卡对镜头展示；特写卡面印刷光泽；卡牌倾斜反光展示；多张卡牌平铺对比；特写卡背与边框；近景翻看闪卡；卡牌平铺桌面；整理摆放卡牌\nCLIP: 46-138|MTG卡牌生意；230-323|卡牌印刷对比；368-415|桌游线下场景",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711959,
+  "id": "20261103211915d487f63953824260",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "20261103211915d487f63953824260",
+  "usage": {
+    "completion_tokens": 104,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 487,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 591
+  }
+}

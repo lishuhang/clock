@@ -217,3 +217,138 @@
   - `method=yt-dlp XiaoHongShu extractor(匿名) fmt=0`
 - conclusion: 小红书视频下载成功
 - next: 下一平台: douyin
+`2026-11-03T20:07:40+08:00` **[material-search][warmup]** www.bilibili.com http=200 cookies=['buvid3', 'b_nut']
+`2026-11-03T20:07:40+08:00` **[material-search][wbi]** key_len=32(前6=ea1db1…)
+`2026-11-03T20:07:40+08:00` **[material-search][ok]** [万智牌 开卡] n=0 top3=
+`2026-11-03T20:07:41+08:00` **[material-search][ok]** [万智牌 霍比特人] n=0 top3=
+`2026-11-03T20:07:43+08:00` **[material-search][ok]** [孩之宝] n=20 top3=20年前第一部变形金刚电影的周边玩具(11:52s) | 终于等到他漫画造型的电影版了～Mar(3:21s) | 【搬运】英皇电影/孩之宝娱乐/华策影(1:8s)
+`2026-11-03T20:07:44+08:00` **[material-search][ok]** [小猪佩奇 玩具] n=0 top3=
+`2026-11-03T20:07:46+08:00` **[material-search][ok]** [变形金刚 玩具] n=20 top3=9.9块！机器恐龙大合体！金属变体红(3:6s) | 20年前第一部变形金刚电影的周边玩具(11:52s) | 变形金刚玩具动画：时空战记·机械英雄(s)
+`2026-11-03T20:07:47+08:00` **[material-search][ok]** [万智牌 至尊魔戒] n=0 top3=
+`2026-11-03T20:07:49+08:00` **[material-search][ok]** [小马宝莉] n=20 top3=【中配1080P】小马宝莉短片大合集(33:20s) | 【中文配音】小马宝莉特辑：彩虹之旅(59:5s) | 【小马宝莉】小马的故事就此开始了～（(20:17s)
+`2026-11-03T20:07:50+08:00` **[material-search][ok]** [地产大亨 桌游] n=0 top3=
+`2026-11-03T20:07:51+08:00` **[material-search][ok]** [万智牌 店赛] n=0 top3=
+`2026-11-03T20:07:53+08:00` **[material-search][ok]** [万智牌 印刷] n=20 top3=【万智牌萌新指北】如何精准辨别日印(8:53s) | 体验独弈引擎的万智牌RPG，收集，组(20:7s) | 万智牌 万智牌美版印刷和日版印刷的区(7:41s)
+`2026-11-03T20:07:54+08:00` **[material-search][ok]** [集装箱 港口] n=0 top3=
+`2026-11-03T20:07:55+08:00` **[material-search][ok]** [特朗普 关税] n=0 top3=
+`2026-11-03T20:07:57+08:00` **[material-search][done]** 落盘 /home/z/my-project/clock/1103-agent-downloader/materials/search_raw.json OK 12/12; fails=none
+`2026-11-03T20:08:35+08:00` **[material-search][warmup]** www.bilibili.com http=200 cookies=['buvid3', 'b_nut']
+`2026-11-03T20:08:35+08:00` **[material-search][wbi]** key_len=32(前6=ea1db1…)
+`2026-11-03T20:08:36+08:00` **[material-search][ok]** [万智牌开卡] n=20 top3=万智牌北京聚光灯系列赛正赛直播回顾(826:27s) | 这不是so easy嘛！#万智牌 #(0:12s) | 拆卡实验3.0｜一盒万智牌最新最强最(33:39s)
+`2026-11-03T20:08:39+08:00` **[material-search][ok]** [小猪佩奇] n=20 top3=佩奇的膝盖摔伤了！小猪佩奇故事全集(18:7s) | 小猪佩奇 全集合集 🎄圣诞特辑🎄下雪(26:58s) | （带动画版）小猪佩奇英文台词逐句影子(s)
+`2026-11-03T20:08:41+08:00` **[material-search][ok]** [万智牌 魔戒] n=0 top3=
+`2026-11-03T20:08:44+08:00` **[material-search][ok]** [万智牌 中土] n=0 top3=
+`2026-11-03T20:08:46+08:00` **[material-search][ok]** [大富翁 桌游] n=0 top3=
+`2026-11-03T20:08:49+08:00` **[material-search][ok]** [万智牌 比赛] n=0 top3=
+`2026-11-03T20:08:52+08:00` **[material-search][ok]** [集装箱] n=0 top3=
+`2026-11-03T20:08:54+08:00` **[material-search][ok]** [港口 吊装] n=0 top3=
+`2026-11-03T20:08:57+08:00` **[material-search][ok]** [关税] n=20 top3=零关税，仅仅是药品名表便宜了吗？中国(3:50s) | 一口气了解关税(28:20s) | 6.8.2关税(46:22s)
+`2026-11-03T20:09:00+08:00` **[material-search][ok]** [孩之宝 财报] n=0 top3=
+`2026-11-03T20:09:02+08:00` **[material-search][done]** 落盘 /home/z/my-project/clock/1103-agent-downloader/materials/search_raw.json OK 10/10; fails=none
+`2026-11-03T20:11:36+08:00` **[material-dl][fail]** S001 BV1oQdSY2EsV primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:36+08:00` **[material-dl][fail]** S002 BV1Wm421376H primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:38+08:00` **[material-dl][fail]** S002 fallback也失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:38+08:00` **[material-dl][fail]** S003 BV13rja6pEm2 primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:38+08:00` **[material-dl][fail]** S004 BV1Gd4y1Y7zt primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:38+08:00` **[material-dl][fail]** S005 BV11r4y1K7vo primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:38+08:00` **[material-dl][fail]** S006 BV1qJAGebEuX primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:40+08:00` **[material-dl][fail]** S006 fallback也失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:40+08:00` **[material-dl][fail]** S007 BV1NqL6z5EE1 primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:40+08:00` **[material-dl][fail]** S008 BV1jFCdYYELA primary失败: view code=-412 msg=request was banned
+`2026-11-03T20:11:40+08:00` **[material-dl][fail]** S009 BV1NZxx6SEuH primary失败: view code=-412 msg=request was banned
+
+## [W020] 2026-11-03T20:11:40+08:00 | task=material-download | status=PARTIAL
+- cmd: `dl_materials.py (plan.json驱动)`
+- raw: materials/materials.json
+- key_facts (verbatim):
+  - `001 BV1oQdSY2EsV fail -MB - primary`
+  - `002 BV1Wm421376H fail -MB - primary`
+  - `003 BV13rja6pEm2 fail -MB - primary`
+  - `004 BV1Gd4y1Y7zt fail -MB - primary`
+  - `005 BV11r4y1K7vo fail -MB - primary`
+  - `006 BV1qJAGebEuX fail -MB - primary`
+  - `007 BV1NqL6z5EE1 fail -MB - primary`
+  - `008 BV1jFCdYYELA fail -MB - primary`
+  - `009 BV1NZxx6SEuH fail -MB - primary`
+- conclusion: 素材下载 0/9 ok, total 0MB
+- next: 抽帧九宫格 → 大模型切题复判 → 分镜表
+`2026-11-03T20:12:23+08:00` **[material-dl][playurl]** S001 BV1oQdSY2EsV parts=1 qn=64 预估5MB
+`2026-11-03T20:12:43+08:00` **[material-dl][playurl]** S002 BV1Wm421376H parts=1 qn=64 预估285MB
+`2026-11-03T20:15:06+08:00` **[material-dl][fail]** S002 BV1Wm421376H primary失败: ('Connection broken: IncompleteRead(13372920 bytes read, 271581383 more expected)', IncompleteRead(13372920 bytes read, 271581383 more expected))
+`2026-11-03T20:15:09+08:00` **[material-dl][playurl]** S002 BV1ETnZ6jEhj parts=1 qn=64 预估34MB
+`2026-11-03T20:17:24+08:00` **[material-dl][badpack]** S002 attempt1 Enter command: <target>|all <time>|-1 <command>[ <argument>] 
+`2026-11-03T20:17:38+08:00` **[material-dl][badpack]** S002 attempt2 Enter command: <target>|all <time>|-1 <command>[ <argument>] 
+`2026-11-03T20:17:38+08:00` **[material-dl][fail]** S002 fallback也失败: 两次体检均坏包
+`2026-11-03T20:17:38+08:00` **[material-dl][playurl]** S003 BV13rja6pEm2 parts=1 qn=64 预估103MB
+`2026-11-03T20:20:13+08:00` **[material-dl][badpack]** S003 attempt1 [null @ 0x5616328d5e80] Application provided invalid, non monotonically increasing dts to muxer in stream 0: 1199 >= 1199 [null @ 0x5616328d5e80] Appl
+`2026-11-03T20:20:50+08:00` **[material-dl][badpack]** S003 attempt2 [null @ 0x55a63bc34e80] Application provided invalid, non monotonically increasing dts to muxer in stream 0: 1199 >= 1199 [null @ 0x55a63bc34e80] Appl
+`2026-11-03T20:20:50+08:00` **[material-dl][fail]** S003 BV13rja6pEm2 primary失败: 两次体检均坏包
+`2026-11-03T20:20:50+08:00` **[material-dl][playurl]** S004 BV1Gd4y1Y7zt parts=1 qn=80 预估455MB
+`2026-11-03T20:23:54+08:00` **[material-dl][fail]** S002 BV1Wm421376H primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:04+08:00` **[material-dl][clean]** 删除残留 S002_bili_BV1Wm421376H.mp4
+`2026-11-03T20:24:39+08:00` **[material-dl][fail]** S004 BV1Gd4y1Y7zt primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:39+08:00` **[material-dl][fail]** S005 BV11r4y1K7vo primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:39+08:00` **[material-dl][fail]** S006 BV1qJAGebEuX primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:41+08:00` **[material-dl][fail]** S006 fallback也失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:41+08:00` **[material-dl][fail]** S007 BV1NqL6z5EE1 primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:41+08:00` **[material-dl][fail]** S008 BV1jFCdYYELA primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:24:41+08:00` **[material-dl][fail]** S009 BV1NZxx6SEuH primary失败: too many values to unpack (expected 2)
+`2026-11-03T20:35:31+08:00` **[material-dl][playurl]** S002 BV1Wm421376H parts=1 qn=16 预估87MB 期望时长2019s
+`2026-11-03T20:40:42+08:00` **[material-dl][clean]** 删除残留 S002_bili_BV1ETnZ6jEhj.mp4
+`2026-11-03T20:40:43+08:00` **[material-dl][grid]** S002 重做九宫格(文件更新)
+`2026-11-03T20:41:15+08:00` **[material-dl][playurl]** S004 BV1Gd4y1Y7zt parts=1 qn=16 预估71MB 期望时长485s
+`2026-11-03T20:43:04+08:00` **[material-dl][badpack]** S004 attempt1: 时长残缺 1906s≠485s
+`2026-11-03T20:43:10+08:00` **[material-dl][badpack]** S004 attempt2: 时长残缺 1906s≠485s
+`2026-11-03T20:43:10+08:00` **[material-dl][fail]** S004 BV1Gd4y1Y7zt primary失败: 两次体检均失败: 时长残缺 1906s≠485s
+`2026-11-03T20:43:10+08:00` **[material-dl][playurl]** S005 BV11r4y1K7vo parts=1 qn=80 预估170MB 期望时长461s
+`2026-11-03T20:47:43+08:00` **[material-dl][playurl]** S005 BV11r4y1K7vo parts=1 qn=80 预估170MB 分P时长461s(plan记461s)
+`2026-11-03T20:51:33+08:00` **[material-dl][playurl]** S006 BV1qJAGebEuX parts=1 qn=64 预估174MB 分P时长1700s(plan记1700s)
+`2026-11-03T20:53:48+08:00` **[material-dl][playurl]** S007 BV1NqL6z5EE1 parts=1 qn=64 预估15MB 分P时长151s(plan记1217s)
+`2026-11-03T20:55:01+08:00` **[material-dl][fail]** S007 BV1NqL6z5EE1 primary失败: ('Connection broken: IncompleteRead(6954487 bytes read, 7784991 more expected)', IncompleteRead(6954487 bytes read, 7784991 more expected))
+`2026-11-03T20:55:01+08:00` **[material-dl][playurl]** S008 BV1jFCdYYELA parts=1 qn=32 预估9MB 分P时长1087s(plan记1087s)
+`2026-11-03T20:55:04+08:00` **[material-dl][badpack]** S008 attempt1: 时长残缺 180s≠1087s
+`2026-11-03T20:55:05+08:00` **[material-dl][badpack]** S008 attempt2: 时长残缺 180s≠1087s
+`2026-11-03T20:55:05+08:00` **[material-dl][fail]** S008 BV1jFCdYYELA primary失败: 两次体检均失败: 时长残缺 180s≠1087s
+`2026-11-03T20:55:05+08:00` **[material-dl][playurl]** S009 BV1NZxx6SEuH parts=1 qn=64 预估92MB 分P时长712s(plan记712s)
+`2026-11-03T21:00:17+08:00` **[material-dl][playurl]** S007 BV1NqL6z5EE1 parts=1 qn=64 预估15MB 分P时长151s(plan记1217s)
+`2026-11-03T21:00:49+08:00` **[material-dl][playurl]** S008 BV1jFCdYYELA parts=1 qn=32 预估9MB 分P时长1087s(plan记1087s)
+`2026-11-03T21:00:50+08:00` **[material-dl][badpack]** S008 attempt1: 时长残缺 180s≠1087s
+`2026-11-03T21:00:52+08:00` **[material-dl][badpack]** S008 attempt2: 时长残缺 180s≠1087s
+`2026-11-03T21:00:52+08:00` **[material-dl][fail]** S008 BV1jFCdYYELA primary失败: 两次体检均失败: 时长残缺 180s≠1087s
+`2026-11-03T21:00:54+08:00` **[material-dl][fail]** S008 yt-dlp兕底也失败: [Errno 2] No such file or directory: '/home/z/.venv/bin/yt-dlp'
+`2026-11-03T21:00:54+08:00` **[material-dl][playurl]** S009 BV1NZxx6SEuH parts=1 qn=64 预估92MB 分P时长712s(plan记712s)
+`2026-11-03T21:10:55+08:00` **[material-dl][playurl]** S008 BV1jFCdYYELA parts=1 qn=32 预估9MB 分P时长1087s(plan记1087s)
+`2026-11-03T21:10:56+08:00` **[material-dl][badpack]** S008 attempt1: 时长残缺 180s≠1087s
+`2026-11-03T21:10:57+08:00` **[material-dl][badpack]** S008 attempt2: 时长残缺 180s≠1087s
+`2026-11-03T21:10:57+08:00` **[material-dl][fail]** S008 BV1jFCdYYELA primary失败: 两次体检均失败: 时长残缺 180s≠1087s
+`2026-11-03T21:11:00+08:00` **[material-dl][fail]** S008 yt-dlp兕底也失败: yt-dlp -J 失败: ERROR: [BiliBili] 1jFCdYYELA: Unable to download webpage: HTTP Error 412: Precondition Failed (caused by <HTTPError 412: Precondition Fa
+
+## [W021] 2026-11-03T21:21:47+08:00 | task=material-search | status=OK
+- cmd: `search_bilibili.py 两轮12+10词`
+- raw: materials/search_raw.json
+- key_facts (verbatim):
+  - `首轮: 孩之宝/变形金刚 玩具/小马宝莉/万智牌 印刷 命中; 8词空result(code=0)`
+  - `重试词面(仅此一次换法): 万智牌开卡/小猪佩奇/关税 命中; 万智牌 魔戒/中土、大富翁 桌游、集装箱、港口 吊装、孩之宝 财报 仍空(长尾软拦截)`
+  - `通路: 游客wbi search(bilibili.com预热buvid3+nav取wbi_img+md5签名), 间隔1.2/2.5s`
+- conclusion: 素材搜索通路固化: B站唯一可自搜平台; 7/22词面命中
+- next: 大模型按标题/播放量切题选定9条+2fallback
+
+## [W022] 2026-11-03T21:21:47+08:00 | task=material-download | status=OK(8ok+1partial)
+- cmd: `dl_materials.py(plan.json驱动, 幂等续跑5段)`
+- raw: materials/materials.json
+- key_facts (verbatim):
+  - `9条落位: S001 4.6MB/S002 86.7MB(qn16降档)/S003 103.1MB/S004 71.2MB/S005 170.5MB/S006 174.0MB/S007 14.7MB/S008 partial(试看钳制180s)/S009 91.6MB, 共724MB`
+  - `管线修复3次: view412→pagelist取cid(B29); 搜索duration失真→pagelist分P时长(B30); IncompleteRead纳入attempt重试`
+  - `B31实测: S008 durl声称1087s/9MB实际前180s, yt-dlp对B站412(坑B6原文命中); B32实测: 沙盒重启venv丢yt-dlp, 重装恢复`
+  - `>100MB三条(S003/S005/S006) split 90m 分卷+md5.txt(B33)`
+- conclusion: 素材轮下载完成, 编号S001-S009存档materials/clips/
+- next: VLM九宫格复判
+
+## [W023] 2026-11-03T21:21:47+08:00 | task=material-vlm | status=OK
+- cmd: `vlm_grids.py(z-ai vision CLI) × 9宫格`
+- raw: materials/vlm/S00x.json
+- key_facts (verbatim):
+  - `S001-S006/S009 给出CLIP推荐秒段; S007/S008 判NONE(动画画面与财经B-roll语境不符)但保留为IP主题展示画面`
+  - `S006 内含港口/货运画面(510-680s/850-1019s), 覆盖文案13供应链空缺`
+- conclusion: 分镜表14镜头定稿(materials/materials.md §三), 素材未切割仅标用法
+- next: 文档/materials.md/findings/03追加/worklog/state更新→单次push

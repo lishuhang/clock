@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 主播播报关税视频；主播讲解；港口工人验货；特朗普关税讲话；货运列车运输；主播讲解关税；主播讲解；主播口播；黑白历史影像\nCLIP: 510s-680s|港口供应链画面；680s-850s|关税政策表态；850s-1019s|货运物流画面",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711962,
+  "id": "20261103211919da9a27fc23d943f6",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "20261103211919da9a27fc23d943f6",
+  "usage": {
+    "completion_tokens": 79,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 471,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 550
+  }
+}

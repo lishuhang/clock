@@ -1,0 +1,29 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "第1行CONTENT：玩具套装开箱展示；把玩变形飞机玩具；持玩具讲解；开箱玩具包装；擎天柱卡车玩具；手持玩具介绍；变形玩具特写；把玩玩具；擎天柱人偶特写\n第2行CLIP：71-213|变形金刚IP展示；284-427|玩具开箱周边；569-712|擎天柱产品特写",
+        "reasoning_content": "All frames are toy unboxing/review of Transformers toys—content mismatch with financial commentary? Hasbro IP Transformers toys could serve IP矩阵 point. Recommend small clips.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711973,
+  "id": "20261103211927a4e97d7b8a6142e1",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "20261103211927a4e97d7b8a6142e1",
+  "usage": {
+    "completion_tokens": 126,
+    "completion_tokens_details": {
+      "reasoning_tokens": 33
+    },
+    "prompt_tokens": 481,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 607
+  }
+}

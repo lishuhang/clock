@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 小猪佩奇动画片头；泰迪熊电影画面；小马宝莉彩虹群像；翻书露出独角兽；小马玩偶特写；电商卡片商品页；小马动画骑手；巴拉巴拉小魔仙；暗色剪影画面\nCLIP: 0-14s|小猪佩奇IP介绍；26-40s|小马宝莉IP矩阵；53-67s|卡片生意展示",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711945,
+  "id": "2026110321190078086d9284064c8d",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "2026110321190078086d9284064c8d",
+  "usage": {
+    "completion_tokens": 98,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 471,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 569
+  }
+}

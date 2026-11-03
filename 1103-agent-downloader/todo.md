@@ -24,3 +24,12 @@
 - [x] T2.3 失败平台如实记录 (报错逐字, REPORT §3)
 - [x] T2.4 根 worklog 追加 + push
 - [x] skill 固化 (skills/video-downloader)
+
+## Phase 3 — 素材轮(2026-11-03下午, 文案配切题素材)
+- [x] T3.1 B站wbi搜索两轮22词(7词命中, 长尾软拦截B28如实记录)
+- [x] T3.2 大模型切题选定9条+2fallback链(plan.json)
+- [x] T3.3 dl_materials.py幂等下载S001-S009(8ok+1partial=724MB, 管线修3次: B29/B30/B31)
+- [x] T3.4 VLM九宫格复判+分镜表14镜头(materials/materials.md, 素材未切割仅标秒段)
+- [x] T3.5 >100MB三条split 90m分卷入库+md5(B33)
+- [x] T3.6 worklog W021-W023 + findings/03追加B28-B35 + state→material_round_complete
+- [ ] T3.7 用户确认素材后执行切割(未执行, 分镜表已标秒段)

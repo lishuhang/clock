@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "CONTENT: 开盒取卡包；拆包展示万智牌；手持稀有卡展示；翻看卡片正反面；卡片特写镜头；万智牌轮抽开卡；紫色稀有卡特写；双卡对比展示；卡牌收藏铺开\nCLIP: 0-60s|MTG卡牌生意开场；240-360s|卡牌印刷/IP话题背景；420-600s|线下开卡氛围",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1793711952,
+  "id": "202611032119087f8453272ee34359",
+  "model": "glm-5.3-flash",
+  "object": "chat.completion",
+  "request_id": "202611032119087f8453272ee34359",
+  "usage": {
+    "completion_tokens": 95,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 483,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 578
+  }
+}
