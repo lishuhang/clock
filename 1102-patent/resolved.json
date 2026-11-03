@@ -351,15 +351,41 @@
       "category": "游戏相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "玩家拖拽塔防干员挪动到可摆放区域时，系统捕捉当下候选摆放点位，结合地图通路与寻路逻辑算出该位置对应的目标点并完成数据绑定。干员身旁会出现可旋转的指向箭头，跟随拖拽实时更新指向方向。还没松手确认部署，玩家就能提前看清单位后续行进方向，有效避免摆错位置、单位跑错路线的问题。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN108436952B",
+      "title_real": "一种电-气复合驱动柔性手指的仿鹰爪物流包装机械手",
+      "assignee_real": "江南大学",
+      "abstract_real": " 本发明公开了一种电‑气复合驱动柔性手指的仿鹰爪物流包装机械手，由驱动部件、四个相同手指部件组成，手指部件由指根节、中指节和指尖节组成，本发明可以根据情况选择接触力的作用点，以及作用力的方向，使抓取过程不对物体造成形变以及损伤，抓取更精确可靠；同时，调整根指节与被抓物体的角度，可以适应抓取物体尺寸的较大变化，适应抓取物体形状、竖横放置的变化，抓取力作用点和大小有柔性自适应形，反应敏捷、缓冲性好。",
+      "pubdate": "2019-07-23",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/6d/e7/a1/0af701b472f926/CN108436952B.pdf",
+      "confidence": "company",
+      "candidates": [
+        {
+          "pub": "CN108436952B",
+          "assignee": "江南大学",
+          "title": "一种电-气复合驱动柔性手指的仿鹰爪物流包装机械手"
+        },
+        {
+          "pub": "CN111762687B",
+          "assignee": "中车长江运输设备集团有限公司",
+          "title": "一种集装箱公铁联运侧面装卸系统及方法"
+        },
+        {
+          "pub": "CN109085845B",
+          "assignee": "北京航空航天大学",
+          "title": "一种自主空中加油对接仿生视觉导航控制系统及方法"
+        },
+        {
+          "pub": "CN107416195B",
+          "assignee": "北京航空航天大学",
+          "title": "一种空中操作多旋翼飞行器的仿鹰抓取系统"
+        },
+        {
+          "pub": "CN108473528B",
+          "assignee": "弗门尼舍公司",
+          "title": "高强度甜味剂"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -368,15 +394,41 @@
       "category": "游戏相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "先识别画面里的候选角色、绑定好目标玩家的肢体，AI实时盯着关键点；再统计关键点推理的耗时波动，判断设备当前是忙是闲；最后忙的时候降低检测频率省算力、闲的时候升频提精度。多人一起跳、一起打的体感游戏，识别又快又省电，玩家动作跟手不卡顿。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN111460130A",
+      "title_real": "信息推荐方法、装置、设备和可读存储介质",
+      "assignee_real": "咪咕数字传媒有限公司",
+      "abstract_real": " 本发明实施例提供一种信息推荐方法、装置、电子设备和可读存储介质，确定目标用户对应的用户特征属性向量；将目标用户对应的用户特征属性向量输入至对应的推荐模型中，得到推荐模型输出的兴趣偏好分的预测结果；其中，推荐模型与对抗模型组成生成对抗网络；生成对抗网络是以用户特征属性向量样本、融合特征向量样本以及用户行为隐反馈特征向量样本作为对抗模型的输入训练得到；融合特征向量样本是基于用户行为数据样本和待推荐物品对应的物品辅助信息样本确定的。本发明实施例提供的方法，引入了待推荐物品对应的物品辅助信息，增加了模型输入数据的信息维度，能有效挖掘出用户行为和待推荐物品属性间的关系，从而提升推荐的准确率。",
+      "pubdate": "2020-07-28",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/1d/c6/8c/44a83833450249/CN111460130A.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN111460130A",
+          "assignee": "咪咕数字传媒有限公司",
+          "title": "信息推荐方法、装置、设备和可读存储介质"
+        },
+        {
+          "pub": "CN107968814B",
+          "assignee": "咪咕互动娱乐有限公司",
+          "title": "一种就餐地点的推荐方法、服务器及移动终端"
+        },
+        {
+          "pub": "CN107638669B",
+          "assignee": "咪咕互动娱乐有限公司",
+          "title": "一种信息处理方法、装置及存储介质"
+        },
+        {
+          "pub": "CN107578161A",
+          "assignee": "咪咕文化科技有限公司",
+          "title": "一种产品评测方法、装置及存储介质"
+        },
+        {
+          "pub": "CN109568947A",
+          "assignee": "咪咕互动娱乐有限公司",
+          "title": "一种云游戏控制方法、装置、设备和计算机存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -385,15 +437,41 @@
       "category": "AI相关",
       "progress": "2026年10月23日申请公布",
       "summary_docx": "把一批剧本情节样本搭配专家打分结果给到智能体，智能体遵循打分对比反思总结四套对话逻辑和大模型开展多轮交互打磨，迭代产出适配剧本审稿的评分提示词。优酷长视频内容场景下，整套流程无需提示词工程师手动逐条编写，靠自动化方式就能拿到标准化提示规则，高效完成剧本大纲的打分审稿工作。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
+      "pub": "AU2020274322B2",
+      "title_real": "Process and apparatus for estimating real-time quality of experience",
+      "assignee_real": "Canopus Networks Assets Pty Ltd",
+      "abstract_real": " 20. The apparatus of any one of claims 12 to 19, wherein the online service is a Twitch™, 20. The apparatus of any one of claims 12 to 19, wherein the online service is a TwitchTM, Facebook™ Facebook Live,or orYouTube Live, <b>YouTube</b>™ Live,Live, livelive streaming streaming service. service. 21. …",
+      "pubdate": "2025-08-07",
       "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "confidence": "company",
+      "candidates": [
+        {
+          "pub": "AU2020274322B2",
+          "assignee": "Canopus Networks Assets Pty Ltd",
+          "title": "Process and apparatus for estimating real-time quality of experience"
+        },
+        {
+          "pub": "EP3907592B1",
+          "assignee": "Huawei Technologies Co., Ltd.",
+          "title": "Method for moving application icons, and electronic device"
+        },
+        {
+          "pub": "US10979498B2",
+          "assignee": "Voxp Pte. Ltd.",
+          "title": "System, method and device for provision and management of web resource"
+        },
+        {
+          "pub": "CN106559677B",
+          "assignee": "华为技术有限公司",
+          "title": "终端、缓存服务器及获取视频分片的方法及装置"
+        },
+        {
+          "pub": "US11256741B2",
+          "assignee": "Vertex Capital Llc",
+          "title": "Video tagging system and method"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -402,15 +480,41 @@
       "category": "AI相关",
       "progress": "2026年10月23日申请公布",
       "summary_docx": "智能体的执行意图、输出结果连同页面渲染指令被整合封装为宏指令数据包，系统解析数据包内容后匹配加载 PPT、视频、文本等各类 UI 组件，推理过程与结果卡片得以动态渲染展示在界面。百度文心这类 AI 生成 PPT、剪辑视频场景下，用户可实时看见任务处理进度，同一套底层逻辑适配手机、电脑网页多端运行，不用重复开发多套业务逻辑。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN118093801B",
+      "title_real": "基于大语言模型的信息交互方法、装置以及电子设备",
+      "assignee_real": "百度在线网络技术（北京）有限公司",
+      "abstract_real": " 本公开提供了基于大语言模型的信息交互方法、装置以及电子设备，人工智能技术领域，尤其涉及深度学习、大语言模型等技术领域，可应用于人工智能的内容生成等场景。具体实现方案为：响应于获取到需求描述信息，利用大语言模型处理需求描述信息，得到与需求描述信息相匹配的任务执行策略，其中，任务执行策略包括多个需求任务属性，多个需求任务属性中的至少一个与需求描述信息表征的需求意图相匹配；根据任务执行策略中的需求任务属性，确定与任务执行策略相关的策略执行结果；以及根据策略执行结果生成反馈信息，并展示反馈信息。",
+      "pubdate": "2025-04-25",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/af/b9/62/280761895e1173/CN118093801B.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN118093801B",
+          "assignee": "百度在线网络技术（北京）有限公司",
+          "title": "基于大语言模型的信息交互方法、装置以及电子设备"
+        },
+        {
+          "pub": "CN114820906B",
+          "assignee": "北京百度网讯科技有限公司",
+          "title": "图像渲染方法、装置、电子设备及存储介质"
+        },
+        {
+          "pub": "CN111708858B",
+          "assignee": "北京百度网讯科技有限公司",
+          "title": "一种地图数据处理方法、装置、设备以及存储介质"
+        },
+        {
+          "pub": "CN111833418B",
+          "assignee": "北京百度网讯科技有限公司",
+          "title": "动画交互方法、装置、设备以及存储介质"
+        },
+        {
+          "pub": "CN112102462B",
+          "assignee": "北京百度网讯科技有限公司",
+          "title": "图像的渲染方法、装置"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
