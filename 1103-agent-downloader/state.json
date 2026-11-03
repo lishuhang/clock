@@ -1,9 +1,9 @@
 {
   "task_id": "1103-agent-downloader",
   "goal": "从 YouTube/Instagram/X/Threads/微博/抖音/小红书/B站 各成功下载1个视频，并获取准确的来源URL、作者、标题、摘要",
-  "phase": "download_round_running",
-  "updated": "2026-11-03T18:50:21+08:00",
-  "next_task": "按 todo.md Phase 1 顺序实抓：微博(最低风险)→B站→YouTube→X→Threads→小红书→Instagram→抖音；每平台先 --simulate/--dump-json 拿元数据再下载",
+  "phase": "download_round_complete",
+  "updated": "2026-11-03T18:57:43+08:00",
+  "next_task": "实抓轮已完成 5/7 (微博/B站/X/Threads/小红书✅, YouTube/抖音❌两法用尽). 下一步可选: ①YouTube bgutil POT provider 部署 ②抖音 ttwid 注入或 TikTokDownloader ③REPORT.md 已交付, skill 已固化(skills/video-downloader)",
   "environment": {
     "sandbox": "Debian 13 trixie, 2C/4G, egress=HK Alibaba Cloud 8.212.10.159",
     "network": "16/16 关键域名网络层可达(2026-11-03实测, logs/net_probe_001.txt)",
@@ -27,7 +27,8 @@
         "file": "weibo_5266679128920856.mp4",
         "size_mb": 4.1,
         "resolution": "540x960",
-        "method": "planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd"
+        "method": "planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd",
+        "note": "容器API与WeiboUser列时间线均被访客墙挡; 单视频yt-dlp游客通路畅通"
       }
     },
     "bilibili": {
@@ -47,7 +48,11 @@
       "feasibility": "medium",
       "primary": "yt-dlp(2026.10.26)+player_client=ios,web_safari; 数据中心IP可能bot check→bgutil POT provider(node版)或burner cookies",
       "cookies_needed": "可能需要(PO token可替代)",
-      "tested": "network; 上轮会话yt-dlp触发验证码"
+      "tested": "network; 上轮会话yt-dlp触发验证码",
+      "result_1103": {
+        "ok": false,
+        "reason": "两client组合均 Sign in bot-check(数据中心IP), 见REPORT §3.3/§4"
+      }
     },
     "x_twitter": {
       "feasibility": "medium",
@@ -91,7 +96,11 @@
       "feasibility": "medium",
       "primary": "iesdouyin.com/share/video/{aweme_id} 分享页SSR(iOS UA, /play/?ratio=default拿原片4K60, 免登录); 备选TikTokDownloader(★17.3k,当日仍在更新)",
       "cookies_needed": "no(分享页通路)",
-      "tested": "network; yt-dlp内置Douyin extractor已知失效(a_bogus)"
+      "tested": "network; yt-dlp内置Douyin extractor已知失效(a_bogus)",
+      "result_1103": {
+        "ok": false,
+        "reason": "iesdouyin SSR 已收壳+yt-dlp 要 fresh cookies, 见REPORT §3.4/§4"
+      }
     },
     "x": {
       "result_1103": {

@@ -12,6 +12,6 @@
   "file": "weibo_5266679128920856.mp4",
   "view_count": 816375,
   "like_count": 47996,
-  "method": "planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd",
+  "method": "planB: 搜索引擎转引URL + Weibo extractor(游客) fmt=mp4_hd",
   "discover": "yt-dlp WeiboUser extractor (m.weibo.cn/u/2656274875, 免登录)"
 }
