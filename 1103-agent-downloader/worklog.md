@@ -184,3 +184,24 @@
   - `method=yt-dlp-threads 插件(Googlebot SSR) fmt=dash-17997862818103670v+dash-17997862773103670a`
 - conclusion: Threads视频下载成功
 - next: 收尾: REPORT.md
+`2026-11-03T18:49:20+08:00` **[douyin][resolve]** https://v.douyin.com/kcvMpuN/ -> https://www.iesdouyin.com/share/video/6915675899241450760/?region=CN&mid=6911453067020585735&u_code=j8a5173b&d
+`2026-11-03T18:49:21+08:00` **[douyin][fail]** _ROUTER_DATA无item(删除/风控?) loaderData keys=['video_layout', 'video_(id)/page']
+
+## [W017] 2026-11-03T18:49:21+08:00 | task=douyin-download | status=FAIL
+- cmd: `python3 tools/dl_douyin.py https://v.douyin.com/kcvMpuN/`
+- raw: logs/douyin_001.txt
+- key_facts (verbatim):
+  - `target=https://v.douyin.com/kcvMpuN/`
+  - `_ROUTER_DATA无item(删除/风控?) loaderData keys=['video_layout', 'video_(id)/page']`
+- conclusion: 失败
+- next: 重试: --planb (yt-dlp)
+`2026-11-03T18:50:02+08:00` **[douyin][fail]** yt-dlp -J 失败: ERROR: [Douyin] 7557764222948478251: Fresh cookies (not necessarily logged in) are needed
+
+## [W018] 2026-11-03T18:50:02+08:00 | task=douyin-download | status=FAIL
+- cmd: `python3 tools/dl_douyin.py https://www.douyin.com/video/7557764222948478251 --planb`
+- raw: logs/douyin_001.txt
+- key_facts (verbatim):
+  - `target=https://www.douyin.com/video/7557764222948478251`
+  - `yt-dlp -J 失败: ERROR: [Douyin] 7557764222948478251: Fresh cookies (not necessarily logged in) are needed`
+- conclusion: 失败
+- next: 未探索: TikTokDownloader(扫码) / playwright真浏览器
