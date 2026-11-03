@@ -123,18 +123,6 @@ def resolve_one(name, kw):
     if primary:
         return parse_result(primary[0]), [parse_result(x) for x in primary], "top"
     return {}, [], "none"
-    for p in cands:
-        if kw and kw in (p["title"] or ""):
-            return p, cands, "title"
-    if kw:
-        results2 = search_raw(title + " " + kw)
-        for j in results2:
-            p = parse_result(j)
-            if p["pub"] and kw in (p["assignee"] or ""):
-                return p, cands, "assignee2"
-    if cands:
-        return cands[0], cands, "low"
-    return {}, cands, "none"
 
 
 def download_pdf(pub, pdf_hint=""):
@@ -172,18 +160,54 @@ def download_pdf(pub, pdf_hint=""):
     return "ERR " + str(last)
 
 
+def _placeholder(p):
+    return {
+        "applicant_docx": p.get("applicant", ""),
+        "docx_title": p.get("title", ""),
+        "category": p.get("category", ""),
+        "progress": p.get("progress", ""),
+        "summary_docx": p.get("summary", ""),
+        "pub": "", "title_real": "", "assignee_real": "", "abstract_real": "",
+        "pubdate": "", "pdf_hint": "", "confidence": "pending",
+        "candidates": [], "ok": False, "pdf_bytes": None,
+    }
+
+
 def do_resolve():
     with open("patents.json", encoding="utf-8") as f:
         db = json.load(f)
     patents = db.get("patents", [])
-    print("载入专利 %d 条" % len(patents), flush=True)
+    # 分批解析：env PAT_RANGE="a:b" 只处理索引 [a,b) 的子集，规避 Google 限流；
+    # 不在区间内的条目保留 resolved.json 中已有的结果（增量合并），避免覆盖已解出的专利。
+    rng = os.environ.get("PAT_RANGE", "")
+    if rng and ":" in rng:
+        a, b = rng.split(":")
+        slice_idx = set(range(int(a), int(b)))
+    else:
+        slice_idx = set(range(len(patents)))
+    print("载入专利 %d 条，本次处理索引 %s" % (len(patents), sorted(slice_idx)), flush=True)
+    old_list = []
+    try:
+        with open("resolved.json", encoding="utf-8") as f:
+            old_list = json.load(f).get("results", [])
+    except FileNotFoundError:
+        old_list = []
     results = []
-    for i, p in enumerate(patents, 1):
+    for i, p in enumerate(patents):
         name = p.get("patent_name", "")
         applicant = p.get("applicant", "")
         kw = KW.get(applicant, "")
-        print("[%d/%d] %s | kw=%s" % (i, len(patents), name[:24], kw), flush=True)
+        if i not in slice_idx:
+            results.append(old_list[i] if i < len(old_list) else _placeholder(p))
+            continue
+        print("[%d] %s | kw=%s" % (i, name[:24], kw), flush=True)
         best, cands, conf = resolve_one(name, kw)
+        # 防御：若本次解析失败(none)但旧结果已 ok，则保留旧的好结果，绝不降级
+        if conf == "none" and i < len(old_list) and old_list[i].get("ok"):
+            results.append(old_list[i])
+            print("   -> 本次 none，保留旧 ok 结果(%s)" % old_list[i].get("pub"), flush=True)
+            time.sleep(random.uniform(1.5, 3))
+            continue
         rec = {
             "applicant_docx": applicant,
             "docx_title": p.get("title", ""),
