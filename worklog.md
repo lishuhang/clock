@@ -414,3 +414,21 @@ Stage Summary:
 - output/：成品mp4 + 剪映工程(自包含assets可一次性重链) + 字幕srt + 分镜json + 修正配音wav，共112MB
 - 全流程脚本持久化：splice_voice.py / assemble_video.py / make_jianying.py
 - 剪映工程schema为6.x兼容尽力而为版，导入若有兼容问题以成品mp4为准，素材与时间轴数据齐全可快速重建
+
+---
+Task ID: 1103-agent-downloader-research
+Agent: Super Z (main)
+Task: 8平台视频下载（YouTube/Instagram/X/Threads/微博/抖音/小红书/B站）可行性调研轮——只调研不实抓，摸清通路/环境/坑并建立持续性工作协议
+
+Work Log:
+- 环境探针：Debian13/2C4G，ffmpeg 7.1.5 + playwright+chromium 预装，出口=香港阿里云(8.212.10.159)，16/16关键域名网络层全通（YouTube/IG/X/Threads 无墙，微博/抖音/小红书/B站不拒境外）——难点只剩平台反爬，不是网络
+- 工具落地：yt-dlp 2026.10.26 + gallery-dl 1.32.19 装入 /home/z/.venv；extractor 覆盖实测：yt-dlp 有 YouTube21/Weibo3/XiaoHongShu1/BiliBili19/Douyin1(已知失效)/Threads0；gallery-dl 有 instagram72/twitter61/weibo32/bilibili11，无 threads.net、无 douyin/xhs
+- 方案调研：zyipeng/video-downloader platform-notes 全文精读（抖音走 iesdouyin 分享页 SSR 免登录免签名可拿4K原片 ratio=default、小红书必须 App 分享链接的 xsec_token、B站720p+要登录态）；TikTokDownloader 认证体系深读（a_bogus=SM3+RC4、msToken 900s自动刷新）；yt-dlp 数据中心IP triage（bot check 三层解法：player_client变体→bgutil POT provider→burner cookies，重试无效）；Threads 唯一活跃解=tribixbite/yt-dlp-threads 插件（Googlebot UA 拿 SSR 全量 post 绕登录墙）
+- 仓库核查：TikTokDownloader★17.3k(当日更新)/XHS-Downloader★13.2k/MediaCrawler★70k/instaloader★13.8k 活跃；BBDown、BiliTools、bilibili-API-collect、junhoyeo/threads-api 已归档勿选；ReaJason/xhs 16个月停更
+- 血泪传承：发现上轮 geetest_beat2.py 等8个脚本未推库、已随沙盒回收丢失——本轮所有脚本/日志即时入库根治；上轮B站12条踩坑（412风控/验证码延迟8s/CDN坏包1/3重下即愈等）全部并入坑清单
+- 持续性协议：state.json 单一事实源 + worklog verbatim 摘录（防概括失真）+ logs/ 全文证据 + 每任务即 commit+push（防沙盒回收）+ RESUME.md 三分钟恢复协议（防上下文崩溃）+ 防token狂烧守则（脚本化/压缩输出/失败先查原始log禁止盲试）
+
+Stage Summary:
+- 产物全部在 1103-agent-downloader/：README/RESUME/state.json/todo/worklog + findings×5（环境实测/8平台可行性矩阵/分平台笔记含来源/27条坑清单/持续性协议规范）+ tools×5探针脚本 + logs×5原始输出
+- 结论：8平台中7个有活跃现成通路——微博最易（yt-dlp游客4K）、抖音最难但分享页旁路免签名、Threads 靠插件；Instagram 需 sessionid cookie、小红书需带 xsec_token 的 App 分享链接（均已列入 state.json blocked_on 待用户补给）
+- 下轮执行：todo.md Phase 0（装 threads 插件/选定测试URL/建 cookie 目录）→ Phase 1 按风险从低到高实抓（微博→B站→YouTube→X→Threads→小红书→Instagram→抖音，每平台先 --dump-json 验元数据再实下）
