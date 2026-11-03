@@ -160,3 +160,15 @@
   - `yt-dlp -J 失败: ERROR: [youtube] EkdIZXDnRK8: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass `
 - conclusion: yt-dlp 提取失败(疑似bot-check)
 - next: 重试: --planb; 未探索: bgutil POT provider(node) / burner cookies
+`2026-11-03T18:47:38+08:00` **[x][extract]** yt-dlp formats=11 选定=best 高度=0
+
+## [W015] 2026-11-03T18:47:41+08:00 | task=x-download | status=OK
+- cmd: `python3 tools/dl_x.py`
+- raw: logs/x_001.txt
+- key_facts (verbatim):
+  - `target=https://x.com/SpaceX/status/1806444569107865825`
+  - `author=SpaceX (@SpaceX)`
+  - `file=x_1806444569107865825.mp4 size=4331139 res=1920x1080`
+  - `method=yt-dlp twitter extractor(游客) fmt=best`
+- conclusion: X视频下载成功
+- next: 下一平台: threads

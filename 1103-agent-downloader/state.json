@@ -2,7 +2,7 @@
   "task_id": "1103-agent-downloader",
   "goal": "从 YouTube/Instagram/X/Threads/微博/抖音/小红书/B站 各成功下载1个视频，并获取准确的来源URL、作者、标题、摘要",
   "phase": "download_round_running",
-  "updated": "2026-11-03T18:46:42+08:00",
+  "updated": "2026-11-03T18:47:41+08:00",
   "next_task": "按 todo.md Phase 1 顺序实抓：微博(最低风险)→B站→YouTube→X→Threads→小红书→Instagram→抖音；每平台先 --simulate/--dump-json 拿元数据再下载",
   "environment": {
     "sandbox": "Debian 13 trixie, 2C/4G, egress=HK Alibaba Cloud 8.212.10.159",
@@ -78,6 +78,15 @@
       "primary": "iesdouyin.com/share/video/{aweme_id} 分享页SSR(iOS UA, /play/?ratio=default拿原片4K60, 免登录); 备选TikTokDownloader(★17.3k,当日仍在更新)",
       "cookies_needed": "no(分享页通路)",
       "tested": "network; yt-dlp内置Douyin extractor已知失效(a_bogus)"
+    },
+    "x": {
+      "result_1103": {
+        "ok": true,
+        "file": "x_1806444569107865825.mp4",
+        "size_mb": 4.3,
+        "resolution": "1920x1080",
+        "method": "yt-dlp twitter extractor(游客) fmt=best"
+      }
     }
   },
   "blocked_on": [

@@ -1,0 +1,17 @@
+{
+  "platform": "x",
+  "status": "ok",
+  "source_url": "https://x.com/SpaceX/status/1806444569107865825",
+  "author": "SpaceX (@SpaceX)",
+  "title": "SpaceX - Starbase team testing the tower chopsticks for the upcoming catch of ...",
+  "summary": "Starbase team testing the tower chopsticks for the upcoming catch of a Super Heavy booster https://t.co/mwkefizmwO",
+  "publish_time": "20240627",
+  "duration_sec": 27.293,
+  "resolution": "1920x1080",
+  "size_bytes": 4331139,
+  "file": "x_1806444569107865825.mp4",
+  "view_count": 18446838,
+  "like_count": 13448,
+  "method": "yt-dlp twitter extractor(游客) fmt=best",
+  "discover": "WebSearch(Lemmy帖留档: SpaceX 官方筷子臂测试推文)"
+}
