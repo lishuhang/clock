@@ -2,11 +2,11 @@ name: patent-resolve
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '1102-patent/patents.json'
-      - '1102-patent/pipeline.py'
-      - '.github/workflows/resolve.yml'
+    inputs:
+      pat_range:
+        description: 'PAT_RANGE 分批解析区间，如 "0:6"（只处理索引 0-5）。留空=全量（不推荐，易触发 Google 限流）。'
+        required: false
+        default: ''
 
 concurrency:
   group: patent-pipeline
@@ -25,6 +25,8 @@ jobs:
           python-version: '3.11'
       - name: Resolve real publication numbers + abstracts
         working-directory: 1102-patent
+        env:
+          PAT_RANGE: ${{ github.event.inputs.pat_range }}
         run: python3 pipeline.py resolve
       - name: Commit resolved.json
         working-directory: 1102-patent
