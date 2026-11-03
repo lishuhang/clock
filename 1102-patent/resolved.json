@@ -523,15 +523,41 @@
       "category": "AI相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "想让 AI 虚拟角色发社交动态更鲜活？本专利给虚拟角色配上人设档案 + 完整故事线。提取故事里对应发布节点的事件，结合角色性格生成描述提示，还能联动形象库产出匹配图文社交帖。发布后还能参考历史互动智能回复评论，角色动态连贯不割裂，告别 AI 人设崩塌，轻松打造真实感满满的虚拟社交账号。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN109272380B",
+      "title_real": "虚拟宠物商品的交易方法、装置、设备及存储介质",
+      "assignee_real": "腾讯科技（深圳）有限公司",
+      "abstract_real": " 本申请是关于一种虚拟宠物商品的交易方法、计算机设备及存储介质，涉及计算机应用技术领域。该方法用于为应用程序提供后台支持的服务器集群中，应用程序提供有虚拟宠物，且存在至少一个虚拟宠物的宠物形象是基于基因遗传规则生成的，该方法包括：接收第一终端发送的购买请求，根据购买请求获取第一验证信息，第一验证信息是存储在区块链系统中的信息；当第一验证信息指示购买请求合法时，将第一宠物商品的所有权由第二账号转移至第一账号。本方案从区块链系统中获取稳定性和可靠性的极高的验证信息对请求的合法性进行验证，并在验证合法后执行宠物商品的交易，提高了虚拟宠物交易的安全性。",
+      "pubdate": "2023-01-06",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/81/33/f7/7700921d272fc1/CN109272380B.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN109272380B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "虚拟宠物商品的交易方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "WO2020228514A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "内容推荐方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "WO2020192568A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "人脸图像生成方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "WO2020125660A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "信息推荐方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "WO2022206510A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "联邦学习的模型训练方法、装置、设备及存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -540,15 +566,41 @@
       "category": "AI相关",
       "progress": "2026年10月23日申请公布",
       "summary_docx": "这套方案面向传感器读数、车流量这类按时间记录的数据。它先把数据分成不同粗细的片段，多轮观察大趋势和小波动，把每一轮看到的信息保留下来，把数值范围校正、拼接后交给序列模型，像续写文章一样补出后续数据；最后还原成人类看得懂的真实数值，输出补齐或预测结果。可用于工业传感器缺值修复、车流量预测、训练样本扩充。相比传统方案，它对复杂分布数据的生成结果更贴近真实的业务规律。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
+      "pub": "CN112084056B",
+      "title_real": "异常检测方法、装置、设备及存储介质",
+      "assignee_real": "腾讯科技（深圳）有限公司",
+      "abstract_real": " 本申请涉及一种异常检测方法、装置、设备及存储介质。该方法包括：获取至少一个待检测时序数据；从所述至少一个待检测时序数据中提取基础特征信息；确定与基础特征信息对应的异常检测模型；将所述至少一个待检测时序数据输入对应的异常检测模型中，进行异常检测处理，得到所述至少一个待检测时序数据对应的异常检测结果；获取异常检测结果为异常的待检测时序数据作为目标时序数据以及获取所述目标时序数据对应的业务类型；基于目标时序数据对应的业务类型，对目标时序数据进行验证，确定目标时序数据对应的目标异常检测结果。本申请的异常检测处理，人力成本低、耗时低、异常检测模型通用性更高且异常检测更加精细化。",
+      "pubdate": "2026-05-19",
       "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN112084056B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "异常检测方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "CN112422873B",
+          "assignee": "Oppo（重庆）智能科技有限公司",
+          "title": "插帧方法、装置、电子设备及存储介质"
+        },
+        {
+          "pub": "CN111680217B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "内容推荐方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "CN108635861B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "控制应用中车辆的方法、装置、设备及存储介质"
+        },
+        {
+          "pub": "CN117499711A",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "视频生成模型的训练方法、装置、设备及存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -557,15 +609,41 @@
       "category": "AI相关",
       "progress": "2026年10月23日申请公布",
       "summary_docx": "普通看图问答会产出海量图像标记拖累算力，这套方案对输入图像编码生成大量视觉标记，借助可学习查询向量充当筛选放大镜，只保留关键图像特征，剔除冗余信息。筛选压缩后的图像特征搭配问题文本送入解码单元生成问答回复。模型推理算力开销大幅降低，手机端也可流畅完成人物、美食、风景类图片识别问答任务。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN115223020B",
+      "title_real": "图像处理方法、装置、设备、存储介质及计算机程序产品",
+      "assignee_real": "腾讯科技（深圳）有限公司",
+      "abstract_real": " 本申请实施例提供了一种图像处理方法、装置、电子设备以及可读存储介质，涉及人工智能、多媒体、以及云技术等领域。该方法包括：基于待处理图像，提取待处理图像对应的至少两种模态的数据特征；根据每种模态的数据特征，确定每种模态的数据特征的权重，其中，每种模态对应的权重表征了该模态的数据特征对于图像处理任务的贡献度；根据各模态的数据特征以及对应的权重，确定每种模态的目标特征；基于各模态的目标特征，确定待处理图像对应于图像处理任务的处理结果。基于本申请实施例提供的该方法，能够有效提高图像处理效果。",
+      "pubdate": "2024-04-19",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/d6/54/5c/86e94488df8c58/CN115223020B.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN115223020B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "图像处理方法、装置、设备、存储介质及计算机程序产品"
+        },
+        {
+          "pub": "WO2023134296A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "分类预测方法, 装置, 设备, 存储介质及计算机程序产品"
+        },
+        {
+          "pub": "CN110162669A",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "视频分类处理方法、装置、计算机设备及存储介质"
+        },
+        {
+          "pub": "WO2025077380A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "数据处理方法、装置、电子设备及存储介质"
+        },
+        {
+          "pub": "CN117521675A",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "基于大语言模型的信息处理方法、装置、设备及存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -574,15 +652,41 @@
       "category": "AI相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "虚拟拍戏时 LED 屏幕放出虚拟背景，摄像机一并拍下屏幕，还有跑到屏幕外面的柱子、窗户这些实景道具。依靠两套三维模型算出掩码蒙版，把画面里屏幕区域、屏幕外实景分得清清楚楚。虚拟背景只填补没有实物的空白位置，现场真实布景全部原样留住。剧组不必砸钱搭建超大 LED 屏，实景不会被虚拟画面盖掉，镜头里虚实拼接自然，不会出现穿帮破绽。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
+      "pub": "AU2020274322B2",
+      "title_real": "Process and apparatus for estimating real-time quality of experience",
+      "assignee_real": "Canopus Networks Assets Pty Ltd",
+      "abstract_real": " 20. The apparatus of any one of claims 12 to 19, wherein the online service is a Twitch™, 20. The apparatus of any one of claims 12 to 19, wherein the online service is a TwitchTM, Facebook™ Facebook Live,or orYouTube Live, <b>YouTube</b>™ Live,Live, livelive streaming streaming service. service. 21. …",
+      "pubdate": "2025-08-07",
       "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "confidence": "company",
+      "candidates": [
+        {
+          "pub": "AU2020274322B2",
+          "assignee": "Canopus Networks Assets Pty Ltd",
+          "title": "Process and apparatus for estimating real-time quality of experience"
+        },
+        {
+          "pub": "EP3907592B1",
+          "assignee": "Huawei Technologies Co., Ltd.",
+          "title": "Method for moving application icons, and electronic device"
+        },
+        {
+          "pub": "US10979498B2",
+          "assignee": "Voxp Pte. Ltd.",
+          "title": "System, method and device for provision and management of web resource"
+        },
+        {
+          "pub": "CN106559677B",
+          "assignee": "华为技术有限公司",
+          "title": "终端、缓存服务器及获取视频分片的方法及装置"
+        },
+        {
+          "pub": "US11256741B2",
+          "assignee": "Vertex Capital Llc",
+          "title": "Video tagging system and method"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -591,15 +695,41 @@
       "category": "AI相关",
       "progress": "2026年10月2日申请公布",
       "summary_docx": "做虚拟短片不用一帧帧手动调动画。这套创作工具打开可编辑虚拟场景，靠时间轴打点设置角色走位、动作和镜头推拉环绕。系统自动补齐中间过渡画面，直接导出片段素材。已有图片还能一键转成虚拟场景，素材再拿去二次生成新内容，大幅减少繁琐操作，普通人做虚拟视频更省事高效。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN118051291B",
+      "title_real": "会话界面的展示方法、装置、电子设备、存储介质和程序产品",
+      "assignee_real": "北京字跳网络技术有限公司",
+      "abstract_real": " 本公开实施例提供了一种会话界面的展示方法、装置、电子设备、存储介质和程序产品。该方法包括：接收当前用户针对目标用户的会话界面展示操作；响应于所述会话界面展示操作，展示当前用户与目标用户之间的会话界面；在所述会话界面中展示与目标虚拟对象对应的目标页面内容，所述目标虚拟对象与所述当前用户同所述目标用户之间的互动行为信息相关联。本公开实施例利用上述技术方案，能够丰富会话界面中所展示的内容。",
+      "pubdate": "2025-01-24",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/54/e4/93/5a004752a10a49/CN118051291B.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN118051291B",
+          "assignee": "北京字跳网络技术有限公司",
+          "title": "会话界面的展示方法、装置、电子设备、存储介质和程序产品"
+        },
+        {
+          "pub": "CN107431819B",
+          "assignee": "诺基亚技术有限公司",
+          "title": "用于视频解码的方法、装置、计算机可读存储介质及视频解码器"
+        },
+        {
+          "pub": "CN114080817B",
+          "assignee": "谷歌有限责任公司",
+          "title": "从可视内容生成交互式音轨的系统和方法"
+        },
+        {
+          "pub": "WO2023185640A1",
+          "assignee": "北京字跳网络技术有限公司",
+          "title": "页面显示方法、装置、设备、计算机可读存储介质及产品"
+        },
+        {
+          "pub": "CN115098099B",
+          "assignee": "北京字跳网络技术有限公司",
+          "title": "媒体内容的生成方法、装置、电子设备和存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
@@ -608,15 +738,41 @@
       "category": "AI相关",
       "progress": "2026年10月9日授权公告",
       "summary_docx": "打游戏还能扔道具给对手 “一键变声”！这套游戏交互方案加入变声投掷、射击道具，被命中的角色直接开启变声 buff，玩家说话、系统播报语音都会自动切换成魔法音、机械音等趣味声效。界面同步提示变声类型与剩余时效，给对局增添搞笑整活效果，带动游戏语音功能更多人愿意开口使用。",
-      "pub": "",
-      "title_real": "",
-      "assignee_real": "",
-      "abstract_real": "",
-      "pubdate": "",
-      "pdf_hint": "",
-      "confidence": "none",
-      "candidates": [],
-      "ok": false,
+      "pub": "CN117170685B",
+      "title_real": "一种数据处理方法、装置、设备及介质",
+      "assignee_real": "腾讯科技（深圳）有限公司",
+      "abstract_real": " 本申请公开了一种数据处理方法、装置、设备及介质，方法包括：将初始网络模型输入至深度学习编译器，在通过深度学习编译器对初始网络模型进行模型分析时，获取优化计算图；对优化计算图进行划分，得到N个计算子图；对N个计算子图中的算子进行性能统计分析，若得到的性能统计分析结果指示N个计算子图中的算子包含第一类型算子，则通过为第一类型算子所配置的调度优化策略，对第一类型算子进行算子优化处理，得到优化算子，将优化算子所在的计算子图作为优化子图；基于与优化子图相关联的调度搜索空间，确定初始网络模型的模型调度参数，基于模型调度参数，将优化计算图转换为模型优化代码。采用本申请，可以提升模型在推理时的性能和效率。",
+      "pubdate": "2024-02-23",
+      "pdf_hint": "https://patentimages.storage.googleapis.com/pdfs/4b/b4/ef/44255227c330c1/CN117170685B.pdf",
+      "confidence": "assignee",
+      "candidates": [
+        {
+          "pub": "CN117170685B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "一种数据处理方法、装置、设备及介质"
+        },
+        {
+          "pub": "CN112767910B",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "音频信息合成方法、装置、计算机可读介质及电子设备"
+        },
+        {
+          "pub": "WO2022089224A1",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "一种视频通信方法、装置、电子设备、计算机可读存储介质及计算机程序产品"
+        },
+        {
+          "pub": "CN117828010A",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "文本处理方法、装置、电子设备、存储介质以及程序产品"
+        },
+        {
+          "pub": "CN111968626A",
+          "assignee": "腾讯科技（深圳）有限公司",
+          "title": "变声处理方法、装置、设备及可读存储介质"
+        }
+      ],
+      "ok": true,
       "pdf_bytes": null
     },
     {
