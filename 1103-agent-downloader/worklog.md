@@ -172,3 +172,15 @@
   - `method=yt-dlp twitter extractor(游客) fmt=best`
 - conclusion: X视频下载成功
 - next: 下一平台: threads
+`2026-11-03T18:48:59+08:00` **[threads][extract]** 插件 formats=4 选定=dash-17997862818103670v+dash-17997862773103670a 高度=1280 时长=95
+
+## [W016] 2026-11-03T18:49:02+08:00 | task=threads-download | status=OK
+- cmd: `python3 tools/dl_threads.py https://www.threads.com/@mosseri/post/De90Pbuk52l`
+- raw: logs/threads_001.txt
+- key_facts (verbatim):
+  - `target=https://www.threads.com/@mosseri/post/De90Pbuk52l`
+  - `author=Colin and Samir`
+  - `file=threads_De90Pbuk52l.mp4 size=11940105 res=720x1280`
+  - `method=yt-dlp-threads 插件(Googlebot SSR) fmt=dash-17997862818103670v+dash-17997862773103670a`
+- conclusion: Threads视频下载成功
+- next: 收尾: REPORT.md

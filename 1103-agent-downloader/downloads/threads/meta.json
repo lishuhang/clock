@@ -1,0 +1,17 @@
+{
+  "platform": "threads",
+  "status": "ok",
+  "source_url": "https://www.threads.com/@mosseri/post/De90Pbuk52l",
+  "author": "Colin and Samir",
+  "title": "Instagram launches longform content called “Features” per @mosseri",
+  "summary": "Instagram launches longform content called “Features” per @mosseri",
+  "publish_time": null,
+  "duration_sec": 95,
+  "resolution": "720x1280",
+  "size_bytes": 11940105,
+  "file": "threads_De90Pbuk52l.mp4",
+  "view_count": null,
+  "like_count": 101,
+  "method": "yt-dlp-threads 插件(Googlebot SSR) fmt=dash-17997862818103670v+dash-17997862773103670a",
+  "discover": "搜索提供URL"
+}
