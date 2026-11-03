@@ -123,3 +123,16 @@
   - `method=planB: yt-dlp WeiboUser自发现 + Weibo extractor(游客) fmt=mp4_hd`
 - conclusion: 微博视频下载成功
 - next: 下一平台: bilibili
+`2026-11-03T18:46:06+08:00` **[bilibili][discover]** 热门API命中 bvid=BV1RA4w6AE74 cid=43283448191 时长=342s 标题=总有世界，与你同频｜《弧光猎人》同频测试PV&国服全新PVP事件预告 UP=弧光猎人_ARCRaiders
+`2026-11-03T18:46:06+08:00` **[bilibili][playurl-html5]** code=0 msg=OK quality=64
+
+## [W012] 2026-11-03T18:46:42+08:00 | task=bilibili-download | status=OK
+- cmd: `python3 tools/dl_bilibili.py`
+- raw: logs/bilibili_001.txt
+- key_facts (verbatim):
+  - `target=https://www.bilibili.com/video/BV1RA4w6AE74`
+  - `author=弧光猎人_ARCRaiders (mid=3546964469746014)`
+  - `file=bilibili_BV1RA4w6AE74.mp4 size=29157708 res=1280x536`
+  - `method=guest playurl(platform=html5,high_quality=1, qn=64)`
+- conclusion: B站视频下载成功
+- next: 下一平台: youtube

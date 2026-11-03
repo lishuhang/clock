@@ -1,0 +1,3 @@
+STEP 目标: https://www.bilibili.com/video/BV1RA4w6AE74 | 总有世界，与你同频｜《弧光猎人》同频测试PV&国服全新PVP事件预告 | UP:弧光猎人_ARCRaiders | 342s
+STEP html5通路: qn=64
+RESULT[bilibili] OK: bilibili_BV1RA4w6AE74.mp4 29.2MB 1280x536 @弧光猎人_ARCRaiders (mid=3546964469746014)

@@ -1,0 +1,18 @@
+{
+  "platform": "bilibili",
+  "status": "ok",
+  "source_url": "https://www.bilibili.com/video/BV1RA4w6AE74",
+  "author": "弧光猎人_ARCRaiders (mid=3546964469746014)",
+  "title": "总有世界，与你同频｜《弧光猎人》同频测试PV&国服全新PVP事件预告",
+  "summary": "《弧光猎人》（英文名：ARC Raiders）是一款由Embark Studios和腾讯联合开发、腾讯代理发行的第三人称PvEvP撤离射击冒险游戏。\n狭路相逢，是针锋相对、做匹独狼，还是合作抵抗？不一样的选择，会打开不一样的世界。\n你，想要怎样的冒险，想成为怎样的奇袭者？\n\n「数据猎取」——国服专属PVP事件介绍：\n目标区域通讯已中断，奇袭者可在此搜集用以恢复通信的讯号数据，带回斯佩兰扎换取名望与财富。\n相互劫掠在所难免，带得回去，才算你的。\n奇袭者们！我们地表见！\n\n弧光猎人【同频测试】现已开放招募，1",
+  "publish_time": "2026-11-03",
+  "duration_sec": 342,
+  "resolution": "1280x536",
+  "size_bytes": 29157708,
+  "file": "bilibili_BV1RA4w6AE74.mp4",
+  "view": 1412315,
+  "like": 15867,
+  "method": "guest playurl(platform=html5,high_quality=1, qn=64)",
+  "discover": "api.bilibili.com/x/web-interface/popular 热门榜(免登录)",
+  "note": "免登录最高480p(B11); 720p+需SESSDATA cookie(用户未提供, 记录为未探索路径)"
+}
