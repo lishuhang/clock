@@ -83,6 +83,7 @@
 | B34 | 长任务被 Bash 600s 上限杀掉留半截文件 | 单段超时（A2 变体）；半截文件 size≠durl.size 但容器 duration 元数据仍在 | 下载脚本做成**幂等续跑**（体检含字节数±2%比对）；分段重入 | ✅实测 |
 | B35 | 体检把 dts 警告当坏包（"non monotonically increasing dts to muxer"） | `ffmpeg -f null` 对部分 mp4 时间基过敏，播放实际正常 | 只拦致命错误（Invalid data/NAL/moov/corrupt/EOF），dts 警告放行 | ✅实测 |
 ## Round 2 新坑 (C系列)
+
 | # | 现象 | 真因 | 对策 | 状态 |
 |---|---|---|---|---|
 | C1 | m.weibo.cn容器API纯HTTP永远ok=-100 | 访客SUB需JS护照(visitor.passport.weibo.cn链), requests/首页GET拿不到 | agent-browser真浏览器自动完成; 别再试纯HTTP | ✅已解 |
