@@ -123,3 +123,9 @@
 | API直调 | rednote页面 eval _webmsxyw 签名+POST search/notes | **HTTP200签名有效, 但 code:-101 无登录信息** → 硬性要求登录态 |
 - 关键资产: `window._webmsxyw` 在页面可eval调用(签名生成器白嫖); edith API对游客非全封(search/recommend 200)
 - 固化: scripts/xhs_search_download.py — 注入web_session(种在website-login/error页保持xiaohongshu.com域)→搜索→抽xsec_token链接→yt-dlp
+
+### Round 2b 增补 — 小红书搜索(cookie线) ✅ (2026-11-04)
+- **唯稳定链路**: Netscape全量cookie → Playwright storage state → `agent-browser state load` → 搜索页 `search_result?keyword=` → UI点「筛选→视频」 → 抽 `a[href*=search_result]` xsec_token 链接 → `yt-dlp --cookies <文件>` 下载
+- **必须全量cookie**: web_session(httpOnly, state load才能种) + a1(设备指纹,签名绑定); 单web_session成功率低
+- **不要直调搜索API**: 页面内eval _webmsxyw 签名正确也会 300011 Account abnormal; 页面自身走 so.xiaohongshu.com v2 API + 全套头(x-s-common等); UI筛选是零签名风险路径
+- 实测双关键词: 万智牌(Boltyn组合技 100.3MB) / 孩之宝(V级蝙蝠魔 16.3MB), 全自动零token

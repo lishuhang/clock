@@ -1,0 +1,23 @@
+{
+ "platform": "xiaohongshu",
+ "method": "agent-browser + 全量cookie(Playwright state load) + UI视频筛选(筛选→视频) + yt-dlp --cookies",
+ "search_keyword": "万智牌",
+ "note_id": "6ae6b07a000000001b01cab0",
+ "source_url": "https://www.xiaohongshu.com/search_result/6ae6b07a000000001b01cab0?xsec_token=ABGr0KAy7BsFd-THNI3X-JWWvKLHYQdVSzIF8fjv4DAmU=&xsec_source=",
+ "author": null,
+ "title": "Boltyn组合技构筑思路分享｜FaB",
+ "video": {
+  "resolution": "720x1280",
+  "codec": "h264",
+  "duration_s": 246.0
+ },
+ "file": "xhs_6ae6b07a000000001b01cab0.mp4",
+ "size_mb": 100.34,
+ "search_hits_preview": [
+  "/search_result/6ae6b07a000000001b01cab0?xsec_token=ABGr0KAy7BsFd-THNI3X-JWWvKLHYQdVSzIF8fjv4DAmU=&xsec_source=",
+  "/search_result/6add784b000000001400c801?xsec_token=AB1xdgpZGhx6BdaQaH5hrRTfwJMalEkRIOqDrke8LdAZ8=&xsec_source=",
+  "/search_result/6a511d9f000000001702a1d9?xsec_token=ABkhKAcfzdZnBjWVod9Uo7zEFdVlPMNyPVJBnzuMNy0bk=&xsec_source=",
+  "/search_result/6ac76e9a000000001a0240cd?xsec_token=ABeimf2L7aV-9GdvnELxkP9uofAY0HHh32MrIwrpN8Bck=&xsec_source=",
+  "/search_result/6ad6374d000000000d02030b?xsec_token=AB6w7IE2X691KWu_Cx9AgB2l5TZ-PfvUv71jorY6cW9gI=&xsec_source="
+ ]
+}

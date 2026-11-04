@@ -1,15 +1,9 @@
 {
   "task_id": "1103-agent-downloader",
   "goal": "从 YouTube/Instagram/X/Threads/微博/抖音/小红书/B站 各成功下载1个视频，并获取准确的来源URL、作者、标题、摘要",
-<<<<<<< HEAD
-  "phase": "material_round_complete",
-  "updated": "2026-11-03T21:21:47+08:00",
-  "next_task": "实抓轮已完成 5/7 (微博/B站/X/Threads/小红书✅, YouTube/抖音❌两法用尽). 下一步可选: ①YouTube bgutil POT provider 部署 ②抖音 ttwid 注入或 TikTokDownloader ③REPORT.md 已交付, skill 已固化(skills/video-downloader)",
-=======
   "phase": "search_round_complete",
-  "updated": "2026-11-04T10:30:00+08:00",
-  "next_task": "微博搜索→下载已固化(游客/零token); 小红书待用户提供web_session cookie后跑xhs_search_download.py即可全自动; CF Worker未部署(无指南级项目, 按规则跳过)",
->>>>>>> 4d8c76e (R2: 微博搜索→下载全链路固化(游客/零token) + 小红书搜索终判(web_session唯一钥匙) + 探针×10 + findings/坑清单C系列)
+  "updated": "2026-11-04T10:50:00+08:00",
+  "next_task": "微博+小红书搜索→下载双链路已固化✅(scripts/weibo_search_download.py + xhs_search_download_v3.py). 可选后续: YouTube bgutil POT / 抖音 ttwid / 素材切割执行轮",
   "environment": {
     "sandbox": "Debian 13 trixie, 2C/4G, egress=HK Alibaba Cloud 8.212.10.159",
     "network": "16/16 关键域名网络层可达(2026-11-03实测, logs/net_probe_001.txt)",
@@ -40,7 +34,7 @@
         "ok": true,
         "method": "agent-browser真浏览器走访客护照JS(m.weibo.cn) → 页面内fetch容器搜索API(100103type=1&q=) → statuses/show直链",
         "guest": "免登录免cookie, 每次open m.weibo.cn自动完成护照",
-        "script": "scripts/weibo_search_download.py",
+        "script": "scripts/weibo_search_download.py (R2固化, 游客免登录)",
         "tested": "孩之宝 万智牌 → 1280x720 13.8MB",
         "backup": "纯HTTP: genvisitor2访客SUB可通weibo.com/ajax/feed/hottimeline与hotSearch热搜榜, 但搜索接口未在weibo.com域发现"
       }
@@ -100,11 +94,15 @@
         "method": "yt-dlp XiaoHongShu extractor(匿名) fmt=0"
       },
       "search": {
-        "ok": false,
-        "blocked_reason": "搜索API硬性要求登录态(code:-101无登录信息); 游客三路全灭: RedCrack纯Python=shield 471(数据中心IP), 页面级=300012 IP at risk(国内)/登录墙(rednote国际版), API签名直调(_webmsxyw有效)=-101",
-        "unlock": "用户提供 web_session cookie → scripts/xhs_search_download.py 全自动(种cookie→搜索页→抽xsec_token链接→yt-dlp)",
-        "cookie_file": "/home/z/my-project/.secrets/cookies/xiaohongshu_web_session.txt",
-        "bonus": "web_session注入后大概率同时解锁4K档(上轮findings B18)"
+        "ok": true,
+        "method": "全量cookie(Netscape→Playwright state) + agent-browser + UI视频筛选 + yt-dlp --cookies",
+        "cookie": "用户提供 2026-11-04, 存 .secrets/cookies/xiaohongshu_cookies.txt (16枚含a1/web_session)",
+        "script": "scripts/xhs_search_download_v3.py",
+        "tested": [
+          "万智牌 720x1280 100.3MB(Boltyn组合技)",
+          "孩之宝 720x1280 16.3MB(V级蝙蝠魔把玩)"
+        ],
+        "notes": "游客搜索三层风控死路见findings/02 R2增补; eval直调v1 API会300011, 必须走UI筛选"
       }
     },
     "instagram": {
@@ -134,7 +132,6 @@
     }
   },
   "blocked_on": [
-    "小红书搜索: 需 web_session cookie (登录 xiaohongshu.com → F12 → Cookies → web_session 值 → 写入 .secrets/cookies/xiaohongshu_web_session.txt)",
     "YouTube: bgutil POT provider 或 burner cookies (可选)",
     "抖音: ttwid 注入或 TikTokDownloader (可选)"
   ],
@@ -142,7 +139,6 @@
     "上一轮(1020-feng-video)的 geetest_beat2.py/bili_fetch.py 等8个脚本未推GitHub已随沙盒丢失——B站验证码求解器需按 findings/03 坑7-9 的设计要点重建"
   ],
   "worklog_pointer": "worklog.md (本轮 W001-W008)",
-<<<<<<< HEAD
   "material_round": {
     "goal": "为孩之宝Q3财报解说文案配切题素材并下载编号存档",
     "search": "B站游客wbi search两轮22词, 7词命中(热点实体词高, 长尾词软拦截)",
@@ -150,11 +146,10 @@
     "doc": "materials/materials.md(对照表+分镜表+坑B28-B33+小红书自搜边界回答)",
     "vlm": "9宫格复判, 分镜14镜头, 素材未切割仅标秒段",
     "next_task": "用户确认素材后可切割; 空缺画面(至尊魔戒卡/财报/大富翁)待给定URL或再探"
-=======
+  },
   "cf_worker": {
     "deployed": false,
     "reason": "无指南级开源项目, 按用户规则不自行摸索; token存.secrets/cf_token备用",
     "assessment": "CF/GH Actions出口均为数据中心IP, 解决不了小红书IP风控; 微博已直连无需中转; 脚本全量入库GitHub即等效'服务常驻'"
->>>>>>> 4d8c76e (R2: 微博搜索→下载全链路固化(游客/零token) + 小红书搜索终判(web_session唯一钥匙) + 探针×10 + findings/坑清单C系列)
   }
 }

@@ -371,3 +371,12 @@
 - **W110 小红书固化脚本就绪(待cookie)**: scripts/xhs_search_download.py — 读.secrets/cookies/xiaohongshu_web_session.txt → 搜索URL被300012拦到website-login/error页(恰好保持xiaohongshu.com域, 正好种cookie) → 重新open搜索页 → 抽explore链接(note_id+xsec_token) → yt-dlp下载(上轮已通通路); 无cookie时打印获取指引退出
 - **W111 CF Worker决策**: 调研(web search×7)未发现"小红书/微博搜索下载中转"的**指南级**开源项目(只有泛CF-Worker代理教程) — 按用户规则"没有详细外部指南就不自行摸索"→ **未部署**; cf token已存.secrets/cf_token备用(600权限)
 - **W112 中转形态评估**: ①GitHub Actions runner=Azure数据中心IP, 对小红书IP风控无解, 仅cookie可存Secrets(沙盒.secrets等效); ②CF Worker出口同为数据中心IP同理; ③微博沙盒直连已通无需中转 → **中转边际价值=仅'服务常驻'(沙盒重置不丢), 但脚本已全部入库GitHub, 重建=git clone, 中转非必需** → 记录不实施
+
+### Round 2b 工作记录 (W113-W119, 用户提供cookie后)
+- **W113 push补完**: 上轮中断的push实为半成功(rebase冲突+stash纠缠) — worklog.md有<<<<<<< ======= >>>>>>>冲突标记被误提交; 手工删3行标记(两侧内容都保留: 素材轮W021-W023在前,R2 W101-W112在后), amend+rebase --quit+branch -f main+stash drop(内容已在远端) → push 8429a6a..20d6a8c ✅
+- **W114 沙盒重置影响**: /home/z/.venv的yt-dlp丢失(FileNotFoundError), /home/z/.venv/bin/pip install yt-dlp 重装2026.10.26; 技能新增坑16
+- **W115 全量cookie注入成功✅**: 用户给Netscape全量cookie(16枚, 含a1设备指纹+web_session+websectiga+sec_poison_id等); 转 Playwright storage state → agent-browser state load → 打开 search_result?keyword=万智牌 → **页面正常渲染**(title=万智牌-小红书搜索, 无300012无登录墙) → 抽到20条xsec_token链接; 关键: web_session是httpOnly, document.cookie种不进, 必须state load(坑11)
+- **W116 API直调被风控+UI筛选破局**: 页面内eval _webmsxyw签名+POST edith.../v1/search/notes → **300011 Account abnormal**(页面自身走 so.xiaohongshu.com v2 API+全套头, 直调v1会触发账号风控); 改走纯UI: 点「筛选」→「视频」(childElementCount===0+innerText精确匹配, els[last]避免父子重复) → 卡片刷新 → 前6条yt-dlp探测**6/6全VIDEO** — 不碰签名最稳(坑12)
+- **W117 v3定稿+万智牌全链路✅**: xhs_search_download_v3.py — cookie转换→state load→搜索页→UI视频筛选→抽链接→yt-dlp --cookies下载; "万智牌"→Boltyn组合技构筑思路分享 720x1280 100.3MB(105213794B); 首版踩坑: IIFE的JSON.stringify少个右括号(SyntaxError), 双层引号解析
+- **W118 第二关键词泛化验证✅**: "孩之宝"→沉浸式把玩孩之宝09V级蝙蝠魔 720x1280 16.3MB, 全链路复跑无人工干预 — 链路稳定可复用
+- **W119 skill更新+分卷入库**: SKILL-video-downloader 更新(description含搜索/环境自检加agent-browser/§3自发现重写/新增§3b微博§3c小红书搜索链路/坑11-16); >100MB万智牌按素材轮惯例split 90m分卷+md5.txt; v2/v3脚本入库

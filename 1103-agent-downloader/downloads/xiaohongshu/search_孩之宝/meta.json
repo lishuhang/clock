@@ -1,0 +1,23 @@
+{
+ "platform": "xiaohongshu",
+ "method": "agent-browser + 全量cookie(Playwright state load) + UI视频筛选(筛选→视频) + yt-dlp --cookies",
+ "search_keyword": "孩之宝",
+ "note_id": "6ae9ede0000000000e024200",
+ "source_url": "https://www.xiaohongshu.com/search_result/6ae9ede0000000000e024200?xsec_token=ABkme_Tr3ZT8yX8226GhV7Z8vTaHYjpB8cG_nNoFPBz_w=&xsec_source=",
+ "author": null,
+ "title": "沉浸式把玩 | 孩之宝 09 V级 蝙蝠魔",
+ "video": {
+  "resolution": "720x1280",
+  "codec": "h264",
+  "duration_s": 67.0
+ },
+ "file": "xhs_6ae9ede0000000000e024200.mp4",
+ "size_mb": 16.35,
+ "search_hits_preview": [
+  "/search_result/6ae9ede0000000000e024200?xsec_token=ABkme_Tr3ZT8yX8226GhV7Z8vTaHYjpB8cG_nNoFPBz_w=&xsec_source=",
+  "/search_result/6a58f3700000000011019127?xsec_token=AB4C7dc2YsRY3pDkcclim88zkwN333I6TFN3cVGXeiOlc=&xsec_source=",
+  "/search_result/6ae845b4000000000e02610f?xsec_token=ABKPhqkuSZ5mLzlPRHbgmOddFtRSC0ClCXjAoIQMVarqI=&xsec_source=",
+  "/search_result/6ac0629c0000000018006228?xsec_token=ABkbr_ugpm7LYZQCwjEA-6dd06XvQAdCitswepTRAJIqM=&xsec_source=",
+  "/search_result/6ae82ffb00000000120134da?xsec_token=ABKPhqkuSZ5mLzlPRHbgmOddsE8n1nEU_Ac91Mnt7yHsI=&xsec_source="
+ ]
+}
