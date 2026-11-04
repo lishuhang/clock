@@ -1,0 +1,30 @@
+{
+ "steps": [
+  {
+   "step": "genvisitor2+cookies",
+   "ok": true,
+   "detail": "sub_len=94 xsrf_len=0 setcookie_names=['SVB']"
+  },
+  {
+   "step": "s.weibo.com_ajax_search",
+   "ok": false,
+   "detail": "HTTP200 json=True ok=None keys=['code', 'msg', 'data']"
+  },
+  {
+   "step": "weibo.com_ajax_search_all",
+   "ok": false,
+   "detail": "EXC HTTP Error 404: Not Found"
+  },
+  {
+   "step": "weibo.com_ajax_statuses_searchall",
+   "ok": false,
+   "detail": "EXC HTTP Error 404: Not Found"
+  },
+  {
+   "step": "weibo.com_ajax_side_hotssearch",
+   "ok": true,
+   "detail": "HTTP200 json=True ok=1 keys=['ok', 'data', 'logs', 'topLogs'] data_keys=['hotgovs', 'hotgov', 'realtime']"
+  }
+ ],
+ "weibo.com_ajax_side_hotssearch_raw_len": 14515
+}

@@ -1,0 +1,19 @@
+{
+ "steps": [
+  {
+   "step": "mweibo_home_cookies",
+   "ok": false,
+   "detail": "got=['WEIBOCN_FROM']"
+  },
+  {
+   "step": "mweibo_container_search",
+   "ok": false,
+   "detail": "ok=-100 cards=0 msg="
+  },
+  {
+   "step": "mweibo_video_tab_search",
+   "ok": false,
+   "detail": "ok=-100 cards=0 video_cards=0"
+  }
+ ]
+}

@@ -352,3 +352,22 @@
   - `S006 内含港口/货运画面(510-680s/850-1019s), 覆盖文案13供应链空缺`
 - conclusion: 分镜表14镜头定稿(materials/materials.md §三), 素材未切割仅标用法
 - next: 文档/materials.md/findings/03追加/worklog/state更新→单次push
+
+---
+## Round 2 — 2026-11-04 微博+小红书「搜索→下载」链路攻坚
+任务: 跑通两家搜索到下载单条视频持续链路, 固化为不烧token方案。免费优先 > 本地浏览器cookies/MCP浏览器 > 付费。CF Worker/GH Actions 免费中转为期望最佳形态(但无详细外部指南不自行摸索)。CF token 已存 .secrets/cf_token。
+上轮已知: 微博容器API ok=-100(要JS级访客cookie), 单视频下载畅通; 小红书搜索需登录+签名, 单视频(xsec_token链接)下载畅通, agent-browser未试过。
+
+### Round 2 工作记录 (W101-W112)
+- **W101 微博genvisitor2探针✅**: passport.weibo.com/visitor/genvisitor2 纯HTTP POST(cb/tid/from=weibo/webdriver=false, 教程原参数) → retcode=20000000 拿到访客SUB(94字符, 教程写死tid竟可复用); 带SUB调 weibo.com/ajax/feed/hottimeline → ok:1真实statuses! **微博"发现"层解锁** (logs/wb_search_probe.json)
+- **W102 m.weibo.cn纯HTTP死路确认**: 首页GET只种WEIBOCN_FROM不种SUB, 容器API仍ok=-100 — 上轮结论"JS级访客cookie"复核成立, 不再重试
+- **W103 weibo.com域搜索404×2**: /ajax/search/all、/ajax/statuses/searchall 均404(猜测路径不存在); s.weibo.com/ajax/statuses/search 返回{code,msg,data}非ok结构未细究; **热搜榜 weibo.com/ajax/side/hotSearch 游客可用(ok:1)** (logs/wb_search_probe3.json)
+- **W104 微博搜索攻破🎉**: agent-browser真浏览器 open m.weibo.cn → 自动完成"新浪访客系统"护照(visitor.passport.weibo.cn/visitor/visitor?entry=sinawap, JS级) → 页面内eval fetch容器搜索API → **15条真实结果含视频标记**, 马保国本人视频在内; 游客cookie(SUBP/MLOGIN/_T_WM/XSRF-TOKEN)自动种下 (scripts/wb_browser_search.sh)
+- **W105 小红书RedCrack游客471**: mankezhou/RedCrack(MIT, 纯Python逆向全参数) guest session创建时 as.xiaohongshu.com/api/sec/v1/shield/webprofile 返回471 → 461异常 — **数据中心IP+游客指纹被安全接口拦**, 与其skill文档预警一致; 注意: RedCrack的config.py用相对路径, 必须cwd=仓库根目录运行
+- **W106 小红书页面级IP风控**: agent-browser开 www.xiaohongshu.com 直接重定向 www.rednote.com(国际版, 香港IP判定); 搜索页被拦到 /website-login/error **error_code=300012 "IP at risk"**; 但 edith.xiaohongshu.com/api/sns/web/v1/search/recommend XHR 200(API层未全封)
+- **W107 rednote国际版登录墙**: rednote.com/search_result?keyword=页面正常打开(title=关键词-rednote search, 无IP风控页)但渲染 "Log in to view search results" 登录墙, 游客0结果
+- **W108 小红书游客搜索终判**: rednote.com页面 eval window._webmsxyw(存在,function)签名 + fetch POST edith.../search/notes → **HTTP200签名有效但 code:-101 "无登录信息，或登录信息为空"** → 搜索API硬性要求登录态。至此游客三路(RedCrack纯Python/页面级/API签名直调)全灭, **web_session cookie是唯一钥匙**, 与XHS-Downloader/MediaCrawler文档一致
+- **W109 微博全链路固化实测✅**: scripts/weibo_search_download.py "孩之宝 万智牌" → 搜索命中睿卡潮玩万智牌王者之战赛事混剪(视频标记) → statuses/show拿直链 → curl下载 **1280x720 13.8MB**, ffprobe体检通过, meta.json含完整来源信息 → downloads/weibo/search_孩之宝 万智牌/
+- **W110 小红书固化脚本就绪(待cookie)**: scripts/xhs_search_download.py — 读.secrets/cookies/xiaohongshu_web_session.txt → 搜索URL被300012拦到website-login/error页(恰好保持xiaohongshu.com域, 正好种cookie) → 重新open搜索页 → 抽explore链接(note_id+xsec_token) → yt-dlp下载(上轮已通通路); 无cookie时打印获取指引退出
+- **W111 CF Worker决策**: 调研(web search×7)未发现"小红书/微博搜索下载中转"的**指南级**开源项目(只有泛CF-Worker代理教程) — 按用户规则"没有详细外部指南就不自行摸索"→ **未部署**; cf token已存.secrets/cf_token备用(600权限)
+- **W112 中转形态评估**: ①GitHub Actions runner=Azure数据中心IP, 对小红书IP风控无解, 仅cookie可存Secrets(沙盒.secrets等效); ②CF Worker出口同为数据中心IP同理; ③微博沙盒直连已通无需中转 → **中转边际价值=仅'服务常驻'(沙盒重置不丢), 但脚本已全部入库GitHub, 重建=git clone, 中转非必需** → 记录不实施

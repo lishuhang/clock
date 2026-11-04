@@ -71,6 +71,7 @@
 | B26 | 找 bgutil 插件 404 | 正确路径 `Brainicism/bgutil-ytdlp-pot-provider`（大写 B） | ✅本轮实测 |
 | B27 | 网页中转站（snapany 等） | 第一次解析后弹登录墙，不可靠 | 不作为主通路 | `[上轮]` |
 
+<<<<<<< HEAD
 ### 素材轮新坑（B站管线, 2026-11-03 W021-W023）
 | # | 现象 | 真因 | 对策 | 状态 |
 |---|---|---|---|---|
@@ -82,3 +83,15 @@
 | B33 | push 被 GitHub 拒 | 单文件 100MB 硬限 | >100MB 素材 `split -b 90m` 分卷+md5 入库；commit 前 `git status` 复核 | ✅实测 |
 | B34 | 长任务被 Bash 600s 上限杀掉留半截文件 | 单段超时（A2 变体）；半截文件 size≠durl.size 但容器 duration 元数据仍在 | 下载脚本做成**幂等续跑**（体检含字节数±2%比对）；分段重入 | ✅实测 |
 | B35 | 体检把 dts 警告当坏包（"non monotonically increasing dts to muxer"） | `ffmpeg -f null` 对部分 mp4 时间基过敏，播放实际正常 | 只拦致命错误（Invalid data/NAL/moov/corrupt/EOF），dts 警告放行 | ✅实测 |
+=======
+## Round 2 新坑 (C系列)
+| # | 现象 | 真因 | 对策 | 状态 |
+|---|---|---|---|---|
+| C1 | m.weibo.cn容器API纯HTTP永远ok=-100 | 访客SUB需JS护照(visitor.passport.weibo.cn链), requests/首页GET拿不到 | agent-browser真浏览器自动完成; 别再试纯HTTP | ✅已解 |
+| C2 | genvisitor2教程写死tid担心过期 | tid竟是可复用的 | 直接用教程参数(2025-08教程, 2026-11实测仍有效) | 📚 |
+| C3 | RedCrack import报 eval() arg TypeError | config.py相对路径读ini | 必须 os.chdir(RedCrack仓库根) 再import | 📚 |
+| C4 | 小红书游客471/300012/-101三层墙 | 数据中心IP+无登录态叠加风控 | web_session cookie唯一解; 三层分别是shield风控/页面IP风控/API登录校验, 全测过才知最深一层是登录 | ✅终判 |
+| C5 | 沙盒访问xiaohongshu.com首页变rednote.com | 海外IP判定自动切国际站 | 国际版API/签名函数(_webmsxyw)与国内版同源, 可直接用 | 📚 |
+| C6 | agent-browser eval返回JSON被双层引号包裹 | CLI输出格式 | 解析循环: 先去引号层再解JSON文本层(见weibo_search_download.py ab_eval) | 📚 |
+| C7 | 微博旧视频playback_list只有stream一档 | 2020年前后老微博无多码率 | 新视频有多档; 选档逻辑vids[-1]取最高 | 📚 |
+>>>>>>> 4d8c76e (R2: 微博搜索→下载全链路固化(游客/零token) + 小红书搜索终判(web_session唯一钥匙) + 探针×10 + findings/坑清单C系列)

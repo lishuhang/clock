@@ -106,3 +106,20 @@
 - **Stack Overflow**：沙盒内 yt-dlp 网络受限类问题检索（结论：与本项目相关的失败模式是平台侧而非网络侧，已并入坑清单）
 - **LinuxDo / V2EX / 知乎 / 即刻 / 小红书讨论**：检索视频下载工具讨论；有效产出为 zyipeng notes（技能社区）与 xiaoer-videolab README（其对微博/知乎 SPA 结构的判断与 zyipeng 相反——以 zyipeng 的实测笔记为准，下轮用真实 URL 验证仲裁）
 - **skill 市场**：`[上轮]` 已排查 dsh-plugin.org(15512 插件,DSH 专用不兼容)、skills.pub(6400+,无视频下载类)、lobehub(前端向)——无现成 skill，不重复排查
+
+## Round 2 增补 — 搜索通路 (2026-11-04)
+
+### 微博搜索 (游客/免登录/零cookie) ✅ 已固化
+- **唯一稳定通路**: agent-browser 真浏览器 open m.weibo.cn → JS自动完成"新浪访客系统"护照(visitor.passport.weibo.cn, entry=sinawap) → 页面内 eval fetch `/api/container/getIndex?containerid=100103type%3D1%26q%3D{kw}&page_type=searchall` → 完整JSON(mblog列表, page_info.media_info判视频) → `/statuses/show?id={mid}` 拿 playback_list 直链 → curl下载(Referer: m.weibo.cn)
+- **纯HTTP边界**: genvisitor2(passport.weibo.com, POST cb/tid/from/webdriver, 教程tid可复用)拿访客SUB → **只通 weibo.com/ajax/feed/hottimeline(热门流)与 /ajax/side/hotSearch(热搜榜)**; m.weibo.cn容器API纯HTTP永远ok=-100(JS护照必须真浏览器), weibo.com域无搜索ajax(404)
+- 固化: scripts/weibo_search_download.py (实测 孩之宝万智牌→720p 13.8MB)
+
+### 小红书搜索 (游客) ❌ 三层风控实测全灭, web_session 是唯一钥匙
+| 层 | 路 | 结果 |
+|---|---|---|
+| 纯Python签名 | RedCrack(mankezhou/RedCrack, MIT) guest | session创建即死: as.xiaohongshu.com shield/webprofile **471**(数据中心IP+游客指纹) |
+| 页面级 | agent-browser 国内版 | www.xiaohongshu.com→重定向rednote.com; 搜索页 **300012 IP at risk** |
+| 页面级 | rednote国际版 | 页面开但 **"Log in to view search results"** 登录墙 |
+| API直调 | rednote页面 eval _webmsxyw 签名+POST search/notes | **HTTP200签名有效, 但 code:-101 无登录信息** → 硬性要求登录态 |
+- 关键资产: `window._webmsxyw` 在页面可eval调用(签名生成器白嫖); edith API对游客非全封(search/recommend 200)
+- 固化: scripts/xhs_search_download.py — 注入web_session(种在website-login/error页保持xiaohongshu.com域)→搜索→抽xsec_token链接→yt-dlp

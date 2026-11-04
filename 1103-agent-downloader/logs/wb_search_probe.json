@@ -1,0 +1,19 @@
+{
+ "steps": [
+  {
+   "step": "genvisitor2",
+   "ok": true,
+   "detail": "HTTP200 sub=<94chars> raw_head=window.visitor_gray_callback && visitor_gray_callback({\"retcode\":20000000,\"msg\":\"succ\",\"data\":{\"sub\":\"_2AkMdtgZHf8NxqwFRmvkWzm_iZIR0zADEieKr6vecJRMxHRl-yT8XqnJatRB6NjYoqANCRCy8vC7C0pOwnYbzvQKOEGBh\",\"s"
+  },
+  {
+   "step": "hottimeline_verify",
+   "ok": true,
+   "detail": "HTTP200 has_statuses=True head={\"ok\":1,\"statuses\":[{\"visible\":{\"type\":0,\"list_id\":0},\"created_at\":\"Wed Nov 04 08:44:31 +0800 2026\",\"id\":5361451330175471,\"idstr\":\"5361451330175471\",\""
+  },
+  {
+   "step": "mweibo_search",
+   "ok": false,
+   "detail": "HTTP200 non-json head=<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"shortcut icon\" href=\"https://weibo.com/favicon.ico\" />\n    <meta"
+  }
+ ]
+}

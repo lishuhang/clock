@@ -1,0 +1,27 @@
+{
+ "platform": "weibo",
+ "method": "agent-browser游客护照 + 页面内容器搜索API + statuses/show直链",
+ "search_keyword": "孩之宝 万智牌",
+ "mid": "5113385641315379",
+ "bid": "P5CdK5wbN",
+ "source_url": "https://m.weibo.cn/status/5113385641315379",
+ "web_url": "https://weibo.com/1927326021/P5CdK5wbN",
+ "author": "睿卡潮玩",
+ "title": "<a href=\"https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E7%9D%BF%E5%8D%A1%E6%9D%AF%E4%B8%87%E6%",
+ "created_at": "Thu Dec 19 20:00:01 +0800 2024",
+ "quality": "stream",
+ "video": {
+  "resolution": "1280x720",
+  "codec": "h264",
+  "duration_s": 134.397007
+ },
+ "file": "weibo_5113385641315379.mp4",
+ "size_mb": 13.82,
+ "search_hits_preview": [
+  {
+   "id": "5113385641315379",
+   "u": "睿卡潮玩",
+   "t": "#睿卡杯万智牌王者之战# 从5月的店家资格预选赛开始，2000多名牌手中争相角逐。这次我们制作了一次回顾混剪，带大家快速的重温这6个月的赛事，你是否能在视频中找"
+  }
+ ]
+}
