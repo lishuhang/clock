@@ -71,7 +71,6 @@
 | B26 | 找 bgutil 插件 404 | 正确路径 `Brainicism/bgutil-ytdlp-pot-provider`（大写 B） | ✅本轮实测 |
 | B27 | 网页中转站（snapany 等） | 第一次解析后弹登录墙，不可靠 | 不作为主通路 | `[上轮]` |
 
-<<<<<<< HEAD
 ### 素材轮新坑（B站管线, 2026-11-03 W021-W023）
 | # | 现象 | 真因 | 对策 | 状态 |
 |---|---|---|---|---|
@@ -83,7 +82,6 @@
 | B33 | push 被 GitHub 拒 | 单文件 100MB 硬限 | >100MB 素材 `split -b 90m` 分卷+md5 入库；commit 前 `git status` 复核 | ✅实测 |
 | B34 | 长任务被 Bash 600s 上限杀掉留半截文件 | 单段超时（A2 变体）；半截文件 size≠durl.size 但容器 duration 元数据仍在 | 下载脚本做成**幂等续跑**（体检含字节数±2%比对）；分段重入 | ✅实测 |
 | B35 | 体检把 dts 警告当坏包（"non monotonically increasing dts to muxer"） | `ffmpeg -f null` 对部分 mp4 时间基过敏，播放实际正常 | 只拦致命错误（Invalid data/NAL/moov/corrupt/EOF），dts 警告放行 | ✅实测 |
-=======
 ## Round 2 新坑 (C系列)
 | # | 现象 | 真因 | 对策 | 状态 |
 |---|---|---|---|---|
@@ -94,4 +92,7 @@
 | C5 | 沙盒访问xiaohongshu.com首页变rednote.com | 海外IP判定自动切国际站 | 国际版API/签名函数(_webmsxyw)与国内版同源, 可直接用 | 📚 |
 | C6 | agent-browser eval返回JSON被双层引号包裹 | CLI输出格式 | 解析循环: 先去引号层再解JSON文本层(见weibo_search_download.py ab_eval) | 📚 |
 | C7 | 微博旧视频playback_list只有stream一档 | 2020年前后老微博无多码率 | 新视频有多档; 选档逻辑vids[-1]取最高 | 📚 |
->>>>>>> 4d8c76e (R2: 微博搜索→下载全链路固化(游客/零token) + 小红书搜索终判(web_session唯一钥匙) + 探针×10 + findings/坑清单C系列)
+| C8 | state.json/worklog/findings多处残留<<<<<<< ======= >>>>>>> | rebase中断时冲突未解就被stash pop+commit | 每次push前 `grep -rn "<<<<<<<"` 全局扫一遍; 上轮已修复3处 | ✅R2b |
+| C9 | cp报cannot stat但ls看得到文件 | ①文件名零的个数抄错一位(6ae9ede+10个0) ②沙盒fs瞬态抖动 | 复制用glob通配符; 报错先python repr(filename)核对字节 | 📚 |
+| C10 | 小红书eval直调v1搜索API签名正确仍被拒(300011 Account abnormal) | 页面自身走 so.xiaohongshu.com v2 API+全套头(x-s-common等), 直调edith v1触发账号风控 | 视频筛选走UI点击「筛选→视频」, 零签名风险 | ✅已解 |
+| C11 | web_session用document.cookie种不进 | httpOnly属性, JS无法读写 | Netscape→Playwright storage state→agent-browser state load; 全量cookie(含a1)比单web_session稳 | ✅已解 |
