@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>explainer-video-studio · vertical master v2 · 1080x1920</title>
+<style>
+  /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
+   * v2 画面规格（2026-11-05 用户修订）：
+   *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
+   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
+   *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
+   */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* 普惠体三字重（本地 TTF，路径相对 canvas 页；母版被复制到别处时按需改写） */
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-black.ttf") format("truetype"); font-weight: 900; }
+  :root {
+    --brand: #fc8166; --brand-deep: #e55b46;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #e7e3e1;
+  }
+  body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
+         font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
+         background: #f6f4f2; }
+  /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
+  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #f6f4f2; }
+  #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
+  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
+  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
+  [data-hud] { pointer-events: none; }
+  .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
+  .hud-progress .track { position: absolute; inset: 0; background: rgba(49,46,46,.16); }
+  .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+                        background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1680px; height: 240px; z-index: 60;
+             display: flex; align-items: center; justify-content: center; }
+  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap;
+                  text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
+                               0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
+                               1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
+  .hud-watermark { position: absolute; inset: 0; z-index: 70; }
+  .hud-watermark img { width: 100%; height: 100%; object-fit: fill; }
+  /* ---- 章节角标（小、半透明，顶部进度条下方左侧） ---- */
+  .hud-chapter { position: absolute; top: 26px; left: 32px; z-index: 60;
+                 background: rgba(20,18,17,.55); color: #fff; font-size: 30px; font-weight: 700;
+                 padding: 8px 24px; border-radius: 999px; letter-spacing: 2px; backdrop-filter: blur(4px); }
+  /* ---- 受控动效原语（renderFrame 按时间驱动） ---- */
+  [data-anim] { opacity: 0; will-change: transform, opacity; }
+  /* 章节擦除覆盖层（0.4s 橙板横扫） */
+  .wipe-overlay { position: absolute; inset: 0; z-index: 50; background: var(--brand);
+                  transform: translateX(-100%); }
+</style>
+</head>
+<body>
+  <!-- L0 背景（YZ_EDIT_BG） -->
+  <div id="bg-layer">
+    <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
+    <div data-anim="kb" data-kb="1.0,1.0,1.05,1.05" style="position:absolute;inset:0;background:radial-gradient(110% 80% at 50% 30%, #3d3226 0%, #221b13 55%, #14100b 100%);"></div>
+    <!-- ======== YZ_EDIT_BG_END ======== -->
+  </div>
+
+  <!-- L1 主体（YZ_EDIT_STAGE） -->
+  <div id="stage"><div class="inner" id="el-stage">
+    <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
+    
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;">
+  <div class="banner" data-anim="stamp" data-t="0.6" data-d="0.5">
+    <div class="bs">一元一秒 · 百元造梦</div>
+    <div class="bd">Seedance 2.0 时代 · 行业口号</div>
+  </div>
+  <div data-anim="up" data-t="3.4" style="font-size:40px;color:#d9cdb4;">到了质量更高的 Seedance 2.5 时代，还能维持吗？</div>
+</div>
+    <!-- ======== YZ_EDIT_STAGE_END ======== -->
+  </div></div>
+
+  <!-- 章节擦除（需要换段动效的镜头取消注释并设 data-t="end-0.4"） -->
+  <!-- <div class="wipe-overlay" data-anim="wipe-in" data-t="end-0.4" data-d="0.4"></div> -->
+
+  <!-- L2 HUD 预览（截帧隐藏） -->
+  <div class="hud-progress" data-hud><div class="track"></div><div class="fill" id="el-progress"></div></div>
+  <div class="hud-chapter" data-hud id="el-chapter">章节</div>
+  <div class="hud-sub" data-hud><div class="txt" id="el-subtitle">字幕加载中…</div></div>
+  <div class="hud-watermark" data-hud><img id="el-watermark" alt=""></div>
+
+<script>
+/* ============ 受控时钟引擎 v2 ============
+ * window.renderFrame(payload)
+ *   payload = { t(镜内秒), shot_dur, progress_pct, subtitle, chapter,
+ *               hud(bool, 截帧时 false → 隐藏 [data-hud]), watermark(src) }
+ * 元素动效：data-anim="pop|fade|up|stamp|wipe-in|wipe-out" data-t="秒|end-0.4" data-d="时长(默认0.5)"
+ * 连续动画：data-anim="kb" data-kb="s0x,s0y,e0x,e0y"（背景推拉，0→shot_dur 线性缓动）
+ * 计数器：<span data-counter="0,4556,1.2,0">(from,to,dur秒,小数位)</span>
+ * 采集声明：window.SHOOT_DENSE=[[t0,t1,fps],...]（连续段）  window.SHOOT_KEYS=[t,...]（关键帧）
+ */
+window.renderFrame = function (p) {
+  var dur = p.shot_dur || 10;
+  var t = p.t || 0;
+  if (p.hud !== undefined) {
+    document.querySelectorAll('[data-hud]').forEach(function (el) {
+      el.style.display = p.hud === false ? 'none' : '';
+    });
+  }
+  if (p.hud !== false) {
+    if (p.chapter !== undefined) document.getElementById('el-chapter').textContent = p.chapter;
+    var sub = document.getElementById('el-subtitle');
+    if (p.subtitle !== undefined) sub.textContent = p.subtitle;
+    document.getElementById('el-progress').style.width = (p.progress_pct || 0) + '%';
+    if (p.watermark) document.getElementById('el-watermark').src = p.watermark;
+  }
+  document.querySelectorAll('[data-anim],[data-counter],[data-kb]').forEach(function (el) {
+    var t0s = el.getAttribute('data-t') || '0';
+    var t0 = t0s.indexOf('end-') === 0 ? Math.max(0, dur - parseFloat(t0s.slice(4))) : parseFloat(t0s);
+    var d = parseFloat(el.getAttribute('data-d') || '0.5');
+    var kind = el.getAttribute('data-anim');
+    var k = Math.max(0, Math.min(1, (t - t0) / (d || 0.001)));
+    var e = 1 - Math.pow(1 - k, 3); /* easeOutCubic */
+    if (kind) {
+      if (kind === 'kb') {
+        var seq = (el.getAttribute('data-kb') || '1,1,1.06,1.06').split(',').map(Number);
+        var kk = Math.max(0, Math.min(1, t / Math.max(0.001, dur)));
+        var ke = kk < .5 ? 2 * kk * kk : 1 - Math.pow(-2 * kk + 2, 2) / 2; /* easeInOut */
+        var sc = seq[0] + (seq[2] - seq[0]) * ke, scy = seq[1] + (seq[3] - seq[1]) * ke;
+        el.style.transform = 'scale(' + sc + ',' + scy + ')';
+        el.style.opacity = 1; el.style.transformOrigin = 'center';
+        return;
+      }
+      if (k <= 0) { el.style.opacity = 0; el.style.transform = 'none'; }
+      else {
+        el.style.opacity = 1;
+        if (kind === 'pop')        el.style.transform = 'scale(' + (0.6 + 0.4 * e) + ')';
+        else if (kind === 'up')   { el.style.transform = 'translateY(' + ((1 - e) * 60) + 'px)'; el.style.opacity = e; }
+        else if (kind === 'stamp') el.style.transform = 'scale(' + (1.25 - 0.25 * e) + ')';
+        else if (kind === 'wipe-in')  el.style.transform = 'translateX(' + (-100 + 100 * e) + '%)';
+        else if (kind === 'wipe-out') el.style.transform = 'translateX(' + (100 * e) + '%)';
+        else if (kind === 'fade')  el.style.opacity = e;
+      }
+      return;
+    }
+    var c = el.getAttribute('data-counter');
+    if (c) {
+      var a = c.split(',').map(Number); /* from,to,dur,decimals */
+      var ck = Math.max(0, Math.min(1, (t - t0) / (a[2] || 1)));
+      var ce = 1 - Math.pow(1 - ck, 2);
+      var v = a[0] + (a[1] - a[0]) * ce;
+      el.textContent = v.toFixed(a[3] !== undefined ? a[3] : 0);
+      el.style.opacity = k <= 0 ? 0 : 1;
+    }
+  });
+  return true;
+};
+
+/* 自检：主体不超 4:3 安全区（data-deco 豁免）、一切不超画布 */
+window.yzCheck = function () {
+  var problems = [];
+  var st = document.getElementById('stage').getBoundingClientRect();
+  document.querySelectorAll('#el-stage *').forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    if (!r.width || !r.height || el.closest('[data-deco]')) return;
+    if (r.right > st.right + 2 || r.bottom > st.bottom + 2 || r.left < st.left - 2 || r.top < st.top - 2)
+      problems.push('overflow:' + (el.className || el.tagName));
+  });
+  var sub = document.getElementById('el-subtitle');
+  if (sub && sub.scrollWidth > 1040) problems.push('subtitle-overflow');
+  return problems.length ? { status: 'noncompliant', problems: problems }
+                         : { status: 'compliant' };
+};
+</script>
+<style>
+.tt{font-size:64px;font-weight:900;color:var(--ink);line-height:1.22;text-align:center;}
+.tsub{font-size:30px;color:var(--ink-2);text-align:center;margin-top:16px;}
+.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#9a9595;}
+.card{background:#fff;border-radius:28px;box-shadow:0 10px 40px rgba(49,46,46,.08);}
+.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;
+      padding:12px 30px;font-size:32px;font-weight:700;}
+.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
+      padding:12px 30px;font-size:32px;font-weight:700;}
+.kpi{font-weight:900;color:var(--ink);}
+.brand{color:var(--brand-deep);}
+
+.banner{background:linear-gradient(180deg,#f3e2bb,#e6cf9d);border:6px solid #8a6d3b;border-radius:26px;
+        padding:60px 90px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.4);}
+.bs{font-size:96px;font-weight:900;color:#5c3d14;letter-spacing:6px;}
+.bd{font-size:30px;color:#8a6d3b;margin-top:22px;}
+</style><script>window.SHOOT_DENSE=[[0, 15.04, 5]];window.SHOOT_KEYS=[0.6, 3.4];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+</body>
+</html>
