@@ -450,3 +450,21 @@ Stage Summary:
 - "自行搜索"结论：B站热门API/YouTube ytsearch/Threads主页SSR可沙盒内自发现;X/微博靠搜索引擎转引;抖音转引收录差需热榜站或用户给链;小红书必须用户给App分享链接——详见REPORT §5
 - 下一步若续做：YouTube装bgutil POT、抖音ttwid注入是各自失败的对症解,预算各约半小时
 - 工作目录: 1103-agent-downloader/ (REPORT.md 为总入口)
+
+---
+Task ID: 1105-canvas-test-videos-bootstrap
+Agent: GLM (main)
+Task: AI视频画布横评三篇文章→B站竖屏解说视频三部曲 · 前期调研轮（网盘全量盘点+时间线复原+素材地图+分镜表+skill固化）
+
+Work Log:
+- 通路验证：用户提供网盘token（quota OK：账号娱乐资本论，6.1T盘）；GitHub token 261023-glm（admin权限，repo 6.8GB，blobless浅克隆+sparse检出1105-canvas-test-videos，token不落盘）
+- 全量遍历：递归脚本（BFS+分页+0.35s限速+崩溃续跑）扫 /202610-AI视频画布横评 = 260目录/3368文件/7.3GB，261次API零错误；server_mtime全是11-05同步时间，真实时间线靠文件名mmdd-hhmm（47个时间戳节点）
+- 关键文件拉取（batch_download.py，fs_id直连省list调用）：文案终稿1104-1800（三集全）、前期调研skill×3（1102-1626文案改编指南/1104-1800 Gemini防踩坑70KB/SKILL-video-downloader-1104-1026）、成品稿件×3、V1配音740.4s、BGM 143.8s、浮水印PNG、信息图HTML 27张（价格6/功能B版10/实测11）+source-data.csv×3
+- 通读核心文档，时间线复原：0910功能对照表启动→0923十一平台教程离线库→0927-1027三篇文章生产（价格v5.3→v5.7→1007定稿；功能v5→v15定稿1015+信息图A/B；实测1016参考图V1→1022 V2修正→1027定稿+信息图1026-28）→1102-1104视频化调研（文案改编skill/8平台下载skill/防踩坑指南）→1105工作夹+V1配音，详见 01-findings/timeline.md
+- 发现关键事实矛盾备忘：充值总额4556(文案V1) vs 4856(实测篇文章)——已写入timeline.md待事实门禁统一口径
+- 产出：01-findings/{timeline,assets-map,netdisk-inventory}.md + scripts/{traverse_netdisk,batch_download,analyze_tree}.py + 02-storyboards/（三集分镜表）+ 03-skill/（解说视频一站式skill）
+
+Stage Summary:
+- 前期调研闭环：网盘只读通路/时间线/素材地图/文案/配音/信息图资产全部就位并入库备份
+- 分镜表（02-storyboards/storyboard-trilogy.md）：三集×9:16竖屏/4:3安全框/框外字幕条，按小Lin说70%+差评/晚点30%风格，素材分【盘】【canvas】【外】三类标注——待用户批准后投产
+- 投产管线（依据Gemini防踩坑指南改造）：事实核查门禁(facts_ledger)→分镜JSON→TTS分句对齐(V1用既有配音+ASR重对齐)→信息图HTML改造为canvas动效→受控时钟截帧→ffmpeg混音组装→LUFS/坏帧/水印合规质检
