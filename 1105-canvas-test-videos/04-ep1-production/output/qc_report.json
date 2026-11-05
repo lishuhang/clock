@@ -1,0 +1,14 @@
+{
+ "gates": {
+  "G1_零坏帧": "PASS",
+  "G2_时长": "PASS",
+  "G3_分辨率": "PASS",
+  "G4_响度": "PASS",
+  "G5_无长黑屏": "PASS",
+  "G6_元数据": "PASS"
+ },
+ "BUILD_SUCCESS": true,
+ "duration": 740.36,
+ "output": "/home/z/my-project/ep1-work/output/AI视频画布横评-第一篇-价格篇-成片.mp4",
+ "total_target": 740.36
+}

@@ -483,3 +483,23 @@ Work Log:
 Stage Summary:
 - 交付物：三集分镜表（待批准）+ 解说视频一站式skill（可复用于任意主题）+ 推荐Prompt说明
 - 分镜表批准后即可按 skill 十步状态机投产：V1 优先（配音已就绪），素材全部网盘在位
+
+---
+Task ID: 1105-ep1-price-final
+Agent: Super Z (main)
+Task: 第一篇「价格篇」正式剪辑成片（十步状态机 Step 5-9：截帧→总装→质检→交付）
+
+Work Log:
+- 现场恢复：浅克隆 clock 仓 + 网盘拉取 V1配音(740.36s, 44.1k单声道)/BGM(143.76s, 48k立体声)；canvas 43镜/分镜JSON/字幕JSON(385条≤14字无间隙)/素材全部在位
+- 抽检：S01/S05/S10/S20/S30/S43 六镜入场+停留12格 VLM 审看全OK（无乱码/无溢出/素材齐全/构图安全框内）
+- 截帧：h5_render.py v2 全量 43镜 2578帧（HUD隐藏，1fps网格+入场窗+dense窗，163MB）；后台进程曾被沙箱静默回收（nohup/setsid均~80s被杀），改前台幂等续跑完成
+- 总装脚本 v2（ffmpeg_master_v2.py + 分段版 _seg.py）：白字黑边ASS字幕(普惠体68px Outline=7 单行 WrapStyle=2) + sendcmd驱动drawbox动画进度条(#e55b46 0.5s步进) + 全屏wm75.png水印顶层 + BGM闪避修正版(sidechaincompress双输入+aformat统一48k立体声) + loudnorm两遍I=-15
+- 关键坑：crop/drawbox的w表达式仅初始化求值不支持t→sendcmd方案；drawbox@命名实例sendcmd不识别；sidechaincompress采样率声道不一致直接失败；多输入PNG索引错位（预览3输入vs渲染5输入）致首次全渲失败，参数化索引后过
+- 成片：分段编码(0-370/370-740.36s，段B字幕cmds偏移-370s)→concat→一次性音频→混流→1080×1920×30fps 12:20.36 37MB，faststart，comment清空
+- 质检：G1零坏帧/G2时长±0.04s/G3分辨率/G4响度-15.3LUFS/G5无长黑屏/G6无Remotion元数据 → BUILD_SUCCESS；strings二进制级复查0痕迹
+- 双重目检：VLM 6抽帧(5/100/369/400/600/735s)字幕对位精确/水印全屏/画面无缺陷/370s拼接缝无异常；像素级测进度条6帧全部命中(7/145/539/583/875/1072px，偏差≤1px)；音频4采样点-16.9~-20.2dB健康
+
+Stage Summary:
+- 交付：成片mp4(37MB)+字幕srt(385条)已入 download/ 与 04-ep1-production/output/；帧目录163MB不入库（h5_render幂等可再生成）
+- 脚本沉淀：ffmpeg_master_v2(_seg).py/spot_check.py 入库并同步 explainer-video-studio skill；production-notes.md 记录5条新坑
+- 第二/三篇待用户指令后按同管线投产（canvas需按同规格重制）
