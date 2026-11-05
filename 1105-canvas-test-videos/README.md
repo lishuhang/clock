@@ -38,4 +38,11 @@
 - [x] 时间线复原来龙去脉（见 01-findings/timeline.md）
 - [x] 三集分镜表（见 02-storyboards/，待用户批准）
 - [x] 解说视频 skill 固化（见 03-skill/）
-- [ ] 正式制作（分镜批准后启动）
+- [x] 正式制作第一篇「价格篇」（2026-11-05 成片，见 04-ep1-production/production-notes.md）
+  - [x] 分镜修订 v2（4:3安全框新解/全屏水印75%/顶部进度条/剪映风字幕）
+  - [x] 图表版本核对（公众号终版 18 图 vs 信息图，wechat-published/）
+  - [x] canvas 43 镜 + 受控截帧 2578 帧
+  - [x] 分段总装 + 质检 G1-G6 全 PASS（BUILD_SUCCESS）
+  - [x] 交付：成片 37MB + 字幕 srt（download/ 与 output/）
+- [ ] 第二篇「功能篇」制作（canvas 需按 v2 规格重制，配音待用户定）
+- [ ] 第三篇「实测篇」制作（同上）
