@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>explainer-video-studio · vertical master 1080x1920</title>
+<style>
+  /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand: #fc8166; --brand-deep: #e55b46;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #e7e3e1;
+    --stage-bg: #ffffff;
+  }
+  body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
+         font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
+         background: #f6f4f2; }
+  /* ---- 顶部带 Y:0~240（章节胶囊+进度条+水印） ---- */
+  .topband { position: absolute; top: 0; left: 0; right: 0; height: 240px;
+             display: flex; align-items: center; padding: 0 48px; gap: 24px; }
+  .chapter-pill { background: var(--ink); color: #fff; font-size: 34px; font-weight: 700;
+                  padding: 14px 34px; border-radius: 999px; letter-spacing: 2px;
+                  white-space: nowrap; }
+  .progress-track { flex: 1; height: 12px; background: var(--line); border-radius: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
+  .watermark { height: 120px; max-width: 320px; object-fit: contain; opacity: .92; }
+  /* ---- 4:3 主舞台 Y:240~1680（主体内容唯一合法区域） ---- */
+  .stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px;
+           background: var(--stage-bg); overflow: hidden; }
+  .stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 安全边距 */
+  /* ---- 底部带 Y:1680~1920（框外主字幕条） ---- */
+  .bottomband { position: absolute; top: 1680px; left: 0; right: 0; height: 240px;
+                display: flex; align-items: center; justify-content: center; padding: 0 40px; }
+  .subtitle-pill { max-width: 1000px; background: rgba(20,18,17,.92); color: #fff;
+                   font-size: 72px; font-weight: 700; line-height: 1.22; text-align: center;
+                   padding: 22px 46px; border-radius: 26px;
+                   border-bottom: 8px solid var(--brand); }
+  .subtitle-pill em { font-style: normal; color: var(--brand); } /* KTV 高亮词 */
+  /* ---- 受控动效原语（由 JS 按时间驱动，禁 CSS 自动播放） ---- */
+  [data-anim] { opacity: 0; will-change: transform, opacity; }
+  .anim-in { opacity: 1 !important; }
+</style>
+</head>
+<body>
+  <div class="topband">
+    <div class="chapter-pill" id="el-chapter">章节</div>
+    <div class="progress-track"><div class="progress-fill" id="el-progress"></div></div>
+    <img class="watermark" id="el-watermark" alt="">
+  </div>
+
+  <div class="stage"><div class="inner" id="el-stage">
+    <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
+    <div style="display:flex;height:100%;align-items:center;justify-content:center;">
+      <div data-anim="pop" data-t="0.3" style="font-size:120px;font-weight:900;color:var(--ink);">示例：大数字砸屏</div>
+    </div>
+    <!-- ======== YZ_EDIT_STAGE_END ======== -->
+  </div></div>
+
+  <div class="bottomband">
+    <div class="subtitle-pill" id="el-subtitle">字幕加载中…</div>
+  </div>
+
+<script>
+/* ============ 受控时钟引擎（截帧唯一入口，禁 setInterval 自动播放） ============
+ * window.renderFrame(payload)  —— h5_render.py 逐帧调用
+ *   payload = { chapter, subtitle, subtitle_html, progress_pct(0-100),
+ *               watermark(src), t(当前镜内秒), shot_dur }
+ * 元素动效：data-anim="pop|fade|up|stamp" data-t="出现秒" data-d="动画时长(默认0.5)"
+ * 纯函数驱动：同一 t 永远渲染同一画面（确定性=零掉帧=音画同步）
+ */
+window.renderFrame = function (p) {
+  if (p.chapter !== undefined) document.getElementById('el-chapter').textContent = p.chapter;
+  var sub = document.getElementById('el-subtitle');
+  if (p.subtitle_html !== undefined) sub.innerHTML = p.subtitle_html;
+  else if (p.subtitle !== undefined) sub.textContent = p.subtitle;
+  document.getElementById('el-progress').style.width = (p.progress_pct || 0) + '%';
+  if (p.watermark !== undefined) document.getElementById('el-watermark').src = p.watermark;
+
+  var t = p.t || 0;
+  document.querySelectorAll('#el-stage [data-anim]').forEach(function (el) {
+    var t0 = parseFloat(el.getAttribute('data-t') || '0');
+    var d = parseFloat(el.getAttribute('data-d') || '0.5');
+    var kind = el.getAttribute('data-anim');
+    var k = Math.max(0, Math.min(1, (t - t0) / d));      // 0→1 进度
+    var e = 1 - Math.pow(1 - k, 3);                      // easeOutCubic
+    if (k <= 0) { el.style.opacity = 0; el.style.transform = 'none'; return; }
+    el.style.opacity = 1;
+    if (kind === 'pop')      el.style.transform = 'scale(' + (0.6 + 0.4 * e) + ')';
+    else if (kind === 'up')  el.style.transform = 'translateY(' + ((1 - e) * 60) + 'px)';
+    else if (kind === 'stamp'){ el.style.transform = 'scale(' + (1.25 - 0.25 * e) + ')'; }
+    else                     el.style.transform = 'none';
+    if (kind === 'fade' || kind === 'up') el.style.opacity = e;
+  });
+  return true;
+};
+
+/* 自检：h5_render 截帧前调用，返回 'compliant' 才允许出帧 */
+window.yzCheck = function () {
+  var problems = [];
+  var stage = document.querySelector('.stage');
+  var sr = stage.getBoundingClientRect();
+  document.querySelectorAll('#el-stage *').forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    if (r.width && r.height) {
+      if (r.right > sr.right + 1 || r.bottom > sr.bottom + 1 || r.left < sr.left - 1 || r.top < sr.top - 1)
+        problems.push('overflow:' + (el.className || el.tagName));
+    }
+  });
+  var sub = document.getElementById('el-subtitle');
+  if (sub.scrollHeight > 240) problems.push('subtitle-overflow');
+  return problems.length ? { status: 'noncompliant', problems: problems }
+                         : { status: 'compliant' };
+};
+</script>
+</body>
+</html>

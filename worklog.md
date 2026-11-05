@@ -468,3 +468,18 @@ Stage Summary:
 - 前期调研闭环：网盘只读通路/时间线/素材地图/文案/配音/信息图资产全部就位并入库备份
 - 分镜表（02-storyboards/storyboard-trilogy.md）：三集×9:16竖屏/4:3安全框/框外字幕条，按小Lin说70%+差评/晚点30%风格，素材分【盘】【canvas】【外】三类标注——待用户批准后投产
 - 投产管线（依据Gemini防踩坑指南改造）：事实核查门禁(facts_ledger)→分镜JSON→TTS分句对齐(V1用既有配音+ASR重对齐)→信息图HTML改造为canvas动效→受控时钟截帧→ffmpeg混音组装→LUFS/坏帧/水印合规质检
+
+---
+Task ID: 1105-canvas-test-videos-bootstrap（续）
+Agent: GLM (main)
+Task: 分镜表定稿 + 解说视频skill固化（explainer-video-studio v1.0）
+
+Work Log:
+- 分镜表生成器：台词按段/句切片直接取自文案终稿（零抄写误差），字数权重分配时间码；V1 用真实配音 740.36s 反推语速 5.02字/秒 → V1 43镜/12:20（与配音精确吻合）/V2 39镜/11:19/V3 51镜/13:55；覆盖率校验三集均为 0 未覆盖句（台词100%进分镜）
+- 外部素材锚点已核：牌子=DiDi_OK B站2100万播放/郭帆点赞/23天100万；丧尸清道夫=Mx-Shell云南玉溪中专学历婚礼摄影师/10天3000元/全网破亿（B站搜BV可下）；TTS服务 tts.lishuhang.com 可达(200)
+- skill 固化（skills/explainer-video-studio/ → 03-skill/ + download/explainer-video-studio.zip 187KB/29文件）：SKILL.md（一句话用法+起点决策表+十步状态机+12条铁律）+ references×5（风格配方/画面规格/管线踩坑/事实门禁/合作skill）+ scripts×7（env_check/tts_align/h5_render/ffmpeg_master/make_storyboard/netdisk/batch_download，全部py_compile通过）+ assets（vertical_master.html 母版实测渲染验收 PASS：yzCheck compliant、分区像素校验6/6、动效帧差异712点；ffmpeg合成音效×6）+ examples（timeline-ep1.json）
+- 推荐 Prompt 用法说明按用户要求另附于 skill 外（download/解说视频skill_推荐Prompt用法.md）
+
+Stage Summary:
+- 交付物：三集分镜表（待批准）+ 解说视频一站式skill（可复用于任意主题）+ 推荐Prompt说明
+- 分镜表批准后即可按 skill 十步状态机投产：V1 优先（配音已就绪），素材全部网盘在位
