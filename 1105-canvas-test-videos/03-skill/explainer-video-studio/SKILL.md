@@ -68,7 +68,8 @@ Step 9  交付                    → output/ 成片+srt+timeline+报告
 | `make_storyboard.py` | 口播稿→分镜表 md + timeline.json（段/句切片数据 + 字数权重时间码；有整条配音时按实测时长反推语速） | `--audio-sec 740.36` 校准 |
 | `tts_align.py` | 逐句 TTS（tts.lishuhang.com，Playwright 自动化）+ 静音裁切 + 时间轴重算；`--existing` 模式对齐整条既有配音 | `--voice`（站点内音色） |
 | `h5_render.py` | timeline + canvas HTML → 受控截帧（renderFrame 注入，动效窗口 30fps，静态复用）→ concat 清单 | `--fps 30` |
-| `ffmpeg_master.py` | 视频轨+人声+BGM(ducking -13.5dB)+音效 → loudnorm → 质检 → BUILD_SUCCESS；含 Remotion 元数据清除 | `--bgm-loop` 无缝循环 |
+| `ffmpeg_master.py` | 总装混音（v1 基础版） | 视频轨+人声+BGM(ducking -13.5dB)+音效 → loudnorm → 质检 → BUILD_SUCCESS；含 Remotion 元数据清除 | `--bgm-loop` 无缝循环 |
+| `ffmpeg_master_v2.py` / `ffmpeg_master_v2_seg.py` | 总装混音 v2（1105 价格篇实战版）：ASS白字黑边字幕烧录 + sendcmd/drawbox 动画进度条 + 全屏水印顶层叠加 + BGM闪避修正(sidechaincompress双输入+aformat统一采样率)；`_seg` 分段模式绕沙箱600s命令超时，段B字幕/cmds自动偏移，幂等续跑 | `--preview-ts 10,300,700` 出静帧目检 |
 | `netdisk.py` / `batch_download.py` | 网盘 quota/list/search/meta/download / 按正则批量（tree.json fs_id 直连） | token 走环境变量 |
 
 ## §6 与其他 skill 的协作
