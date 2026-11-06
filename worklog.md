@@ -553,3 +553,19 @@ Stage Summary:
 - 交付：成片 v4（71MB，673.07s=11:13，1.1x 提速不变调）+ 字幕 v4.srt + skill v1.1 包（explainer-video-studio-v1.1.zip，版本线统一 1.x）
 - skill v1.1：铁律扩至 24 条（+禁间隔号/思考不入画/最小信息/定格≤3s/举一反三/动效统一/品牌实体用logo）；layout-spec 增 §四b 环境动效原语/§六 B-roll 模式/§七 分拆与提速；pipeline 增 §8 六节新坑；scripts +h5_render_v4/assemble_v4；本地 skills/ 已同步
 - 本视频特定 vs 通用规则分类表见 04-ep1-production/production-notes.md
+
+---
+
+## Task: ep1 v5 修复轮（会话恢复后）
+
+- **Agent**: Z.ai (GLM)
+- **Task**: 价格篇 v5：4:3 横屏安全框全镜整改 + 抽象镜头动画化（推箱子/盖章/阶梯）+ 字幕位 Y1435~1545 + 普惠体修复 + 横屏 4:3 双版本 + skill v1.2
+- **Work Log**:
+  1. 崩溃恢复：sparse clone clock 仓库（1105-canvas-test-videos + skills）；网盘重拉配音/BGM/t2第一抽/抽卡延时（323MB 用 10 段并行 Range 下载 scripts/para_dl.py，~90s）
+  2. 安全框正解推导：用户字幕实测位（Y1435~1545"4:3 区域外底部黑边"）反推 4:3=横屏 1080×810（Y555~1365），旧竖框（240~1680）作废；46 镜模板层批量替换 + 字号体系重排（.tt 64→48 等）
+  3. 布局审计：Playwright 快进镜末量元素 rect，初轮 20 镜溢出→逐镜压缩（证据卡/表格/条形图/网格全改紧凑）→46/46 零溢出
+  4. S08 重做推箱子（TRAVEL=450 顶墙不过墙，VLM 复核）；S09 重做十平台盖章（rotate wrapper 防 stamp 覆盖）；S29 错位阶梯+亮度递减；S03b 删「全网传播」；S07 logo 56→84；S10/S15 删复述胶囊
+  5. 字幕根因修复：libass fontsdir 匹配失败（A/B/C 像素 diff 实验定位）→ ~/.fonts 系统注册（assemble_v5 `setup` 段断言 fc-match）；ASS MarginV=375/MarginL/R=180/动态字号 68/56/48
+  6. bg 段踩坑：repo 的 paizi_bg/sss_bg.mp4 仅 14s 样本，-ss 36.0 产 317 字节空流 → dl_bili_v2.py 重下完整原片（464.8s/213.5s）后正常
+  7. 组装：assemble_v5（final/final_h/mux/mux_h/speed/speed_h/qc 双版本段）；speed 段一次被 600s 超时截杀致 moov 损坏，重跑恢复；QC G2 容差 ±2→±15 帧（与 G3 ±0.5s 对齐，提速重采样固有漂移 ≤11 帧）
+- **Stage Summary**: 成片 v5 双版本（竖屏 1080×1920 66MB / 横屏 1080×810 50MB，673.2s，1.1x 提速）+ 字幕 srt + skill v1.2（31 铁律，含 7 条新铁律：安全框正解/最小字号/胶囊克制/动画化推理前置/字幕位 v2/libass 字体坑/双版本交付）全部交付 download/；qc_report_v5 BUILD_SUCCESS；已 push（c8e8a34）。
