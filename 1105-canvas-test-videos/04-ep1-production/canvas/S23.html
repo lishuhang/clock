@@ -7,10 +7,10 @@
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
    *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
-   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
    *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
    *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
-   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
    *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
    */
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,19 +28,19 @@
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
   #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
-  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
-  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
-  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
-  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
-                  padding: 0 20px; white-space: nowrap;
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
                   text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
                                0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
                                1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
@@ -69,12 +69,12 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 30px;">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:12px 18px;">
   <div style="display:flex;align-items:center;gap:18px;" data-anim="up" data-t="0.1" data-d="0.4">
-    <div style="font-size:44px;font-weight:900;color:#f2efec;white-space:nowrap;display:flex;align-items:center;gap:14px;"><img src="../assets/logos/higgsfield.png" style="height:52px;object-fit:contain;">Higgsfield「45折」核查</div>
+    <div style="font-size:32px;font-weight:900;color:#f2efec;white-space:nowrap;display:flex;align-items:center;gap:12px;"><img src="../assets/logos/higgsfield.png" style="height:40px;object-fit:contain;">Higgsfield「45折」核查</div>
     <div class="tag45" data-anim="stamp" data-t="3.53" data-d="0.3">宣称45折</div>
   </div>
-  <div style="display:flex;gap:26px;margin-top:22px;flex:1;">
+  <div style="display:flex;gap:14px;margin-top:10px;flex:1;">
     <div class="evi" style="flex:1.15;display:flex;flex-direction:column;" data-anim="up" data-t="5.65" data-d="0.5" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="0">
       <div class="evi-lab">higgsfield.com/pricing 实截</div>
       <div class="shotbox" style="flex:1;">
@@ -85,7 +85,7 @@
       </div>
       <div class="src2">跑满240秒生成量 → 只能选最高档 Ultra</div>
     </div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
       <div class="calc" data-anim="stamp" data-t="18.35" data-d="0.4">
         <div class="c-lab">Ultra 月付</div>
         <div class="c-big">$129<span class="c-unit">/月</span></div>
@@ -220,23 +220,23 @@ window.yzCheck = function () {
 </script>
 <style>
 .evi{background:#1e1b19;border:1.5px solid #3a3634;border-radius:22px;padding:18px 22px;}
-.evi-lab{font-size:22px;color:#8f8984;margin-bottom:10px;font-weight:700;letter-spacing:1px;}
+.evi-lab{font-size:24px;color:#8f8984;margin-bottom:10px;font-weight:700;letter-spacing:1px;}
 .shotbox{background:#131110;border-radius:12px;padding:8px;display:flex;justify-content:center;align-items:flex-start;}
 .imgwrap{position:relative;display:inline-block;line-height:0;}
-.shotbox img{max-width:100%;max-height:920px;object-fit:contain;border-radius:6px;display:block;}
+.shotbox img{max-width:100%;max-height:330px;object-fit:contain;border-radius:6px;display:block;}
 .src2{font-size:21px;color:#a8a19b;margin-top:10px;text-align:center;}
 .tag45{background:rgba(252,129,102,.16);border:2px solid #fc8166;color:#fc8166;border-radius:999px;
        padding:8px 26px;font-size:30px;font-weight:900;transform:rotate(2deg);white-space:nowrap;}
 .imgwrap img.marked{position:absolute;inset:0;width:100%;height:100%;}
-.calc{background:#1e1b19;border:1.5px solid #3a3634;border-radius:20px;padding:22px 28px;text-align:center;}
+.calc{background:#1e1b19;border:1.5px solid #3a3634;border-radius:16px;padding:13px 18px;text-align:center;}
 .calc.warn{border-color:rgba(229,91,70,.55);background:rgba(229,91,70,.08);}
 .c-lab{font-size:24px;color:#8f8984;font-weight:700;}
-.c-big{font-size:72px;font-weight:900;color:#f2efec;margin-top:6px;}
-.c-unit{font-size:28px;color:#b5aea9;font-weight:700;margin-left:8px;}
-.c-eq{font-size:36px;font-weight:900;color:#fc8166;margin-top:6px;}
-.verdict{background:#1e1b19;border-radius:20px;padding:20px 24px;font-size:34px;font-weight:900;color:#f2efec;
+.c-big{font-size:44px;font-weight:900;color:#f2efec;margin-top:6px;}
+.c-unit{font-size:24px;color:#b5aea9;font-weight:700;margin-left:8px;}
+.c-eq{font-size:27px;font-weight:900;color:#fc8166;margin-top:6px;}
+.verdict{background:#1e1b19;border-radius:16px;padding:13px 18px;font-size:28px;font-weight:900;color:#f2efec;
          text-align:center;border:1.5px solid #3a3634;}
-.no{color:#e55b46;font-size:44px;margin-right:10px;}
+.no{color:#e55b46;font-size:34px;margin-right:10px;}
 </style><script>window.SHOOT_DENSE=[[0.8, 10.0, 10]];</script>
 </body>
 </html>

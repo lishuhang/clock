@@ -7,10 +7,10 @@
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
    *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
-   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
    *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
    *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
-   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
    *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
    */
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,19 +28,19 @@
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
   #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
-  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
-  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
-  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
-  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
-                  padding: 0 20px; white-space: nowrap;
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
                   text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
                                0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
                                1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
@@ -70,29 +70,29 @@
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
 <h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35">不是聊天框，是无限画布</h1>
-<div style="margin-top:52px;display:flex;gap:28px;align-items:stretch;height:880px;">
+<div style="margin-top:14px;display:flex;gap:22px;align-items:stretch;height:520px;">
   <div class="card" style="flex:1;padding:32px;display:flex;flex-direction:column;" data-anim="fade" data-t="3.8" data-d="0.5" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="0">
-    <div style="font-size:32px;font-weight:700;color:#b5aea9;">普通网页聊天框</div>
-    <div style="margin-top:26px;background:#131110;border-radius:18px;padding:26px;font-size:30px;color:#d8d2cd;line-height:1.6;min-height:170px;">
-      <span data-anim="typing" data-text="你好，请帮我生成一个视频……" data-t="4.3" data-d="3.2">你好，请帮我生成一个视频……</span><span style="display:inline-block;width:4px;height:34px;background:#9a9595;vertical-align:middle;"></span>
+    <div style="font-size:30px;font-weight:700;color:#b5aea9;">普通网页聊天框</div>
+    <div style="margin-top:16px;background:#131110;border-radius:14px;padding:18px;font-size:28px;color:#d8d2cd;line-height:1.6;min-height:170px;">
+      <span data-anim="typing" data-text="你好，请帮我生成一个视频……" data-t="4.3" data-d="3.2">你好，请帮我生成一个视频……</span><span style="display:inline-block;width:4px;height:30px;background:#9a9595;vertical-align:middle;"></span>
     </div>
-    <div data-anim="fade" data-t="7.7" data-d="0.4" style="margin-top:24px;background:#131110;border-radius:18px;padding:20px 26px;font-size:28px;color:#6b6666;">回复中，请稍候……</div>
-    <div style="margin-top:auto;font-size:30px;color:#b5aea9;">一句一句等回复</div>
+    <div data-anim="fade" data-t="7.7" data-d="0.4" style="margin-top:14px;background:#131110;border-radius:14px;padding:14px 20px;font-size:28px;color:#6b6666;">回复中，请稍候……</div>
+    <div style="margin-top:auto;font-size:28px;color:#b5aea9;">一句一句等回复</div>
   </div>
-  <div data-anim="pop" data-t="10.5" data-d="0.5" style="align-self:center;font-size:70px;font-weight:900;color:var(--brand-deep);" data-ambient="pulse" data-amp="0.02" data-sp="0.45">VS</div>
+  <div data-anim="pop" data-t="10.5" data-d="0.5" style="align-self:center;font-size:54px;font-weight:900;color:var(--brand-deep);" data-ambient="pulse" data-amp="0.02" data-sp="0.45">VS</div>
   <div class="card" style="flex:1.15;padding:22px;display:flex;flex-direction:column;overflow:hidden;border:3px solid var(--brand);" data-anim="up" data-t="11.5" data-d="0.55" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="1.6">
-    <div style="font-size:32px;font-weight:700;">无限画布型工作台</div>
+    <div style="font-size:30px;font-weight:700;">无限画布型工作台</div>
     <div style="margin-top:14px;flex:1;overflow:hidden;border-radius:14px;position:relative;">
       <img src="../assets/bili/纳逗Pro画布总览.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" data-anim="kb" data-kb="1,1,1.09,1.09">
     </div>
-    <div style="margin-top:14px;font-size:30px;color:var(--brand-deep);font-weight:700;">节点铺开，资产沉淀，流程可视</div>
+    <div style="margin-top:12px;font-size:28px;color:var(--brand-deep);font-weight:700;">节点铺开，资产沉淀，流程可视</div>
   </div>
 </div>
-<div style="margin-top:44px;display:flex;gap:26px;justify-content:center;">
-  <div class="pl" data-anim="pop" data-t="14.8" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0"><img src="../assets/logos/xiaoyunque_w.png" style="height:56px;object-fit:contain;">小云雀</div>
-  <div class="pl" data-anim="pop" data-t="15.7" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0.9"><img src="../assets/logos/libtv.png" style="height:56px;object-fit:contain;">LibTV</div>
-  <div class="pl" data-anim="pop" data-t="16.6" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="1.8"><img src="../assets/logos/oiioii.png" style="height:56px;object-fit:contain;">OiiOii</div>
-  <div class="pl" data-anim="pop" data-t="17.5" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="2.7"><img src="../assets/logos/tapnow.png" style="height:56px;object-fit:contain;">TapNow</div>
+<div style="margin-top:14px;display:flex;gap:20px;justify-content:center;">
+  <div class="pl" data-anim="pop" data-t="14.8" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0"><img src="../assets/logos/xiaoyunque_w.png" style="height:84px;object-fit:contain;">小云雀</div>
+  <div class="pl" data-anim="pop" data-t="15.7" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0.9"><img src="../assets/logos/libtv.png" style="height:84px;object-fit:contain;">LibTV</div>
+  <div class="pl" data-anim="pop" data-t="16.6" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="1.8"><img src="../assets/logos/oiioii.png" style="height:84px;object-fit:contain;">OiiOii</div>
+  <div class="pl" data-anim="pop" data-t="17.5" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="2.7"><img src="../assets/logos/tapnow.png" style="height:84px;object-fit:contain;">TapNow</div>
 </div>
 
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -211,9 +211,9 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
+.tt{font-size:48px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
 .card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
-.pl{display:flex;align-items:center;gap:14px;background:#1e1b19;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:14px 30px;font-size:32px;font-weight:700;color:#f2efec;}
+.pl{display:flex;align-items:center;gap:14px;background:#1e1b19;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 24px;font-size:32px;font-weight:700;color:#f2efec;}
 </style><script>window.SHOOT_KEYS=[0.15,3.8,4.3,7.6,10.5,11.5,14.8,15.7,16.6,17.5];window.SHOOT_DENSE=[[4.3,7.6,12]];window.SHOOT_KEYS=window.SHOOT_KEYS||[];window.SHOOT_DENSE=window.SHOOT_DENSE||[];</script>
 </body>
 </html>

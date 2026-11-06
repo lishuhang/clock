@@ -7,10 +7,10 @@
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
    *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
-   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
    *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
    *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
-   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
    *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
    */
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,19 +28,19 @@
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
   #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
-  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
-  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
-  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
-  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
-                  padding: 0 20px; white-space: nowrap;
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
                   text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
                                0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
                                1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
@@ -192,9 +192,9 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
+.tt{font-size:48px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
+.tsub{font-size:28px;color:#b5aea9;text-align:center;margin-top:16px;}
+.src{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:28px;color:#a8a19b;}
 .card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
 .pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
       padding:12px 30px;font-size:32px;font-weight:700;}

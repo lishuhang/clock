@@ -7,10 +7,10 @@
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
    *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
-   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
    *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
    *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
-   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
    *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
    */
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,19 +28,19 @@
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
   #bg-layer { position: absolute; inset: 0; overflow: hidden; background: transparent; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
-  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
-  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
-  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
-  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
-                  padding: 0 20px; white-space: nowrap;
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
                   text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
                                0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
                                1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
@@ -69,9 +69,9 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:26px 30px;">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:14px 20px;">
   <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;" data-anim="up" data-t="0.2" data-d="0.4">
-    <div style="font-size:42px;font-weight:900;color:#f2efec;">漫剧《丧尸清道夫》</div>
+    <div style="font-size:38px;font-weight:900;color:#f2efec;">漫剧《丧尸清道夫》</div>
     <div class="chip">UP主 Mx-Shell</div>
     <div class="chip">云南县城的婚纱摄影师</div>
   </div>
@@ -80,21 +80,20 @@
     <div class="shotbox"><img src="../assets/bili/sss_playcount_x3.png"></div>
     <div class="bignum">424<span class="unit">万次</span></div>
   </div>
-  <div style="display:flex;gap:24px;margin-top:26px;">
+  <div style="display:flex;gap:14px;margin-top:12px;">
     <div class="evi" style="flex:1.15;" data-anim="up" data-t="1.5" data-d="0.45">
       <div class="evi-lab">👍 点赞</div>
       <div class="shotbox"><img src="../assets/bili/sss_like_x2.png"></div>
     </div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:18px;justify-content:center;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center;">
       <div class="goldstamp" data-anim="stamp" data-t="0.4" data-d="0.35">中专学历</div>
       <div class="goldstamp" data-anim="stamp" data-t="1.7" data-d="0.35">今年1月自学AI</div>
       <div class="goldstamp" data-anim="stamp" data-t="3.3" data-d="0.35">成本不到3000元</div>
     </div>
   </div>
-  <div class="evi" style="margin-top:26px;flex:1;display:flex;flex-direction:column;justify-content:center;" data-anim="up" data-t="5.8" data-d="0.5">
-    <div class="evi-lab">全网传播</div>
-    <div style="font-size:88px;font-weight:900;color:#fc8166;text-align:center;letter-spacing:4px;">
-      全网播放<span style="font-size:120px;">破亿</span></div>
+  <div class="evi" style="margin-top:12px;flex:1;display:flex;flex-direction:column;justify-content:center;" data-anim="up" data-t="5.8" data-d="0.5">
+    <div style="font-size:56px;font-weight:900;color:#fc8166;text-align:center;letter-spacing:3px;">
+      全网播放<span style="font-size:76px;">破亿</span></div>
   </div>
 </div>
 
@@ -214,20 +213,20 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:#f2efec;}
+.tt{font-size:48px;font-weight:900;color:#f2efec;}
 .chip{display:inline-block;background:#2a2624;color:#b5aea9;border:1.5px solid #3a3634;
-      border-radius:999px;padding:8px 24px;font-size:26px;font-weight:700;}
+      border-radius:999px;padding:6px 18px;font-size:24px;font-weight:700;}
 .chip-o{background:rgba(252,129,102,.14);color:#fc8166;border-color:rgba(252,129,102,.4);}
-.evi{background:#1e1b19;border:1.5px solid #3a3634;border-radius:22px;padding:20px 24px;}
-.evi-lab{font-size:24px;color:#8f8984;margin-bottom:12px;font-weight:700;letter-spacing:1px;}
+.evi{background:#1e1b19;border:1.5px solid #3a3634;border-radius:18px;padding:14px 18px;
+.evi-lab{font-size:24px;color:#8f8984;margin-bottom:8px;font-weight:700;letter-spacing:1px;}
 .shotbox{background:#131110;border-radius:12px;padding:10px;display:flex;justify-content:center;align-items:center;}
-.shotbox img{max-width:100%;max-height:150px;object-fit:contain;border-radius:6px;}
-.bignum{font-size:74px;font-weight:900;color:#fc8166;margin-top:8px;text-align:center;letter-spacing:2px;}
-.unit{font-size:30px;color:#b5aea9;margin-left:10px;font-weight:700;}
+.shotbox img{max-width:100%;max-height:104px;object-fit:contain;border-radius:6px;}
+.bignum{font-size:56px;font-weight:900;color:#fc8166;margin-top:8px;text-align:center;letter-spacing:2px;}
+.unit{font-size:26px;color:#b5aea9;margin-left:10px;font-weight:700;}
 .goldstamp{background:linear-gradient(160deg,#3a2f1d,#28200f);border:2px solid #8a6d3b;color:#e8c07a;
-           border-radius:14px;padding:14px 26px;font-size:38px;font-weight:900;text-align:center;
+           border-radius:12px;padding:10px 18px;font-size:31px;font-weight:900;text-align:center;
            transform:rotate(-1.5deg);box-shadow:0 6px 24px rgba(0,0,0,.5);}
-.src2{font-size:22px;color:#a8a19b;margin-top:12px;text-align:right;}
+.src2{font-size:24px;color:#a8a19b;margin-top:8px;text-align:right;}
 </style><script>window.SHOOT_DENSE=[[0, 6.8, 12]];</script>
 </body>
 </html>

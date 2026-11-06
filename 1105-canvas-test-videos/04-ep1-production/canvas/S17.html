@@ -7,10 +7,10 @@
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
    *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
-   *  2. 4:3 安全框（Y:240~1680）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
    *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
    *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
-   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体、单行不折行（ffmpeg/libass 叠加）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
    *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
    */
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,19 +28,19 @@
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
   #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
-  /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
-  #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
-  #stage .inner { position: absolute; inset: 40px 60px 60px 60px; } /* 主体安全边距 */
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
-  .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
-                  padding: 0 20px; white-space: nowrap;
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
                   text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
                                0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
                                1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
@@ -70,7 +70,7 @@
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
 <h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">10家的常规月度套餐秒价</h1><div class="tsub" data-anim="up" data-t="2.25">按「最通用档位」从贵到便宜</div>
-<div style="margin-top:44px;display:flex;flex-direction:column;gap:17px;width:100%;"><div class="brow" data-anim="up" data-t="1.23" data-d="0.4"><div class="bl"><img src="../assets/logos/tapnow.png" style="height:48px;object-fit:contain;"><span style="color:var(--brand-deep);font-weight:900;">TapNow</span></div><div class="btrack"><div class="bfill" style="width:95%;background:linear-gradient(90deg,#fc8166,#e55b46);"></div><div class="bv">2.28</div></div></div><div class="brow" data-anim="up" data-t="1.88" data-d="0.4"><div class="bl"><img src="../assets/logos/nadou.png" style="height:48px;object-fit:contain;"><span>纳逗Pro</span></div><div class="btrack"><div class="bfill" style="width:94%;"></div><div class="bv">2.25</div></div></div><div class="brow" data-anim="up" data-t="2.53" data-d="0.4"><div class="bl"><img src="../assets/logos/oiioii.png" style="height:48px;object-fit:contain;"><span>OiiOii</span></div><div class="btrack"><div class="bfill" style="width:85%;"></div><div class="bv">2.03</div></div></div><div class="brow" data-anim="up" data-t="3.19" data-d="0.4"><div class="bl"><img src="../assets/logos/wanxing.png" style="height:48px;object-fit:contain;"><span>万兴剧厂</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.93</div></div></div><div class="brow" data-anim="up" data-t="3.84" data-d="0.4"><div class="bl"><img src="../assets/logos/anishort.png" style="height:48px;object-fit:contain;"><span>AniShort</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.92</div></div></div><div class="brow" data-anim="up" data-t="4.5" data-d="0.4"><div class="bl"><img src="../assets/logos/jurilu.png" style="height:48px;object-fit:contain;"><span>巨日禄</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.92</div></div></div><div class="brow" data-anim="up" data-t="5.15" data-d="0.4"><div class="bl"><img src="../assets/logos/shotlab.png" style="height:48px;object-fit:contain;"><span>ShotLab</span></div><div class="btrack"><div class="bfill" style="width:78%;"></div><div class="bv">1.86</div></div></div><div class="brow" data-anim="up" data-t="5.8" data-d="0.4"><div class="bl"><img src="../assets/logos/libtv.png" style="height:48px;object-fit:contain;"><span>LibTV</span></div><div class="btrack"><div class="bfill" style="width:77%;"></div><div class="bv">1.84</div></div></div><div class="brow" data-anim="up" data-t="6.46" data-d="0.4"><div class="bl"><img src="../assets/logos/seko.png" style="height:48px;object-fit:contain;"><span>Seko</span></div><div class="btrack"><div class="bfill" style="width:62%;"></div><div class="bv">1.50</div></div></div><div class="brow" data-anim="up" data-t="7.11" data-d="0.4"><div class="bl"><img src="../assets/logos/xiaoyunque_w.png" style="height:48px;object-fit:contain;"><span style="color:var(--brand-deep);font-weight:900;">小云雀</span></div><div class="btrack"><div class="bfill" style="width:36%;background:linear-gradient(90deg,#fc8166,#e55b46);"></div><div class="bv">0.87</div></div></div></div>
+<div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;width:100%;"><div class="brow" data-anim="up" data-t="1.23" data-d="0.4"><div class="bl"><img src="../assets/logos/tapnow.png" style="height:40px;object-fit:contain;"><span style="color:var(--brand-deep);font-weight:900;">TapNow</span></div><div class="btrack"><div class="bfill" style="width:95%;background:linear-gradient(90deg,#fc8166,#e55b46);"></div><div class="bv">2.28</div></div></div><div class="brow" data-anim="up" data-t="1.88" data-d="0.4"><div class="bl"><img src="../assets/logos/nadou.png" style="height:40px;object-fit:contain;"><span>纳逗Pro</span></div><div class="btrack"><div class="bfill" style="width:94%;"></div><div class="bv">2.25</div></div></div><div class="brow" data-anim="up" data-t="2.53" data-d="0.4"><div class="bl"><img src="../assets/logos/oiioii.png" style="height:40px;object-fit:contain;"><span>OiiOii</span></div><div class="btrack"><div class="bfill" style="width:85%;"></div><div class="bv">2.03</div></div></div><div class="brow" data-anim="up" data-t="3.19" data-d="0.4"><div class="bl"><img src="../assets/logos/wanxing.png" style="height:40px;object-fit:contain;"><span>万兴剧厂</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.93</div></div></div><div class="brow" data-anim="up" data-t="3.84" data-d="0.4"><div class="bl"><img src="../assets/logos/anishort.png" style="height:40px;object-fit:contain;"><span>AniShort</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.92</div></div></div><div class="brow" data-anim="up" data-t="4.5" data-d="0.4"><div class="bl"><img src="../assets/logos/jurilu.png" style="height:40px;object-fit:contain;"><span>巨日禄</span></div><div class="btrack"><div class="bfill" style="width:80%;"></div><div class="bv">1.92</div></div></div><div class="brow" data-anim="up" data-t="5.15" data-d="0.4"><div class="bl"><img src="../assets/logos/shotlab.png" style="height:40px;object-fit:contain;"><span>ShotLab</span></div><div class="btrack"><div class="bfill" style="width:78%;"></div><div class="bv">1.86</div></div></div><div class="brow" data-anim="up" data-t="5.8" data-d="0.4"><div class="bl"><img src="../assets/logos/libtv.png" style="height:40px;object-fit:contain;"><span>LibTV</span></div><div class="btrack"><div class="bfill" style="width:77%;"></div><div class="bv">1.84</div></div></div><div class="brow" data-anim="up" data-t="6.46" data-d="0.4"><div class="bl"><img src="../assets/logos/seko.png" style="height:40px;object-fit:contain;"><span>Seko</span></div><div class="btrack"><div class="bfill" style="width:62%;"></div><div class="bv">1.50</div></div></div><div class="brow" data-anim="up" data-t="7.11" data-d="0.4"><div class="bl"><img src="../assets/logos/xiaoyunque_w.png" style="height:40px;object-fit:contain;"><span style="color:var(--brand-deep);font-weight:900;">小云雀</span></div><div class="btrack"><div class="bfill" style="width:36%;background:linear-gradient(90deg,#fc8166,#e55b46);"></div><div class="bv">0.87</div></div></div></div>
 <div class="refline" data-anim="fade" data-t="9.4">他付的价 ¥2.6/秒（虚线以上）</div>
 <div class="src" data-anim="fade" data-t="1.84" data-d="0.4">资料来源：娱乐资本论整理<br>数据截至 2026-10-05</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -189,9 +189,9 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
+.tt{font-size:48px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
+.tsub{font-size:28px;color:#b5aea9;text-align:center;margin-top:16px;}
+.src{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:28px;color:#a8a19b;}
 .card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
 .pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
       padding:12px 30px;font-size:32px;font-weight:700;}
@@ -200,12 +200,12 @@ window.yzCheck = function () {
 .kpi{font-weight:900;color:#f2efec;}
 .brand{color:var(--brand-deep);}
 
-.brow{display:flex;align-items:center;gap:18px;}
-.bl{width:280px;display:flex;align-items:center;gap:14px;font-size:36px;color:#f2efec;font-weight:700;justify-content:flex-end;}
-.btrack{flex:1;position:relative;height:52px;background:#171412;border:1.5px solid #2a2624;border-radius:12px;overflow:hidden;}
+.brow{display:flex;align-items:center;gap:12px;}
+.bl{width:250px;display:flex;align-items:center;gap:10px;font-size:30px;color:#f2efec;font-weight:700;justify-content:flex-end;}
+.btrack{flex:1;position:relative;height:38px;background:#171412;border:1.5px solid #2a2624;border-radius:12px;overflow:hidden;}
 .bfill{position:absolute;left:0;top:0;bottom:0;background:#9c948f;border-radius:12px;}
-.bv{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:34px;font-weight:900;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.55);}
-.refline{margin:22px 0 0 298px;border-top:4px dashed var(--brand-deep);font-size:26px;color:var(--brand-deep);padding-top:10px;}
+.bv{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;font-weight:900;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.55);}
+.refline{margin:12px 0 0 268px;border-top:3px dashed var(--brand-deep);font-size:24px;color:var(--brand-deep);padding-top:10px;}
 .btrack{--ref:0;}</style><script>window.SHOOT_KEYS=[0.6, 0.92, 1.24, 1.56, 1.88, 2.2, 2.52, 2.84, 3.16, 3.48, 4.6];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
 <script>(function(){var line=document.createElement('div');
     line.style.cssText='position:absolute;left:268px;right:30px;height:0;border-top:4px dashed #e55b46;z-index:5;pointer-events:none;';
