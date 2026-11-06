@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>explainer-video-studio · vertical master v2 · 1080x1920</title>
+<title>explainer-video-studio vertical master v2 1080x1920</title>
 <style>
   /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
    * v2 画面规格（2026-11-05 用户修订）：
@@ -37,7 +37,7 @@
   .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
-  .hud-sub { position: absolute; left: 0; right: 0; top: 1680px; height: 240px; z-index: 60;
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1650px; height: 90px; z-index: 60;
              display: flex; align-items: center; justify-content: center; }
   .hud-sub .txt { font-size: 70px; font-weight: 700; color: #fff; letter-spacing: 1px;
                   padding: 0 20px; white-space: nowrap;
@@ -72,9 +72,9 @@
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:46px;">
   <div data-anim="fade" data-t="0.2" style="font-size:52px;font-weight:900;color:#fff;">我们审阅的 <span style="color:#fc8166;">70 份</span> 法律协议</div>
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px;"><div class="doc" data-anim="pop" data-t="0.6" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="0.82" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="1.04" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="1.26" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="1.48" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="1.7000000000000002" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="1.92" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="2.14" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="2.36" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="2.58" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="2.8000000000000003" data-d="0.3">📄</div><div class="doc" data-anim="pop" data-t="3.02" data-d="0.3">📄</div>
-    <div style="grid-column:span 6;text-align:center;color:#a8a19b;font-size:24px;" data-anim="fade" data-t="3.6">用户协议 · 隐私政策 · 付费服务协议 · 积分规则 · 会员协议 …</div>
+    <div style="grid-column:span 6;text-align:center;color:#a8a19b;font-size:24px;" data-anim="fade" data-t="3.6">用户协议、隐私政策、付费服务协议、积分规则、会员协议 …</div>
   </div>
-  <div class="stampbox" data-anim="stamp" data-t="5.2" data-d="0.5">所有平台均保留随时单方面调整<br>会员权益 · 定价 · 扣点率的权利</div>
+  <div class="stampbox" data-anim="stamp" data-t="5.2" data-d="0.5">所有平台均保留随时单方面调整<br>会员权益、定价和扣点率的权利</div>
   <div data-anim="up" data-t="10.0" style="font-size:32px;color:#9c948f;">促销变动，往往不会提前通知</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -94,7 +94,8 @@
  * window.renderFrame(payload)
  *   payload = { t(镜内秒), shot_dur, progress_pct, subtitle, chapter,
  *               hud(bool, 截帧时 false → 隐藏 [data-hud]), watermark(src) }
- * 元素动效：data-anim="pop|fade|up|stamp|wipe-in|wipe-out" data-t="秒|end-0.4" data-d="时长(默认0.5)"
+ * 元素动效：data-anim="pop|fade|up|stamp|wipe-in|wipe-out|typing" data-t="秒|end-0.4" data-d="时长(默认0.5)"
+ * 环境动效：data-ambient="float|pulse"（入场后持续微动；data-amp/data-sp/data-ph0 可调）
  * 连续动画：data-anim="kb" data-kb="s0x,s0y,e0x,e0y"（背景推拉，0→shot_dur 线性缓动）
  * 计数器：<span data-counter="0,4556,1.2,0">(from,to,dur秒,小数位)</span>
  * 采集声明：window.SHOOT_DENSE=[[t0,t1,fps],...]（连续段）  window.SHOOT_KEYS=[t,...]（关键帧）
@@ -114,7 +115,7 @@ window.renderFrame = function (p) {
     document.getElementById('el-progress').style.width = (p.progress_pct || 0) + '%';
     if (p.watermark) document.getElementById('el-watermark').src = p.watermark;
   }
-  document.querySelectorAll('[data-anim],[data-counter],[data-kb]').forEach(function (el) {
+  document.querySelectorAll('[data-anim],[data-counter],[data-kb],[data-ambient]').forEach(function (el) {
     var t0s = el.getAttribute('data-t') || '0';
     var t0 = t0s.indexOf('end-') === 0 ? Math.max(0, dur - parseFloat(t0s.slice(4))) : parseFloat(t0s);
     var d = parseFloat(el.getAttribute('data-d') || '0.5');
@@ -140,9 +141,28 @@ window.renderFrame = function (p) {
         else if (kind === 'wipe-in')  el.style.transform = 'translateX(' + (-100 + 100 * e) + '%)';
         else if (kind === 'wipe-out') el.style.transform = 'translateX(' + (100 * e) + '%)';
         else if (kind === 'fade')  el.style.opacity = e;
+      else if (kind === 'typing') {
+        var txt = el.getAttribute('data-text') || el.textContent;
+        el.textContent = txt.slice(0, Math.ceil(txt.length * k));
+        el.style.opacity = k <= 0 ? 0 : 1;
       }
-      return;
+      }
+      if (!el.getAttribute('data-ambient')) return;
     }
+    /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
+    var amb = el.getAttribute('data-ambient');
+    if (amb && (!kind || t > t0 + d)) {
+      var at0 = kind ? t0 + d : 0;
+      var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
+      var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
+      var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');
+      el.style.opacity = 1;
+      if (amb === 'float')
+        el.style.transform = 'translateY(' + (Math.sin((t - at0) * sp * 6.283 + ph0) * amp).toFixed(1) + 'px)';
+      else if (amb === 'pulse')
+        el.style.transform = 'scale(' + (1 + Math.sin((t - at0) * sp * 6.283 + ph0) * amp).toFixed(4) + ')';
+    }
+    if (kind) return;
     var c = el.getAttribute('data-counter');
     if (c) {
       var a = c.split(',').map(Number); /* from,to,dur,decimals */
