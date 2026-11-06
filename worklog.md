@@ -525,3 +525,31 @@ Stage Summary:
 - 音画同步：三连坑全修,句首实测误差≤0.3s,帧级零漂移
 - 视觉：全片黑底暗色系,品牌橙保留,B站证据链完整(原片叠底+网页截图裁切)
 - skill v2.0 已同步本地与GitHub；第二/三篇按v3管线(黑底规格+whisper对齐+帧数精确)待用户指令投产
+
+---
+
+## Task: ep1 v4 验收反馈修复轮（续 63c8d63）
+Agent: Z.ai (GLM)
+Task: 按 2026-11-06 用户验收反馈重制价格篇：通用规则固化 skill v1.1 + 本视频特定修复 + 1.1x 提速
+
+Work Log:
+- 工作区崩溃恢复：稀疏克隆 clock/1105-canvas-test-videos 复原 43 镜 canvas/分镜数据/素材/skill v2.0；网盘重拉配音/BGM/水印/新增素材（抽卡延时 323MB、anishort t2 第一抽、AniShort智能连线.png、纳逗Pro画布总览.png）
+- 通用规则落地（43 页全局）：
+  - 间隔号 137 处清零（确定性映射：短语→逗号/顿号、来源行→换行、《画布横评·价格篇》→《画布横评》价格篇）
+  - 括注思考剥离（（视频页截图）（取证截图）等 6 处；口径实证行删除）
+  - 最小信息（B站播放量（重制版·视频页截图）→B站播放量；10家平台·三集连载·第一集 价格篇→① 价格篇）
+  - 字幕位：ASS MarginV 84→180（底缘 y=1740=4:3 安全框下缘外 1 出血位）；hud 预览带 1650/90
+  - 定格≤3s：Stage B 脚本对 36 镜入场时间线性拉伸（t≤0.3 钉住）+ class 级环境动效注入（float/pulse，ph0 错相）+ 证据截图 kb 缓推；新增引擎原语 float/pulse/typing + data-ambient 机制（43 页引擎块统一替换）
+  - 动效统一：环境动效全片一套参数（float amp4-8/sp≤0.32、pulse amp.005-.012/sp≤0.45，2fps 网格适配红线）
+  - logo 补齐 13 处：S20 TapNow/S23 Higgsfield/S25 万兴/S27 巨日禄/S30 TapNow/S32 万兴/S34 第6卡+巨日禄/S36 四卡+TapNow/S37 三卡/S39 十卡内联（pyl 212px flex 行+图标圈 50px 修溢出）/S40 巨日禄/S41 OiiOii+Flova 退款行新增
+- 分镜分拆（B-roll 前景展示模式）：S02→S02a(2.8s《牌子》纯净前景)+S02b(8.48s scrim 0.6s 淡入+证据卡按台词重排 0.8/2.6/4.3/5.9s)；S03→S03a(2.8s)+S03b(9.77s)；S24→S24a(21.0s 参数 chips+16 卡牌 6.2-18.6s 逐张)+S24b(11.02s 抽卡延时 85-96s 段背景+10倍速标+问题胶囊)
+- S04 重做为视频背景镜（anishort t2 金钟木偶段 offset 3.2s，scrim 0.55）；S07 重做（typing 打字 4.3-7.5s+纳逗Pro画布总览 kb+四平台 logo 按读音 14.8-17.5s）；S11 logo 墙按读音逐个弹出（11.68-24.73s 字符占比定位）；S35 重排为 1年/2年/3年 语序三列 logo 墙（min-height 640 等高）
+- shots_v4：46 镜（43-3+6），Σ帧 22211 不变；h5_render_v4：解析 data-t/data-counter 自动入场窗（±0.45s@15fps/counter@12fps）+2fps 网格+DENSE，46 镜 yzCheck 全过
+- assemble_v4：BG_V4 六源带偏移（坑：v3 bg 素材是预裁剪段，-ss 36 越界产 317 字节空文件→偏移改相对 0/2.8）；speed 段 setpts=PTS/1.1+atempo=1.1+fps=30+frames:v 20192 精确；srt 365 卡 ÷1.1 重定时
+- 重大坑：新建透明页（S02a/S03a/S04/S24b）沿用 S01 母版 body#131110 不透明 → 灰 17 平帧盖死影片；修复 body/#bg-layer→transparent（v3 老页本就如此）
+- QC：G1-G7 全 PASS（20192 帧精确/673.07s/1080×1920/-15LUFS/无黑屏/无元数据）；VLM 抽帧：S02a 街头实拍清晰、S07 对比+logo、S24b 录屏+10倍速标、片尾三联卡、字幕位于 90.6% 高度（1740px 规范位）
+
+Stage Summary:
+- 交付：成片 v4（71MB，673.07s=11:13，1.1x 提速不变调）+ 字幕 v4.srt + skill v1.1 包（explainer-video-studio-v1.1.zip，版本线统一 1.x）
+- skill v1.1：铁律扩至 24 条（+禁间隔号/思考不入画/最小信息/定格≤3s/举一反三/动效统一/品牌实体用logo）；layout-spec 增 §四b 环境动效原语/§六 B-roll 模式/§七 分拆与提速；pipeline 增 §8 六节新坑；scripts +h5_render_v4/assemble_v4；本地 skills/ 已同步
+- 本视频特定 vs 通用规则分类表见 04-ep1-production/production-notes.md

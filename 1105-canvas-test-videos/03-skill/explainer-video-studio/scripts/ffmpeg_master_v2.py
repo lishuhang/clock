@@ -53,7 +53,7 @@ def gen_ass(subs, path):
         "OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, "
         "Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
         "Style: Sub,Alibaba PuHuiTi 3.0,68,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,"
-        "1,0,0,0,100,100,0,0,1,7,0,2,60,60,84,1\n\n"
+        "1,0,0,0,100,100,0,0,1,7,0,2,60,60,180,1\n\n"
         "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
     lines = [head]
     for s in subs:

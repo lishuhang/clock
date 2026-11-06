@@ -1,0 +1,16 @@
+{
+ "gates": {
+  "G1_零坏帧": "PASS",
+  "G2_帧数": "PASS",
+  "G3_时长": "PASS",
+  "G4_分辨率": "PASS",
+  "G5_响度": "PASS",
+  "G6_无长黑屏": "PASS",
+  "G7_元数据": "PASS"
+ },
+ "BUILD_SUCCESS": true,
+ "frames": 20192,
+ "duration": 673.066667,
+ "speed": 1.1,
+ "pre_speed_total": 740.36
+}
