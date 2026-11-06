@@ -503,3 +503,25 @@ Stage Summary:
 - 交付：成片mp4(37MB)+字幕srt(385条)已入 download/ 与 04-ep1-production/output/；帧目录163MB不入库（h5_render幂等可再生成）
 - 脚本沉淀：ffmpeg_master_v2(_seg).py/spot_check.py 入库并同步 explainer-video-studio skill；production-notes.md 记录5条新坑
 - 第二/三篇待用户指令后按同管线投产（canvas需按同规格重制）
+
+---
+Task ID: 1105-ep1-price-v3
+Agent: Super Z (main)
+Task: 第一篇「价格篇」v3 修复重制（用户三反馈：音画不同步/黑底/B站真实素材 + skill v2.0）
+
+Work Log:
+- 用户反馈归因三连坑实测确认：①字数权重估算全片漂移±27s(句3估算27.33s vs 实测开口29.38s) ②concat demuxer PNG时长量化1/25s网格每镜+0.02s累积0.9s ③h5_render v1只截1.5s窗致42/43页data-t>1.5s元素丢失(v2生产用的渲染器未入库已丢失,重建为v3)
+- 实测对齐：本地faster-whisper base(hf-mirror手动下模型,PyAV冲突用f32le raw+numpy绕开,740s全片42s转写) + silencedetect(-38dB/0.22s)双校准 + SequenceMatcher脚本文本↔whisper字符流对齐 + 静音边界吸附 → 76句实测时间码(句首≤0.3s)；z-ai asr限流(13次/周期)弃用
+- 帧数精确架构：n_i=round(dur×30)逐镜编码(符号链接序列物化22211帧,按max t'≤k/30映射) + concat -c copy timescale 30000 + 终渲A/B用-frames:v(修-t边界丢3帧) → vtrack/vfinal 22211帧精确命中；幂等检查加getsize>1MB(0字节残骸坑)
+- B站素材通路(412时代)：pagelist拿cid→playurl html5游客720p→curl -C -断点续传(牌子81MB/丧尸30.2MB,ffprobe体检465s/214s全量)；m.bilibili.com移动页免验证码截播放量条(2152.1万/424万)；player.bilibili.com外链播放器DOM截点赞(150.1万/37.7万)；郭帆评论游客不可达→腾讯新闻段落截图留证；真浏览器桌面视频页=GeeTest验证码墙勿碰
+- 黑底换肤43页：dark_convert.py(CSS变量上下文替换+background:var(--ink)深底白字块反转为浅色芯片+渐变逐一映射+rgba阴影转换)；logo修复(白底键出d<8→alpha0+裁切居中，纯黑libtv反转，暗色xiaoyunque反色副本，暗字形HSV提亮保色相)；S17数值加阴影+轨道描边；S11十格logo全可见
+- S02/S03/S14/S23重做：透明叠层页(TRANSPARENT_SHOTS,scrim82%)+ffmpeg双层合成(bg_seg 1080x1920精确帧数+overlay PNG序列)；新闻蓝横幅按颜色行扫裁切(B-max(R,G)>15)；Higgsfield $129红框像素行扫定位23.2-28.2%烘进图片双图叠放淡入；S23 yzCheck溢出修复(img max-height 920)
+- 字幕v3：365卡jieba词边界分卡(AI逆袭不再断词)+whisper词锚定卡内时间
+- 质检：G1-G7全PASS(帧数精确/时长/分辨率/响度-15/无黑屏/无元数据)；VLM抽帧：t=29.4s字幕「这些案例很容易给人一种错觉」与句3实测开口29.38s精确对位(用户投诉点闭环)、370s A/B边界字幕连续无花屏、S02/S03视频叠底+证据卡合成自然、片尾三联卡正常
+- skill v2.0：SKILL.md 17条铁律(+实测对齐/帧数精确/全动效覆盖/B站素材铁律/黑底规范)；layout-spec §二b黑底映射表；yz-infographic暗色例外措辞(黑底白字不违反规范,橙高亮黑底直用)；pipeline §7 v3新坑(5节)；scripts +6(v3渲染器/总装/对齐/字幕/换肤/B站下载),v1渲染器标记DEPRECATED
+
+Stage Summary:
+- 交付：成片v3(43MB,22211帧精确)+字幕v3.srt+qc报告 → download/ 与 04-ep1-production/output/
+- 音画同步：三连坑全修,句首实测误差≤0.3s,帧级零漂移
+- 视觉：全片黑底暗色系,品牌橙保留,B站证据链完整(原片叠底+网页截图裁切)
+- skill v2.0 已同步本地与GitHub；第二/三篇按v3管线(黑底规格+whisper对齐+帧数精确)待用户指令投产
