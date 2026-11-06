@@ -70,7 +70,7 @@
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;">
-  <div style="display:flex;gap:22px;margin-bottom:70px;"><div class="tile" data-anim="pop" data-t="0.9" data-d="0.35">日更</div><div class="tile" data-anim="pop" data-t="1.4500000000000002" data-d="0.35">涨粉</div><div class="tile" data-anim="pop" data-t="2.0" data-d="0.35">变现</div><div class="tile" data-anim="pop" data-t="2.5500000000000003" data-d="0.35">神话</div></div>
+  <div style="display:flex;gap:22px;margin-bottom:70px;"><div class="tile" data-anim="pop" data-t="0.9" data-d="0.35" data-ambient="float" data-amp="8.0" data-sp="0.32" data-ph0="0">日更</div><div class="tile" data-anim="pop" data-t="1.4500000000000002" data-d="0.35" data-ambient="float" data-amp="8.0" data-sp="0.32" data-ph0="0.7">涨粉</div><div class="tile" data-anim="pop" data-t="2.0" data-d="0.35" data-ambient="float" data-amp="8.0" data-sp="0.32" data-ph0="1.4">变现</div><div class="tile" data-anim="pop" data-t="2.5500000000000003" data-d="0.35" data-ambient="float" data-amp="8.0" data-sp="0.32" data-ph0="2.1">神话</div></div>
   <div data-anim="pop" data-t="0.15" data-d="0.5" style="font-size:150px;font-weight:900;color:#fff;line-height:1.18;text-align:center;">
     普通人<br>靠<span class="brand" style="color:#fc8166;">AI逆袭</span>
   </div>
@@ -150,8 +150,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

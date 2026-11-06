@@ -71,12 +71,12 @@
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;">
   <div data-anim="stamp" data-t="0.3" data-d="0.55" style="font-size:290px;font-weight:900;color:#fff;line-height:1;">12<span style="font-size:130px;color:#fc8166;">倍</span></div>
-  <div style="display:flex;gap:60px;align-items:flex-end;" data-anim="fade" data-t="2.2">
+  <div style="display:flex;gap:60px;align-items:flex-end;" data-anim="fade" data-t="3.62">
     <div class="ghost">¥0.3<span>/秒 地板价</span></div>
     <div class="stairs">▮▮▮▮▯</div>
     <div class="ghost">¥3.6<span>/秒 散买价</span></div>
   </div>
-  <div data-anim="up" data-t="4.4" style="font-size:36px;color:#9c948f;">阶梯定价策略拉开的价差</div>
+  <div data-anim="up" data-t="7.25" style="font-size:36px;color:#9c948f;">阶梯定价策略拉开的价差</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
@@ -152,8 +152,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

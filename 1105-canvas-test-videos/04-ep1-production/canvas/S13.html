@@ -70,11 +70,11 @@
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;">
-  <div class="pill" data-anim="fade" data-t="0.2" style="background:rgba(255,255,255,.2);font-size:34px;">第一章</div>
-  <div data-anim="pop" data-t="0.5" data-d="0.55" style="font-size:104px;font-weight:900;color:#fff;text-align:center;line-height:1.25;">
+  <div class="pill" data-anim="fade" data-t="0.2" style="background:rgba(255,255,255,.2);font-size:34px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0">第一章</div>
+  <div data-anim="pop" data-t="2.1" data-d="0.55" style="font-size:104px;font-weight:900;color:#fff;text-align:center;line-height:1.25;">
     同一条模型<br>几家卖价？
   </div>
-  <div data-anim="up" data-t="1.8" style="display:flex;align-items:center;gap:22px;background:rgba(255,255,255,.14);
+  <div data-anim="up" data-t="7.56" style="display:flex;align-items:center;gap:22px;background:rgba(255,255,255,.14);
        border-radius:999px;padding:18px 40px;">
     <div style="font-size:36px;font-weight:700;color:#fff;">Seedance 2.5</div>
     <div style="font-size:30px;color:#ffe3da;">同模型，同清晰度，不同标价</div>
@@ -154,8 +154,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

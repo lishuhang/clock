@@ -61,24 +61,14 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#171412,#26201d);"></div>
+    <div style="position:absolute;inset:0;background:transparent;"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
   <!-- L1 主体（YZ_EDIT_STAGE） -->
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
-    
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:50px;">
-  <div style="font-size:44px;font-weight:700;color:#fff;">贴近实战的测试场景</div>
-  <div style="display:flex;gap:34px;color:#9c948f;font-size:32px;">
-    <div>4 段提示词</div><div>× 15 秒/段</div><div>× 满血版 720P</div><div>× 每段抽 4 次</div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;"><div class="pc" data-anim="pop" data-t="1.2" data-d="0.32"><div class="pcr">P1</div><div class="pcc">第1抽</div></div><div class="pc" data-anim="pop" data-t="2.25" data-d="0.32"><div class="pcr">P1</div><div class="pcc">第2抽</div></div><div class="pc" data-anim="pop" data-t="3.3" data-d="0.32"><div class="pcr">P1</div><div class="pcc">第3抽</div></div><div class="pc" data-anim="pop" data-t="4.3500000000000005" data-d="0.32"><div class="pcr">P1</div><div class="pcc">第4抽</div></div><div class="pc" data-anim="pop" data-t="5.4" data-d="0.32"><div class="pcr">P2</div><div class="pcc">第1抽</div></div><div class="pc" data-anim="pop" data-t="6.45" data-d="0.32"><div class="pcr">P2</div><div class="pcc">第2抽</div></div><div class="pc" data-anim="pop" data-t="7.500000000000001" data-d="0.32"><div class="pcr">P2</div><div class="pcc">第3抽</div></div><div class="pc" data-anim="pop" data-t="8.55" data-d="0.32"><div class="pcr">P2</div><div class="pcc">第4抽</div></div><div class="pc" data-anim="pop" data-t="9.6" data-d="0.32"><div class="pcr">P3</div><div class="pcc">第1抽</div></div><div class="pc" data-anim="pop" data-t="10.65" data-d="0.32"><div class="pcr">P3</div><div class="pcc">第2抽</div></div><div class="pc" data-anim="pop" data-t="11.7" data-d="0.32"><div class="pcr">P3</div><div class="pcc">第3抽</div></div><div class="pc" data-anim="pop" data-t="12.75" data-d="0.32"><div class="pcr">P3</div><div class="pcc">第4抽</div></div><div class="pc" data-anim="pop" data-t="13.8" data-d="0.32"><div class="pcr">P4</div><div class="pcc">第1抽</div></div><div class="pc" data-anim="pop" data-t="14.85" data-d="0.32"><div class="pcr">P4</div><div class="pcc">第2抽</div></div><div class="pc" data-anim="pop" data-t="15.9" data-d="0.32"><div class="pcr">P4</div><div class="pcc">第3抽</div></div><div class="pc" data-anim="pop" data-t="16.95" data-d="0.32"><div class="pcr">P4</div><div class="pcc">第4抽</div></div></div>
-  <div class="pill" data-anim="stamp" data-t="19.0" data-d="0.45" style="background:var(--brand);font-size:42px;">
-    16 抽，240 秒生成量</div>
-  <div data-anim="fade" data-t="26.0" style="font-size:34px;color:#9c948f;">10 家平台走完这一轮，最低要充多少钱？</div>
-</div>
+    <div style="position:absolute;inset:0;"></div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -153,8 +143,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');
@@ -194,22 +184,6 @@ window.yzCheck = function () {
                          : { status: 'compliant' };
 };
 </script>
-<style>
-.tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
-.card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
-.pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:#f2efec;}
-.brand{color:var(--brand-deep);}
-
-.pc{width:150px;height:150px;border-radius:18px;background:rgba(255,255,255,.08);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.14);}
-.pcr{font-size:26px;color:#f0a394;font-weight:700;}
-.pcc{font-size:34px;color:#fff;font-weight:700;margin-top:8px;}
-</style><script>window.SHOOT_KEYS=[1.2, 2.25, 3.3, 4.35, 5.4, 6.45, 7.5, 8.55, 9.6, 10.65, 11.7, 12.75, 13.8, 14.85, 15.9, 16.95, 19.0, 26.0];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+<style></style><script></script>
 </body>
 </html>

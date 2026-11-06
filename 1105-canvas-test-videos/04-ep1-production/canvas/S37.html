@@ -69,15 +69,15 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">免费赠送的积分，寿命更短</h1><div class="tsub" data-anim="up" data-t="1.1">哪怕连续包年，订阅积分也是按月发放、下月清零</div>
-<div style="margin:56px auto 0;width:900px;display:flex;gap:26px;justify-content:center;"><div class="hg" data-anim="pop" data-t="4.0" data-d="0.4">
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">免费赠送的积分，寿命更短</h1><div class="tsub" data-anim="up" data-t="1.16">哪怕连续包年，订阅积分也是按月发放、下月清零</div>
+<div style="margin:56px auto 0;width:900px;display:flex;gap:26px;justify-content:center;"><div class="hg" data-anim="pop" data-t="4.24" data-d="0.4" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0.7">
         <div class="hs">⏳</div>
-        <div class="hl">TapNow 拉新奖励</div><div class="hv">1 个月</div></div><div class="hg" data-anim="pop" data-t="11.0" data-d="0.4">
+        <div class="hl"><img src="../assets/logos/tapnow.png" style="height:40px;vertical-align:-8px;margin-right:8px;object-fit:contain;">TapNow 拉新奖励</div><div class="hv">1 个月</div></div><div class="hg" data-anim="pop" data-t="11.65" data-d="0.4" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="1.4">
         <div class="hs">⏳</div>
-        <div class="hl">OiiOii 会员签到盒饭</div><div class="hv">3 天</div></div><div class="hg" data-anim="pop" data-t="18.0" data-d="0.4">
+        <div class="hl"><img src="../assets/logos/oiioii.png" style="height:40px;vertical-align:-8px;margin-right:8px;object-fit:contain;">OiiOii 会员签到盒饭</div><div class="hv">3 天</div></div><div class="hg" data-anim="pop" data-t="19.06" data-d="0.4" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="2.1">
         <div class="hs crash">⏳</div>
-        <div class="hl">小云雀 每日免费积分</div><div class="hv">1 天</div></div></div>
-<div class="pill" data-anim="stamp" data-t="20.0" data-d="0.45" style="margin:70px auto 0;width:fit-content;background:var(--brand-deep);font-size:38px;">当日清零：有效期只有短短 1 天</div>
+        <div class="hl"><img src="../assets/logos/xiaoyunque_w.png" style="height:40px;vertical-align:-8px;margin-right:8px;object-fit:contain;">小云雀 每日免费积分</div><div class="hv">1 天</div></div></div>
+<div class="pill" data-anim="stamp" data-t="21.18" data-d="0.45" style="margin:70px auto 0;width:fit-content;background:var(--brand-deep);font-size:38px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="2.8">当日清零：有效期只有短短 1 天</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -152,8 +152,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

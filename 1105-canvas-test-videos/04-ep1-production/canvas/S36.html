@@ -71,13 +71,13 @@
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:52px;">
   <div data-anim="fade" data-t="0.2" style="font-size:58px;font-weight:900;color:#fff;">订阅制会员积分：<span style="color:#fc8166;">整整一半平台</span>月结清零</div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;"><div class="zc" data-anim="pop" data-t="0.8" data-d="0.35">
-        <div class="zt">Seko</div><div class="zd">随会员月发放</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="1.5" data-d="0.35">
-        <div class="zt">ShotLab 超会</div><div class="zd">会员创作币</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="2.2" data-d="0.35">
-        <div class="zt">万兴剧厂</div><div class="zd">订阅积分</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="2.8999999999999995" data-d="0.35">
-        <div class="zt">OiiOii</div><div class="zd">订阅盒饭</div><div class="zx">31 天月结清零</div></div></div>
-  <div class="pill" data-anim="up" data-t="6.8" style="background:rgba(255,255,255,.12);font-size:32px;">
-    TapNow 订阅积分：每批 60 天有效</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;"><div class="zc" data-anim="pop" data-t="1.49" data-d="0.35" data-ambient="float" data-amp="5.0" data-sp="0.32" data-ph0="0">
+        <img src="../assets/logos/seko.png" style="height:54px;object-fit:contain;display:block;margin:0 auto 8px;"><div class="zt">Seko</div><div class="zd">随会员月发放</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="2.79" data-d="0.35" data-ambient="float" data-amp="5.0" data-sp="0.32" data-ph0="0.7">
+        <img src="../assets/logos/shotlab.png" style="height:54px;object-fit:contain;display:block;margin:0 auto 8px;"><div class="zt">ShotLab 超会</div><div class="zd">会员创作币</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="4.09" data-d="0.35" data-ambient="float" data-amp="5.0" data-sp="0.32" data-ph0="1.4">
+        <img src="../assets/logos/wanxing.png" style="height:54px;object-fit:contain;display:block;margin:0 auto 8px;"><div class="zt">万兴剧厂</div><div class="zd">订阅积分</div><div class="zx">31 天月结清零</div></div><div class="zc" data-anim="pop" data-t="5.39" data-d="0.35" data-ambient="float" data-amp="5.0" data-sp="0.32" data-ph0="2.1">
+        <img src="../assets/logos/oiioii.png" style="height:54px;object-fit:contain;display:block;margin:0 auto 8px;"><div class="zt">OiiOii</div><div class="zd">订阅盒饭</div><div class="zx">31 天月结清零</div></div></div>
+  <div class="pill" data-anim="up" data-t="12.64" style="background:rgba(255,255,255,.12);font-size:32px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="2.8">
+    <img src="../assets/logos/tapnow.png" style="height:40px;vertical-align:-9px;margin-right:10px;object-fit:contain;">TapNow 订阅积分：每批 60 天有效</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
@@ -153,8 +153,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

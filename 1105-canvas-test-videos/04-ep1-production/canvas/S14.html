@@ -74,12 +74,12 @@
     <div class="sl-main">一元一秒，百元造梦</div>
     <div class="sl-sub">—— 2026年初，Seedance 2.0 时代的行业口号</div>
   </div>
-  <div class="evi" style="margin-top:56px;width:100%;" data-anim="up" data-t="2.2" data-d="0.5">
+  <div class="evi" style="margin-top:56px;width:100%;" data-anim="up" data-t="7.38" data-d="0.5" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="0">
     <div class="evi-lab">原文出处</div>
-    <div class="shotbox"><img src="../assets/bili/origin_yiyimiao_marked.png"></div>
+    <div class="shotbox"><img src="../assets/bili/origin_yiyimiao_marked.png" data-anim="kb" data-kb="1,1,1.04,1.04"></div>
     <div class="src2">——娱乐资本论《画布横评》价格篇<br>腾讯新闻 2026-10-08</div>
   </div>
-  <div class="q" data-anim="up" data-t="3.8" data-d="0.5">到了质量更高的 Seedance 2.5 时代，成本还能维持「一元一秒」吗？</div>
+  <div class="q" data-anim="up" data-t="12.74" data-d="0.5">到了质量更高的 Seedance 2.5 时代，成本还能维持「一元一秒」吗？</div>
 </div>
 
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -156,8 +156,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

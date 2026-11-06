@@ -71,10 +71,10 @@
     
 <div style="position:absolute;inset:0;">
   <div style="margin-top:120px;text-align:center;font-size:52px;font-weight:900;color:#f2efec;" data-anim="fade" data-t="0.1">资金投入 + 时间精力</div>
-  <div style="margin-top:26px;text-align:center;font-size:60px;" data-anim="pop" data-t="0.8" data-d="0.3">💥</div>
-  <div class="coin" data-anim="fade" data-t="1.0" data-d="1.6" style="left:180px;">¥</div><div class="coin" data-anim="fade" data-t="1.25" data-d="1.6" style="left:480px;">¥</div><div class="coin" data-anim="fade" data-t="1.5" data-d="1.6" style="left:780px;">¥</div>
+  <div style="margin-top:26px;text-align:center;font-size:60px;" data-anim="pop" data-t="1.12" data-d="0.3">💥</div>
+  <div class="coin" data-anim="fade" data-t="1.4" data-d="1.6" style="left:180px;">¥</div><div class="coin" data-anim="fade" data-t="1.75" data-d="1.6" style="left:480px;">¥</div><div class="coin" data-anim="fade" data-t="2.1" data-d="1.6" style="left:780px;">¥</div>
   <div style="position:absolute;left:0;right:0;bottom:190px;text-align:center;">
-    <div class="pill" data-anim="up" data-t="2.3" style="background:var(--brand-deep);font-size:44px;">沉没成本</div>
+    <div class="pill" data-anim="up" data-t="3.22" style="background:var(--brand-deep);font-size:44px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0">沉没成本</div>
   </div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -151,8 +151,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

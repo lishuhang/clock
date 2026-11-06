@@ -69,21 +69,21 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">这套机制，似曾相识</h1>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">这套机制，似曾相识</h1>
 <div style="margin:60px auto 0;width:900px;display:flex;gap:30px;align-items:stretch;">
-  <div class="card" style="flex:1;padding:44px;text-align:center;" data-anim="pop" data-t="0.9" data-d="0.45">
+  <div class="card" style="flex:1;padding:44px;text-align:center;" data-anim="pop" data-t="1.4" data-d="0.45">
     <div style="font-size:90px;">🏋️</div>
     <div style="font-size:38px;font-weight:900;margin-top:20px;">预付费健身卡</div>
     <div style="font-size:28px;color:#b5aea9;margin-top:14px;line-height:1.6;">赌你办了卡不去<br>浪费的年费归店里</div>
   </div>
-  <div data-anim="pop" data-t="6.0" style="align-self:center;font-size:56px;">≈</div>
-  <div class="card" style="flex:1;padding:44px;text-align:center;" data-anim="pop" data-t="3.0" data-d="0.45">
+  <div data-anim="pop" data-t="9.33" style="align-self:center;font-size:56px;">≈</div>
+  <div class="card" style="flex:1;padding:44px;text-align:center;" data-anim="pop" data-t="4.67" data-d="0.45">
     <div style="font-size:90px;">🪙</div>
     <div style="font-size:38px;font-weight:900;margin-top:20px;">积分月结清零</div>
     <div style="font-size:28px;color:#b5aea9;margin-top:14px;line-height:1.6;">赌你每个月用不完<br>沉没余额变平台利润</div>
   </div>
 </div>
-<div class="pill" data-anim="stamp" data-t="12.0" data-d="0.5" style="margin:66px auto 0;width:fit-content;background:#f2efec;font-size:42px;">如出一辙</div>
+<div class="pill" data-anim="stamp" data-t="18.66" data-d="0.5" style="margin:66px auto 0;width:fit-content;background:#f2efec;font-size:42px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0.7">如出一辙</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -158,8 +158,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

@@ -3,9 +3,9 @@ name: explainer-video-studio
 description: 解说视频一站式生产管线（B站知识区/竖屏9:16风格）。用户一句话给出风格、主题、时长、素材来源（可含百度网盘 token），即可走完 事实核查→分镜表→TTS配音对齐→HTML canvas动效→受控时钟截帧→ffmpeg混音组装→成片质检 全流程。当用户要求"做解说视频/知识区视频/把文章或报告改成视频/竖屏短视频/科普视频/横评视频"时使用。
 ---
 
-# 解说视频工作室 · 一站式生产管线（v2.0，2026-11-06 实战固化）
+# 解说视频工作室 · 一站式生产管线（v1.1，2026-11-06 实战固化）
 
-> **v2.0 修订（价格篇 v3 修复轮实战）**：①配音实测对齐（whisper 词级时间戳，废弃字数权重估算投产）②帧数精确组装（修复 concat 图像时长量化漂移）③B站真实素材铁律（原片叠底+网页截图取证）④黑底暗色系规范（本类片专用）。修 bugs 详情见 `references/pipeline.md` §7。
+> **v1.1 修订（价格篇 v4 用户验收反馈固化）**：新增七条通用硬规则（禁间隔号/思考不入画/最小信息/定格≤3s/举一反三/动效统一/品牌实体用logo）+ 字幕位规 1740px + B-roll 影片前景展示模式 + 成片提速能力。版本线统一为 1.x：本版含并此前内部 v2.0 草案（实测对齐/帧数精确/B站素材/黑底换肤）全部内容。修 bugs 详情见 `references/pipeline.md` §7-§8。
 
 本 skill 由四源整合：Remotion 渲染合规调研（水印/许可）、Gemini 视频任务防踩坑指南（Token 黑洞与 H5 受控截帧架构）、娱资信息图 skill v3.2（品牌视觉系统）、1105 画布横评三集视频实操（网盘素材管线 + 分镜表方法论 + timeline JSON）。
 
@@ -59,13 +59,20 @@ Step 9  交付                    → output/ 成片+srt+timeline+报告
 12. **网盘只读**：素材只拉不上传；用户 GitHub 仓只放中间件与半成品（≤99MB/文件）。
 13. **配音实测对齐，禁字数权重直接投产**：字数权重×平均语速的估算全片可漂移 ±27s（1105 实测，用户在 27s 处即感知音画不同步）。既有整条配音必须 whisper（本地 faster-whisper，HF 429 时走 hf-mirror.com 手动下 model.bin/config/tokenizer/vocabulary）+ silencedetect 静音区间双校准；字幕分卡时间用词锚定；估算值仅用于分镜表预览列。
 14. **帧数精确组装，禁 concat demuxer 图像时长**：concat 清单里 PNG 的 `duration` 会被量化到 1/25s 网格（实测每镜 +0.01~0.02s，43 镜累积近 0.9s 漂移）。正确架构：每镜 `n_i = round(dur_i×30)`，序列物化（符号链接指向渲染帧，按"最大 t′≤k/30"映射）→ 逐镜 `-framerate 30 -i seq -frames:v n_i` 编码 → `concat -c copy -video_track_timescale 30000`；终渲 A/B 分段用 `-frames:v` 而非 `-t`（`-t` 会在段边界丢 2~3 帧）。全片帧数必须 == round(总长×30)。
-15. **截帧必须覆盖全部动效时刻**：v1 渲染器只截前 1.5s 入场窗，data-t>1.5s 的元素全部丢失（42/43 页中招）。v3 时刻集 = 入场窗(1.5s@30fps) ∪ 基础网格(2fps 全程) ∪ 页面 `SHOOT_DENSE=[[t0,t1,fps],...]` 声明 ∪ 尾帧；页面动画超过 2fps 采样密度时必须声明 DENSE。
+15. **截帧必须覆盖全部动效时刻**：v1 渲染器只截前 1.5s 入场窗，data-t>1.5s 的元素全部丢失（42/43 页中招）。v4 时刻集 = 开场窗(0.5s@30fps) ∪ **自动入场窗（解析 HTML data-t/data-counter，每个入场时刻 ±0.45s@15fps，counter 按ramp全程@12fps）** ∪ 基础网格(2fps 全程，承载环境微动) ∪ 页面 `SHOOT_DENSE=[[t0,t1,fps],...]` 声明 ∪ 尾帧；页面动画超过 2fps 采样密度时必须声明 DENSE。
 16. **B站真实素材铁律**：①作品/影片类素材找原片片段做背景叠底（压暗 82% scrim），不用 canvas 模拟；②播放量/点赞等外部数字证据一律网页截图+裁切（m.bilibili.com 移动页免验证码截播放量；player.bilibili.com 外链播放器 DOM 截点赞数——游客只见前 3 条热评，名人评价用新闻报道段落截图留证）；③下载通路：`pagelist` API 拿 cid → `playurl?platform=html5&high_quality=1` 游客 720p（view API/视频页有 412/验证码墙勿碰；CDN 掐长连接用 `curl -C -` 断点续传）；④ B31 试看钳制：durl 声称时长≠实际可解码时长，下载后必须 ffprobe 体检。
 17. **黑底暗色系（本类解说片专用）**：小Lin说式黑底片一律暗色系——底 `#131110`/面板 `#1e1b19`/正文 `#f2efec`/次级 `#b5aea9`/线 `#3a3634`；**品牌橙 #fc8166/#e55b46 原样保留**（黑底白字、橙高亮不违反品牌规范，属本类片的合法换肤）；yz-infographic 白底信息图进入本类视频前必须按映射表换肤（见 layout-spec §2b）；白底网页截图用深色卡片承托；深色 logo 白底键出透明（距白 <8 → alpha 0），纯黑字形反转白色。
+18. **禁用间隔号（·）**：画面内任何文字不得用间隔号 `·` 作美化分隔元素，也不得用间隔号替代换行。替代方案：同一句内用逗号/顿号连成一个人说的话；并列的独立信息（来源/日期/口径）各自换行。`《XX·XX》` 类含间隔号的引用标题改写为 `《XX》XX`。交付前全局 grep `·` 必须为零（含 HTML 注释与 title 标签）。
+19. **思考过程不入正文**：制作侧的思考/口径说明（如「实测口径」「视频页截图取证」「重制版实证」这类括注）不得括注在画面正文里；口径与来源信息只保留事实核查必需的最小项，其余进 production-report.md。画面是给观众看的，不是给制作者看的。
+20. **最小信息原则（如无必要，勿增实体）**：每个故事板只保留解释画面所需的最小必要信息，但不得精简到看不懂。像 PPT 演讲——幻灯片只写讲话人实际说过的内容，没说的就不加；「B站播放量(视频页截图)」→「B站播放量」。反例间同样适用：解释画面所需的关键口径不可删（如表格的统计口径行）。
+21. **画面定格≤3s**：单个画面定格不得长于 3s；多元素可逐级浮现，但全部定格后不得超过 3s 必须再有变化。画面内为视频且播放中不算定格，但原则上 3s 后仍须切画面。静态画面必须保持动感：模拟聊天框打字（typing）、截图轮换/内嵌视频片段、环境微动（float/pulse，见 layout-spec §四b）。入场时刻按台词读音逐级浮现（元素出现时机≈该内容被念到的时刻），不得前 2s 全部弹完然后长静止。
+22. **举一反三排查**：修任何问题时，同类问题必须全片排查（发现一处 `·` 就 grep 全部 43 页；发现一处>3s 定格就扫全部镜头的尾滞与空窗）。但举一反三仅限确定同类别的问题，不得连带修改不相关的内容。
+23. **动效统一**：故事板之间的硬切是节奏语言，不代表镜内动效可以硬切。同一镜内元素入场必须用同一套动效词汇（同一缓动/同一入场原语），环境微动全片统一（幅度/频率一套参数）；新增镜头必须与全片动效语言一致。
+24. **品牌实体必用官方 logo**：画面讲到具体平台/公司/产品时，必须使用项目提供的官方 logo 素材，不得纯文字代替（标题行内嵌 logo、卡片带 logo、logo 墙等形式均可）。logo 素材缺失时先向用户索取或从官网提取，不得用自绘文字冒充。
 
 ## §4 画面与动效规范
 
-见 `references/layout-spec.md`（9:16/4:3 安全框/上下字幕带/品牌色字体/13 个 canvas 模板枚举/信息图 HTML 复用法）。若用户未指定品牌系，默认用该 spec 的中性科技配色；娱资项目强制品牌系（#fc8166/#e55b46 + 阿里普惠体 + 河豚 logo）。
+见 `references/layout-spec.md`（9:16/4:3 安全框/上下字幕带/品牌色字体/13 个 canvas 模板枚举/信息图 HTML 复用法/**字幕位 1740px/B-roll 影片前景展示模式/环境动效原语**）。若用户未指定品牌系，默认用该 spec 的中性科技配色；娱资项目强制品牌系（#fc8166/#e55b46 + 阿里普惠体 + 河豚 logo）。
 
 ## §5 管线脚本（`scripts/`，均可独立运行）
 
@@ -78,8 +85,10 @@ Step 9  交付                    → output/ 成片+srt+timeline+报告
 | `ffmpeg_master.py` | 总装混音（v1 基础版） | 视频轨+人声+BGM(ducking -13.5dB)+音效 → loudnorm → 质检 → BUILD_SUCCESS；含 Remotion 元数据清除 | `--bgm-loop` 无缝循环 |
 | `ffmpeg_master_v2.py` / `ffmpeg_master_v2_seg.py` | 总装混音 v2（1105 价格篇实战版）：ASS白字黑边字幕烧录 + sendcmd/drawbox 动画进度条 + 全屏水印顶层叠加 + BGM闪避修正(sidechaincompress双输入+aformat统一采样率)；`_seg` 分段模式绕沙箱600s命令超时，段B字幕/cmds自动偏移，幂等续跑 | `--preview-ts 10,300,700` 出静帧目检 |
 | `align_final.py` / `subs_real.py` | **v2 新增**：whisper 词级时间戳 + 脚本字符流模糊对齐 + 静音边界吸附 → 每句实测时间码 + jieba 词边界字幕分卡 | 先跑 faster-whisper 全片转写出 whisper_segs.json |
-| `h5_render_v3.py` | **v2 新增**：受控截帧 v3（入场窗∪2fps网格∪DENSE 窗 + render-manifest + 透明叠层模式 `TRANSPARENT_SHOTS`） | `--only S01,S02` 幂等续跑 |
-| `assemble_v3.py` | **v2 新增**：帧数精确总装（bg 视频段/seq 序列物化/逐镜 enc/concat/final A-B/audio/mux/qc 七段幂等） | `python3 assemble_v3.py bg\|seq\|enc\|cat\|final\|audio\|mux\|qc` |
+| `h5_render_v3.py` | 受控截帧 v3（入场窗∪2fps网格∪DENSE 窗 + render-manifest + 透明叠层模式 `TRANSPARENT_SHOTS`） | `--only S01,S02` 幂等续跑 |
+| `h5_render_v4.py` | **v1.1 新增**：截帧 v4（解析 data-t 自动生成入场窗@15fps + counter 窗@12fps + 2fps 网格），入场动画全程平滑 | `--only S01,S02` 幂等续跑 |
+| `assemble_v3.py` | 帧数精确总装（bg 视频段/seq 序列物化/逐镜 enc/concat/final A-B/audio/mux/qc 七段幂等） | `python3 assemble_v3.py bg\|seq\|enc\|cat\|final\|audio\|mux\|qc` |
+| `assemble_v4.py` | **v1.1 新增**：总装 v4（分镜分拆 a/b + BG_V4 多源视频背景带偏移 + 字幕 MarginV=180 + `speed` 段：成片整体提速 setpts+atempo 不变调 + srt 同步重定时） | `python3 assemble_v4.py bg\|seq\|enc\|cat\|final\|audio\|mux\|speed\|qc` |
 | `netdisk.py` / `batch_download.py` | 网盘 quota/list/search/meta/download / 按正则批量（tree.json fs_id 直连） | token 走环境变量 |
 
 ## §6 与其他 skill 的协作
@@ -94,4 +103,9 @@ Step 9  交付                    → output/ 成片+srt+timeline+报告
 
 ## §8 实战样例
 
-`examples/timeline-ep1.json`：1105 画布横评·价格篇（43 镜/12:20/真实配音校准）。完整工作现场：GitHub `lishuhang/clock` → `1105-canvas-test-videos/`（含三集分镜表、素材地图、时间线复原）。
+`examples/timeline-ep1.json`：1105 画布横评·价格篇（46 镜/12:20/真实配音校准，v4 分拆版）。完整工作现场：GitHub `lishuhang/clock` → `1105-canvas-test-videos/`（含三集分镜表、素材地图、时间线复原）。
+
+## §9 版本史
+
+- **v1.0**（2026-11-05）：四源整合初版，十步状态机 + 12 铁律。
+- **v1.1**（2026-11-06）：价格篇 v3→v4 修复轮全部沉淀。含并内部 v2.0 草案（铁律 13-17：whisper 实测对齐/帧数精确组装/动效全覆盖/B站素材铁律/黑底换肤）与 v4 验收反馈（铁律 18-24：禁间隔号/思考不入画/最小信息/定格≤3s/举一反三/动效统一/品牌实体用logo；字幕位 1740px；B-roll 影片前景展示模式；分镜分拆 a/b；成片提速段）。版本线自此统一为 1.x。

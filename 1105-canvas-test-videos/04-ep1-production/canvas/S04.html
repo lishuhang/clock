@@ -61,7 +61,7 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#242020,#1a1716);"></div>
+    <div style="position:absolute;inset:0;background:rgba(10,8,7,.74);" data-anim="fade" data-t="0" data-d="0.5"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
@@ -69,9 +69,20 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">“一人剧组”的时代</h1><div class="tsub" data-anim="up" data-t="1.1">似乎已经唾手可得</div>
-<div style="margin-top:70px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;width:820px;"><div class="nd" data-anim="pop" data-t="0.5" data-d="0.3">剧本</div><div class="nd" data-anim="pop" data-t="0.78" data-d="0.3">分镜</div><div class="nd" data-anim="pop" data-t="1.06" data-d="0.3">角色</div><div class="nd" data-anim="pop" data-t="1.34" data-d="0.3">配音</div><div class="nd" data-anim="pop" data-t="1.62" data-d="0.3">剪辑</div><div class="nd" data-anim="pop" data-t="1.9000000000000001" data-d="0.3">发布</div></div>
-<div class="pill-o" data-anim="stamp" data-t="3.4" data-d="0.4" style="margin-top:70px;font-size:38px;">只要选对工具，就够了？</div>
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+  <h1 class="tt" data-anim="fade" data-t="1.5" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">“一人剧组”的时代</h1>
+  <div class="tsub" data-anim="up" data-t="2.1" data-d="0.45" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="1.2">似乎已经唾手可得</div>
+  <div style="margin-top:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;width:820px;">
+    <div class="nd" data-anim="pop" data-t="2.6" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0">剧本</div>
+    <div class="nd" data-anim="pop" data-t="2.95" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0.9">分镜</div>
+    <div class="nd" data-anim="pop" data-t="3.3" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="1.8">角色</div>
+    <div class="nd" data-anim="pop" data-t="3.65" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="2.7">配音</div>
+    <div class="nd" data-anim="pop" data-t="4.0" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="3.6">剪辑</div>
+    <div class="nd" data-anim="pop" data-t="4.35" data-d="0.3" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="4.5">发布</div>
+  </div>
+  <div class="pill-o" data-anim="stamp" data-t="5.1" data-d="0.4" style="margin-top:64px;font-size:38px;" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="2.1">只要选对工具，就够了？</div>
+</div>
+
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -146,8 +157,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');
@@ -189,18 +200,9 @@ window.yzCheck = function () {
 </script>
 <style>
 .tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
-.card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
-.pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:#f2efec;}
-.brand{color:var(--brand-deep);}
-
-.nd{background:#1e1b19;border:2px solid #3a3634;border-radius:20px;height:130px;display:flex;
-    align-items:center;justify-content:center;font-size:42px;font-weight:700;color:#f2efec;}
-</style><script>window.SHOOT_KEYS=[0.5, 0.78, 1.06, 1.34, 1.62, 1.9, 3.4];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+.tsub{font-size:30px;color:#c9c2bd;text-align:center;margin-top:16px;}
+.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;padding:12px 30px;font-size:32px;font-weight:700;}
+.nd{height:104px;border-radius:18px;background:rgba(20,17,15,.72);border:1px solid rgba(255,255,255,.14);color:#f2efec;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;backdrop-filter:blur(3px);}
+</style><script></script>
 </body>
 </html>

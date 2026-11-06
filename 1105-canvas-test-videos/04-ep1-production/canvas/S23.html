@@ -71,32 +71,32 @@
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 30px;">
   <div style="display:flex;align-items:center;gap:18px;" data-anim="up" data-t="0.1" data-d="0.4">
-    <div style="font-size:44px;font-weight:900;color:#f2efec;white-space:nowrap;">Higgsfield「45折」核查</div>
-    <div class="tag45" data-anim="stamp" data-t="1.0" data-d="0.3">宣称45折</div>
+    <div style="font-size:44px;font-weight:900;color:#f2efec;white-space:nowrap;display:flex;align-items:center;gap:14px;"><img src="../assets/logos/higgsfield.png" style="height:52px;object-fit:contain;">Higgsfield「45折」核查</div>
+    <div class="tag45" data-anim="stamp" data-t="3.53" data-d="0.3">宣称45折</div>
   </div>
   <div style="display:flex;gap:26px;margin-top:22px;flex:1;">
-    <div class="evi" style="flex:1.15;display:flex;flex-direction:column;" data-anim="up" data-t="1.6" data-d="0.5">
+    <div class="evi" style="flex:1.15;display:flex;flex-direction:column;" data-anim="up" data-t="5.65" data-d="0.5" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="0">
       <div class="evi-lab">higgsfield.com/pricing 实截</div>
       <div class="shotbox" style="flex:1;">
         <div class="imgwrap">
-          <img src="../assets/bili/higgsfield_ultra.png">
-          <img src="../assets/bili/higgsfield_ultra_marked.png" class="marked" data-anim="fade" data-t="4.0" data-d="0.45">
+          <img src="../assets/bili/higgsfield_ultra.png" data-anim="kb" data-kb="1,1,1.04,1.04">
+          <img src="../assets/bili/higgsfield_ultra_marked.png" class="marked" data-anim="fade" data-t="14.12" data-d="0.45">
         </div>
       </div>
       <div class="src2">跑满240秒生成量 → 只能选最高档 Ultra</div>
     </div>
     <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
-      <div class="calc" data-anim="stamp" data-t="5.2" data-d="0.4">
+      <div class="calc" data-anim="stamp" data-t="18.35" data-d="0.4">
         <div class="c-lab">Ultra 月付</div>
         <div class="c-big">$129<span class="c-unit">/月</span></div>
         <div class="c-eq">≈ ¥864 / 月</div>
       </div>
-      <div class="calc warn" data-anim="stamp" data-t="7.0" data-d="0.4">
+      <div class="calc warn" data-anim="stamp" data-t="24.7" data-d="0.4">
         <div class="c-lab">长期年付高档位</div>
         <div class="c-big">一次付费</div>
         <div class="c-eq" style="color:#e55b46;">轻松破万元</div>
       </div>
-      <div class="verdict" data-anim="up" data-t="9.0" data-d="0.5">
+      <div class="verdict" data-anim="up" data-t="31.76" data-d="0.5">
         <span class="no">✗</span> 对国内个人创作者并不划算
       </div>
     </div>
@@ -177,8 +177,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

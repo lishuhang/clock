@@ -69,10 +69,10 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">价格战打得极其复杂</h1><div class="tsub" data-anim="up" data-t="1.1">新入行的创作者很难一眼算清真实成本</div>
-<div style="margin:60px auto 0;width:820px;display:flex;flex-direction:column;gap:22px;"><div class="gate" data-anim="up" data-t="0.8" data-d="0.45"><span>1</span>不同档位</div><div class="gate" data-anim="up" data-t="1.7000000000000002" data-d="0.45"><span>2</span>包月包年</div><div class="gate" data-anim="up" data-t="2.6" data-d="0.45"><span>3</span>零买点数</div><div class="gate" data-anim="up" data-t="3.5" data-d="0.45"><span>4</span>退款限制</div><div class="gate" data-anim="up" data-t="4.4" data-d="0.45"><span>5</span>积分过期</div></div>
-<div style="margin-top:56px;display:flex;justify-content:center;" data-anim="fade" data-t="6.4">
-  <div class="pill" style="font-size:36px;">同质化严重 × 定价极复杂</div>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">价格战打得极其复杂</h1><div class="tsub" data-anim="up" data-t="3.01">新入行的创作者很难一眼算清真实成本</div>
+<div style="margin:60px auto 0;width:820px;display:flex;flex-direction:column;gap:22px;"><div class="gate" data-anim="up" data-t="2.19" data-d="0.45"><span>1</span>不同档位</div><div class="gate" data-anim="up" data-t="4.65" data-d="0.45"><span>2</span>包月包年</div><div class="gate" data-anim="up" data-t="7.12" data-d="0.45"><span>3</span>零买点数</div><div class="gate" data-anim="up" data-t="9.58" data-d="0.45"><span>4</span>退款限制</div><div class="gate" data-anim="up" data-t="12.04" data-d="0.45"><span>5</span>积分过期</div></div>
+<div style="margin-top:56px;display:flex;justify-content:center;" data-anim="fade" data-t="17.52">
+  <div class="pill" style="font-size:36px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0.7">同质化严重 × 定价极复杂</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
@@ -148,8 +148,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

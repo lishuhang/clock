@@ -71,8 +71,8 @@
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;">
   <img src="../assets/logo-icon-white.svg" data-anim="pop" data-t="0.2" data-d="0.5" style="height:190px;">
-  <div data-anim="up" data-t="0.7" style="font-size:84px;font-weight:900;color:#f2efec;">AI视频画布<span class="brand">硬核横评</span></div>
-  <div class="pill" data-anim="fade" data-t="1.5">① 价格篇</div>
+  <div data-anim="up" data-t="0.93" style="font-size:84px;font-weight:900;color:#f2efec;">AI视频画布<span class="brand">硬核横评</span></div>
+  <div class="pill" data-anim="fade" data-t="1.99" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0">① 价格篇</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
@@ -148,8 +148,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

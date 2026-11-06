@@ -69,21 +69,21 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">算清综合支出为什么难</h1>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">算清综合支出为什么难</h1>
 <div style="margin:56px auto 0;width:880px;">
-  <div style="text-align:center;font-size:34px;color:#b5aea9;" data-anim="fade" data-t="0.8">① 同一个东西，四个名字</div>
+  <div style="text-align:center;font-size:34px;color:#b5aea9;" data-anim="fade" data-t="0.83">① 同一个东西，四个名字</div>
   <div style="display:flex;justify-content:center;gap:22px;margin-top:30px;">
-    <div class="coinname" data-anim="pop" data-t="2.2" data-d="0.4">积分</div>
-    <div class="coinname" data-anim="pop" data-t="4.4" data-d="0.4">创作币</div>
-    <div class="coinname" data-anim="pop" data-t="6.6" data-d="0.4">盒饭</div>
-    <div class="coinname" data-anim="pop" data-t="8.8" data-d="0.4">Tapies</div>
+    <div class="coinname" data-anim="pop" data-t="2.27" data-d="0.4">积分</div>
+    <div class="coinname" data-anim="pop" data-t="4.55" data-d="0.4">创作币</div>
+    <div class="coinname" data-anim="pop" data-t="6.82" data-d="0.4">盒饭</div>
+    <div class="coinname" data-anim="pop" data-t="9.1" data-d="0.4">Tapies</div>
   </div>
-  <div style="text-align:center;font-size:34px;color:#b5aea9;margin-top:64px;" data-anim="fade" data-t="12.0">② 价格体系混着卖</div>
+  <div style="text-align:center;font-size:34px;color:#b5aea9;margin-top:64px;" data-anim="fade" data-t="12.41">② 价格体系混着卖</div>
   <div style="display:flex;justify-content:center;gap:20px;margin-top:30px;flex-wrap:wrap;">
-    <div class="pricecard" data-anim="stamp" data-t="13.4" data-d="0.4" style="transform:rotate(-4deg);">原价</div>
-    <div class="pricecard" data-anim="stamp" data-t="15.4" data-d="0.4" style="transform:rotate(3deg);background:rgba(252,129,102,.10);">首月补贴价</div>
-    <div class="pricecard" data-anim="stamp" data-t="17.4" data-d="0.4" style="transform:rotate(-2deg);">团队批量价</div>
-    <div class="pricecard" data-anim="stamp" data-t="19.4" data-d="0.4" style="transform:rotate(4deg);background:rgba(252,129,102,.10);">连续包月包年优惠</div>
+    <div class="pricecard" data-anim="stamp" data-t="13.86" data-d="0.4" style="transform:rotate(-4deg);">原价</div>
+    <div class="pricecard" data-anim="stamp" data-t="15.92" data-d="0.4" style="transform:rotate(3deg);background:rgba(252,129,102,.10);">首月补贴价</div>
+    <div class="pricecard" data-anim="stamp" data-t="17.99" data-d="0.4" style="transform:rotate(-2deg);">团队批量价</div>
+    <div class="pricecard" data-anim="stamp" data-t="20.06" data-d="0.4" style="transform:rotate(4deg);background:rgba(252,129,102,.10);">连续包月包年优惠</div>
   </div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -160,8 +160,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

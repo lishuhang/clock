@@ -69,20 +69,20 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">单秒价格区间极大</h1><div class="tsub" data-anim="up" data-t="1.1">地板价藏在最高档连续包年 / 大促摊薄</div>
-<div class="ax" data-anim="fade" data-t="0.8" style="margin-top:80px;">
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">单秒价格区间极大</h1><div class="tsub" data-anim="up" data-t="2.93">地板价藏在最高档连续包年 / 大促摊薄</div>
+<div class="ax" data-anim="fade" data-t="2.13" style="margin-top:80px;">
   <div class="axline"></div>
   <div class="ax0">¥0</div><div class="ax1">¥3.6+</div>
-  <div class="anchor" data-anim="stamp" data-t="1.8" data-d="0.45">
+  <div class="anchor" data-anim="stamp" data-t="4.79" data-d="0.45">
     <div class="ap">¥0.3<span class="au">/秒</span></div>
     <div class="al">部分平台宣称可摊薄到的地板价</div>
   </div>
 </div>
 <div style="display:flex;gap:26px;justify-content:center;margin-top:90px;" >
-  <div class="card fl" data-anim="pop" data-t="4.6" data-d="0.4">连续包年摊薄</div>
-  <div class="card fl" data-anim="pop" data-t="5.6" data-d="0.4">大促活动期</div>
+  <div class="card fl" data-anim="pop" data-t="12.25" data-d="0.4">连续包年摊薄</div>
+  <div class="card fl" data-anim="pop" data-t="14.91" data-d="0.4">大促活动期</div>
 </div>
-<div class="src" data-anim="fade" data-t="0.9" data-d="0.4">资料来源：娱乐资本论整理<br>数据截至 2026-10-05</div>
+<div class="src" data-anim="fade" data-t="2.4" data-d="0.4">资料来源：娱乐资本论整理<br>数据截至 2026-10-05</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -157,8 +157,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

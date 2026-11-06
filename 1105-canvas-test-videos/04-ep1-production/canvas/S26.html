@@ -69,18 +69,18 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">门槛最低 vs 门槛最高</h1>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">门槛最低 vs 门槛最高</h1>
 <div style="margin:52px auto 0;width:900px;display:flex;gap:30px;">
-  <div class="card" style="flex:1;padding:28px;display:flex;flex-direction:column;border:4px solid #4caf7d;" data-anim="pop" data-t="0.8" data-d="0.45">
+  <div class="card" style="flex:1;padding:28px;display:flex;flex-direction:column;border:4px solid #4caf7d;" data-anim="pop" data-t="3.36" data-d="0.45">
     <div style="display:flex;align-items:center;gap:16px;"><img src="../assets/logos/anishort.png" style="height:56px;object-fit:contain;"><b style="font-size:36px;">AniShort 进阶版</b></div>
     <div style="font-size:110px;font-weight:900;color:#4caf7d;line-height:1;margin:22px 0;">¥218</div>
-    <img src="../assets/shots/AniShort-个人包月价格.jpg" style="border-radius:14px;object-fit:cover;width:100%;height:420px;">
+    <img src="../assets/shots/AniShort-个人包月价格.jpg" style="border-radius:14px;object-fit:cover;width:100%;height:420px;" data-anim="kb" data-kb="1,1,1.04,1.04">
     <div style="font-size:27px;color:#4caf7d;font-weight:700;margin-top:14px;">门槛最低</div>
   </div>
-  <div class="card" style="flex:1;padding:28px;display:flex;flex-direction:column;filter:grayscale(.5);" data-anim="pop" data-t="2.6" data-d="0.45">
+  <div class="card" style="flex:1;padding:28px;display:flex;flex-direction:column;filter:grayscale(.5);" data-anim="pop" data-t="10.92" data-d="0.45">
     <div style="display:flex;align-items:center;gap:16px;"><img src="../assets/logos/jurilu.png" style="height:56px;object-fit:contain;"><b style="font-size:36px;">巨日禄</b></div>
     <div style="font-size:110px;font-weight:900;color:#f2efec;line-height:1;margin:22px 0;">¥600<span style="font-size:44px;color:#b5aea9;">起充</span></div>
-    <img src="../assets/shots/巨日禄-积分充值价格.jpg" style="border-radius:14px;object-fit:cover;width:100%;height:420px;">
+    <img src="../assets/shots/巨日禄-积分充值价格.jpg" style="border-radius:14px;object-fit:cover;width:100%;height:420px;" data-anim="kb" data-kb="1,1,1.04,1.04">
     <div style="font-size:27px;color:var(--brand-deep);font-weight:700;margin-top:14px;">不设会员套餐，只能散充买点数</div>
   </div>
 </div>
@@ -158,8 +158,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

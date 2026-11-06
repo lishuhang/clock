@@ -69,16 +69,16 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">我们的评测姿势</h1>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">我们的评测姿势</h1>
 <div style="margin:60px auto 0;width:880px;display:flex;gap:26px;">
-  <div class="card trip" data-anim="pop" data-t="0.8" data-d="0.4">
+  <div class="card trip" data-anim="pop" data-t="2.04" data-d="0.4">
     <div class="t1">🗓</div><div class="t2">10月5日</div><div class="t3">价格稳定窗口期<br>锁定评测数据</div></div>
-  <div class="card trip" data-anim="pop" data-t="2.6" data-d="0.4" style="border:3px solid var(--brand);">
+  <div class="card trip" data-anim="pop" data-t="6.64" data-d="0.4" style="border:3px solid var(--brand);">
     <div class="t1">🧾</div><div class="t2" style="color:var(--brand-deep);">¥4,556</div><div class="t3">自费充值<br>10家平台全跑通</div></div>
-  <div class="card trip" data-anim="pop" data-t="4.6" data-d="0.4">
+  <div class="card trip" data-anim="pop" data-t="11.74" data-d="0.4">
     <div class="t1">📚</div><div class="t2">70 份</div><div class="t3">法律协议与计费文档<br>逐份查阅</div></div>
 </div>
-<div class="src" data-anim="fade" data-t="0.9" data-d="0.4">资料来源：娱乐资本论整理<br>数据截至 2026-10-05</div>
+<div class="src" data-anim="fade" data-t="2.3" data-d="0.4">资料来源：娱乐资本论整理<br>数据截至 2026-10-05</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -153,8 +153,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

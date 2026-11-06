@@ -69,18 +69,18 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">创作资产极难迁移</h1><div class="tsub" data-anim="up" data-t="1.1">重度沉淀在最初起步的平台上</div>
-<div class="vault" data-anim="fade" data-t="5.0" data-d="0.4">
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">创作资产极难迁移</h1><div class="tsub" data-anim="up" data-t="1.6">重度沉淀在最初起步的平台上</div>
+<div class="vault" data-anim="fade" data-t="7.27" data-d="0.4">
   <div class="lockrow" >
-        <div class="lk-label" data-anim="pop" data-t="0.7" data-d="0.35">捏好的角色</div>
-        <div class="lk-lock" data-anim="stamp" data-t="1.3" data-d="0.3">🔒</div></div><div class="lockrow" >
-        <div class="lk-label" data-anim="pop" data-t="1.8" data-d="0.35">调顺的工作流</div>
-        <div class="lk-lock" data-anim="stamp" data-t="2.4000000000000004" data-d="0.3">🔒</div></div><div class="lockrow" >
-        <div class="lk-label" data-anim="pop" data-t="2.9000000000000004" data-d="0.35">积累的素材</div>
-        <div class="lk-lock" data-anim="stamp" data-t="3.5" data-d="0.3">🔒</div></div>
-  <div class="lk-cap" data-anim="fade" data-t="5.4">平台边界</div>
+        <div class="lk-label" data-anim="pop" data-t="1.02" data-d="0.35">捏好的角色</div>
+        <div class="lk-lock" data-anim="stamp" data-t="1.89" data-d="0.3">🔒</div></div><div class="lockrow" >
+        <div class="lk-label" data-anim="pop" data-t="2.62" data-d="0.35">调顺的工作流</div>
+        <div class="lk-lock" data-anim="stamp" data-t="3.49" data-d="0.3">🔒</div></div><div class="lockrow" >
+        <div class="lk-label" data-anim="pop" data-t="4.21" data-d="0.35">积累的素材</div>
+        <div class="lk-lock" data-anim="stamp" data-t="5.09" data-d="0.3">🔒</div></div>
+  <div class="lk-cap" data-anim="fade" data-t="7.85">平台边界</div>
 </div>
-<div class="pill" data-anim="up" data-t="6.6" style="margin-top:60px;">选错平台 = 资产被锁死</div>
+<div class="pill" data-anim="up" data-t="9.59" style="margin-top:60px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0.7">选错平台 = 资产被锁死</div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -155,8 +155,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

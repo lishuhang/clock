@@ -71,14 +71,14 @@
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:50px;">
   <div style="display:flex;gap:26px;">
-    <div class="fin done" data-anim="pop" data-t="0.4" data-d="0.4"><div class="f1">✓</div><div class="f2">价格篇</div></div>
-    <div class="fin" data-anim="pop" data-t="1.6" data-d="0.4"><div class="f1">?</div><div class="f2">功能篇</div></div>
-    <div class="fin" data-anim="pop" data-t="2.8" data-d="0.4"><div class="f1">?</div><div class="f2">实测篇</div></div>
+    <div class="fin done" data-anim="pop" data-t="0.81" data-d="0.4"><div class="f1">✓</div><div class="f2">价格篇</div></div>
+    <div class="fin" data-anim="pop" data-t="3.24" data-d="0.4"><div class="f1">?</div><div class="f2">功能篇</div></div>
+    <div class="fin" data-anim="pop" data-t="5.68" data-d="0.4"><div class="f1">?</div><div class="f2">实测篇</div></div>
   </div>
-  <div data-anim="up" data-t="4.6" style="font-size:64px;font-weight:900;color:#f2efec;text-align:center;line-height:1.4;">
+  <div data-anim="up" data-t="9.33" style="font-size:64px;font-weight:900;color:#f2efec;text-align:center;line-height:1.4;">
     这些钱买到的功能<br>到底<span class="brand">顺不顺手</span>？
   </div>
-  <div style="display:flex;align-items:center;gap:26px;" data-anim="fade" data-t="8.0">
+  <div style="display:flex;align-items:center;gap:26px;" data-anim="fade" data-t="16.22">
     <img src="../assets/logo-icon-white.svg" style="height:96px;">
     <div style="font-size:38px;color:#b5aea9;">一键三连，关注娱乐资本论看续集</div>
   </div>
@@ -157,8 +157,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

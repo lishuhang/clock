@@ -70,15 +70,15 @@
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;">
-  <div class="pill" data-anim="fade" data-t="0.3" style="background:rgba(255,255,255,.14);font-size:32px;">核心建议</div>
-  <div data-anim="up" data-t="0.9" data-d="0.6" style="font-size:86px;font-weight:900;color:#fff;text-align:center;line-height:1.4;">
+  <div class="pill" data-anim="fade" data-t="0.3" style="background:rgba(255,255,255,.14);font-size:32px;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0">核心建议</div>
+  <div data-anim="up" data-t="1.2" data-d="0.6" style="font-size:86px;font-weight:900;color:#fff;text-align:center;line-height:1.4;">
     前期千万不要<br>一次性充入<span style="color:#7fd8a4;">太多资金</span>
   </div>
   <div style="display:flex;gap:26px;">
-    <div class="step" data-anim="pop" data-t="4.6" data-d="0.4"><b>①</b> 先小额试跑</div>
-    <div class="step" data-anim="pop" data-t="6.4" data-d="0.4"><b>②</b> 确认模型版本</div>
-    <div class="step" data-anim="pop" data-t="8.2" data-d="0.4"><b>③</b> 核对扣点规则</div>
-    <div class="step" data-anim="pop" data-t="10.0" data-d="0.4"><b>④</b> 再做长期决定</div>
+    <div class="step" data-anim="pop" data-t="6.14" data-d="0.4"><b>①</b> 先小额试跑</div>
+    <div class="step" data-anim="pop" data-t="8.54" data-d="0.4"><b>②</b> 确认模型版本</div>
+    <div class="step" data-anim="pop" data-t="10.94" data-d="0.4"><b>③</b> 核对扣点规则</div>
+    <div class="step" data-anim="pop" data-t="13.34" data-d="0.4"><b>④</b> 再做长期决定</div>
   </div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -155,8 +155,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

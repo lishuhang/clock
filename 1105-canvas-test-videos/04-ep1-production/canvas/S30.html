@@ -69,17 +69,17 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">测算扣点最费劲：TapNow</h1>
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">测算扣点最费劲：<img src="../assets/logos/tapnow.png" style="height:58px;vertical-align:-6px;margin:0 10px;object-fit:contain;">TapNow</h1>
 <div style="margin:56px auto 0;width:880px;display:flex;gap:30px;align-items:stretch;">
   <div class="card" style="flex:1.3;padding:26px;position:relative;" data-anim="fade" data-t="0.8" data-d="0.5">
-    <img src="../assets/shots/tapnow-02-wechat.jpg" style="border-radius:16px;object-fit:cover;width:100%;height:700px;">
+    <img src="../assets/shots/tapnow-02-wechat.jpg" style="border-radius:16px;object-fit:cover;width:100%;height:700px;" data-anim="kb" data-kb="1,1,1.04,1.04">
     <div class="redbox" data-anim="stamp" data-t="5.0" data-d="0.4">S2.5 720P 标准扣点</div>
   </div>
   <div style="flex:1;display:flex;flex-direction:column;gap:26px;justify-content:center;">
     <div class="card" style="padding:40px;text-align:center;border:4px solid var(--brand);" data-anim="stamp" data-t="5.0" data-d="0.45">
       <div style="font-size:110px;font-weight:900;color:var(--brand-deep);line-height:1;">40<span style="font-size:44px;color:#b5aea9;">积分/秒</span></div>
     </div>
-    <div class="pill" data-anim="up" data-t="8.0" style="font-size:32px;align-self:center;">最终靠人工客服问出</div>
+    <div class="pill" data-anim="up" data-t="8.0" style="font-size:32px;align-self:center;" data-ambient="float" data-amp="7.0" data-sp="0.32" data-ph0="0.7">最终靠人工客服问出</div>
   </div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
@@ -156,8 +156,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');

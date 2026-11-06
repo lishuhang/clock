@@ -61,7 +61,7 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#242020,#1a1716);"></div>
+    <div style="position:absolute;inset:0;background:#171412;"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
@@ -69,22 +69,32 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">不是聊天框，是无限画布</h1>
-<div style="margin-top:56px;display:flex;gap:30px;align-items:stretch;height:900px;">
-  <div class="card" style="flex:1;padding:34px;display:flex;flex-direction:column;" data-anim="fade" data-t="0.9" data-d="0.5">
+<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35">不是聊天框，是无限画布</h1>
+<div style="margin-top:52px;display:flex;gap:28px;align-items:stretch;height:880px;">
+  <div class="card" style="flex:1;padding:32px;display:flex;flex-direction:column;" data-anim="fade" data-t="3.8" data-d="0.5" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="0">
     <div style="font-size:32px;font-weight:700;color:#b5aea9;">普通网页聊天框</div>
-    <div style="margin-top:26px;background:#131110;border-radius:18px;padding:26px;font-size:30px;color:#a8a19b;">
-      你好，请帮我生成一个视频…<span style="display:inline-block;width:4px;height:34px;background:#9a9595;vertical-align:middle;"></span>
+    <div style="margin-top:26px;background:#131110;border-radius:18px;padding:26px;font-size:30px;color:#d8d2cd;line-height:1.6;min-height:170px;">
+      <span data-anim="typing" data-text="你好，请帮我生成一个视频……" data-t="4.3" data-d="3.2">你好，请帮我生成一个视频……</span><span style="display:inline-block;width:4px;height:34px;background:#9a9595;vertical-align:middle;"></span>
     </div>
+    <div data-anim="fade" data-t="7.7" data-d="0.4" style="margin-top:24px;background:#131110;border-radius:18px;padding:20px 26px;font-size:28px;color:#6b6666;">回复中，请稍候……</div>
     <div style="margin-top:auto;font-size:30px;color:#b5aea9;">一句一句等回复</div>
   </div>
-  <div data-anim="pop" data-t="2.2" data-d="0.5" style="align-self:center;font-size:70px;font-weight:900;color:var(--brand-deep);">VS</div>
-  <div class="card" style="flex:1.15;padding:22px;display:flex;flex-direction:column;overflow:hidden;border:3px solid var(--brand);" data-anim="up" data-t="3.0" data-d="0.55">
+  <div data-anim="pop" data-t="10.5" data-d="0.5" style="align-self:center;font-size:70px;font-weight:900;color:var(--brand-deep);" data-ambient="pulse" data-amp="0.02" data-sp="0.45">VS</div>
+  <div class="card" style="flex:1.15;padding:22px;display:flex;flex-direction:column;overflow:hidden;border:3px solid var(--brand);" data-anim="up" data-t="11.5" data-d="0.55" data-ambient="float" data-amp="4.0" data-sp="0.32" data-ph0="1.6">
     <div style="font-size:32px;font-weight:700;">无限画布型工作台</div>
-    <img src="../assets/shots/小云雀-首屏.jpg" style="margin-top:16px;border-radius:14px;object-fit:cover;width:100%;height:640px;">
-    <div style="margin-top:auto;font-size:30px;color:var(--brand-deep);font-weight:700;">节点铺开，资产沉淀，流程可视</div>
+    <div style="margin-top:14px;flex:1;overflow:hidden;border-radius:14px;position:relative;">
+      <img src="../assets/bili/纳逗Pro画布总览.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" data-anim="kb" data-kb="1,1,1.09,1.09">
+    </div>
+    <div style="margin-top:14px;font-size:30px;color:var(--brand-deep);font-weight:700;">节点铺开，资产沉淀，流程可视</div>
   </div>
 </div>
+<div style="margin-top:44px;display:flex;gap:26px;justify-content:center;">
+  <div class="pl" data-anim="pop" data-t="14.8" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0"><img src="../assets/logos/xiaoyunque_w.png" style="height:56px;object-fit:contain;">小云雀</div>
+  <div class="pl" data-anim="pop" data-t="15.7" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="0.9"><img src="../assets/logos/libtv.png" style="height:56px;object-fit:contain;">LibTV</div>
+  <div class="pl" data-anim="pop" data-t="16.6" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="1.8"><img src="../assets/logos/oiioii.png" style="height:56px;object-fit:contain;">OiiOii</div>
+  <div class="pl" data-anim="pop" data-t="17.5" data-d="0.35" data-ambient="float" data-amp="6.0" data-sp="0.32" data-ph0="2.7"><img src="../assets/logos/tapnow.png" style="height:56px;object-fit:contain;">TapNow</div>
+</div>
+
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -159,8 +169,8 @@ window.renderFrame = function (p) {
     }
     /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
     var amb = el.getAttribute('data-ambient');
-    if (amb && (!kind || t > t0 + d)) {
-      var at0 = kind ? t0 + d : 0;
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
       var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
       var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
       var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');
@@ -202,15 +212,8 @@ window.yzCheck = function () {
 </script>
 <style>
 .tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
 .card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
-.pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:#f2efec;}
-.brand{color:var(--brand-deep);}
-</style><script>window.SHOOT_KEYS=[0.9, 2.2, 3.0];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+.pl{display:flex;align-items:center;gap:14px;background:#1e1b19;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:14px 30px;font-size:32px;font-weight:700;color:#f2efec;}
+</style><script>window.SHOOT_KEYS=[0.15,3.8,4.3,7.6,10.5,11.5,14.8,15.7,16.6,17.5];window.SHOOT_DENSE=[[4.3,7.6,12]];window.SHOOT_KEYS=window.SHOOT_KEYS||[];window.SHOOT_DENSE=window.SHOOT_DENSE||[];</script>
 </body>
 </html>
