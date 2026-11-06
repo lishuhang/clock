@@ -3,12 +3,12 @@ name: explainer-video-studio
 description: 解说视频一站式生产管线（B站知识区/竖屏9:16风格）。用户一句话给出风格、主题、时长、素材来源（可含百度网盘 token），即可走完 事实核查→分镜表→TTS配音对齐→HTML canvas动效→受控时钟截帧→ffmpeg混音组装→成片质检 全流程。当用户要求"做解说视频/知识区视频/把文章或报告改成视频/竖屏短视频/科普视频/横评视频"时使用。
 ---
 
-# 解说视频工作室 · 一站式生产管线（v1.2，2026-11-06 实战固化）
+# 解说视频工作室 · 一站式生产管线（v2.0，防回归架构版）
 
-> **v1.2 修订（价格篇 v5 用户验收反馈固化）**：安全框正解为横屏 4:3（Y555~1365，1080×810）并全镜整改；字幕位规改为 Y1435~1545（宽 720）；画布最小字号规定；胶囊克制与同义反复清除；**抽象镜头动画化（LLM 推理前置到分镜阶段）**；libass 字体坑（fontsdir 不可靠→系统注册）；双版本交付（竖屏 + 横屏 4:3 crop）。
-> **v1.1 修订（价格篇 v4 用户验收反馈固化）**：新增七条通用硬规则（禁间隔号/思考不入画/最小信息/定格≤3s/举一反三/动效统一/品牌实体用logo）+ B-roll 影片前景展示模式 + 成片提速能力。版本线统一为 1.x：本版含并此前内部 v2.0 草案（实测对齐/帧数精确/B站素材/黑底换肤）全部内容。修 bugs 详情见 `references/pipeline.md` §7-§8。
+> **v2.0 修订（规整轮）**：①铁律去项目化——项目专属数值（安全框坐标/字幕位/配色）移入"项目档案 Profile"机制，通用规则与项目参数分离，防止跨项目污染；②新增**防回归协议**（`references/anti-regression.md`）：单一事实源 + 开工对账 + 重写对账 + 感知维度门禁，来自实战中"已修复问题三度回归"的血泪复盘；③新增**文档优先协议**：外部平台操作先查路由表，探索是最后手段；④新增铁律：真实影片素材原生比例呈现。
+> v1.x 版本史见文末。
 
-本 skill 由四源整合：Remotion 渲染合规调研（水印/许可）、Gemini 视频任务防踩坑指南（Token 黑洞与 H5 受控截帧架构）、娱资信息图 skill v3.2（品牌视觉系统）、1105 画布横评三集视频实操（网盘素材管线 + 分镜表方法论 + timeline JSON）。
+本 skill 由五源整合：Remotion 渲染合规调研、Gemini 视频任务防踩坑指南（Token 黑洞与 H5 受控截帧架构）、娱资信息图 skill（品牌视觉系统）、三部曲解说片实操（网盘素材管线 + 分镜方法论 + timeline JSON）、v6 复盘轮（防回归架构）。
 
 ## §0 一句话用法（对用户的承诺）
 
@@ -22,100 +22,129 @@ description: 解说视频一站式生产管线（B站知识区/竖屏9:16风格�
 | 只有主题（连文案都没有） | Step 0 选题+文案 | 按 `references/style-guide.md` 的改编 SOP/文风配方写口播稿（用户确认后才进分镜） |
 | 有文章/报告（要改编） | Step 0.5 文案改编 | 同上，保骨肉去水分，口径以用户终稿为准 |
 | 有口播终稿 | Step 1 事实核查 | `facts-gate.md` 门禁 |
-| 有终稿+配音 | Step 3 对齐 | **whisper 实测对齐**：本地 faster-whisper（hf-mirror 拉模型）词级时间戳 + silencedetect 双校准（`scripts/align_final.py`），句首误差≤0.3s；字数权重只作兜底 |
+| 有终稿+配音 | Step 3 对齐 | **配音实测对齐**：本地 faster-whisper（hf-mirror 拉模型）词级时间戳 + silencedetect 双校准（`scripts/align_final.py`），句首误差≤0.3s；字数权重只作分镜预览，**严禁直接投产** |
 | 什么都有只要成片 | Step 4 起投产 | 按 timeline JSON 逐镜生产 |
 
-素材来源决策：百度网盘（token→`scripts/netdisk.py`/`batch_download.py`，只读不上传）｜本地文件｜外部平台（见 `references/video-downloader-skill.md`：B站免登录720p、微博游客、小红书需cookie、YouTube数据中心IP死路）｜自制 canvas 动效（本 skill 主力）。
+**开工第一件事（不讨论例外）**：若项目有上一轮的工作仓，先跑 `assemble_* setup` 对账断言（或等价核对：字幕/分镜/时间轴与已验收交付物逐条对账），对平了才动第一根手指。详见 `references/anti-regression.md`。
 
-## §2 十步状态机（每步完成即落盘 `.step_N_done` 标记，幂等可续跑）
+素材来源决策：百度网盘（token→`scripts/netdisk.py`/`batch_download.py`，只读不上传）｜本地文件｜外部平台（**先查** `references/video-downloader-skill.md` §2 路由表）｜自制 canvas 动效（本 skill 主力）。
+
+## §2 项目档案 Profile（通用规则与项目参数分离）
+
+**所有版式数值（安全框坐标、字幕位、字号体系、配色、双版本策略）都不是 skill 的硬编码，而是项目档案参数。** 新项目开工时从用户反馈/参考视频中实测确定，写入项目 README 的 Profile 区；跨项目复用本 skill 时必须重新确认，禁止沿用上一项目的数值。
+
+默认参考档案（来自实战项目验收，**仅作缺省示例**）：见 `references/layout-spec.md` §0——9:16 画布 + 4:3 横屏安全框（切上下黑边即得横屏版）+ 框外底部字幕条 + 品牌橙强调 + 阿里普惠体。
+
+## §3 十步状态机（每步完成即落盘 `.step_N_done` 标记，幂等可续跑）
 
 ```
 Step 0  选题与文案（若需）      → script.md（口播终稿，须用户批准）
 Step 1  事实核查门禁            → facts_ledger.json（校验不过禁止进 Step 2）
 Step 2  分镜表                  → storyboard.md + timeline.json（须用户批准）
-Step 3  配音与对齐              → audio/S##.mp3 + aligned-timeline.json（既有配音走 whisper 实测对齐，见铁律13）
-Step 4  素材拉取                → assets/（网盘/外部/截图，含 meta 留痕）
+Step 3  配音与对齐              → audio/S##.mp3 + 字幕权威卡 JSON（入库！见铁律 A6）
+Step 4  素材拉取                → assets/（网盘/外部/截图，含 meta 留痕；外部平台先查路由表）
 Step 5  canvas 动效制作         → canvas/S##.html（受控时钟 renderFrame API）
-Step 6  受控截帧                → frames/S##/ + render-manifest.json（v3：入场窗30fps∪2fps网格∪页面SHOOT_DENSE窗，见铁律15）
-Step 7  组装混音                → build/（帧数精确架构：逐镜 n=round(dur×30) 段编码 + concat -c copy，见铁律14）
-Step 8  质检门禁                → BUILD_SUCCESS 或打回（坏帧/黑屏/响度/水印/乱码）
-Step 9  交付                    → output/ 成片+srt+timeline+报告
+Step 6  受控截帧                → frames/S##/ + render-manifest.json（入场窗30fps∪2fps网格∪DENSE）
+Step 7  组装混音                → build/（帧数精确架构 + setup 对账断言，见铁律 C 组）
+Step 8  质检门禁                → BUILD_SUCCESS 或打回（技术健康 G1-G7 + 感知维度 G8-G10 + 锚点目检）
+Step 9  交付                    → output/ 成片+srt+timeline+报告；决定正确性的中间件同步入库
 ```
 
-工作目录结构（固定，长任务防崩）：`project/{script.md, facts_ledger.json, storyboard.md, timeline.json, audio/, assets/, canvas/, frames/, build/, output/, worklog.md}`。**每完成一步 commit+push 到用户指定的 Git 工作仓（若有）**；网盘源文件永不入 Git，只入切片/半成品/canvas HTML。
+工作目录结构（固定，长任务防崩）：`project/{script.md, facts_ledger.json, storyboard.md, timeline.json, 字幕权威卡.json, canvas/, frames/, build/, output/, worklog.md}`。**每完成一步 commit+push 到用户指定的 Git 工作仓（若有）；网盘源文件永不入 Git，只入切片/半成品/canvas HTML；"决定正确性的中间产物"（对齐字幕卡、分镜 JSON、关键脚本）与作品同级入库**。
 
-## §3 硬性铁律（全部来自实测血泪，违反=返工）
+## §4 硬性铁律（分六组，全部来自实测血泪，违反=返工）
+
+### A. 工程纪律
 
 1. **只有必须用 token 的才交给 AI**：可复用的一切（下载/截帧/对齐/组装/质检）必须脚本化；AI 只产出 JSON 配置与文案，不手写执行命令。
-2. **禁实时录屏**：Playwright `record_video_dir` 在沙盒高负载下掉帧导致音画错位；一律走受控时钟 `renderFrame(payload)` 截帧，静态区间单帧复用（`-loop 1 -t` 延展），只有动效窗口按 fps 截。
-3. **ffmpeg 永远 `-nostdin -y`**；文字渲染 100% 走 HTML/CSS（或 PIL 降级），禁用 `drawtext`（沙盒常缺 freetype/中文字体）。
-4. **字体本地加载**：`assets/h5_templates` 与信息图包自带阿里普惠体/思源系，`@font-face` 用本地绝对路径，禁 Google Fonts/CDN；截帧前 `await document.fonts.ready`。
-5. **外部素材失败预算**：每素材重试≤1 次、超时 5s 即回退 canvas 自制动效或网盘替代素材；静态图优先于视频（Ken Burns 补动效）。
-6. **TTS 分句合成，严禁整篇**：跨句累积误差不可救；句内字幕按"汉字权重1.0+句末标点1.2"线性映射实测时长，误差<0.1s。既有一整条配音时用 `--existing` 静音切分重对齐。
-7. **事实门禁前置**：`facts_ledger.json` 每条数字带 claim/raw_inputs/formula/source_url/is_estimated，`verify_facts.py` 重算不过 = 禁止开写分镜；推算值画面自动打"\*推算"角标。
-8. **节奏方差**：hook_punch(2~4s 大字+boom) / fast_list(3~5s 卡片+pop) / deep_explain(8~15s 流程图) 三型交替，相邻两个 deep 之间必须插暴击或快闪（防匀速念经）。
-9. **成片强制机器质检**：`ffmpeg -v error -f null` 零坏帧 + LUFS -14~-16 + 无黑屏段 + 抽帧 contact sheet 无乱码豆腐块 + 分辨率/时长复核；输出 `BUILD_SUCCESS` 才可交付。
-10. **渲染水印合规**：若用 Remotion 渲染任何片段，交付前必须 `ffmpeg -c copy -metadata comment=" "` 清除 `Made with Remotion` 容器元数据（画面本身无水印，详见 `references/pipeline.md` §6）。
-11. **token/cookie 永不落盘**：只走环境变量，不进任何产物/日志/Git。
-12. **网盘只读**：素材只拉不上传；用户 GitHub 仓只放中间件与半成品（≤99MB/文件）。
-13. **配音实测对齐，禁字数权重直接投产**：字数权重×平均语速的估算全片可漂移 ±27s（1105 实测，用户在 27s 处即感知音画不同步）。既有整条配音必须 whisper（本地 faster-whisper，HF 429 时走 hf-mirror.com 手动下 model.bin/config/tokenizer/vocabulary）+ silencedetect 静音区间双校准；字幕分卡时间用词锚定；估算值仅用于分镜表预览列。
-14. **帧数精确组装，禁 concat demuxer 图像时长**：concat 清单里 PNG 的 `duration` 会被量化到 1/25s 网格（实测每镜 +0.01~0.02s，43 镜累积近 0.9s 漂移）。正确架构：每镜 `n_i = round(dur_i×30)`，序列物化（符号链接指向渲染帧，按"最大 t′≤k/30"映射）→ 逐镜 `-framerate 30 -i seq -frames:v n_i` 编码 → `concat -c copy -video_track_timescale 30000`；终渲 A/B 分段用 `-frames:v` 而非 `-t`（`-t` 会在段边界丢 2~3 帧）。全片帧数必须 == round(总长×30)。
-15. **截帧必须覆盖全部动效时刻**：v1 渲染器只截前 1.5s 入场窗，data-t>1.5s 的元素全部丢失（42/43 页中招）。v4 时刻集 = 开场窗(0.5s@30fps) ∪ **自动入场窗（解析 HTML data-t/data-counter，每个入场时刻 ±0.45s@15fps，counter 按ramp全程@12fps）** ∪ 基础网格(2fps 全程，承载环境微动) ∪ 页面 `SHOOT_DENSE=[[t0,t1,fps],...]` 声明 ∪ 尾帧；页面动画超过 2fps 采样密度时必须声明 DENSE。
-16. **B站真实素材铁律**：①作品/影片类素材找原片片段做背景叠底（压暗 82% scrim），不用 canvas 模拟；②播放量/点赞等外部数字证据一律网页截图+裁切（m.bilibili.com 移动页免验证码截播放量；player.bilibili.com 外链播放器 DOM 截点赞数——游客只见前 3 条热评，名人评价用新闻报道段落截图留证）；③下载通路：`pagelist` API 拿 cid → `playurl?platform=html5&high_quality=1` 游客 720p（view API/视频页有 412/验证码墙勿碰；CDN 掐长连接用 `curl -C -` 断点续传）；④ B31 试看钳制：durl 声称时长≠实际可解码时长，下载后必须 ffprobe 体检。
-17. **黑底暗色系（本类解说片专用）**：小Lin说式黑底片一律暗色系——底 `#131110`/面板 `#1e1b19`/正文 `#f2efec`/次级 `#b5aea9`/线 `#3a3634`；**品牌橙 #fc8166/#e55b46 原样保留**（黑底白字、橙高亮不违反品牌规范，属本类片的合法换肤）；yz-infographic 白底信息图进入本类视频前必须按映射表换肤（见 layout-spec §2b）；白底网页截图用深色卡片承托；深色 logo 白底键出透明（距白 <8 → alpha 0），纯黑字形反转白色。
-18. **禁用间隔号（·）**：画面内任何文字不得用间隔号 `·` 作美化分隔元素，也不得用间隔号替代换行。替代方案：同一句内用逗号/顿号连成一个人说的话；并列的独立信息（来源/日期/口径）各自换行。`《XX·XX》` 类含间隔号的引用标题改写为 `《XX》XX`。交付前全局 grep `·` 必须为零（含 HTML 注释与 title 标签）。
-19. **思考过程不入正文**：制作侧的思考/口径说明（如「实测口径」「视频页截图取证」「重制版实证」这类括注）不得括注在画面正文里；口径与来源信息只保留事实核查必需的最小项，其余进 production-report.md。画面是给观众看的，不是给制作者看的。
-20. **最小信息原则（如无必要，勿增实体）**：每个故事板只保留解释画面所需的最小必要信息，但不得精简到看不懂。像 PPT 演讲——幻灯片只写讲话人实际说过的内容，没说的就不加；「B站播放量(视频页截图)」→「B站播放量」。反例间同样适用：解释画面所需的关键口径不可删（如表格的统计口径行）。
-21. **画面定格≤3s**：单个画面定格不得长于 3s；多元素可逐级浮现，但全部定格后不得超过 3s 必须再有变化。画面内为视频且播放中不算定格，但原则上 3s 后仍须切画面。静态画面必须保持动感：模拟聊天框打字（typing）、截图轮换/内嵌视频片段、环境微动（float/pulse，见 layout-spec §四b）。入场时刻按台词读音逐级浮现（元素出现时机≈该内容被念到的时刻），不得前 2s 全部弹完然后长静止。
-22. **举一反三排查**：修任何问题时，同类问题必须全片排查（发现一处 `·` 就 grep 全部 43 页；发现一处>3s 定格就扫全部镜头的尾滞与空窗）。但举一反三仅限确定同类别的问题，不得连带修改不相关的内容。
-23. **动效统一**：故事板之间的硬切是节奏语言，不代表镜内动效可以硬切。同一镜内元素入场必须用同一套动效词汇（同一缓动/同一入场原语），环境微动全片统一（幅度/频率一套参数）；新增镜头必须与全片动效语言一致。
-24. **品牌实体必用官方 logo**：画面讲到具体平台/公司/产品时，必须使用项目提供的官方 logo 素材，不得纯文字代替（标题行内嵌 logo、卡片带 logo、logo 墙等形式均可）。logo 素材缺失时先向用户索取或从官网提取，不得用自绘文字冒充。
-25. **4:3 安全框 = 横屏 1080×810（Y555~1365）**：竖屏 9:16 画面里，全部主体内容必须完整落在 **4:3 横屏比例**的安全框（1080×810 居中，Y=555~1365）内——切掉上下黑边即得 B站横屏版（铁律 31 双版本）。旧解「1080×1440 竖框（Y240~1680）」是错误理解：按旧解排布的内容切横屏后上下都会丢。落地手段：布局审计脚本逐镜测元素 rect（Playwright 快进到镜末后量边界），0 溢出才算合规；`#stage{top:555px;height:810px}`。
-26. **画布内最小字号（1080 宽基准）**：正文 ≥28px、标签/角标/来源注 ≥24px、卡片标题 ≥28px；logo 图片显示高度 ≥78px（网格内）/≥84px（单行展示）。竖屏与横屏 1:1 共用画面，过小字号在两个版本都无法辨认——「看得清」是硬门槛，不是审美偏好。
-27. **胶囊克制 + 同义反复清除**：胶囊高亮（pill）能不用就不用——为填充胶囊而写的复述/凑数废话一律禁止。判断：胶囊内容必须是新信息（特例、乘积结论、台词未覆盖的事实），复述标题或台词的胶囊删除。同义反复同理：小字标签与大字内容同义时删小字（例：「全网传播」标签 +「全网播放破亿」大字 → 删标签）。
-28. **抽象镜头动画化（LLM 推理前置到分镜阶段）**：分镜表阶段就对抽象概念（沉没成本/迁移难/同质化/门槛）运用推理能力设计「用动画讲故事」的方案——推箱子、下台阶、金币沉底、盖章、迷宫等视觉隐喻；这类动画连续运动（SHOOT_DENSE 8~12fps 全程），即使屏内超 3s 也不无聊（铁律 21 的合法豁免：一直在动≠定格）。文字罗列镜优先改造为视觉隐喻（例：四级台阶列表 → 错位阶梯+亮度递减，「越往下越难」直接被看见）。在分镜表就想好「这个概念怎么用动画讲」，而不是做成静态文字卡后靠入场动效补救。
-29. **字幕位规 v2（Y1435~1545）**：字幕框顶部 Y=1435、底部 Y=1545、高 110px、宽 720px（左右各留白 180px），位于 4:3 安全框外的底部黑边内（用户图上实测位）。ASS 实现：Alignment 2 + **MarginV=375** + **MarginL/R=180** + 字号 68；动态字号（视觉长度>10.2 字→`{\fs56}`、>12.5 字→`{\fs48}`，WrapStyle=2 不折行）。旧 1740 位作废。
-30. **libass 字体坑：fontsdir 不可靠，必须系统注册**：ffmpeg `subtitles` 滤镜的 `fontsdir` 在部分环境无法匹配 family 名（实测：三字重同 family 的 ttf 经 fontsdir 喂给 libass 匹配失败，中英混排 fallback 成 DejaVu Sans（英文）+系统中文字体（观感割裂）。正确做法：**字体 ttf 复制到 `~/.fonts` + `fc-cache -f` 系统注册**（组装脚本 `setup` 段自动执行并断言 `fc-match` 命中），fontsdir 保留作双保险；ASS `Fontname` 必须写 `fc-scan` 查到的精确 family 名（如 `Alibaba PuHuiTi 3.0`）。交付前抽帧目检字幕字形是否为目标字体。
-31. **双版本交付（竖屏 + 横屏 4:3）**：B站分发同步输出横屏版 = 竖屏 `crop=1080:810:0:555`。管线：水印在 crop 前叠加（全屏图自动取中段）→ crop → 进度条 crop 后重画（顶部 y=0~8）→ 横屏字幕单独重烧（ASS PlayResY=810、MarginV=36、字号 56/44/38 动态，烧在画面内底部）。横屏版与竖屏版共用 vtrack/音频/提速参数，QC 双版本全过才交付。
+2. **ffmpeg 永远 `-nostdin -y`**；文字渲染 100% 走 HTML/CSS（或 PIL 降级），禁用 `drawtext`（沙盒常缺 freetype/中文字体）。
+3. **token/cookie 永不落盘**：只走环境变量，不进任何产物/日志/Git。
+4. **网盘只读**：素材只拉不上传；用户 Git 仓只放中间件与半成品（≤99MB/文件）。
+5. **脚本即时入库**：写完就 commit，不许"用完再存"——沙盒回收不等人（实测：下载器脚本用完未入库，下一轮被迫重写）。
+6. **中间产物分级入库**：作品（成片/srt）≠事实（对齐字幕卡/分镜JSON/时间轴）。**凡是用户验收过的东西，它的再生产依据必须同刻入库，并在文件头写清血缘（`_provenance`：生成方式/依据/验收状态）**。仓库里不许存在"名字合理但血统不明"的同类文件。
 
-## §4 画面与动效规范
+### B. 渲染与组装
 
-见 `references/layout-spec.md`（9:16 全幅背景 + **4:3 横屏安全框 Y555~1365** + 底部黑边字幕带 Y1435~1545 / 品牌色字体 / 13 个 canvas 模板枚举 / 信息图 HTML 复用法 / B-roll 影片前景展示模式 / 环境动效原语 / **抽象镜头动画化方法论** / 最小字号规定）。若用户未指定品牌系，默认用该 spec 的中性科技配色；娱资项目强制品牌系（#fc8166/#e55b46 + 阿里普惠体 + 河豚 logo）。
+7. **禁实时录屏**：Playwright `record_video_dir` 在沙盒高负载下掉帧导致音画错位；一律走受控时钟 `renderFrame(payload)` 截帧，静态区间单帧复用，只有动效窗口按 fps 截。
+8. **帧数精确组装**：concat demuxer 对图像序列的 duration 会量化到 1/25s 网格（每镜 +0.01~0.02s，长片累积秒级漂移）。正确架构：每镜 `n_i=round(dur_i×fps)` 序列物化 → 逐镜编码 `-frames:v n_i` → `concat -c copy -video_track_timescale <fps×1000>`；分段终渲用 `-frames:v` 而非 `-t`；全片帧数必须 == round(总长×fps)。
+9. **截帧覆盖全部动效时刻**：时刻集 = 开场窗 ∪ 自动入场窗（解析 data-t/data-counter）∪ 基础网格（承载环境微动）∪ 页面 `SHOOT_DENSE` 声明 ∪ 尾帧；页面动画超过网格采样密度时必须声明 DENSE。
+10. **字体本地加载**：`@font-face` 用本地绝对路径，禁 Google Fonts/CDN；截帧前 `await document.fonts.ready`；ASS 烧录字体必须**系统注册**（ttf 复制 `~/.fonts` + `fc-cache`，`fontsdir` 不可靠），`Fontname` 写 `fc-scan` 精确 family 名，交付前抽帧目检字形。
+
+### C. 对齐与同步（音画不同步是观众最先感知的维度）
+
+11. **配音实测对齐，禁字数权重投产**：字数权重×平均语速全片可漂移 ±20s 以上，观众在几十秒处即可感知。既有整条配音必须 whisper（本地 faster-whisper，HF 429 走 hf-mirror 手动下模型）+ silencedetect 双校准；字幕分卡用词锚定。估算值只用于分镜预览列。
+12. **TTS 分句合成，严禁整篇**：跨句累积误差不可救；句内字幕按"汉字权重1.0+句末标点1.2"线性映射实测时长。
+13. **字幕单一事实源**：每个项目只允许一个权威字幕卡 JSON（带 `_provenance` 血缘头）。组装脚本只许引用它；**开工时必须先与已验收的 srt 交付物逐卡对账**（卡数/文本/时间差阈值），对不上拒绝开工——这一步 30 秒，能省整轮重制。
+14. **成片提速不变调**：`setpts=PTS/k,fps` + `atempo=k` 一步完成；外挂 srt 全部时间戳 ÷k；QC 按新时长验收。
+
+### D. 内容与设计
+
+15. **事实门禁前置**：`facts_ledger.json` 每条数字带 claim/raw_inputs/formula/source_url/is_estimated，重算不过禁止开写分镜；推算值画面自动打"\*推算"角标；口径矛盾不静默改用户数字。
+16. **节奏方差**：hook_punch / fast_list / deep_explain 三型交替，相邻两个 deep 之间必须插暴击或快闪。
+17. **最小信息原则**：每镜只保留解释画面所需的最小必要信息，但不得精简到看不懂——像 PPT 演讲，只写讲话人实际说过的内容；口径类关键信息不可删。
+18. **画面定格≤3s**：全部元素入场完毕后不得长于 3s 无变化；静态画面必须保持动感（typing/截图轮换/环境微动 float/pulse）；入场时刻按台词读音逐级浮现。连续动画（一直在动）是合法豁免。
+19. **抽象镜头动画化（推理前置到分镜阶段）**：分镜表阶段就对抽象概念设计"用动画讲故事"的视觉隐喻（推箱子/下台阶/盖章/迷宫），连续运动全程 DENSE；不要做成静态文字卡后靠入场动效补救。方法论见 layout-spec §八。
+20. **动效统一**：同一镜内一套入场原语；环境微动全片一套参数；镜间硬切是节奏语言，镜内不硬切。
+21. **品牌实体必用官方 logo**；禁用间隔号 `·` 作美化分隔/替代换行（同句用逗号顿号，并列独立信息各自换行）；制作侧思考/口径括注不入画面正文。
+22. **举一反三排查**：修一处问题时同类全片排查（grep/全镜扫描），但仅限确定同类，不动无关内容。
+
+### E. 素材
+
+23. **外部素材失败预算**：每素材重试≤1 次、超时 5s 回退 canvas 自制动效或替代素材；静态图优先于视频。
+24. **文档优先协议**：任何外部平台操作（下载/搜索/截图）前，**先查 `references/video-downloader-skill.md` 路由表并按表执行**；表中没有的通路才允许探索，探索预算=1 次换法，探索结论立即回写文档。禁止"凭印象先试一路撞墙再回头翻文档"。
+25. **真实影片素材原生比例呈现（铁律，违者观众秒感知）**：
+    - 影片作为**展示主体**（B-roll 前景/证据片段）：**fit 模式**——等比缩放进安全框舞台，完整可见，letterbox/pillarbox 用底色 pad，禁止裁切放大；
+    - 影片作为**氛围底**（scrim 压暗做背景纹理）：可 cover 舞台框（等比放大后裁切，无拉伸），竖版源全宽可见；
+    - **任何模式都禁止非等比拉伸**；QC 必须做几何断言（抽帧实测窗口矩形 == ffprobe 源分辨率推算值）。
+    - 记住：`force_original_aspect_ratio=increase` + crop 对 16:9 源铺满 9:16 = 横向只可见 ~32%——这不是"风格"，是事故。
+
+### F. 质检与交付
+
+26. **机器门禁两级**：技术健康（G1-G7：零坏帧/帧数/时长/分辨率/响度/无长黑屏/无渲染器元数据）+ **感知维度（G8-G10：字幕对账/素材几何/进度条与UI连续性）**，模板见 `references/anti-regression.md` §4。全部 PASS 才 BUILD_SUCCESS。
+27. **目检锚点化**：VLM/人眼抽帧检查必须"先算期望再对照实读"（字幕锚点/几何锚点），不做自由描述——感知级检查会误报（实测：把源片贴地特写误判为拉伸变形），几何争议一律像素 diff 仲裁。
+28. **渲染水印合规**：若用 Remotion 渲染，交付前清容器元数据。
+29. **双版本交付**（若项目档案要求横屏版）：crop 切框前后顺序要明确（水印先叠后切、进度条切后重画、字幕独立重烧），双版本 QC 全过才交付。
 
 ## §5 管线脚本（`scripts/`，均可独立运行）
 
-| 脚本 | 作用 | 关键参数 |
+| 脚本 | 性质 | 作用 |
 |---|---|---|
-| `env_check.py` | 环境自检（node/playwright/ffmpeg/字体/网盘token）输出能力清单 | `--netdisk` 顺带验 token |
-| `make_storyboard.py` | 口播稿→分镜表 md + timeline.json（段/句切片数据 + 字数权重时间码；有整条配音时按实测时长反推语速） | `--audio-sec 740.36` 校准 |
-| `tts_align.py` | 逐句 TTS（tts.lishuhang.com，Playwright 自动化）+ 静音裁切 + 时间轴重算；`--existing` 模式对齐整条既有配音 | `--voice`（站点内音色） |
-| `h5_render.py` | timeline + canvas HTML → 受控截帧（renderFrame 注入，动效窗口 30fps，静态复用）→ concat 清单 | `--fps 30` |
-| `ffmpeg_master.py` | 总装混音（v1 基础版） | 视频轨+人声+BGM(ducking -13.5dB)+音效 → loudnorm → 质检 → BUILD_SUCCESS；含 Remotion 元数据清除 | `--bgm-loop` 无缝循环 |
-| `ffmpeg_master_v2.py` / `ffmpeg_master_v2_seg.py` | 总装混音 v2（1105 价格篇实战版）：ASS白字黑边字幕烧录 + sendcmd/drawbox 动画进度条 + 全屏水印顶层叠加 + BGM闪避修正(sidechaincompress双输入+aformat统一采样率)；`_seg` 分段模式绕沙箱600s命令超时，段B字幕/cmds自动偏移，幂等续跑 | `--preview-ts 10,300,700` 出静帧目检 |
-| `align_final.py` / `subs_real.py` | **v2 新增**：whisper 词级时间戳 + 脚本字符流模糊对齐 + 静音边界吸附 → 每句实测时间码 + jieba 词边界字幕分卡 | 先跑 faster-whisper 全片转写出 whisper_segs.json |
-| `h5_render_v3.py` | 受控截帧 v3（入场窗∪2fps网格∪DENSE 窗 + render-manifest + 透明叠层模式 `TRANSPARENT_SHOTS`） | `--only S01,S02` 幂等续跑 |
-| `h5_render_v4.py` | **v1.1 新增**：截帧 v4（解析 data-t 自动生成入场窗@15fps + counter 窗@12fps + 2fps 网格），入场动画全程平滑 | `--only S01,S02` 幂等续跑 |
-| `assemble_v3.py` | 帧数精确总装（bg 视频段/seq 序列物化/逐镜 enc/concat/final A-B/audio/mux/qc 七段幂等） | `python3 assemble_v3.py bg\|seq\|enc\|cat\|final\|audio\|mux\|qc` |
-| `assemble_v4.py` | 总装 v4（分镜分拆 a/b + BG 多源视频背景带偏移 + `speed` 段：成片整体提速 setpts+atempo 不变调 + srt 同步重定时） | `python3 assemble_v4.py bg\|seq\|enc\|cat\|final\|audio\|mux\|speed\|qc` |
-| `assemble_v5.py` | **v1.2 新增**：总装 v5（`setup` 段字体系统注册防 libass fallback；字幕位 Y1435~1545 + 动态字号 68/56/48；`final_h`/`mux_h`/`speed_h` 段：横屏 4:3 版 crop+独立字幕+同速提速；双版本 QC） | `python3 assemble_v5.py setup\|bg\|seq\|enc\|cat\|final\|final_h\|audio\|mux\|mux_h\|speed\|speed_h\|qc` |
-| `netdisk.py` / `batch_download.py` | 网盘 quota/list/search/meta/download / 按正则批量（tree.json fs_id 直连） | token 走环境变量 |
+| `env_check.py` | 通用 | 环境自检（node/playwright/ffmpeg/字体/网盘token） |
+| `make_storyboard.py` | 通用 | 口播稿→分镜表 + timeline.json（字数权重时间码仅预览） |
+| `tts_align.py` | 通用 | 逐句 TTS + 静音裁切；`--existing` 对齐整条既有配音 |
+| `align_final.py` / `subs_real.py` | 通用 | whisper 词级对齐 + jieba 词边界字幕分卡 |
+| `make_canonical_subs.py` | 通用 | 从已验收 srt 反向构建权威字幕卡 JSON（带 `_provenance` 血缘头）——防"沙盒回收后旧文件顶上" |
+| `netdisk.py` / `batch_download.py` / `para_dl.py` | 通用 | 网盘 quota/list/search/meta/download / 批量 / 大文件并行 Range |
+| `h5_render_v3.py` / `h5_render_v4.py` | 通用 | 受控截帧（v3 基础版 / v4 自动入场窗版，幂等续跑） |
+| `ffmpeg_master*.py` / `assemble_v3~v6.py` | 实战模板 | 总装混音各版本（**路径常量为项目实例，复用改 WORK/REPO 常量**）。v6 = 防回归架构参考实现：setup 对账断言 + bg 双模式 + G8-G10 门禁 |
+| `dl_bili_v2.py` / `bili_shots.py` | 实战模板 | B站下载（按 video-downloader 路由表实现） |
+| `dark_convert.py` / `fix_logos.py` | 实战模板 | 亮色资产暗色换肤 / logo 透明化 |
 
 ## §6 与其他 skill 的协作
 
-- 素材外部下载：`references/video-downloader-skill.md`（8 平台通路+16 条踩坑，2026-11 实测）
-- 图表/信息图：`references/yz-infographic-skill.md`（娱资品牌图表规范与 11s 动效引擎；横评项目信息图 HTML 可直接改造为 canvas 动效底版）
+- 素材外部下载：`references/video-downloader-skill.md`（8 平台通路+踩坑，路由表优先）
+- 图表/信息图：`references/yz-infographic-skill.md`（品牌图表规范与动效引擎）
 - 图像生成/搜索：宿主 `image-generation`/`image-search` skill 可补外部静图（失败回退 canvas）
 
 ## §7 交付规范
 
-`output/` 内：`成片.mp4`（1080×1920×30fps H.264）+ `字幕.srt`（Aegisub/B站投稿均兼容）+ `timeline.json`（复用改版）+ `production-report.md`（事实账本核对结果、素材来源清单、音画对齐误差、质检输出、已知妥协）。口径矛盾（不同来源数字打架）在报告中列明并说明采用理由，**不静默修改用户文案数字**。
+`output/` 内：`成片.mp4` + `字幕.srt` + `timeline.json` + `production-report.md`（事实账本核对、素材来源清单、音画对齐误差、质检输出、**已知妥协清单**——妥协必须显式列出并评估用户感知风险，不许静默）。
 
 ## §8 实战样例
 
-`examples/timeline-ep1.json`：1105 画布横评·价格篇（46 镜/12:20/真实配音校准，v4 分拆版）。完整工作现场：GitHub `lishuhang/clock` → `1105-canvas-test-videos/`（含三集分镜表、素材地图、时间线复原）。
+`examples/timeline-ep1.json`：某三部曲第一集 46 镜分镜（**实例数据，仅供格式参考，禁止作为新项目数据源**）。完整工作现场与五轮修复复盘：GitHub 工作仓 `05-retro/RETRO.md`。
 
-## §9 版本史
+## §9 防回归协议与文档优先协议（v2.0 核心，必读）
+
+详见 `references/anti-regression.md`。三句话版本：
+
+1. **修复的完成标志不是"这次对了"，而是"下次想错都错不了"**——每个 bug 修复必须落成机器断言（setup 对账 / QC 门禁）。
+2. **单一事实源 + 开工对账**——权威数据只有一个文件、带血缘头；新会话开工先对账旧世界的账。
+3. **查表优先，探索殿后**——外部操作先路由表，worklog 引用所循文档行；无文档才探索，探索结果回写文档。
+
+## §10 版本史
 
 - **v1.0**（2026-11-05）：四源整合初版，十步状态机 + 12 铁律。
-- **v1.1**（2026-11-06）：价格篇 v3→v4 修复轮全部沉淀。含并内部 v2.0 草案（铁律 13-17）与 v4 验收反馈（铁律 18-24；字幕位 1740px；B-roll 影片前景展示模式；分镜分拆 a/b；成片提速段）。
-- **v1.2**（2026-11-06）：价格篇 v5 验收反馈固化：安全框正解为横屏 4:3 Y555~1365（铁律 25，旧竖框作废）；画布最小字号（铁律 26）；胶囊克制与同义反复清除（铁律 27）；抽象镜头动画化·LLM 推理前置（铁律 28，S08 推箱子/S09 盖章/S29 错位阶梯为样板）；字幕位规 v2 Y1435~1545（铁律 29，1740 作废）；libass 字体系统注册（铁律 30）；双版本交付竖屏+横屏（铁律 31）。
+- **v1.1**（2026-11-06）：实测对齐/帧数精确/B站素材/黑底换肤 + 间隔号/最小信息/定格≤3s/动效统一/logo 强制（铁律 18-24）。
+- **v1.2**（2026-11-06）：安全框正解/最小字号/胶囊克制/动画化前置/字幕位 v2/libass 字体坑/双版本交付（铁律 25-31）。
+- **v2.0**（2026-11-06 规整轮）：**铁律去项目化**（数值入 Profile，防跨项目污染）；**防回归协议**（单一事实源/开工对账/重写对账/感知维度门禁/锚点目检——来自"三处已修复问题全部回归"的复盘）；**文档优先协议**；新增真实影片原生比例铁律；铁律重组为 A-F 六组 29 条。

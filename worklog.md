@@ -569,3 +569,29 @@ Stage Summary:
   6. bg 段踩坑：repo 的 paizi_bg/sss_bg.mp4 仅 14s 样本，-ss 36.0 产 317 字节空流 → dl_bili_v2.py 重下完整原片（464.8s/213.5s）后正常
   7. 组装：assemble_v5（final/final_h/mux/mux_h/speed/speed_h/qc 双版本段）；speed 段一次被 600s 超时截杀致 moov 损坏，重跑恢复；QC G2 容差 ±2→±15 帧（与 G3 ±0.5s 对齐，提速重采样固有漂移 ≤11 帧）
 - **Stage Summary**: 成片 v5 双版本（竖屏 1080×1920 66MB / 横屏 1080×810 50MB，673.2s，1.1x 提速）+ 字幕 srt + skill v1.2（31 铁律，含 7 条新铁律：安全框正解/最小字号/胶囊克制/动画化推理前置/字幕位 v2/libass 字体坑/双版本交付）全部交付 download/；qc_report_v5 BUILD_SUCCESS；已 push（c8e8a34）。
+
+---
+Task ID: 1105-ep1-v6-retro
+Agent: Z.ai (GLM)
+Task: 老板审片三反馈复盘轮：复盘记录 + v6 三修复重制（音画同步/影片比例/进度条）+ skill v2.0 规整（防回归架构）
+
+Work Log:
+- 现场复原：全量 clone clock 仓（非稀疏，410文件），通读 README/RESUME/worklog/production-notes/skill v1.2/assemble_v3~v5 源码，复原五轮修复全链路
+- 反馈归因（先想后改，证据链制）：
+  ① 字幕音频不对位（竖+横）= v5 的 SUBS 指向仓库旧文件 ep1_subtitles.json（v2 时代 385 卡字数权重对齐），字符流对齐法实测漂移 -23.6~+27.8s（86% 采样点>0.5s）——v3 已修复问题的经典回归；whisper 卡 JSON（v3/v4 实际使用）从未入库随沙盒蒸发
+  ② 横屏嵌入影片"拉幅/比例尺不对" = bg 链 scale=1080:1920:force_original_aspect_ratio=increase+crop 铺满 9:16：牌子(16:9) 放大 2.67×横向只露 31.7%、丧尸清道夫(2.34:1) 放大 3.50×只露 24.1%、抽卡延时"只保留水平中部 35%"（v4 已知妥协无人复审）；横屏再 crop 后等效放大 3~6 倍
+  ③ 附带发现：进度条 372s 切点重置永远只走 54%（v4 重写 final 段丢失 v2_seg 的 gen_seg_cmds 段偏移 t-t0，v5 未察觉，横竖屏都中招）
+- v6 修复（assemble_v6.py，全部带回归门禁）：
+  R1 权威字幕源重建：make_canonical_subs.py 从 output/字幕v3.srt（老板验收过音画同步的交付物）反向重建 ep1_subtitles_whisper.json（365卡+_provenance 血缘头）入库；setup 段逐卡对账断言（文本全等/±10ms/卡数365）不过不开工；G8 复验烧录 ASS（竖366横366=365+1跨段卡）
+  R2 bg 双模式：fit（S02a/S02b/S03a/S03b/S24b 展示主体，等比入 1080×810 舞台 pad #131110：16:9→1080×608、2.34:1→1080×462、16:10→1080×675）/ cover（S04 竖版源 720×1280 铺满舞台框取中段，全宽无拉伸）；G9 几何断言抽帧实测窗口矩形 vs ffprobe 推算期望 ±6px，6/6 过（最大偏差3px）
+  R3 gen_seg_cmds(total,t0,t1) 段偏移恢复；G10 切点前后±2s+片尾三处抽帧量顶部橙色条宽断言单调连续+终值满格（实测 539→544→1078px，v5 逻辑会是 539→~9→~542）
+- 生产重制：素材全量重拉（网盘配音/BGM/t2第一抽/抽卡延时 323MB 用重建的 para_dl.py 12 段并行；B站 paizi/sss 按文档 playurl html5 通路）+ 46 镜全量重渲 6016 帧（h5_render_v4 幂等分批）+ 双版本组装（22211 帧精确 vtrack → final/final_h 分段 → 1.1x 提速：竖屏 20205 帧/横屏 20198 帧，673.2s）
+- QC：G1-G10 双版本全 PASS（BUILD_SUCCESS）；锚点式目检（先算期望再对照实读）：26.71s「这些案例很容易给人一种错觉：」/314.27s「最低需要充值多少钱？」/671.42s 片尾 等 4 锚点×2 版本 8/8 命中
+- 目检误报仲裁实录：VLM 判 S02a 嵌入画面"被裁切拉伸"→ 手工同参数链生成参考帧像素 diff（窗口区平均差 5.1=编码噪声级）证明几何完全正确，VLM 把源片贴地特写镜头（脚在上地面占满的影片自身构图）误读为变形；教训=感知检查必须锚点化+像素仲裁
+- 复盘记录：05-retro/RETRO.md（三问题证据链/五步根因链/深层四因：token 花在生产不花在防回归、长上下文负资产、备份纪律半吊子、QC 测技术健康不测用户感知；修复架构=单一事实源+开工对账+感知门禁+重写对账+锚点目检）
+- skill v2.0 规整（explainer-video-studio）：铁律去项目化重组 A-F 六组 29 条（项目数值入 Profile 机制，防跨项目污染）；新增 references/anti-regression.md（防回归协议八节）+ SKILL.md §9 三句话版；文档优先协议（外部平台先查路由表，探索预算1次，结论回写文档）；新增铁律"真实影片素材原生比例"；scripts +assemble_v6/make_canonical_subs/para_dl；清理 03-skill/ 下过期 v1.0 SKILL.md 重复副本（血统不明文件）；推荐Prompt用法更新（whisper 对齐替换已废弃的反推语速+续作防回归条目）
+
+Stage Summary:
+- 交付：v6 成片双版本（竖屏 1080×1920 55MB / 横屏 1080×810 48.8MB，673.2s，音画同步/影片原生比例/进度条满格三修复全过 G1-G10）+ 字幕v6.srt + qc_report_v6 + 复盘记录 RETRO.md + skill v2.0 包（47文件275KB，已同步本地 skills/）→ download/ 与仓库
+- 防回归基建：权威字幕源入库带血缘、setup 开工对账断言、G8-G10 感知维度门禁、锚点目检表、中间产物入库清单——三处回归今后"想错都错不了"
+- 已知妥协：1.1x 提速重采样帧数漂移 +13 帧（0.43s，G2 容差内）；S02b/S03b 证据卡入场时刻仍为字符占比估算（≤1s，不在本次反馈范围）

@@ -28,6 +28,14 @@ git sparse-checkout init --cone && git sparse-checkout set 1105-canvas-test-vide
 5. 根目录 `worklog.md` 尾部 —— 最近一次 Task 的 Work Log / Stage Summary
 6. 网盘文案原文在沙盒 `/home/z/my-project/netdisk_pull/key_files/`（若沙盒被回收，用 `scripts/batch_download.py` 重新拉）
 
+## 3.5 v6 防回归要点（新会话必读）
+
+- **字幕唯一事实源**：`04-ep1-production/ep1_subtitles_whisper.json`（365 卡，带 _provenance；旧的 ep1_subtitles.json 已作废仅存档）
+- **开工先跑对账**：`python3 scripts/assemble_v6.py setup`（G8 前置：与 output/字幕v3.srt 逐卡对账，不过不开工）
+- **bg 视频一律原生比例**：BG_V6 模式表（fit=展示主体/cover=氛围底），禁非等比拉伸；G9 几何断言把关
+- **进度条分段必须带偏移**：gen_seg_cmds(total,t0,t1)；G10 连续性断言把关
+- 三处回归的完整归因见 `05-retro/RETRO.md`；防回归机制通用版见 skill v2.0 `references/anti-regression.md`
+
 ## 4. 接续规矩
 
 - 每完成一个可交付小步立即 `git add 1105-canvas-test-videos/ && git commit && git push`（防回收）
