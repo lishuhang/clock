@@ -69,22 +69,22 @@
   <div id="stage"><div class="inner" id="el-stage">
         <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
 
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">创作资产极难迁移</h1>
+<h1 class="tt" data-anim="fade" data-t="2.7" data-d="0.6" data-ambient="pulse" data-amp="0.005" data-sp="0.35" data-ph0="0">创作资产极难迁移</h1>
 <div class="scene">
   <!-- 地板与标签 -->
   <div class="floor" data-anim="fade" data-t="0.4" data-d="0.5"></div>
-  <div class="fl-label" data-anim="up" data-t="2.2" data-d="0.5">最初起步的平台</div>
+  <div class="fl-label" data-anim="up" data-t="9.0" data-d="0.5">最初起步的平台</div>
   <!-- 平台边界墙 -->
   <div class="wall" data-anim="fade" data-t="0.6" data-d="0.5"></div>
-  <div class="wall-label" data-anim="up" data-t="3.4" data-d="0.5">平台边界</div>
+  <div class="wall-label" data-anim="up" data-t="12.3" data-d="0.5">平台边界</div>
   <!-- 撞击星芒（顶墙时刻闪现） -->
   <div class="impact" id="impact">✦</div>
   <!-- 移动组：小人 + 三只箱子 -->
   <div class="soko-grp" id="soko-grp">
     <div class="crates">
-      <div class="crate c1" data-anim="pop" data-t="0.8" data-d="0.35"><span>角色</span></div>
-      <div class="crate c2" data-anim="pop" data-t="1.15" data-d="0.35"><span>工作流</span></div>
-      <div class="crate c3" data-anim="pop" data-t="1.5" data-d="0.35"><span>素材</span></div>
+      <div class="crate c1" data-anim="pop" data-t="5.2" data-d="0.35"><span>角色</span></div>
+      <div class="crate c2" data-anim="pop" data-t="6.7" data-d="0.35"><span>工作流</span></div>
+      <div class="crate c3" data-anim="pop" data-t="7.7" data-d="0.35"><span>素材</span></div>
     </div>
     <div class="worker">
       <div class="pose" id="pose-push">
@@ -99,7 +99,7 @@
     </div>
   </div>
   <!-- 沉没成本 大字 -->
-  <div class="sunk" data-anim="stamp" data-t="7.9" data-d="0.5" data-ambient="pulse" data-amp="0.008" data-sp="0.4" data-ph0="0.7">沉没成本</div>
+  <div class="sunk" data-anim="stamp" data-t="16.8" data-d="0.5" data-ambient="pulse" data-amp="0.008" data-sp="0.4" data-ph0="0.7">沉没成本</div>
 </div>
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
@@ -251,17 +251,19 @@ window.yzCheck = function () {
 /* 沉没成本 */
 .sunk{position:absolute;left:0;right:0;top:64px;text-align:center;font-size:80px;font-weight:900;
       color:var(--brand-deep);letter-spacing:10px;text-shadow:0 6px 24px rgba(229,91,70,.25);}
-</style><script>window.SHOOT_KEYS=[0.15,0.4,0.6,0.8,1.15,1.5,2.2,3.4,5.2,7.4,7.9];window.SHOOT_DENSE=[[0,12.19,12]];window.SHOOT_KEYS=window.SHOOT_KEYS||[];window.SHOOT_DENSE=window.SHOOT_DENSE||[];</script>
+</style><script>window.SHOOT_KEYS=[0.15,0.4,0.6,2.7,5.2,6.7,7.7,9.0,12.3,16.8];window.SHOOT_DENSE=[[0,18.01,12]];window.SHOOT_KEYS=window.SHOOT_KEYS||[];window.SHOOT_DENSE=window.SHOOT_DENSE||[];</script>
 <script>
-/* 推箱子驱动：走路(t<1.9) → 推箱(1.9~5.2, x+530px) → 顶墙使劲(5.2~7.4, 抖动+汗滴) → 坐下(7.4+) → 呼吸微动 */
+/* 推箱子驱动 v7（18.01s，节拍对位台词）：
+ * 走路(6.3~9.4) → 推箱(9.4~12.6, x+450px，跟「都会重度沉淀在…平台上」)
+ * 顶墙使劲(12.6~16.7, 抖动+汗滴，跟「一旦选错平台…时间精力都会」) → 坐下(16.7) → 沉没成本大字(16.8) */
 window._rf = window.renderFrame;
 window.renderFrame = function (p) {
   window._rf(p);
   var t = p.t || 0;
   var grp = document.getElementById('soko-grp');
   if (!grp) return;
-  var WALK_END = 1.9, PUSH_END = 5.2, GIVE_UP = 7.4, TRAVEL = 450;
-  /* 组位移 */
+  var WALK_START = 6.3, WALK_END = 9.4, PUSH_END = 12.6, GIVE_UP = 16.7, TRAVEL = 450;
+  /* 组位移（走路前原地待命，等待三只箱子就位） */
   var x = 0;
   if (t >= PUSH_END) x = TRAVEL;
   else if (t >= WALK_END) {
@@ -270,7 +272,7 @@ window.renderFrame = function (p) {
   }
   grp.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
   /* 腿部 */
-  var walking = t > 0.35 && t < WALK_END;
+  var walking = t > WALK_START && t < WALK_END;
   var pushing = t >= WALK_END && t < GIVE_UP;
   document.querySelectorAll('#pose-push .leg').forEach(function (l, i) {
     if (walking) l.style.transform = 'rotate(' + (Math.sin(t * 11 + i * Math.PI) * 24) + 'deg)';
@@ -293,10 +295,10 @@ window.renderFrame = function (p) {
       s.style.transform = 'translateY(' + (cyc * 52).toFixed(0) + 'px)';
     } else { s.style.opacity = 0; }
   });
-  /* 顶墙星芒（5.2~5.9 闪一下） */
+  /* 顶墙星芒（12.6~13.4 闪一下） */
   var imp = document.getElementById('impact');
-  if (t >= PUSH_END && t < 5.9) {
-    var ik = (t - PUSH_END) / 0.7;
+  if (t >= PUSH_END && t < 13.4) {
+    var ik = (t - PUSH_END) / 0.8;
     imp.style.opacity = Math.round((1 - ik) * 10) / 10;
     imp.style.transform = 'scale(' + (0.6 + ik * 0.8).toFixed(2) + ')';
   } else imp.style.opacity = 0;
