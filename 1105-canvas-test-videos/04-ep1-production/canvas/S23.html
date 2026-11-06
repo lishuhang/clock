@@ -20,13 +20,13 @@
   @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-black.ttf") format("truetype"); font-weight: 900; }
   :root {
     --brand: #fc8166; --brand-deep: #e55b46;
-    --ink: #312e2e; --ink-2: #6b6666; --line: #e7e3e1;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #3a3634;
   }
   body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
          font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
-         background: #f6f4f2; }
+         background: #131110; }
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
-  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #f6f4f2; }
+  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
   /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
   #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
@@ -34,7 +34,7 @@
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
-  .hud-progress .track { position: absolute; inset: 0; background: rgba(49,46,46,.16); }
+  .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
   .hud-sub { position: absolute; left: 0; right: 0; top: 1680px; height: 240px; z-index: 60;
@@ -61,7 +61,7 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#ffffff,#f2efec);"></div>
+    <div style="position:absolute;inset:0;background:#131110;"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
@@ -69,24 +69,40 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<h1 class="tt" data-anim="fade" data-t="0.15" data-d="0.55">海外平台 Higgsfield 核查</h1><div class="tsub" data-anim="up" data-t="1.1">创作者反映：长期年付高档位 S2.5 打 45 折</div>
-<div style="margin:52px auto 0;width:900px;display:flex;flex-direction:column;gap:26px;">
-  <div class="card q" data-anim="up" data-t="0.9" data-d="0.5">
-    <div class="qh">传闻</div>
-    <div class="qb">S2.5 有 <b style="color:var(--brand-deep);">45 折</b> 优惠，似乎比国内平台便宜？</div></div>
-  <div class="card q" data-anim="up" data-t="6.0" data-d="0.5">
-    <div class="qh">核查</div>
-    <div class="qb">跑满 240 秒生成量 → 必须选最高档 <b>Ultra 套餐</b></div></div>
-  <div class="card q" data-anim="up" data-t="14.0" data-d="0.5" style="border:4px solid var(--brand);">
-    <div class="qh">结果</div>
-    <div class="qb">月付 <b style="font-size:52px;">$129 ≈ ¥864</b> / 月<br>长期年付一次性支出同样轻松破万</div></div>
-  <div style="display:flex;align-items:center;gap:24px;justify-content:center;" data-anim="fade" data-t="26.0">
-    <div style="font-size:120px;font-weight:900;color:#2e8b57;">✓</div>
-    <div style="font-size:120px;font-weight:900;color:var(--brand-deep);">✗</div>
-    <div class="pill" style="font-size:38px;">对国内个人创作者并不划算</div>
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 30px;">
+  <div style="display:flex;align-items:center;gap:18px;" data-anim="up" data-t="0.1" data-d="0.4">
+    <div style="font-size:44px;font-weight:900;color:#f2efec;white-space:nowrap;">Higgsfield「45折」核查</div>
+    <div class="tag45" data-anim="stamp" data-t="1.0" data-d="0.3">宣称45折</div>
+  </div>
+  <div style="display:flex;gap:26px;margin-top:22px;flex:1;">
+    <div class="evi" style="flex:1.15;display:flex;flex-direction:column;" data-anim="up" data-t="1.6" data-d="0.5">
+      <div class="evi-lab">higgsfield.com/pricing 实截</div>
+      <div class="shotbox" style="flex:1;">
+        <div class="imgwrap">
+          <img src="../assets/bili/higgsfield_ultra.png">
+          <img src="../assets/bili/higgsfield_ultra_marked.png" class="marked" data-anim="fade" data-t="4.0" data-d="0.45">
+        </div>
+      </div>
+      <div class="src2">跑满240秒生成量 → 只能选最高档 Ultra</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+      <div class="calc" data-anim="stamp" data-t="5.2" data-d="0.4">
+        <div class="c-lab">Ultra 月付</div>
+        <div class="c-big">$129<span class="c-unit">/月</span></div>
+        <div class="c-eq">≈ ¥864 / 月</div>
+      </div>
+      <div class="calc warn" data-anim="stamp" data-t="7.0" data-d="0.4">
+        <div class="c-lab">长期年付高档位</div>
+        <div class="c-big">一次付费</div>
+        <div class="c-eq" style="color:#e55b46;">轻松破万元</div>
+      </div>
+      <div class="verdict" data-anim="up" data-t="9.0" data-d="0.5">
+        <span class="no">✗</span> 对国内个人创作者并不划算
+      </div>
+    </div>
   </div>
 </div>
-<div class="src" data-anim="fade" data-t="0.9" data-d="0.4">资料来源：娱乐资本论整理 · 数据截至 2026-10-05</div>
+
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -183,20 +199,24 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:var(--ink);line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:var(--ink-2);text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#9a9595;}
-.card{background:#fff;border-radius:28px;box-shadow:0 10px 40px rgba(49,46,46,.08);}
-.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:var(--ink);}
-.brand{color:var(--brand-deep);}
-
-.q{display:flex;gap:30px;align-items:center;padding:36px 44px;}
-.qh{background:var(--ink);color:#fff;font-size:30px;font-weight:700;border-radius:14px;padding:12px 24px;flex-shrink:0;}
-.qb{font-size:40px;color:var(--ink);line-height:1.5;}
-</style><script>window.SHOOT_KEYS=[0.9, 6.0, 14.0, 26.0];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+.evi{background:#1e1b19;border:1.5px solid #3a3634;border-radius:22px;padding:18px 22px;}
+.evi-lab{font-size:22px;color:#8f8984;margin-bottom:10px;font-weight:700;letter-spacing:1px;}
+.shotbox{background:#131110;border-radius:12px;padding:8px;display:flex;justify-content:center;align-items:flex-start;}
+.imgwrap{position:relative;display:inline-block;line-height:0;}
+.shotbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;display:block;}
+.src2{font-size:21px;color:#a8a19b;margin-top:10px;text-align:center;}
+.tag45{background:rgba(252,129,102,.16);border:2px solid #fc8166;color:#fc8166;border-radius:999px;
+       padding:8px 26px;font-size:30px;font-weight:900;transform:rotate(2deg);white-space:nowrap;}
+.imgwrap img.marked{position:absolute;inset:0;width:100%;height:100%;}
+.calc{background:#1e1b19;border:1.5px solid #3a3634;border-radius:20px;padding:22px 28px;text-align:center;}
+.calc.warn{border-color:rgba(229,91,70,.55);background:rgba(229,91,70,.08);}
+.c-lab{font-size:24px;color:#8f8984;font-weight:700;}
+.c-big{font-size:72px;font-weight:900;color:#f2efec;margin-top:6px;}
+.c-unit{font-size:28px;color:#b5aea9;font-weight:700;margin-left:8px;}
+.c-eq{font-size:36px;font-weight:900;color:#fc8166;margin-top:6px;}
+.verdict{background:#1e1b19;border-radius:20px;padding:20px 24px;font-size:34px;font-weight:900;color:#f2efec;
+         text-align:center;border:1.5px solid #3a3634;}
+.no{color:#e55b46;font-size:44px;margin-right:10px;}
+</style><script>window.SHOOT_DENSE=[[0.8, 10.0, 10]];</script>
 </body>
 </html>

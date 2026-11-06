@@ -20,13 +20,13 @@
   @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-black.ttf") format("truetype"); font-weight: 900; }
   :root {
     --brand: #fc8166; --brand-deep: #e55b46;
-    --ink: #312e2e; --ink-2: #6b6666; --line: #e7e3e1;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #3a3634;
   }
   body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
          font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
-         background: #f6f4f2; }
+         background: #131110; }
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
-  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #f6f4f2; }
+  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
   /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
   #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
@@ -34,7 +34,7 @@
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
-  .hud-progress .track { position: absolute; inset: 0; background: rgba(49,46,46,.16); }
+  .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
   .hud-sub { position: absolute; left: 0; right: 0; top: 1680px; height: 240px; z-index: 60;
@@ -61,7 +61,7 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div data-anim="kb" data-kb="1.0,1.0,1.05,1.05" style="position:absolute;inset:0;background:radial-gradient(110% 80% at 50% 30%, #3d3226 0%, #221b13 55%, #14100b 100%);"></div>
+    <div style="position:absolute;inset:0;background:#131110;"></div><div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(252,129,102,.07),transparent 62%);"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
@@ -69,13 +69,19 @@
   <div id="stage"><div class="inner" id="el-stage">
     <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
     
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;">
-  <div class="banner" data-anim="stamp" data-t="0.6" data-d="0.5">
-    <div class="bs">一元一秒 · 百元造梦</div>
-    <div class="bd">Seedance 2.0 时代 · 行业口号</div>
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 40px;">
+  <div class="slogan" data-anim="pop" data-t="0.2" data-d="0.6">
+    <div class="sl-main">一元一秒 · 百元造梦</div>
+    <div class="sl-sub">—— 2026年初 · Seedance 2.0 时代的行业口号</div>
   </div>
-  <div data-anim="up" data-t="3.4" style="font-size:40px;color:#d9cdb4;">到了质量更高的 Seedance 2.5 时代，还能维持吗？</div>
+  <div class="evi" style="margin-top:56px;width:100%;" data-anim="up" data-t="2.2" data-d="0.5">
+    <div class="evi-lab">口号出处 · 原文截图（红框）</div>
+    <div class="shotbox"><img src="../assets/bili/origin_yiyimiao_marked.png"></div>
+    <div class="src2">——娱乐资本论《画布横评·价格篇》2026-10-08 · 腾讯新闻</div>
+  </div>
+  <div class="q" data-anim="up" data-t="3.8" data-d="0.5">到了质量更高的 Seedance 2.5 时代，成本还能维持「一元一秒」吗？</div>
 </div>
+
     <!-- ======== YZ_EDIT_STAGE_END ======== -->
   </div></div>
 
@@ -172,21 +178,17 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:var(--ink);line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:var(--ink-2);text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#9a9595;}
-.card{background:#fff;border-radius:28px;box-shadow:0 10px 40px rgba(49,46,46,.08);}
-.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:var(--ink);}
-.brand{color:var(--brand-deep);}
-
-.banner{background:linear-gradient(180deg,#f3e2bb,#e6cf9d);border:6px solid #8a6d3b;border-radius:26px;
-        padding:60px 90px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.4);}
-.bs{font-size:96px;font-weight:900;color:#5c3d14;letter-spacing:6px;}
-.bd{font-size:30px;color:#8a6d3b;margin-top:22px;}
-</style><script>window.SHOOT_DENSE=[[0, 15.04, 5]];window.SHOOT_KEYS=[0.6, 3.4];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
+.slogan{border:3px solid #8a6d3b;border-radius:18px;padding:36px 40px;transform:rotate(-1deg);
+        background:linear-gradient(160deg,#332a1a,#28200f);box-shadow:0 10px 40px rgba(0,0,0,.55);}
+.sl-main{font-size:70px;font-weight:900;color:#e8c07a;letter-spacing:4px;text-align:center;white-space:nowrap;}
+.sl-sub{font-size:26px;color:#b5aea9;margin-top:16px;text-align:center;letter-spacing:2px;}
+.evi{background:#1e1b19;border:1.5px solid #3a3634;border-radius:22px;padding:20px 24px;}
+.evi-lab{font-size:24px;color:#8f8984;margin-bottom:12px;font-weight:700;letter-spacing:1px;}
+.shotbox{background:#131110;border-radius:12px;padding:10px;display:flex;justify-content:center;}
+.shotbox img{max-width:100%;max-height:300px;object-fit:contain;border-radius:6px;}
+.src2{font-size:22px;color:#a8a19b;margin-top:12px;text-align:right;}
+.q{margin-top:46px;font-size:40px;font-weight:900;color:#f2efec;text-align:center;line-height:1.5;}
+.q em{color:#fc8166;font-style:normal;}
+</style><script>window.SHOOT_DENSE=[[0, 5.5, 8]];</script>
 </body>
 </html>

@@ -20,13 +20,13 @@
   @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-black.ttf") format("truetype"); font-weight: 900; }
   :root {
     --brand: #fc8166; --brand-deep: #e55b46;
-    --ink: #312e2e; --ink-2: #6b6666; --line: #e7e3e1;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #3a3634;
   }
   body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
          font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
-         background: #f6f4f2; }
+         background: #131110; }
   /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
-  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #f6f4f2; }
+  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
   #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
   /* ---- L1 主体层：4:3 安全区 Y:240~1680（无可见边框，仅约束主体落位） ---- */
   #stage { position: absolute; top: 240px; left: 0; width: 1080px; height: 1440px; }
@@ -34,7 +34,7 @@
   /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
   [data-hud] { pointer-events: none; }
   .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
-  .hud-progress .track { position: absolute; inset: 0; background: rgba(49,46,46,.16); }
+  .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
   .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
                         background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
   .hud-sub { position: absolute; left: 0; right: 0; top: 1680px; height: 240px; z-index: 60;
@@ -61,7 +61,7 @@
   <!-- L0 背景（YZ_EDIT_BG） -->
   <div id="bg-layer">
     <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#ffffff,#f2efec);"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#242020,#1a1716);"></div>
     <!-- ======== YZ_EDIT_BG_END ======== -->
   </div>
 
@@ -176,23 +176,23 @@ window.yzCheck = function () {
 };
 </script>
 <style>
-.tt{font-size:64px;font-weight:900;color:var(--ink);line-height:1.22;text-align:center;}
-.tsub{font-size:30px;color:var(--ink-2);text-align:center;margin-top:16px;}
-.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#9a9595;}
-.card{background:#fff;border-radius:28px;box-shadow:0 10px 40px rgba(49,46,46,.08);}
-.pill{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;
+.tt{font-size:64px;font-weight:900;color:#f2efec;line-height:1.22;text-align:center;}
+.tsub{font-size:30px;color:#b5aea9;text-align:center;margin-top:16px;}
+.src{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:26px;color:#a8a19b;}
+.card{background:#1e1b19;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+.pill{display:inline-block;background:#f2efec;color:#131110;border-radius:999px;
       padding:12px 30px;font-size:32px;font-weight:700;}
 .pill-o{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
       padding:12px 30px;font-size:32px;font-weight:700;}
-.kpi{font-weight:900;color:var(--ink);}
+.kpi{font-weight:900;color:#f2efec;}
 .brand{color:var(--brand-deep);}
 
-.calc{background:#fff;border-radius:22px;padding:30px 46px;display:flex;align-items:baseline;gap:26px;
-      box-shadow:0 6px 24px rgba(49,46,46,.06);}
-.cv{font-size:76px;font-weight:900;color:var(--ink);}
-.cu{font-size:38px;color:var(--ink-2);}
-.cl{font-size:30px;color:var(--ink-2);}
-.op{font-size:52px;font-weight:900;color:#c9c4c2;text-align:center;}
+.calc{background:#1e1b19;border-radius:22px;padding:30px 46px;display:flex;align-items:baseline;gap:26px;
+      box-shadow:0 6px 24px rgba(0,0,0,.06);}
+.cv{font-size:76px;font-weight:900;color:#f2efec;}
+.cu{font-size:38px;color:#b5aea9;}
+.cl{font-size:30px;color:#b5aea9;}
+.op{font-size:52px;font-weight:900;color:#9c948f;text-align:center;}
 </style><script>window.SHOOT_KEYS=[0.8, 2.2, 2.8, 4.2, 4.8, 7.0];window.SHOOT_DENSE=window.SHOOT_DENSE||[];window.SHOOT_KEYS=window.SHOOT_KEYS||[];</script>
 </body>
 </html>
