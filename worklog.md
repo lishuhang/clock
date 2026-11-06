@@ -623,3 +623,36 @@ Stage Summary:
 - 交付：v7 成片双版本（竖屏 1080×1920 / 横屏 1080×810，673.2s，G1-G13 全 PASS）+ 字幕v7.srt（341 卡，无单字卡，同句同字号）→ download/ 与仓库 output/
 - 架构沉淀：管线分层（canvas=画面创意层 / 水印裁切变速字幕响度=后处理层，字幕最后烧）；G11-G13 三道新门禁进 skill 通用门禁模板
 - 已 push；第二/三篇投产按 v7 分层规格 + G11 语义锚点预检
+
+---
+Task ID: 1105-trilogy-v8-ep23
+Agent: Z.ai (GLM)
+Task: v8 修复轮（水印等比/去进度条/切片化/应景穿插）+ 第二三篇第一版全量投产（正常速度）+ skill v2.2
+
+Work Log:
+- 崩溃恢复：sparse clone clock 仓；网盘发现二三集新配音（1106-1239-功能篇 13MB/1106-1510-实测篇 15.8MB）
+- 用户四反馈归因：
+  ① 浮水印拉伸扭曲 = wm75.png 把原版 1231×1733（比例 0.710）非等比拉到 1080×1920（0.5625），横向压 0.88×/纵向拉 1.11× → wm_v8.png 等比 fit 宽 1080→1080×1520 垂直居中（PIL 教训：paste 自身做 mask 毁 alpha，改透明层 paste+alpha_composite）；新门禁 G14 断言内容宽高比 ±2%（实测 0.7036→0.7037）
+  ② 顶部进度条"根本看不清" → final/final_h 删 track+sendcmd+drawbox；G10 反转为断言顶部无品牌橙（防旧链回归）
+  ③ 大素材重下烧 token → 素材切片化基建：slice_materials.py（manifest 驱动/等比+force_divisible_by=2/单片<20MB 断言/MANIFEST.json 标名用途/幂等）；ep1 六切片 1.5~6MB 入库（牌子 36-47.7s/丧尸 100-113.1s/t2第一抽 3.2-10.2s/抽卡延时两窗 85-96.4+150-160.4 预缩 1080 宽/t2第三抽全片循环备用）；三集配音+BGM 整文件入库（均<20MB）
+  ④ 应景视频穿插防单调 = S25（抽卡延时另一窗 fit）+ S34（t2第三抽 stream_loop 循环 cover 37.6s 镜）透明叠层化（body/#bg-layer→transparent+scrim 0.78），时间轴零改动 → 音画同步零风险
+- 重建 h5_render_v4（v6/v7 用的 v4 渲染器未入库丢失；v3 的 TRANSPARENT_SHOTS 硬编码清单在镜头改名后从未匹配）→ 透明页自动检测（读 body 计算样式决定 omit_background）
+- v8 修复实录：speed 段丢 -frames:v 帧数钳制（v4 有 v7 丢）→ 横屏 20207 帧 G3 差 0.52s FAIL → 恢复钳制 20192 精确；部分残骸文件（7.6MB 但 0 帧）骗过 getsize 幂等检查 → 帧数检查；G1-G14 全 PASS；20192 帧精确双版本交付
+- ep2/ep3 对齐工艺（新）：
+  - 逐句独立对齐产生乱序/负窗（S07 -31s/S10 297.6s）→ 改全局单调对齐：整脚本流↔whisper 字符流一次 SequenceMatcher，句边界累计偏移映射时间；实测 ep2 566.99s（估算 679s 短 112s）/ep3 689.53s（估算 835s 短 145s）——估算时间码全部作废的实证
+  - 无台词续镜（ep2 S25 六宫格）：并入前句单元对齐+语义键切窗（"第一是多模型聚合切换"）
+  - jieba 分卡：vlen 预算（含标点宽度，eff_len 预算会造 16 宽卡）+ 尾部再平衡（末两卡中点重切防 2 字尾巴）+ 退化合并；ep2 317 卡/ep3 400 卡，自检（无退化/同句同档/容量）内建
+- ep2 素材：S01 上集回顾串烧=ep1 v8 成片回剪（4556 收据/12倍哑铃/清零沙漏各 2.2s+fade+tpad 定格 0.3MB）；S39 片尾九宫格=9 家 t2 第一抽 xstack（360×270 横裁格 18.2MB）；首屏取证/v15截图/MCP取证 16 图入库
+- ep3 素材：S02 十宫格=10 家 t2 第一抽（t1 多家首抽失败改 t2 全平台齐）xstack 432×405 格 7.8MB；T1/T3/T4 场景切片（anishort 17.7/5.9/9.1s）；S16 复用 ep1 t2 切片（7s 盖 8.2s 镜 → loop 补）；抽帧对比图 12 张（方差选帧）
+- 页面生成：pages_common.py 组件库（chapter/big_punch/logo_wall/img_show/split_lr/steps_chain/matrix/status_grid/bar_chart/note_list/text_zoom/counter，宽度约束 maxw 防双栏溢出）+ gen_pages_ep2（39 镜）/gen_pages_ep3（51 镜，S19/S41/S42 紧凑状态格防 10 行矩阵溢出，S38 大象用文字不用 emoji 字体）
+- 首轮 yzCheck：ep2 7 页溢出（split 双栏截图卡 max-width:960 爆框）→ img_show maxw 参数+split 列 440px；ep3 51 页一次全过
+- assemble_ep.py：EP=ep2|ep3 环境变量分支的通用总装（v8 架构：等比水印/无进度条/G11 卡文本流语义锚点/G13 字幕带白像素抽样/G9 cover 多帧采样防暗场误报——T2 木偶戏 442/810 行实为暗画面非几何错误/S14 水印等比/SPEED=1.0 正常速度）
+- QC：ep2 G1-G14 全 PASS（17010 帧精确/317 卡/G11 6 锚点全中）；ep3 首轮 G9 S16 暗场误报 → 多帧采样+S16 loop 修复后全 PASS（20686 帧精确/400 卡/G11 6 锚点全中）
+- 视觉抽检：两集成片多点采样 std 全部>8（无空白帧）；ep2 回顾切片 7s 后黑场为设计（闪回淡出承托栏目条）
+- skill v2.2：新铁律 34（看不清的装饰不如不加）/35（镜间穿插应景视频，首选零时间轴改动路线）/36（素材切片化）/37（叠层元素等比）；B11 强化（变速默认 1.0x+帧数钳制）；G10 反转/G14/G9 多帧采样/G13 字幕带抽样入 anti-regression §7（8 条新坑实录：帧数钳制丢失/残骸骗 getsize/cp 重置丢补丁/逐句对齐乱序/jieba 标点宽度/后台进程回收/奇数高炸 x264/PIL paste 毁 alpha）；本地 skills/ 同步
+
+Stage Summary:
+- 交付：v8 双版本（673.2s，1.1x，20192 帧精确）+ ep2 v1 双版本（567.0s，1.0x，17010 帧）+ ep3 v1 双版本（689.5s，1.0x，20686 帧）+ 三集 srt → download/ 与仓库
+- 切片化基建：clips/ 16 切片（ep1×6+ep2×2+ep3×4+登记）全带 MANIFEST 用途索引；配音/BGM 入库；未来会话零大文件重下
+- 三集 90 镜全量 canvas 入库（canvas-ep2 39 页/canvas-ep3 51 页 + 组件库）
+- skill v2.2（37 铁律）同步本地与 GitHub

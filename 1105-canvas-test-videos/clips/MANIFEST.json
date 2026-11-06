@@ -103,6 +103,102 @@
     "S25"
    ],
    "episode": "ep1"
+  },
+  "ep3_t2grid_10plat": {
+   "file": "clips/ep3_t2grid_10plat.mp4",
+   "source": "网盘 3-实测/抽卡视频/anishort（一次性下载后加工）",
+   "window": [
+    0,
+    17.13
+   ],
+   "box": null,
+   "duration": 17.13,
+   "size_mb": 7.76,
+   "purpose": "S02 十宫格视频墙：10家t2第一抽同题对比（432x405格），T2武戏",
+   "used_by": [
+    "S02"
+   ],
+   "episode": "ep3"
+  },
+  "ep3_t1_scene_s15": {
+   "file": "clips/ep3_t1_scene_s15.mp4",
+   "source": "网盘 3-实测/抽卡视频/anishort（一次性下载后加工）",
+   "window": [
+    0,
+    15.03
+   ],
+   "box": null,
+   "duration": 15.03,
+   "size_mb": 3.83,
+   "purpose": "S15 T1文戏实拍背景（AniShort t1第一抽，店铺场景）",
+   "used_by": [
+    "S15"
+   ],
+   "episode": "ep3"
+  },
+  "ep3_t3_scene_s17": {
+   "file": "clips/ep3_t3_scene_s17.mp4",
+   "source": "网盘 3-实测/抽卡视频/anishort（一次性下载后加工）",
+   "window": [
+    0,
+    5.93
+   ],
+   "box": null,
+   "duration": 5.93,
+   "size_mb": 1.8,
+   "purpose": "S17 T3文戏实拍背景（AniShort t3第一抽，柜台取表）",
+   "used_by": [
+    "S17"
+   ],
+   "episode": "ep3"
+  },
+  "ep3_t4_scene_s18": {
+   "file": "clips/ep3_t4_scene_s18.mp4",
+   "source": "网盘 3-实测/抽卡视频/anishort（一次性下载后加工）",
+   "window": [
+    0,
+    9.13
+   ],
+   "box": null,
+   "duration": 9.13,
+   "size_mb": 4.31,
+   "purpose": "S18 T4武戏实拍背景（AniShort t4第一抽，接齿轮）",
+   "used_by": [
+    "S18"
+   ],
+   "episode": "ep3"
+  },
+  "ep2_recap_ep1": {
+   "file": "clips/ep2_recap_ep1.mp4",
+   "source": "回剪自本项目成片/网盘抽卡视频",
+   "window": [
+    0,
+    16.97
+   ],
+   "box": null,
+   "duration": 16.97,
+   "size_mb": 0.31,
+   "purpose": "S01 上集回顾串烧：ep1 v8 成片回剪（4556收据/12倍哑铃/清零沙漏）+定格",
+   "used_by": [
+    "S01"
+   ],
+   "episode": "ep2"
+  },
+  "ep2_t2grid_9plat": {
+   "file": "clips/ep2_t2grid_9plat.mp4",
+   "source": "回剪自本项目成片/网盘抽卡视频",
+   "window": [
+    0,
+    28.9
+   ],
+   "box": null,
+   "duration": 28.9,
+   "size_mb": 18.18,
+   "purpose": "S39 片尾九宫格：9家t2第一抽同题视频墙（360x270横裁格）",
+   "used_by": [
+    "S39"
+   ],
+   "episode": "ep2"
   }
  }
 }

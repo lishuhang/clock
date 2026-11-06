@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>explainer-video-studio vertical master v2 1080x1920</title>
+<style>
+  /* ============ 固定规范层（不得重写，只改 YZ_EDIT 区） ============
+   * v2 画面规格（2026-11-05 用户修订）：
+   *  1. 全画布 1080×1920 即舞台；背景层（图/视频/渐变）按需拉伸铺满 9:16，不加遮罩、不留黑边
+   *  2. 4:3 安全框（Y:555~1365，1080×810 横屏比例）是构图准则：全部【主体】内容落在框内（data-deco 装饰元素除外），
+   *     保证切成 4:3 横屏展示时不遗漏主要内容；主体可漂浮于背景之上
+   *  3. 浮水印不在右上角：整幅 PNG 拉伸铺满全屏防盗，alpha=原有×0.75（成品由 ffmpeg 叠加，模板仅预览）
+   *  4. 顶部全宽细进度条（高8px）；字幕=剪映风白字黑边、透明底、普惠体，位于 Y1435~1545（4:3 框下黑边内，ffmpeg/libass 叠加）
+   *  5. HUD 元素全部标 data-hud，截帧时由 h5_render 隐藏
+   */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* 普惠体三字重（本地 TTF，路径相对 canvas 页；母版被复制到别处时按需改写） */
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "AliPuHui"; src: url("../assets/fonts/alipuhui-black.ttf") format("truetype"); font-weight: 900; }
+  :root {
+    --brand: #fc8166; --brand-deep: #e55b46;
+    --ink: #312e2e; --ink-2: #6b6666; --line: #3a3634;
+  }
+  body { width: 1080px; height: 1920px; overflow: hidden; position: relative;
+         font-family: "AliPuHui", "Alibaba PuHuiTi", "Noto Sans SC", "PingFang SC", sans-serif;
+         background: #131110; }
+  /* ---- L0 背景层：铺满全屏，可拉伸/推拉 ---- */
+  #bg-layer { position: absolute; inset: 0; overflow: hidden; background: #131110; }
+  #bg-layer > img, #bg-layer > video { width: 100%; height: 100%; object-fit: cover; }
+  /* ---- L1 主体层：4:3 横屏安全区 Y:555~1365（无可见边框，仅约束主体落位） ---- */
+  #stage { position: absolute; top: 555px; left: 0; width: 1080px; height: 810px; }
+  #stage .inner { position: absolute; inset: 14px 36px 22px 36px; } /* 主体安全边距 */
+  /* ---- L2 HUD 预览层（截帧隐藏，成品由 ffmpeg 叠加） ---- */
+  [data-hud] { pointer-events: none; }
+  .hud-progress { position: absolute; top: 0; left: 0; right: 0; height: 8px; z-index: 60; }
+  .hud-progress .track { position: absolute; inset: 0; background: rgba(0,0,0,.16); }
+  .hud-progress .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+                        background: linear-gradient(90deg, var(--brand), var(--brand-deep)); }
+  .hud-sub { position: absolute; left: 0; right: 0; top: 1435px; height: 110px; z-index: 60;
+             display: flex; align-items: center; justify-content: center; }
+  .hud-sub .txt { font-size: 68px; font-weight: 700; color: #fff; letter-spacing: 1px;
+                  padding: 0 20px; white-space: nowrap; max-width: 720px;
+                  text-shadow: 0 0 6px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000,
+                               0 -2px 0 #000, 1.5px 1.5px 0 #000, -1.5px 1.5px 0 #000,
+                               1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000; }
+  .hud-watermark { position: absolute; inset: 0; z-index: 70; }
+  .hud-watermark img { width: 100%; height: 100%; object-fit: fill; }
+  /* ---- 章节角标（小、半透明，顶部进度条下方左侧） ---- */
+  .hud-chapter { position: absolute; top: 26px; left: 32px; z-index: 60;
+                 background: rgba(20,18,17,.55); color: #fff; font-size: 30px; font-weight: 700;
+                 padding: 8px 24px; border-radius: 999px; letter-spacing: 2px; backdrop-filter: blur(4px); }
+  /* ---- 受控动效原语（renderFrame 按时间驱动） ---- */
+  [data-anim] { opacity: 0; will-change: transform, opacity; }
+  /* 章节擦除覆盖层（0.4s 橙板横扫） */
+  .wipe-overlay { position: absolute; inset: 0; z-index: 50; background: var(--brand);
+                  transform: translateX(-100%); }
+</style>
+</head>
+<body>
+  <!-- L0 背景（YZ_EDIT_BG） -->
+  <div id="bg-layer">
+    <!-- ======== YZ_EDIT_BG_BEGIN ======== -->
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#242020,#1a1716);"></div>
+    <!-- ======== YZ_EDIT_BG_END ======== -->
+  </div>
+
+  <!-- L1 主体（YZ_EDIT_STAGE） -->
+  <div id="stage"><div class="inner" id="el-stage">
+    <!-- ======== YZ_EDIT_STAGE_BEGIN（每镜内容只改这里） ======== -->
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;"><div style="display:flex;gap:14px;"><div class="card" data-anim="pop" data-t="0.4" style="padding:16px 24px;opacity:.55;text-decoration:line-through;"><div style="font-size:28px;color:#8f8880;">3D 导演台</div></div><div class="card" data-anim="pop" data-t="0.7" style="padding:16px 24px;opacity:.55;text-decoration:line-through;"><div style="font-size:28px;color:#8f8880;">一键成片 Agent</div></div><div class="card" data-anim="pop" data-t="1.0" style="padding:16px 24px;opacity:.55;text-decoration:line-through;"><div style="font-size:28px;color:#8f8880;">分镜模板</div></div></div><div data-anim="up" data-t="2.2" style="margin-top:34px;font-size:44px;font-weight:900;color:#f2efec;">全部停用 · <span style="color:#fc8166;">纯基础生成</span></div><div style="display:flex;gap:60px;margin-top:44px;"><div style="text-align:center;"><div><span data-counter="0,10,1.2,0" style="font-size:84px;font-weight:900;color:#fc8166;">0</span><span style="font-size:32px;color:#b5aea9;"> 家</span></div><div style="font-size:26px;color:#b5aea9;">平台</div></div><div style="text-align:center;"><div><span data-counter="0,16,1.2,0" style="font-size:84px;font-weight:900;color:#fc8166;">0</span><span style="font-size:32px;color:#b5aea9;"> 抽</span></div><div style="font-size:26px;color:#b5aea9;">每平台</div></div><div style="text-align:center;"><div><span data-counter="0,160,2.0,0" style="font-size:84px;font-weight:900;color:#fc8166;">0</span><span style="font-size:32px;color:#b5aea9;"> 条</span></div><div style="font-size:26px;color:#b5aea9;">15 秒成片</div></div></div></div>
+    <!-- ======== YZ_EDIT_STAGE_END ======== -->
+  </div></div>
+
+  <!-- 章节擦除（需要换段动效的镜头取消注释并设 data-t="end-0.4"） -->
+  <!-- <div class="wipe-overlay" data-anim="wipe-in" data-t="end-0.4" data-d="0.4"></div> -->
+
+  <!-- L2 HUD 预览（截帧隐藏） -->
+  <div class="hud-progress" data-hud><div class="track"></div><div class="fill" id="el-progress"></div></div>
+  <div class="hud-chapter" data-hud id="el-chapter">章节</div>
+  <div class="hud-sub" data-hud><div class="txt" id="el-subtitle">字幕加载中…</div></div>
+  <div class="hud-watermark" data-hud><img id="el-watermark" alt=""></div>
+
+<script>
+/* ============ 受控时钟引擎 v2 ============
+ * window.renderFrame(payload)
+ *   payload = { t(镜内秒), shot_dur, progress_pct, subtitle, chapter,
+ *               hud(bool, 截帧时 false → 隐藏 [data-hud]), watermark(src) }
+ * 元素动效：data-anim="pop|fade|up|stamp|wipe-in|wipe-out|typing" data-t="秒|end-0.4" data-d="时长(默认0.5)"
+ * 环境动效：data-ambient="float|pulse"（入场后持续微动；data-amp/data-sp/data-ph0 可调）
+ * 连续动画：data-anim="kb" data-kb="s0x,s0y,e0x,e0y"（背景推拉，0→shot_dur 线性缓动）
+ * 计数器：<span data-counter="0,4556,1.2,0">(from,to,dur秒,小数位)</span>
+ * 采集声明：window.SHOOT_DENSE=[[t0,t1,fps],...]（连续段）  window.SHOOT_KEYS=[t,...]（关键帧）
+ */
+window.renderFrame = function (p) {
+  var dur = p.shot_dur || 10;
+  var t = p.t || 0;
+  if (p.hud !== undefined) {
+    document.querySelectorAll('[data-hud]').forEach(function (el) {
+      el.style.display = p.hud === false ? 'none' : '';
+    });
+  }
+  if (p.hud !== false) {
+    if (p.chapter !== undefined) document.getElementById('el-chapter').textContent = p.chapter;
+    var sub = document.getElementById('el-subtitle');
+    if (p.subtitle !== undefined) sub.textContent = p.subtitle;
+    document.getElementById('el-progress').style.width = (p.progress_pct || 0) + '%';
+    if (p.watermark) document.getElementById('el-watermark').src = p.watermark;
+  }
+  document.querySelectorAll('[data-anim],[data-counter],[data-kb],[data-ambient]').forEach(function (el) {
+    var t0s = el.getAttribute('data-t') || '0';
+    var t0 = t0s.indexOf('end-') === 0 ? Math.max(0, dur - parseFloat(t0s.slice(4))) : parseFloat(t0s);
+    var d = parseFloat(el.getAttribute('data-d') || '0.5');
+    var kind = el.getAttribute('data-anim');
+    var k = Math.max(0, Math.min(1, (t - t0) / (d || 0.001)));
+    var e = 1 - Math.pow(1 - k, 3); /* easeOutCubic */
+    if (kind) {
+      if (kind === 'kb') {
+        var seq = (el.getAttribute('data-kb') || '1,1,1.06,1.06').split(',').map(Number);
+        var kk = Math.max(0, Math.min(1, t / Math.max(0.001, dur)));
+        var ke = kk < .5 ? 2 * kk * kk : 1 - Math.pow(-2 * kk + 2, 2) / 2; /* easeInOut */
+        var sc = seq[0] + (seq[2] - seq[0]) * ke, scy = seq[1] + (seq[3] - seq[1]) * ke;
+        el.style.transform = 'scale(' + sc + ',' + scy + ')';
+        el.style.opacity = 1; el.style.transformOrigin = 'center';
+        return;
+      }
+      if (k <= 0) { el.style.opacity = 0; el.style.transform = 'none'; }
+      else {
+        el.style.opacity = 1;
+        if (kind === 'pop')        el.style.transform = 'scale(' + (0.6 + 0.4 * e) + ')';
+        else if (kind === 'up')   { el.style.transform = 'translateY(' + ((1 - e) * 60) + 'px)'; el.style.opacity = e; }
+        else if (kind === 'stamp') el.style.transform = 'scale(' + (1.25 - 0.25 * e) + ')';
+        else if (kind === 'wipe-in')  el.style.transform = 'translateX(' + (-100 + 100 * e) + '%)';
+        else if (kind === 'wipe-out') el.style.transform = 'translateX(' + (100 * e) + '%)';
+        else if (kind === 'fade')  el.style.opacity = e;
+      else if (kind === 'typing') {
+        var txt = el.getAttribute('data-text') || el.textContent;
+        el.textContent = txt.slice(0, Math.ceil(txt.length * k));
+        el.style.opacity = k <= 0 ? 0 : 1;
+      }
+      }
+      if (!el.getAttribute('data-ambient')) return;
+    }
+    /* 环境动效：入场完成后持续微动（data-ambient="float|pulse"；data-amp幅度 data-sp速度 data-ph0初相） */
+    var amb = el.getAttribute('data-ambient');
+    if (amb && t > t0 + (kind ? d : 0)) {
+      var at0 = t0 + (kind ? d : 0);
+      var amp = parseFloat(el.getAttribute('data-amp') || (amb === 'float' ? '12' : '0.035'));
+      var sp = parseFloat(el.getAttribute('data-sp') || (amb === 'float' ? '0.9' : '0.6'));
+      var ph0 = parseFloat(el.getAttribute('data-ph0') || '0');
+      el.style.opacity = 1;
+      if (amb === 'float')
+        el.style.transform = 'translateY(' + (Math.sin((t - at0) * sp * 6.283 + ph0) * amp).toFixed(1) + 'px)';
+      else if (amb === 'pulse')
+        el.style.transform = 'scale(' + (1 + Math.sin((t - at0) * sp * 6.283 + ph0) * amp).toFixed(4) + ')';
+    }
+    if (kind) return;
+    var c = el.getAttribute('data-counter');
+    if (c) {
+      var a = c.split(',').map(Number); /* from,to,dur,decimals */
+      var ck = Math.max(0, Math.min(1, (t - t0) / (a[2] || 1)));
+      var ce = 1 - Math.pow(1 - ck, 2);
+      var v = a[0] + (a[1] - a[0]) * ce;
+      el.textContent = v.toFixed(a[3] !== undefined ? a[3] : 0);
+      el.style.opacity = k <= 0 ? 0 : 1;
+    }
+  });
+  return true;
+};
+
+/* 自检：主体不超 4:3 安全区（data-deco 豁免）、一切不超画布 */
+window.yzCheck = function () {
+  var problems = [];
+  var st = document.getElementById('stage').getBoundingClientRect();
+  document.querySelectorAll('#el-stage *').forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    if (!r.width || !r.height || el.closest('[data-deco]')) return;
+    if (r.right > st.right + 2 || r.bottom > st.bottom + 2 || r.left < st.left - 2 || r.top < st.top - 2)
+      problems.push('overflow:' + (el.className || el.tagName));
+  });
+  var sub = document.getElementById('el-subtitle');
+  if (sub && sub.scrollWidth > 1040) problems.push('subtitle-overflow');
+  return problems.length ? { status: 'noncompliant', problems: problems }
+                         : { status: 'compliant' };
+};
+</script>
+<style>
+.barchart-track{background:#26221f;}
+.kbd{font-family:ui-monospace,Consolas,monospace;background:#26221f;border:1px solid #3a3634;
+     border-radius:10px;padding:2px 12px;color:#d8d2cc;}
+</style><script>window.SHOOT_DENSE=[[1.2,8,6]];</script>
+</body>
+</html>
