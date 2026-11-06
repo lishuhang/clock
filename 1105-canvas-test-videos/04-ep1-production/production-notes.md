@@ -1,22 +1,32 @@
-# 第一篇「价格篇」投产记录（2026-11-05 成片）
+# 第一篇「价格篇」投产记录（v3 · 2026-11-06 修复重制）
 
-## 成片
-- `output/AI视频画布横评-第一篇-价格篇-成片.mp4`（1080×1920, 30fps, H.264+AAC, 12:20.36, 37MB）
-- `output/qc_report.json`：G1零坏帧/G2时长/G3分辨率/G4响度-15LUFS/G5无长黑屏/G6无Remotion元数据 → BUILD_SUCCESS
-- 字幕独立交付：`output/字幕.srt`（385条，B站投稿兼容）
+## v3 成片
+- `output/AI视频画布横评-第一篇-价格篇-成片v3.mp4`（1080×1920, 30fps, 740.37s=22211帧精确, 43MB）
+- `output/字幕v3.srt`（365条，whisper 词锚定 + jieba 词边界分卡）
+- `output/qc_report_v3.json`：G1零坏帧/G2帧数精确22211/G3时长/G4分辨率/G5响度-15LUFS/G6无长黑屏/G7无Remotion元数据 → BUILD_SUCCESS
+- 同步验证：句3实测开口 29.38s，t=29.4s 帧字幕「这些案例很容易给人一种错觉」精确对位（用户投诉点闭环）；370s A/B 边界无花屏/字幕连续；VLM 8 抽帧全通过
 
-## 管线（十步状态机 Step 5-9 实录）
-1. canvas 43 镜（S01-S43.html，v2 规格母版）→ h5_render.py 受控截帧 2578 帧（JPEG q90，163MB，不入库可再生）
-2. 总装 `scripts/ffmpeg_master_v2_seg.py`（分段模式，绕沙箱 600s 命令超时+后台进程被杀问题）：
-   - 段A 0-370s / 段B 370-740.36s，段B 字幕+sendcmd 时间轴偏移 -370s
-   - 视频链：concat帧轨 → 轨道PNG(1080×8) → sendcmd+drawbox 动画进度条(#e55b46, 0.5s步进) → ASS字幕(普惠体68px白字黑边Outline=7单行) → 全屏wm75.png水印(最顶层)
-   - 音频链：配音(44.1k单声道)与BGM(48k立体声) aformat统一48k立体声 → sidechaincompress闪避 → loudnorm两遍 I=-15
-   - concat拼段 → 混流 → faststart + metadata comment清空
-3. 双重目检：VLM 6抽帧（字幕对位精确/水印/画面无缺陷）+ 像素级进度条测量（6帧全部0-1px误差，370s分段缝无缝）
+## v3 三大修复（对应 2026-11-06 用户反馈）
+1. **音画不同步**（三连坑全修）：
+   - 字数权重估算全片漂移 ±27s → whisper(faster-whisper base, hf-mirror) 词级时间戳 + silencedetect 双校准（`align_final.py`），43 镜全部实测时间码
+   - concat demuxer 图像时长量化(1/25s网格) 每镜+0.02s → 帧数精确架构（`assemble_v3.py`：n=round(dur×30) 逐镜编码 + 符号链接序列 + concat -c copy + -frames:v 分段）
+   - h5_render v1 1.5s 窗口截断（42/43 页 data-t>1.5s 元素丢失）→ `h5_render_v3.py`（入场窗∪2fps网格∪SHOOT_DENSE∪尾帧，43镜 3350 帧全动效覆盖）
+2. **黑底暗色系**：43 页全量换肤（`dark_convert.py`：CSS变量上下文替换+深底白字胶囊反转+渐变映射+logo白键出/反转/提亮）；S01 黑底起与全片统一
+3. **B站真实素材**（S02/S03/S14/S23 重做）：
+   - S02 牌子：原片街头一镜到底(36-50s) 叠底 scrim82% + B站播放量截图(2152.1万) + 嵌入播放器点赞截图(150.1万) + 郭帆转发点赞新闻段落截图 + 23天/100万金色盖章
+   - S03 丧尸清道夫：重制版末日小镇俯瞰(100-115s) 叠底 + 播放量424万/点赞37.7万截图 + 中专/3000元/全网破亿胶囊（口径注明）
+   - S14 一元一秒：原文截图红框留证（娱乐资本论·腾讯新闻 2026-10-08）
+   - S23 Higgsfield：pricing 实截 + $129 划线价红框（像素行扫精确定位 23.2-28.2%）+ ¥864/年付破万核算卡
+   - 通路：pagelist→playurl 游客720p + curl断点续传；m.bilibili.com/player.bilibili.com 免验证码截图
 
-## 踩坑（补入 skill 铁律候选）
-- ffmpeg `crop`/`drawbox` 的 w/h 表达式只在初始化求值一次，不支持 t 逐帧动画 → 用 `sendcmd` 指令文件驱动 drawbox（`drawbox@命名实例` sendcmd 不识别，只能按滤镜类型名命中，图内须唯一同类型滤镜）
-- sidechaincompress 要求主/侧链输入采样率+声道数一致 → 入口先 aformat=sample_rates=48000:channel_layouts=stereo
-- 多输入 filter_complex 中 PNG 索引要按实际输入序号（配音/BGM 占位后轨道/水印后移），预览与全渲染输入布局不同需参数化
-- 沙箱 Bash 600s 上限 + 后台进程会被静默回收（setsid 也一样被杀于~80s）→ 长编码必须分段前台跑，段间幂等续跑
-- concat demuxer `-ss` 输入寻址与输出寻址帧差≈0（可用），段边界字幕事件跨缝双写（A段截尾/B段截头）实现无缝续显
+## 生产数据（v3）
+- `ep1_shots_v3.json`：43镜实测时间码（句首误差≤0.3s，总长740.36s）
+- `ep1_sentences_real.json`：76句实测
+- `ep1_subtitles_real.json`：365卡
+- `materials/bili/`：视频2段+截图18张+meta
+- 帧目录 `frames_v3/`（3350渲染帧+22211序列链接，163MB+，不入库可再生）
+
+## 已知妥协
+- 点赞数用嵌入播放器实时截图（150.1万），与搜索API(142.8万)有快照差——以截图为准
+- S03「全网播放破亿」为全网口径，B站截图实证424万（画面已注明口径）
+- 409字节以内的空段字幕边界偶有 0.25s 最短卡长拉平

@@ -53,3 +53,33 @@
 ## 六、失败处置协议
 
 报错先 `tail -30` 原始日志对照本表 → 换法重试 ≤1 次 → 仍失败记入 production-report.md「未探索/待用户」节并继续其余镜头（禁死磕）。沙盒重置后：`.venv` 重装 yt-dlp（≥2026.09）、按 RESUME.md 三分钟接续。
+
+## §7 v3 修复轮新坑（2026-11-06 价格篇重制实战，全部实测）
+
+### 7.1 音画同步三连坑（用户 27s 处感知不同步的完整归因）
+| # | 坑 | 真因 | 对策（已固化为铁律 13/14/15） |
+|---|---|---|---|
+| P1 | 字数权重估算漂移 ±27s | TTS 实际语速随数字/英文/停顿波动，5.02字/秒只是均值；句3 实测开口 29.38s vs 估算 27.33s（画面早切 2s），到句10 已偏 9s | whisper 词级时间戳 + silencedetect(-38dB/0.22s) 静音区间双校准；句首吸附区间起点 |
+| P2 | concat 图像时长量化 | concat demuxer 对 PNG duration 量化到 1/25s 网格，每镜 +0.01~0.02s，43 镜累积 ~0.9s | 帧数精确架构（铁律14）；实测 `-r 30` 输入参数**不能**改变该网格 |
+| P3 | 渲染器 1.5s 窗口截断 | v1 h5_render 只截前 1.5s，data-t>1.5s 元素全部不可见（42/43 页中招，最长 data-t=30s） | v3 时刻集 = 入场窗 ∪ 2fps 网格 ∪ SHOOT_DENSE ∪ 尾帧（铁律15） |
+
+### 7.2 whisper 本地化
+- `pip install faster-whisper`；PyAV 版本冲突时不要修 av，直接 `ffmpeg -ar 16000 -ac 1 -c:a pcm_f32le -f f32le` 转 raw + `np.fromfile` 喂数组（绕开 decode_audio）。
+- HuggingFace 429（共享出口 IP）：`HF_ENDPOINT=https://hf-mirror.com` 或手动 curl `hf-mirror.com/Systran/faster-whisper-base/resolve/main/{model.bin,config.json,tokenizer.json,vocabulary.txt}`（vocabulary.json/preprocessor_config.json 是 15 字节的 404 页，别下）。
+- base 模型 2C CPU 全片 740s 转写 42s（beam_size=1 + vad_filter + word_timestamps）；转写错字（郭帆→郭翻）不影响对齐——对齐用的是已知脚本文本 ↔ whisper 字符流 SequenceMatcher。
+- z-ai asr API 限流窗口 ~13 次/周期，145 区间全量要数小时；本地 whisper 是正解。
+
+### 7.3 B站素材通路（view API 412 时代）
+- 412 墙：`x/web-interface/view`、视频页（curl/yt-dlp 均拦）、archive/stat API；**搜索/pagelist/reply/playurl API 游客可用**。
+- 下载：`pagelist?bvid=` 拿 cid → `playurl?bvid=&cid=&qn=80&platform=html5&high_quality=1` 拿 durl mp4（720p）→ upos CDN 掐长连接，`curl -C - --retry 5 --retry-all-errors` 断点续传；下载后 ffprobe 时长体检（试看钳制坑 B31）。
+- 截图：m.bilibili.com（iPhone UA）免验证码，`.main-cover .left` 元素截播放量条；player.bilibili.com 外链播放器（桌面 UA）截点赞计数（`contains('万')` DOM 定位）；评论区游客只见前 3 条热评，郭帆类名人评价 → 新闻报道段落截图（playwright 元素级 screenshot）。
+- 真浏览器上下文也会遇 GeeTest 点击验证码（B8：点对也判负，等满 8s，失败整页 reload）——所以一律走 API+移动页，别碰桌面视频页。
+
+### 7.4 图像处理小坑
+- PIL 多通道求均值先 `.astype(int)`：uint8 相加溢出（206+209+209=624 → mod 256 = 112，均亮 37 假读数）。
+- 白底 logo 键出阈值：距白 d<8 → alpha 0，d≥30 → 255，中间线性；纯黑字形（V=0）HSV 缩放无效，直接反转。
+- 元素级网页截图常带"打开App"蓝横幅：按颜色行扫（B - max(R,G) > 15 首行）精确裁掉，比按高度比例裁可靠。
+
+### 7.5 A/B 分段边界
+- 终渲分段 `-t dur` 会在边界丢 2~3 帧（时间戳语义）；用 `-frames:v n` + B 段 `-ss n_A/30`，切点先 round 到帧边界；拼接后全片帧数必须 == round(总长×30)（本次 22211 精确命中）。
+- 幂等检查不能只看文件存在：超时被杀会留 0 字节残骸（`getsize > 1MB` 才算完成）。
