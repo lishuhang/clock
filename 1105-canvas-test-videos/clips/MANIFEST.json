@@ -1,0 +1,108 @@
+{
+ "slices": {
+  "ep1_paizi_s02_36-48": {
+   "file": "clips/ep1_paizi_s02_36-48.mp4",
+   "source": "B站 BV11mFLziEyP《牌子》原片 464.8s 1280x720（一次性下载后切片，原件不入库）",
+   "window": [
+    36.0,
+    47.7
+   ],
+   "box": null,
+   "duration": 11.73,
+   "size_mb": 4.0,
+   "purpose": "S02a(0.0-2.8)街头一镜到底 + S02b(2.8-11.28)证据卡底，fit 模式 16:9→1080x608",
+   "used_by": [
+    "S02a",
+    "S02b"
+   ],
+   "episode": "ep1"
+  },
+  "ep1_sss_s03_100-113": {
+   "file": "clips/ep1_sss_s03_100-113.mp4",
+   "source": "B站 BV1FFRQB2Eqw《丧尸清道夫》重制版 213.5s 1280x548（一次性下载后切片）",
+   "window": [
+    100.0,
+    113.1
+   ],
+   "box": null,
+   "duration": 13.1,
+   "size_mb": 5.77,
+   "purpose": "S03a(0.0-2.8)末日小镇俯瞰 + S03b(2.8-12.57)证据卡底，fit 模式 2.34:1→1080x462",
+   "used_by": [
+    "S03a",
+    "S03b"
+   ],
+   "episode": "ep1"
+  },
+  "ep1_t2take1_s04_3-10": {
+   "file": "clips/ep1_t2take1_s04_3-10.mp4",
+   "source": "AniShort T2 金钟木偶第一抽 15.07s 720x1280（网盘一次性下载）",
+   "window": [
+    3.2,
+    10.2
+   ],
+   "box": null,
+   "duration": 7.0,
+   "size_mb": 3.03,
+   "purpose": "S04 视频背景镜（cover 全宽取中段），金钟木偶段",
+   "used_by": [
+    "S04"
+   ],
+   "episode": "ep1"
+  },
+  "ep1_t2take3_s34_loop": {
+   "file": "clips/ep1_t2take3_s34_loop.mp4",
+   "source": "AniShort T2 金钟木偶第三抽 15.07s 720x1280（网盘一次性下载；与 S04 不同 take 避免重复画面）",
+   "window": [
+    0.0,
+    15.072
+   ],
+   "box": null,
+   "duration": 15.03,
+   "size_mb": 5.8,
+   "purpose": "S34 临界线6卡横扫的循环背景（v8 新增应景素材；37.6s 镜头 stream_loop 循环，cover 模式+scrim）",
+   "used_by": [
+    "S34"
+   ],
+   "episode": "ep1"
+  },
+  "ep1_gacha_timelapse_s24b_85-96": {
+   "file": "clips/ep1_gacha_timelapse_s24b_85-96.mp4",
+   "source": "抽卡过程延时 323MB 2880x1800 167.6s（para_dl 8段并行一次性下载；本切片为 S24b 唯一用途）",
+   "window": [
+    85.0,
+    96.4
+   ],
+   "box": [
+    1080,
+    675
+   ],
+   "duration": 11.4,
+   "size_mb": 2.15,
+   "purpose": "S24b 抽卡延时背景+10倍速标，fit 模式 16:10→1080x675（已预缩放）",
+   "used_by": [
+    "S24b"
+   ],
+   "episode": "ep1"
+  },
+  "ep1_gacha_timelapse_s25_150-160": {
+   "file": "clips/ep1_gacha_timelapse_s25_150-160.mp4",
+   "source": "同上源，另一时间窗（v8 新增：S25 应景背景）",
+   "window": [
+    150.0,
+    160.4
+   ],
+   "box": [
+    1080,
+    675
+   ],
+   "duration": 10.4,
+   "size_mb": 1.52,
+   "purpose": "S25 实测结果4556 的背景视频（v8 新增应景素材：花钱抽卡过程，防单调）",
+   "used_by": [
+    "S25"
+   ],
+   "episode": "ep1"
+  }
+ }
+}

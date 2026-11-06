@@ -12,7 +12,7 @@ import sys
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-SKILL_SCRIPTS = "/home/z/my-project/clock/1105-canvas-test-videos/03-skill/explainer-video-studio/scripts"
+SKILL_SCRIPTS = "/home/z/my-project/skills/remotion-video-studio/scripts"
 sys.path.insert(0, SKILL_SCRIPTS)
 import netdisk  # noqa: E402
 
