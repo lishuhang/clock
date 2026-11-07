@@ -369,7 +369,8 @@ def cmd_final():
     split = find_split()
     for seg, (a, b) in {"A": (0.0, split), "B": (split, TOTAL)}.items():
         p = f"{BUILD}/final_{seg}.mp4"
-        if not (os.path.exists(p) and os.path.getsize(p) > 1e6):
+        # v8b: 帧数断言替代 getsize（轮次超时杀编码会留下 >1MB 残骸骗过 getsize，实测 final_A 2706/11161）
+        if not (os.path.exists(p) and probe_frames(p) == round((b - a) * FPS)):
             final_pass(seg, a, b)
     lst = f"{BUILD}/fin.txt"
     open(lst, "w").write(
@@ -407,7 +408,8 @@ def cmd_final_h():
     split = find_split()
     for seg, (a, b) in {"A": (0.0, split), "B": (split, TOTAL)}.items():
         p = f"{BUILD}/final_h_{seg}.mp4"
-        if not (os.path.exists(p) and os.path.getsize(p) > 1e6):
+        # v8b: 帧数断言替代 getsize（同 cmd_final）
+        if not (os.path.exists(p) and probe_frames(p) == round((b - a) * FPS)):
             final_h_pass(seg, a, b)
     lst = f"{BUILD}/fin_h.txt"
     open(lst, "w").write(

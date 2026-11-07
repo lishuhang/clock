@@ -656,3 +656,27 @@ Stage Summary:
 - 切片化基建：clips/ 16 切片（ep1×6+ep2×2+ep3×4+登记）全带 MANIFEST 用途索引；配音/BGM 入库；未来会话零大文件重下
 - 三集 90 镜全量 canvas 入库（canvas-ep2 39 页/canvas-ep3 51 页 + 组件库）
 - skill v2.2（37 铁律）同步本地与 GitHub
+
+---
+Task ID: 1105-decouple-v8b
+Agent: Z.ai (GLM)
+Task: 流程解耦轮：制作过程复盘文档 + pipeline.py 统一运行器 + H5-SPEC 画面层契约 + play.html 预览器 + skill v2.3 + 三集 b 版本重建验证（用户解耦指令落地）
+
+Work Log:
+- 崩溃恢复实测（本次任务本身就是废墟重启的验证）：clone clock 仓 → 本地 skill 从仓库 v2.2 全量恢复（沙盒 skills/ 是 v1.0 旧快照）→ ln -s repo 软链满足 assemble 脚本硬编码路径
+- 复盘十部分制作过程（PIPELINE-DECOUPLE.md）：P0 调研/P1 文案/P2 分镜(AI)/P3 对齐(脚本)/P4 切片(脚本)/P5 H5动效(AI,可换模型)/P6 截帧(脚本)/P7 总装(脚本)/P8 字幕(脚本)/P9 质检(脚本)/P10 交付(脚本)——仅 P2/P5 必须用模型
+- pipeline.py 统一运行器：check(齐全性：镜表/canvas页数/bg切片/配音/字幕/水印/字体/环境)/render(幂等截帧)/assemble(15段编排)/deliver(b命名归档)；--ep/--from/--to/--steps/--skip/--segments/--only-shots/--list；配置从 assemble_v8/assemble_ep import 常量（单一事实源，两处零维护）
+- H5-SPEC.md 画面层契约：1080×1920 舞台几何/4:3 安全框 Y555~1365/renderFrame 受控时钟/yzCheck 拒收/SHOOT_DENSE 采集窗/零网络本地字体/data-anim 原语表/透明页规则/交付回接流程——其他模型（Kimi K3.1 等）按此逐镜替换的完整接口
+- play.html 顺序播放预览器：iframe 逐镜加载 + rAF 驱动 renderFrame + 字幕卡同步显示 + 配音可选同步 + yzCheck 状态提示（http.server 同源访问）
+- skill v2.3（40 铁律）：38 三大可替换接口契约（画面层 H5/时间轴 shots/字幕权威卡）/39 统一运行器（含残骸帧数断言教训）/40 废墟重启协议（入仓分类=事实源 vs 派生物；b 后缀流程验证约定）；新增 references/h5-spec.md + references/decoupled-pipeline.md
+- 踩坑实录（本轮两个新坑，均已修+入 skill）：
+  ① 轮次超时残骸：assemble final_A 被超时杀死后留下 2706/11161 帧但 >1MB 的残件，getsize-only 检查放行 → 污染 vfinal/mux/speed 全链（speed 出 12520 帧）——修复=assemble_v8 final/final_h 补帧数断言（assemble_ep 本就有，ep2 幸免）；删残骸重跑 final 链恢复 22211 精确
+  ② deliver 命名正则 v[\d.]+ 贪婪吞掉扩展名前的点（字幕v8.bsrt/qc_report_v8.bjson）——改 v\d+(?:\.\d+)? 重跑 deliver
+  ③ 后台进程再证必死：nohup/setsid/disown 均存活不过工具调用边界（3 次实测）→ 长任务一律前台 timeout 分段轮次 + 幂等续跑；非幂等段（speed/subs）单独段跑防重启循环
+- b 版本重建全流程实测：check 三集 PASS（136 镜 canvas/15 路 bg 切片/配音/字幕/字体全在库，零素材重下）→ render 136 镜 ~19 分钟（ep1+ep2 并行 9.3 分钟 + ep3 单跑 9.5 分钟）→ assemble 三集 15 段 → deliver 12 件归档
+- QC：三集 G1-G14 全 PASS（BUILD_SUCCESS）；帧数与原版精确一致：ep1 竖/横 20192/20192、ep2 17010/17010、ep3 20686/20686；G11 语义锚点三集全中（ep1 5 锚/ep2 6 锚/ep3 6 锚）；G13 像素锚点全中；G14 水印等比 0.7036→0.7037
+
+Stage Summary:
+- 交付：v8b/v1b/v1b 三集双版本 + 三份 b 版 srt + QC 报告 → download/ 与仓库 output/（内容与 v8/v1 零变化，纯解耦流程验证）
+- 解耦基建：PIPELINE-DECOUPLE.md（复盘+架构+换模型指南）+ pipeline.py（步骤/段/镜三粒度可停留）+ H5-SPEC.md（画面层接口契约）+ play.html（顺序预览）+ RESUME.md v2（废墟重启标准动作）
+- skill v2.3（40 铁律，A-F 六组）同步本地与 GitHub 03-skill/；H5 外包工作流：给契约+范例镜 → 收单镜 HTML → --only-shots 重截 → assemble，G11/G13 自动把关防回归

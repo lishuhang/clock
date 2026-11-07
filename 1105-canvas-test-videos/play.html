@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>1105 三部曲 · 顺序播放预览器（H5 画面层人审用）</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0908; color: #ddd; font-family: "Alibaba PuHuiTi", "Noto Sans SC", sans-serif;
+         display: flex; height: 100vh; overflow: hidden; }
+  /* 左侧控制栏 */
+  #panel { width: 300px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+           background: #141110; border-right: 1px solid #2a2522; flex-shrink: 0; overflow-y: auto; }
+  #panel h1 { font-size: 16px; color: #fff; }
+  #panel .hint { font-size: 12px; color: #8a8078; line-height: 1.6; }
+  select, button { background: #221d1a; color: #eee; border: 1px solid #3a332e; border-radius: 6px;
+                   padding: 6px 10px; font-size: 13px; cursor: pointer; }
+  button:hover { border-color: #fc8166; }
+  #shotlist { flex: 1; overflow-y: auto; font-size: 12px; margin-top: 4px; }
+  #shotlist div { padding: 4px 8px; border-radius: 4px; cursor: pointer; color: #9a9088;
+                  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #shotlist div.cur { background: #3a241d; color: #fc8166; }
+  #status { font-size: 12px; color: #8a8078; }
+  /* 中央舞台：1080×1920 等比缩放 */
+  #stagewrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+  #framebox { position: relative; transform-origin: center; }
+  #frame { width: 1080px; height: 1920px; border: 0; background: #131110; display: block; }
+  #toast { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+           background: rgba(0,0,0,.7); color: #fff; font-size: 13px; padding: 4px 14px;
+           border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  #subtitle { position: absolute; bottom: 12%; left: 0; right: 0; text-align: center;
+              font-size: 30px; font-weight: 700; color: #fff; pointer-events: none;
+              text-shadow: 0 0 4px #000, 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000; }
+</style>
+</head>
+<body>
+<div id="panel">
+  <h1>顺序播放预览器</h1>
+  <div class="hint">按 H5-SPEC 契约顺序驱动各镜 renderFrame，供换模型/改镜后的人审。
+    空格=播放/暂停，←→=±5s，↑↓=上下镜，点击左列跳镜。配音可选同步播放。</div>
+  <select id="epsel">
+    <option value="ep1">第一篇·价格篇（46镜 740s）</option>
+    <option value="ep2">第二篇·功能篇（39镜 567s）</option>
+    <option value="ep3">第三篇·实测篇（51镜 690s）</option>
+  </select>
+  <div style="display:flex;gap:6px;">
+    <button id="play" style="flex:1">▶ 播放</button>
+    <button id="audio">♪ 配音:关</button>
+  </div>
+  <div id="status">加载中…</div>
+  <div id="shotlist"></div>
+</div>
+<div id="stagewrap">
+  <div id="framebox">
+    <iframe id="frame"></iframe>
+    <div id="subtitle"></div>
+  </div>
+  <div id="toast"></div>
+</div>
+<script>
+const EPS = {
+  ep1: { shots: "04-ep1-production/ep1_shots_v7.json",  canvas: "04-ep1-production/canvas/",
+         subs: "04-ep1-production/ep1_subtitles_v7.json", narr: "04-ep1-production/materials/audio/1105-1200-第一篇.mp3" },
+  ep2: { shots: "04-ep1-production/ep2_shots_real.json", canvas: "04-ep1-production/canvas-ep2/",
+         subs: "04-ep1-production/ep2_subtitles.json", narr: "04-ep1-production/materials/audio/1106-1239-2-功能篇.mp3" },
+  ep3: { shots: "04-ep1-production/ep3_shots_real.json", canvas: "04-ep1-production/canvas-ep3/",
+         subs: "04-ep1-production/ep3_subtitles.json", narr: "04-ep1-production/materials/audio/1106-1510-3-实测篇.mp3" },
+};
+let shots = [], subs = [], startOf = [], total = 0, cur = -1, playing = false;
+let t = 0, lastTs = 0, narrOn = false, narr = new Audio();
+
+const $ = id => document.getElementById(id);
+function toast(msg){ const el=$("toast"); el.textContent=msg; el.style.opacity=1;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.style.opacity=0, 1400); }
+
+async function loadEp(ep){
+  $("status").textContent = "加载中…";
+  const cfg = EPS[ep];
+  const sj = await (await fetch(cfg.shots)).json();
+  shots = sj; total = 0; startOf = [];
+  for (const s of shots){ startOf.push(total); total += s.dur; }
+  try { const d = await (await fetch(cfg.subs)).json();
+        subs = (d.cards||d).map(c=>({s:c.start,e:c.end,t:c.text})); }
+  catch(e){ subs = []; }
+  narr = new Audio(cfg.narr);
+  cur = -1; t = 0; playing = false; $("play").textContent = "▶ 播放";
+  const list = $("shotlist"); list.innerHTML = "";
+  shots.forEach((s,i)=>{ const d=document.createElement("div");
+    d.textContent = `${i+1}. ${s.id}  ${s.dur.toFixed(1)}s`;
+    d.onclick = ()=>seek(startOf[i]+0.01); list.appendChild(d); });
+  markShot();
+  $("status").textContent = `${shots.length} 镜 / ${total.toFixed(1)}s / ${subs.length} 字幕卡`;
+}
+function markShot(){
+  const i = shotIndexAt(t);
+  const kids = $("shotlist").children;
+  for (let k=0;k<kids.length;k++) kids[k].classList.toggle("cur", k===i);
+  if (i>=0) kids[i] && kids[i].scrollIntoView({block:"nearest"});
+}
+function shotIndexAt(x){ for (let i=shots.length-1;i>=0;i--) if (x >= startOf[i]-1e-6) return i; return 0; }
+function seek(x){
+  t = Math.max(0, Math.min(total-0.01, x));
+  if (narrOn) { try{ narr.currentTime = t; }catch(e){} }
+  const i = shotIndexAt(t);
+  if (i !== cur) switchShot(i);
+  drive(); markShot();
+}
+function switchShot(i){
+  cur = i;
+  const cfg = EPS[$("epsel").value];
+  $("frame").src = cfg.canvas + shots[i].id + ".html";
+  $("frame").onload = ()=> drive(true);
+}
+function drive(force){
+  const i = shotIndexAt(t);
+  if (i !== cur){ switchShot(i); return; }
+  const win = $("frame").contentWindow;
+  if (!win || !win.renderFrame) return;
+  const local = t - startOf[i];
+  const sub = subs.find(c => t >= c.s && t <= c.e);
+  win.renderFrame({ t: local, shot_dur: shots[i].dur, hud: true,
+                    subtitle: sub ? sub.t : "", chapter: shots[i].id,
+                    progress_pct: t/total*100, watermark: "" });
+  $("subtitle").textContent = sub ? sub.t : "";
+  $("status").textContent = `镜 ${shots[i].id}（${i+1}/${shots.length}）  ` +
+    `镜内 ${local.toFixed(1)}/${shots[i].dur.toFixed(1)}s  全片 ${t.toFixed(1)}/${total.toFixed(1)}s`;
+}
+function fit(){
+  const wrap = $("stagewrap").getBoundingClientRect();
+  const sc = Math.min((wrap.width-20)/1080, (wrap.height-20)/1920);
+  $("framebox").style.transform = `scale(${sc})`;
+  $("framebox").style.width = "1080px"; $("framebox").style.height = "1920px";
+}
+function loop(ts){
+  if (playing){
+    const dt = (ts - lastTs)/1000; lastTs = ts;
+    t += dt;
+    if (narrOn && narr.paused) narr.play().catch(()=>{});
+    if (t >= total){ t = total-0.01; playing=false; $("play").textContent="▶ 播放"; narr.pause(); }
+    drive(); markShot();
+  } else lastTs = ts;
+  requestAnimationFrame(loop);
+}
+$("play").onclick = ()=>{ playing = !playing; $("play").textContent = playing ? "⏸ 暂停" : "▶ 播放";
+  if (playing){ lastTs = performance.now(); if (narrOn) narr.play().catch(()=>{}); } else narr.pause(); };
+$("audio").onclick = ()=>{ narrOn = !narrOn; $("audio").textContent = narrOn ? "♪ 配音:开" : "♪ 配音:关";
+  if (narrOn){ try{ narr.currentTime = t; narr.play().catch(()=>{}); }catch(e){} } else narr.pause(); };
+$("epsel").onchange = e => loadEp(e.target.value);
+document.addEventListener("keydown", e=>{
+  if (e.code==="Space"){ e.preventDefault(); $("play").click(); }
+  else if (e.key==="ArrowLeft")  seek(t-5);
+  else if (e.key==="ArrowRight") seek(t+5);
+  else if (e.key==="ArrowUp"){ const i=shotIndexAt(t); seek(startOf[Math.max(0,i-1)]+0.01); }
+  else if (e.key==="ArrowDown"){ const i=shotIndexAt(t); seek(startOf[Math.min(shots.length-1,i+1)]+0.01); }
+});
+window.addEventListener("resize", fit);
+/* 截帧器同款自检：页面 yzCheck 非 compliant 在预览中标红提示 */
+setInterval(()=>{ if(cur<0) return; const win=$("frame").contentWindow;
+  if (win && win.yzCheck){ const r = win.yzCheck();
+    if (r.status !== "compliant") $("status").textContent += "  ⚠ yzCheck:"+r.status; } }, 2000);
+
+fit(); loadEp("ep1"); requestAnimationFrame(loop);
+</script>
+</body>
+</html>

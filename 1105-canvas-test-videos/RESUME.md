@@ -22,19 +22,39 @@ git sparse-checkout init --cone && git sparse-checkout set 1105-canvas-test-vide
 ## 3. 恢复上下文（1.5 分钟，按序读）
 
 1. `1105-canvas-test-videos/README.md` —— 章程与进度勾选
-2. `1105-canvas-test-videos/01-findings/timeline.md` —— 项目来龙去脉
-3. `1105-canvas-test-videos/01-findings/assets-map.md` —— 素材地图（哪些在网盘/哪些要做/哪些要外采）
+2. `1105-canvas-test-videos/PIPELINE-DECOUPLE.md` —— 管线解耦架构（职责分层/最小重跑路径/换模型指南）
+3. `1105-canvas-test-videos/01-findings/timeline.md` —— 项目来龙去脉
 4. `1105-canvas-test-videos/02-storyboards/` —— 三集分镜表（若已批准则直接按表投产）
 5. 根目录 `worklog.md` 尾部 —— 最近一次 Task 的 Work Log / Stage Summary
-6. 网盘文案原文在沙盒 `/home/z/my-project/netdisk_pull/key_files/`（若沙盒被回收，用 `scripts/batch_download.py` 重新拉）
 
-## 3.5 v6 防回归要点（新会话必读）
+## 3.5 废墟重启标准动作（v2.3 解耦架构后，替代手工逐段恢复）
 
-- **字幕唯一事实源**：`04-ep1-production/ep1_subtitles_whisper.json`（365 卡，带 _provenance；旧的 ep1_subtitles.json 已作废仅存档）
-- **开工先跑对账**：`python3 scripts/assemble_v6.py setup`（G8 前置：与 output/字幕v3.srt 逐卡对账，不过不开工）
-- **bg 视频一律原生比例**：BG_V6 模式表（fit=展示主体/cover=氛围底），禁非等比拉伸；G9 几何断言把关
-- **进度条分段必须带偏移**：gen_seg_cmds(total,t0,t1)；G10 连续性断言把关
-- 三处回归的完整归因见 `05-retro/RETRO.md`；防回归机制通用版见 skill v2.0 `references/anti-regression.md`
+**工程仓=唯一事实源**（分镜/字幕卡/切片/canvas 页/脚本/字体/配音全部在库）；
+frames 帧库与 build 中间件是派生物，崩溃即弃、脚本重生成：
+
+```bash
+cd /home/z/my-project/work-clock/1105-canvas-test-videos   # clone 出的工程目录
+python3 scripts/pipeline.py --list            # 一屏看三集 check/render/assemble/deliver 实际状态
+python3 scripts/pipeline.py --ep all          # 全量续跑（幂等=自动接续，零素材重下零动效重做）
+# 或按需停留/跳步：
+#   --ep 1 --from render          # ep1 从截帧开始
+#   --ep 2 --skip render          # 帧已在只重组装
+#   --ep 3 --segments subs,qc     # 只重跑字幕烧录+质检
+#   --ep 1 --only-shots S08 --steps render   # 换某镜 H5 后单镜重截
+```
+
+注意事项：
+- **长任务前台 timeout 分段跑**（沙盒后台进程必被会话回收，实测 nohup/setsid 均不可幸免）；
+- 非幂等段（speed/speed_h/subs/subs_h）单独跑：`--segments speed` 一次一段，勿与长段混跑；
+- 段级跳过判据=帧数 ffprobe 断言（v8b 轮已给 final/final_h 补上，防 >1MB 残骸骗过 getsize）；
+- H5 页面替换（外部模型交付）：按 `H5-SPEC.md` 契约验收 → `--only-shots` 重截 → assemble，
+  时间轴/字幕/切片一律不碰，G11/G13 锚点门禁自动把关防回归。
+
+## 3.6 v6 防回归要点（历史存档，G8-G10 断言仍内建于 assemble setup/qc）
+
+- **字幕唯一事实源**：`04-ep1-production/ep1_subtitles_whisper.json`（365 卡，带 _provenance；显示用卡=ep1_subtitles_v7.json 341 卡）
+- **bg 视频一律原生比例**：fit=展示主体 / cover=氛围底，禁非等比拉伸（G9 断言）
+- 三处历史回归的完整归因见 `05-retro/RETRO.md`；防回归机制通用版见 skill `references/anti-regression.md`
 
 ## 4. 接续规矩
 
