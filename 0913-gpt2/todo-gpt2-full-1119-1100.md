@@ -1,6 +1,48 @@
-# GPT-Image-2 生图项目 — 完整工作交接文档（1024-1430 版）
+# GPT-Image-2 生图项目 — 完整工作交接文档（1119-1100 版）
 
-# 第一部分：1024 增量交接日志（2026-10-24 1430，双渠道失效排障 → site:v2ex.com 新通道检索 → rapi 第三通道接入 → v2.0 → 文档合并）
+# 第一部分：1119 增量交接日志（2026-11-19 1100，三通道复检 → rapi 面板适配 → 设置面板冗余清理 → 新通道调研收官 → v2.1）
+
+## TL;DR（供短上下文 Agent 快速阅读）
+
+**项目现状**：生产版本 `kmage-kdr-rapi-2.1`（单文件 Cloudflare Worker「AI生图」，kmage + kdr + rapi 三通道）。本次迭代由用户 11-19 五项指令驱动：① 排除 gpt2.lishuhang.com 各通道故障（复检结论：rapi 全链健康；kmage 免费档仍付费墙、契约未变；kdr 免费档仍会员制——**但本版关键实测修正：host 合法时任意 Key 提交均被受理排队、中继按 Key 真伪转发上游，即自定义付费 Key 路径契约通畅**，v2.0「通道整体待命」表述修正为「免费档待命、付费 Key 可用」）；② rapi 不支持参考图 → 选中该通道时参考图输入区整体禁用（源码级，数据保留切回恢复）；③ 设置面板冗余清理——移除已死的 kdr Gift Key 获取/刷新行（端点恒返回占位符），保留自定义付费 Key textarea（唯一可用路径）；④ 新通道调研收官：v2ex（标签聚合页/sov2ex/web_search）、linux.do 与 NodeSeek（登录墙）、候选站 bundle 逆向，检视 20+ 候选**无一满足「免费+可编程+可持续」标准**，全表记档 README v2.1 节（避免后续重复劳动）；⑤ 线上部署 + 无头浏览器实测（结构自检 36/36 + 三通道切换 + 设置面板 + 控制台零错误 + **生产 E2E rapi 生图 33.0s completed**）后 GitHub 备份。
+
+## 用户指令与落地对照（接手者必读）
+
+1. **「排除 gpt2.lishuhang.com 的各通道故障」→ 三通道 11-19 全链实测**：rapi：trial-session 200 → generations 202 → 轮询 ~30s completed → 图床直连 200（3.4MB PNG；代理路径 CF 1003 属预期兑底），RouterAPI 原帖（t/1240321）活跃至 11-18、试用 Key 未停发——通道本身无故障；kmage：注册 201/登录 401 文案/建 Key 201 契约未变，免费生图仍 403 `account_environment_abnormal`（上游策略，v1.7 已归类）；kdr：占位符 Key 提交 401「请先登录会员」，但假 Key + 合法 host 实测被受理排队（202 queued）且终态 error「上游接口请求失败 (401): Invalid API key」——证明提交不校验 Key 真伪、中继才校验，付费 Key 路径通畅。**注意 host 合法值：www.97api.com / new.97api.com（keydraw.97api.com 会被 400「请求地址只能选择…」拦，worker 现用值正确）**。
+2. **「rapi 通道不支持参考图，选择该通道时请禁用面板的参考图输入」→ 源码级禁用**：参考图 label+refList 包入 `#refSection` 容器，`applyChannel()` 在 rapi 下 `display:none`（含 + 按钮与已入列图；数据保留，切回 kmage/kdr 自动恢复）；容器外新增 `#refDisabledHint` 提示段（rapi 下显示，说明仅文生图与数据保留）——**初版误将 hint 放在容器内（容器隐藏则提示永不显示），自检发现后移出**；同时隐藏 rapi 契约不收的精细度（`#qualityCell`，body 无 quality 参数）与 v2.0 起误显的 kdr 分辨率档（`sizeRowKdr` 改为仅 kdr 显示——rapi 实际用 `rapiSizeFor()` 比例→size 映射，该档从未生效）；`generate()` 校验同步：rapi 必须填写提示词。
+3. **「其他通道的残留功能在设置面板中保留但已经冗余，可以去除」→ 移除已死的 Gift Key UI、保留付费 Key 路径**：删 `giftKeyAlias` pill + `btnRefreshGift` 按钮及其点击绑定；kdr 分区改为「通道状态」pill（`kdrStatePill`：待命（上游会员制））+ 说明文字；**`kdrCustomKeys` textarea 保留**（kdr 当前唯一可用路径，第 1 条实测支撑）；`renderGiftLine()` 退化空函数（维持历史调用点），textarea 回填迁至 `renderSettings()`；移除 `switchChannel('kdr')` 与 init 两处 Gift Key 预取（`generateKdr` 内质询解销后的 `ensureGiftKey(true)` 刷新保留）；徽章 kdr「待命」、rapi 新增分支（v2.0 及以前误显 kmage 积分）。
+4. **「在 v2ex 等地搜索新的免费生图通道及同类资源，尝试增加新通道」→ 调研收官，本版无新增**：途径与候选全表见 README「kmage-kdr-rapi-2.1」节 Survey——五类淘汰（无 API / 人工赠送 / 验证码墙 / 一次性额度 / 纯付费），最接近的 miaosf（双 11 注册送 50 张，活跃）被 better-auth + Turnstile + 邮箱 OTP + 邀请码三重门槛阻断自动化；结论：2026-11 时点唯一达标的 RouterAPI 已在 rapi 通道内。**接手者复查时直接从该表续接，勿重复扫帖**。
+5. **「更新版本号、readme、changelog，直接在线上部署、测试完备无bug后，备份新版 worker js」→ 已完成**：VERSION 6 处 2.1；README（生产行/通道 bullets/v2.1 概览 bullet/文件清单/架构速览/时间线 v2.1 节含 Survey 全表）；/about notes_v2_1 四节 + kdr/rapi mode 更新；worker 头注释 v2.1 版本块；部署 CF API PUT 02:19:09Z success；测试：结构自检 36/36（debug/selfcheck-v2.1.js）+ 无头浏览器（agent-browser）实测三通道切换/设置面板/关于渲染/零控制台错误/生产 E2E rapi 生图 33s completed（截图 debug/e2e-rapi-v2.1-20261119.png）；备份 gpt2-worker-kmage-v2.1.js 入仓库并推送。
+
+## v2.1 变更清单（源码 diff 索引）
+
+- HTML：`#refSection` 容器包裹 + `#refDisabledHint`（容器外）+ `#qualityCell` 标记 + kdr 分区重构（`#kdrStatePill` 替代 Gift Key 行）+ 通知文案三通道
+- JS：applyChannel 通道裁剪四行；generate() rapi 必填提示词；renderGiftLine 空函数；renderSettings 回填 textarea；renderBadge kdr/rapi 分支重写；btnRefreshGift 绑定删除；switchChannel/init Gift 预取删除；generateRapi 兜底文案更新
+- 文案：头部注释 v2.1 块与三通道勘误、关于文档五处、/about kdr+rapi mode、notes_v2_1 四节、时间线 v2.1 条目
+- 后端逻辑零改动（三通道代理/自愈/中继/身份链路原样，仅自描述文本更新）——**回滚 v2.0 无任何行为风险**
+
+## 接手者最需要知道的事（增量）
+
+32. **kdr 付费 Key 是当前唯一免费档外的可用生图路径**：提交端点不校验 Key 真伪（任意 Key + host=www/new.97api.com 即 202 queued），中继转发真实上游时才校验——填入真实付费 Key 即可用（textarea 在设置 → kdr 通道选项）；免费 Gift Key 路径已死（占位符 + 401 会员闸门），UI 已移除但数据模型（kdr_state_v1.gift）保留兼容。
+33. **rapi 面板裁剪的边界**：refSection 隐藏 ≠ 清空 refImages（切回通道自动恢复显示与使用）；generateRapi 内的 refCount() 兜底 guard 保留（防历史会话切通道瞬间提交等边缘）；quality/kdrSize 的隐藏仅 UI 层（值仍存在 formState 记忆中，kmage/kdr 通道继续使用）。
+34. **新通道复查入口**：README「kmage-kdr-rapi-2.1」节 Survey 候选全表（20+ 站点与淘汰原因 + 调研途径与登录墙说明）；若 RouterAPI 停发试用 Key（「试用会话获取失败」）且需新通道，从该表续接而非重新扫帖。
+35. **结构自检脚本**：`debug/selfcheck-v2.1.js`（node 直接跑，36 项断言：VERSION/DOM id/绑定移除/预取移除/notes/时间线/模板完整性/无 CR-LF 转义）——下版迭代改完源码先跑它，再部署。
+
+## 生产环境现状（1119-1100 完工时点）
+
+- Worker `ai-image` = `kmage-kdr-rapi-2.1`（CF API PUT success 2026-11-19T02:19:09Z = GMT+8 10:19）；/healthz 与 /about 2.1（notes_v2_1 四节）；SW 缓存名 ai-image-shell-kmage-kdr-rapi-2.1；页面 title/前端 VERSION 2.1
+- 部署前 diff 确认现网与仓库 v2.0 一致（无漂移）；部署前现网脚本备份 `debug/deployed-v2.0-backup-20261119.js`
+- 生产 E2E：rapi 通道 UI 提交 33.0s completed（gpt-image-2 · 1024x1024 · 2.3MB PNG 直连回传，历史入册、下载可用）；契约探针全过（kmage 注册 201 / kdr 占位符 401 会员文案 + 假 Key queued）
+
+## 未完成事项与下一步建议
+
+1. **真机回归（唯一关键路径）**：用户浏览器打开 gpt2.lishuhang.com → 确认 SW 自动更新到 2.1（旧缓存页面刷新一次即新）→ 切 rapi 验证参考图禁用与生成 → 设置面板查看 kdr 新分区。
+2. **观察项**：RouterAPI 试用 Key 停发信号（「试用会话获取失败」）；kdr 会员制变化（若重新开放免费档，恢复 Gift Key UI 需从 v2.0 文件抄回 giftKeyAlias 行与 ensureGiftKey 预取，或等用户指示）；kmage 闸门放松信号（403 文案变化）。
+3. **明确不做**（沿袭重申）：不伪造质询信号；IP/指纹伪造；老虎机自动化；链式邀请；不绕过 Turnstile/邮箱 OTP 验证墙（调研中此类站点一律判不可接入）。
+
+---
+
+# 第二部分：1024 增量交接日志（2026-10-24 1430，双渠道失效排障 → site:v2ex.com 新通道检索 → rapi 第三通道接入 → v2.0 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -45,7 +87,7 @@
 
 ---
 
-# 第二部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
+# 第三部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -92,7 +134,7 @@
 
 ---
 
-# 第三部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
+# 第四部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -157,7 +199,7 @@
 
 ---
 
-# 第四部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
+# 第五部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -207,7 +249,7 @@
 ---
 
 
-# 第五部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
+# 第六部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -255,7 +297,7 @@
 
 ---
 
-# 第六部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
+# 第七部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -314,7 +356,7 @@
 
 ---
 
-# 第七部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
+# 第八部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -384,7 +426,7 @@
 
 ---
 
-# 第八部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
+# 第九部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
 
 > 以下为 2026-08-25 生成的交接文档（TODO-0826-1200.md）原文，覆盖 2026-07-22 至 2026-08-19。本次合并仅去除了原文件中的行号转录格式（`Read "..."` 头与行号前缀），内容未作任何改动；文中提及的路径（如 `0722-gpt2/`）、版本与结论均为当时状态，最新状态以第一部分与 `README.md` 为准。
 

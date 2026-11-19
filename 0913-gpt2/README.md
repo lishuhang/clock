@@ -1,16 +1,17 @@
 # 0913-gpt2 — AI生图 Worker（kmage + kdr + rapi 三通道）
 
-> **当前生产：`kmage-kdr-rapi-2.0`，部署于 `https://ai-image.lishuhang.workers.dev/`（Cloudflare Worker 名 `ai-image`；自定义域 `gpt2.lishuhang.com`）**
+> **当前生产：`kmage-kdr-rapi-2.1`，部署于 `https://ai-image.lishuhang.workers.dev/`（Cloudflare Worker 名 `ai-image`；自定义域 `gpt2.lishuhang.com`）**
 >
-> 本目录自包含。任何 AI Agent 访问本页/本仓库时：可将 `gpt2-worker-kmage-v2.0.js` 整体作为 skill 调用（单文件 Worker，后端代理 + 内嵌前端，无外部依赖）；排障请先读本文档与文件头部注释，线上自描述接口 `GET /about`、健康检查 `GET /healthz`；页面内右上角齿轮按钮 →「关于」选项卡含同样的自包含文档（对外脱敏版）与完整迭代时间线，与本文档对齐、两头互相补充。
+> 本目录自包含。任何 AI Agent 访问本页/本仓库时：可将 `gpt2-worker-kmage-v2.1.js` 整体作为 skill 调用（单文件 Worker，后端代理 + 内嵌前端，无外部依赖）；排障请先读本文档与文件头部注释，线上自描述接口 `GET /about`、健康检查 `GET /healthz`；页面内右上角齿轮按钮 →「关于」选项卡含同样的自包含文档（对外脱敏版）与完整迭代时间线，与本文档对齐、两头互相补充。
 >
-> **本文档已合并原 `CHANGELOG.md`**（完整迭代时间线见文末，按实际日期正序，从马良渠道至今）；任务交接文档见 `todo-gpt2-full-1024-1430.md`（0722~1024 历史交接全文 + 各次增量交接日志，由原 `TODO-full.md` 逐次合并重命名而来）。
+> **本文档已合并原 `CHANGELOG.md`**（完整迭代时间线见文末，按实际日期正序，从马良渠道至今）；任务交接文档见 `todo-gpt2-full-1119-1100.md`（0722~1119 历史交接全文 + 各次增量交接日志，由原 `TODO-full.md` 逐次合并重命名而来）。
 
-- **最后更新**：2026-10-24（GMT+8）
+- **最后更新**：2026-11-19（GMT+8）
 - **通道**：
   - **kmage**（默认）：上游 https://image.dddd.zone（kmage · AI 视觉工作台）官方 OpenAI 兼容 API。注册送 1 分；签到 +5 分/天/号（注册满 24h 开放）；1 积分 = 1 张图，失败自动返还；号池 N 号 ≈ 5N 张/天。站内老虎机为娱乐玩法（理论返还率 95.88%，负期望），本工具不对其进行自动化，避免把签到攒的积分赌没。**2026-10 现状**：免费生图在充值闸门后（2026-10-07 起），签到/额度类契约未变，号池存量积分待环境风控放行后仍可用
-  - **kdr**：上游 https://keydraw.97api.com（Keydraw/Draw Studio）。免费共享 Gift Key（`GET /api/gift-key` 自动轮换），2026-09 新契约：`key`/`host` 放请求 body，任务制（提交→轮询→图床 URL）；免费档固定 主线路 + gpt-image-2 + 1K；可选自定义付费 Key 解锁全部模型与 2K/4K。**2026-10 现状**：上游将免费生图转入会员登录制（实测提交 401「请先登录会员」，无公开注册端点，Gift Key 端点返回占位符 GO-ON-GOODLUCK）——通道代码/端点/中继全量保留待命，待上游重新开放或提供会员凭据即可恢复
-  - **rapi**（v2.0 新增）：上游 https://routerapi.net（Canvas 站点 = image.routerapi.net 无限画布所在 API 平台）。**免费试用通道**：上游推广帖（v2ex t/1240321）公开发放的共享试用 Key 换发 trial credential（JWT）后走异步生图（`/async/v1/images/*`），每日共享池额度（次日 6-8 点重置），实测单次 1 张、并发 5；试用 Key 仅限 Canvas 网页环境使用（`trial_web_only`），故全部经 Worker 代理（服务端可置 Origin/Referer；浏览器跨域不可伪造 Origin，无直连路径）；credential 以 Cookie（`rapi_trial`）持久化访客身份（等价上游 localStorage 语义）+ isolate 内存缓存，401/403 自动重取重试一次；结果图床为 IP 直链且 CORS 全开 → 前端浏览器直连优先转 b64（Worker 代理对裸 IP 图床命中 CF 1003 Direct IP Not Allowed，仅作兑底）；暂仅文生图（参考图忽略并提示）；错误原文透传（额度耗尽/Key 停发归因清晰）
+  - **kdr**：上游 https://keydraw.97api.com（Keydraw/Draw Studio）。任务制（提交→轮询→图床 URL），2026-09 新契约：`key`/`host` 放请求 body（host 合法值 www/new.97api.com）。**2026-10 现状**：上游免费档转入会员登录制（占位符 Gift Key 提交 401「请先登录会员」，原 `/api/gift-key` 端点恒返回占位符 GO-ON-GOODLUCK）——**v2.1 实测补充**：host 合法时任意 Key 提交均被受理排队、中继按 Key 真伪转发上游（假 Key 中继阶段 401 Invalid API key），即**自定义付费 Key 路径契约通畅**；通道代码/端点/中继全量保留，设置内已死的 Gift Key UI 于 v2.1 移除，填入真实付费 Key 即可用
+  - **rapi**（v2.0 新增）：上游 https://routerapi.net（Canvas 站点 = image.routerapi.net 无限画布所在 API 平台）。**免费试用通道**：上游推广帖（v2ex t/1240321）公开发放的共享试用 Key 换发 trial credential（JWT）后走异步生图（`/async/v1/images/*`），每日共享池额度（次日 6-8 点重置），实测单次 1 张、并发 5；试用 Key 仅限 Canvas 网页环境使用（`trial_web_only`），故全部经 Worker 代理（服务端可置 Origin/Referer；浏览器跨域不可伪造 Origin，无直连路径）；credential 以 Cookie（`rapi_trial`）持久化访客身份（等价上游 localStorage 语义）+ isolate 内存缓存，401/403 自动重取重试一次；结果图床为 IP 直链且 CORS 全开 → 前端浏览器直连优先转 b64（Worker 代理对裸 IP 图床命中 CF 1003 Direct IP Not Allowed，仅作兑底）；仅文生图——**v2.1 起选择该通道时参考图输入自动禁用**（面板同时隐藏 rapi 契约不收的精细度/分辨率档）；错误原文透传（额度耗尽/Key 停发归因清晰）。**2026-11-19 复检**：全链健康（trial-session 200 → generations 202 → ~30s completed → 图床直连 200；原帖活跃至 11-18，试用 Key 未停发）
+- **v2.1 三通道复检 + rapi 面板适配 + 设置面板冗余清理（2026-11-19 起，本版，重要）**：① 三通道 11-19 全链实测（rapi 健康 / kmage 免费档仍付费墙、契约未变 / kdr 免费档会员制但**付费 Key 路径实测通畅**——详见通道条目）；② rapi 面板适配（用户指示）：rapi 不支持参考图 → **选中该通道时参考图输入区整体禁用**（v2.0 为「忽略并提示」，升级为源头禁用；数据保留，切回自动恢复），一并隐藏 rapi 契约不收的精细度（body 无 quality）与 v2.0 起误显的 kdr 分辨率档（rapi 用比例→size 映射，该档从未生效）——rapi 下必须填写提示词；③ 设置面板冗余清理（用户指示）：移除已死的 kdr「共享 Gift Key」获取/刷新行（上游会员制后端点恒返回占位符），保留自定义付费 Key textarea（唯一可用路径）并更新文案；renderGiftLine 退化空函数、textarea 回填迁至 renderSettings；移除通道切换/初始化时的 Gift Key 预取；kdr 徽章「kdr · 待命」、rapi 徽章不再误显 kmage 积分；④ 新通道调研（用户指示）：v2ex（标签聚合页/sov2ex 全文/web_search）、linux.do 与 NodeSeek（登录墙）、候选站 bundle 逆向，检视 20+ 候选——全部落在无 API / 人工赠送 / 验证码墙（Turnstile+邮箱OTP）/ 一次性额度 / 纯付费五类，**无一满足「免费+可编程+可持续」接入标准**，候选全表记档本文档 v2.1 时间线节（避免后续重复劳动）；唯一达标的 RouterAPI 已在 rapi 通道内
 - **v1.5 直连优先（2026-09-23 起，重要）**：两上游已将数据中心出口 IP 拉黑（kdr：免费 Key 黑名单；kmage：生图环境异常），**生图类请求由访客浏览器直连上游**（住宅 IP + 真实 UA；两上游均开放 `Access-Control-Allow-Origin: *`；直连地址运行时经 `GET /about` 获取，脱敏原则不变），Worker 代理降级为直连网络失败时的自动回退；kmage 会话类操作（Cookie 会话，无法跨域携带）不受风控影响，仍走 Worker 代理
 - **v1.6 净号直注（2026-09-23 起，重要）**：v1.5 真机实测 kmage 直连生图仍 403「账号使用环境异常」——号池账号全部是 0913 经 Worker 从数据中心 IP 注册的「代理出身号」，实测确认风控按生图请求出口 IP 判定（/v1 与 /api/tasks 双端点、API Key 与会话 Cookie 双鉴权、任意 Origin/UA/XFF 均同拒）；同时实测**注册端点无 CORS/Origin 校验且 text/plain 请求体照常按 JSON 解析（201）**，访客浏览器可直连注册。v1.6 将注册改为**浏览器直连优先**（no-cors 简单请求，新号「住宅 IP 出生 + 住宅 IP 使用」，注册结果由 Worker 代理登录验证，网络失败回退代理注册）；403 `account_environment_abnormal` 触发自愈链：标记账号（24h 选号跳过）→ 换未标记号重试 → 浏览器直连注册净号再试 → 全部失败时透出错误原文与替代建议
 - **v2.0 新增 rapi 通道 + kdr 上游改版标注（2026-10-24 起，本版，重要）**：1024 用户报告双渠道生成失效，自主排障结论：① kdr——上游免费生图转入**会员登录制**（实测提交 401「请先登录会员后使用免费额度」，`/api/auth/*` 无公开注册端点，Gift Key 端点返回占位符 `GO-ON-GOODLUCK` 而非真实 Key）；② kmage——免费生图在充值闸门后（v1.7 已归类；签到/额度类契约未变，上游存活）。均为上游策略变更而非本工具缺陷；**按用户指示两通道代码/端点/中继全量保留不封闭**。新增 rapi（第三通道）：按用户指示以 `site:v2ex.com` 检索试用推广帖，命中「Canvas 站点」RouterAPI（t/1240321，帖内互动活跃至近期）——端点逆向 + 端到端实测通过后接入。工程要点：试用 Key 换发 credential（JWT）→ `X-Trial-Visitor` 头走异步生图；**credential 即访客身份**（提交与轮询必须同身份，否则任务 `missing`——首版部署实测踩坑），以 Cookie（`rapi_trial`，7 天）持久化 + isolate 缓存兜底 + 401/403 自动轮换重试；结果图床 IP 直链 CORS 全开 → 浏览器直连优先（Worker 代理路径命中 CF 1003 裸 IP 限制，仅作兑底）；冒烟 33/33（含 v1.9 回归）；生产端到端两单实测（22s / 42s completed，2.9MB PNG 直连回传）
@@ -22,7 +23,8 @@
 
 | 文件 | 说明 |
 |---|---|
-| `gpt2-worker-kmage-v2.0.js` | **当前生产版本**。在 1.9 基础上：① 新增 rapi 通道（第三通道）——「Canvas 站点」RouterAPI 免费试用：试用 Key 换发 credential 后走 `/async/v1/images/*` 异步生图，后端 `/api/rapi/{trial-session,generations,tasks/batch}` 代理 + `/rapi/img` 图片兑底代理，credential 以 Cookie（`rapi_trial`）持久化访客身份 + isolate 缓存，401/403 自动轮换重试；请求头置 Origin/Referer 为 Canvas 站点（trial web 校验，浏览器跨域不可伪造 Origin，无直连路径）；② 前端通道选择器新增「rapi」选项、模型列表 gpt-image-2 系列、比例→size 映射、提交→轮询→直连图床优先转 b64 全流程；③ kdr 上游 2026-10 转会员制现状标注（代码全量保留待命）；④ /about 新增 channels.rapi + notes_v2_0，时间线/排障/存储说明同步；VERSION 7 处 2.0 |
+| `gpt2-worker-kmage-v2.1.js` | **当前生产版本**。在 2.0 基础上：① 三通道 11-19 复检（rapi 全链健康：trial-session 200 → generations 202 → ~30s completed → 图床直连 200；kmage 契约未变、免费档仍付费墙；kdr 免费档会员制，**实测 host 合法时任意 Key 提交受理、中继按 Key 真伪转发 → 付费 Key 路径通畅**）；② rapi 面板适配（用户指示）：选中 rapi 时参考图输入区整体禁用（含已入列图；数据保留，切回自动恢复）、精细度与 kdr 分辨率档隐藏（rapi 契约不收）、rapi 下提示词必填；③ 设置面板冗余清理（用户指示）：移除已死的 kdr Gift Key 获取/刷新行与切换/初始化预取，保留自定义付费 Key textarea（唯一可用路径），kdr 徽章「待命」、rapi 徽章新增分支（不再误显 kmage 积分），通知文案三通道勘误；④ 新通道调研结论（20+ 候选无一可接入，全表见时间线 v2.1 节）；⑤ /about 新增 notes_v2_1、头部注释/关于文档/时间线同步；VERSION 6 处 2.1 |
+| `gpt2-worker-kmage-v2.0.js` | v2.0 留档（新增 rapi 通道 + kdr 上游改版标注）。在 1.9 基础上：① 新增 rapi 通道（第三通道）——「Canvas 站点」RouterAPI 免费试用：试用 Key 换发 credential 后走 `/async/v1/images/*` 异步生图，后端 `/api/rapi/{trial-session,generations,tasks/batch}` 代理 + `/rapi/img` 图片兑底代理，credential 以 Cookie（`rapi_trial`）持久化访客身份 + isolate 缓存，401/403 自动轮换重试；请求头置 Origin/Referer 为 Canvas 站点（trial web 校验，浏览器跨域不可伪造 Origin，无直连路径）；② 前端通道选择器新增「rapi」选项、模型列表 gpt-image-2 系列、比例→size 映射、提交→轮询→直连图床优先转 b64 全流程；③ kdr 上游 2026-10 转会员制现状标注（代码全量保留待命）；④ /about 新增 channels.rapi + notes_v2_0，时间线/排障/存储说明同步 |
 | `gpt2-worker-kmage-v1.9.js` | v1.9 留档（中继修复 + 中继遥测 + 自动重载）。修复 3xx 续跳丢弃 Set-Cookie（质询解销凭据 cf_clearance 随 303 下发，原实现新建 Response 丢弃之——「勾选成功也不生效」）；中继请求补 Origin/Referer；质询页改写补 JSON 转义斜杠变体；中继遥测探针 + 报错自动重载 ≤2 次；定位校正 |
 | `gpt2-worker-kmage-v1.8.js` | v1.8 留档（人工验证中继首版）。在 1.7 基础上新增：① kdr 上游人机质询「人工验证中继」（/kdr/challenge 中继入口 + /kdr/chl/*、/cdn-cgi/* 全流程中继；质询页改写剥 CSP/XFO、Set-Cookie 以 kmirror_ 前缀镜像到本站域，代理请求自动还原透传；前端弹窗 iframe 由真实用户完成勾选，postMessage + 代理探活双通道确认，验证后 24h 内代理优先）；② kmage 自愈⓪ 号内重建 API Key（403 环境异常先删旧建新再调用，Key 维度单独标记可不换号解除）；③ 净号不丢弃（批量签到覆盖已归档号与环境异常标记号，持续攒分备 Key 轮换） |
 | `gpt2-worker-kmage-v1.7.js` | v1.7 留档（质询归类 + 充值闸门冷却版）。在 1.6 基础上新增上游人机质询归类（Worker 代理检测 `cf-mitigated: challenge`/质询页特征 → 502 `upstream_challenge` 结构化 JSON，前端快速失败：不刷新 Gift Key、不重试、不转录 HTML 原文，轮询同提前失败）与 kmage 充值闸门 6h 冷却（净号直注亦被 403 环境异常拒绝后，6h 内自愈链跳过自动注册，终态报错明确归因；签到/额度类不受影响） |
@@ -32,11 +34,11 @@
 | `gpt2-worker-kdr-v1.2.js` | 旧 kdr 独立版留档（上游 2026-09 改版后瘫死，已被 kmage-kdr-1.2 修复复活取代） |
 | `gpt2-worker-kdr-v1.1.js` | 旧 kdr 独立版留档（日额度计数 + 多自定义 Key 轮换） |
 | `gpt2-worker-kdr-v1.0.js` | 旧 kdr 独立版留档（单通道 + Gift Key 自动轮换） |
-|  `todo-gpt2-full-1024-1430.md` | 任务交接文档（0722~1024 历史交接全文 + 各次增量交接日志，每次增量后按 GMT+8 完工时间重命名） |
+|  `todo-gpt2-full-1119-1100.md` | 任务交接文档（0722~1119 历史交接全文 + 各次增量交接日志，每次增量后按 GMT+8 完工时间重命名；第一部分为 1119 v2.1 交接，含新通道调研候选全表复查入口） |
 
 > 原 `CHANGELOG.md` 已全文并入本文件文末「完整迭代时间线」节；原 `TODO-full.md` 已与各次增量交接日志合并为 todo 文件。更早的 kmage v1.0~v1.3 与马良 v27.2 留档已随仓库瘦身移除（变更细节见时间线与 todo 文档历史部分）。
 
-## 架构速览（kmage-kdr-rapi-2.0）
+## 架构速览（kmage-kdr-rapi-2.1）
 
 **路由**（Cloudflare Worker `ai-image`，无状态，无 KV 依赖）：
 
@@ -90,10 +92,10 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 
 **生图**：
 - kmage：模型 gpt-image-2 / 2.5-flare / 2.5-sunburst；比例 7 种；质量 auto/low/medium/high；图生图 ≤10 张；前端 180s 超时
-- kdr：任务制（3s 轮询/180s 上限）；免费档锁定 gpt-image-2 + 1K；图生图 multipart edits；结果 URL 经 `/kdr/img` 转 b64
+- kdr：任务制（3s 轮询/180s 上限）；免费档锁定 gpt-image-2 + 1K；图生图 multipart edits；结果 URL 经 `/kdr/img` 转 b64；**2026-10 起免费档会员制（401「请先登录会员」），当前需在设置填入自定义付费 Key 方可用（v2.1 实测路径通畅）**
 
 **号池行为（kmage）**：轮换 most-credits / round-robin；402 积分不足自动换号；401 自动重登重建 Key；429 退避；**5xx 网关错误 4s 同号重试 + 换号重试**；**403 环境异常自愈链（v1.8: 自愈⓪ 号内重建 API Key 重试 → 标记 → 换号 → 净号直注[受 6h 充值闸门冷却] → 诚实报错）**；无号自动注册（可关）；打开页面自动签到（可关；v1.8 起含环境异常标记号与已归档号——净号不丢弃，持续攒分备 Key 轮换）。
-**kdr 行为**：Gift Key 缓存 10 分钟自动轮换；401/403 Key 被拒自动刷新重试；提交 5xx 4s 重试；免费档参数自动回退（模型/1K）并记日志；**上游 Cloudflare 质询（v1.8/v1.9）：触发人工验证中继——弹窗内嵌上游质询页由真实用户勾选完成（只有人工能完成的一步，其余环节工具尽可能自动化），验证凭据经 Cookie 镜像自动携带，通过后自动刷新 Gift Key 重试原任务；v1.9 起质询页注入失败遥测探针（失败明细入应用日志）+ 报错自动重载 ≤2 次；验证未完成则诚实终止不空转**。
+**kdr 行为**：**v2.1 起 Gift Key UI 已移除（端点恒返回占位符）；无自定义 Key 时提交将收到上游 401「请先登录会员」错误原文（归因清晰）；填入自定义付费 Key 后自动优先使用（全模型/2K/4K 解锁）**；提交 5xx 4s 重试；**上游 Cloudflare 质询（v1.8/v1.9）：触发人工验证中继——弹窗内嵌上游质询页由真实用户勾选完成（只有人工能完成的一步，其余环节工具尽可能自动化），验证凭据经 Cookie 镜像自动携带，通过后自动刷新 Gift Key 重试原任务；v1.9 起质询页注入失败遥测探针（失败明细入应用日志）+ 报错自动重载 ≤2 次；验证未完成则诚实终止不空转**。
 **直连优先（v1.5，两通道）**：生图类请求先走浏览器直连，失败自动回退 Worker 代理；控制台日志对每次上游请求标注「直连/代理」路径；上游返回的 4xx/5xx 视为业务响应原样透传给既有重试/换号逻辑，不触发代理回退。v1.8: kdr 人工验证通过后 24h 内代理优先（跳过注定失败的直连尝试）。
 
 ## 使用指引（与页面「关于」文档对齐）
@@ -101,7 +103,7 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 ### 安装到系统（PWA）与界面记忆
 
 - 本应用是 PWA，可安装到操作系统：浏览器地址栏出现「安装」图标时点击即可（设置 → 通用选项 → 「安装到系统」按钮亦可；iOS Safari 用「分享 → 添加到主屏幕」）。应用名「AI生图」，图标为白底圆角矩形叠加画笔颜料盘 logo（与 favicon 同款）；以 standalone 模式打开，保留系统标题栏与窗口控制。
-- 创作面板选项（模型 / 画面比例 / 精细度 / kdr 分辨率档 / 提示词）自动记忆在浏览器 localStorage（`kmage_form_v1`），下次打开自动恢复；模型按通道分别记忆（kmage 与 kdr 各一套），切换通道各自恢复。
+- 创作面板选项（模型 / 画面比例 / 精细度 / kdr 分辨率档 / 提示词）自动记忆在浏览器 localStorage（`kmage_form_v1`），下次打开自动恢复；模型按通道分别记忆（kmage / kdr / rapi 各一套），切换通道各自恢复；v2.1 起面板按通道裁剪（rapi 隐藏参考图/精细度/分辨率档，参考图数据保留）。
 - SW 缓存策略：仅缓存页面外壳（`/` 网络优先回退缓存）与 manifest/图标；不拦截任何代理/API 请求；缓存名随版本号更新，activate 自动清理旧缓存。
 
 ### kmage 积分与 24 小时规则
@@ -161,7 +163,7 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 
 ## 完整迭代时间线（原 CHANGELOG.md 全文 · 按实际日期正序）
 
-页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点 / Canvas 站点」表述）；本文档为维护者视角，保留真实上游地址。当前生产：`kmage-kdr-rapi-2.0`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
+页面内嵌「关于」文档对源站做了脱敏（以「kmage 站点 / kdr 站点 / Canvas 站点」表述）；本文档为维护者视角，保留真实上游地址。当前生产：`kmage-kdr-rapi-2.1`（Cloudflare Worker `ai-image`，https://ai-image.lishuhang.workers.dev/）。
 
 ---
 ## 阶段一：马良渠道（2026-07 上旬及以前，本地迭代 v0.x → v27.2）
@@ -312,7 +314,42 @@ kmage_hist_v1    任务历史（≤40 条；成功/失败/中断均入册。成�
 - 生产端到端：**kdr 免费 Gift Key 真实出图 27.6s**，历史条目含上游存储 URL 与本地缩略图；SW 注册激活正常，`beforeinstallprompt` 触发
 - 备份：`0913-gpt2/gpt2-worker-kmage-v1.4.js`（约 166 KB）
 
-## kmage-kdr-rapi-2.0 (2026-10-24) — 新增 rapi 通道 + kdr 上游改版标注：双渠道失效排障后的第三通道接入（本版）
+## kmage-kdr-rapi-2.1 (2026-11-19) — 三通道复检 + rapi 面板适配 + 设置面板冗余清理 + 新通道调研收官（本版）
+
+### Background（用户指令与复检）
+
+- 用户指令：① 排除 gpt2.lishuhang.com 各通道故障；② rapi 不支持参考图 → 选中该通道时禁用面板参考图输入；③ 设置面板中其他通道已冗余的残留功能可去除；④ 在 v2ex 等地搜索新的免费生图通道及同类资源，尝试增加新通道；⑤ 更新版本号/readme/changelog，线上部署测试无 bug 后备份新版 worker js
+- **三通道 11-19 全链复检（实测）**：① **rapi 健康**——`trial-session` 200（enabled，单任务 1 张/并发 5）→ `generations` 202 → `tasks/batch` 轮询 ~30s completed → 图床 IP 直链直连 200（3.4MB PNG；代理路径 CF 1003 属预期兑底）；RouterAPI 原帖（t/1240321）活跃至 11-18，共享试用 Key 未停发；② **kmage 契约未变**——注册 201（+1 分）/登录 401 错误文案/建 Key 201 均正常，免费生图仍 403 `account_environment_abnormal`「充值后解锁」（上游策略，v1.7 已归类，非新故障）；③ **kdr 认知修正（本版关键发现）**——免费档（占位符 Gift Key）确被会员闸门拦（401「请先登录会员」），但深挖实测 **host 合法（www/new.97api.com，其余 400「请求地址只能选择…」）时任意 Key 提交均被受理排队（202 queued），中继以 Key 真伪转发真实上游（假 Key 任务终态 error「上游接口请求失败 (401): Invalid API key」）**——即自定义付费 Key 路径契约通畅，v2.0 的「通道整体待命」表述修正为「免费档待命、付费 Key 可用」
+
+### Changed
+
+- **rapi 面板适配（用户指令 ②）**：`applyChannel()` 按通道裁剪——`refSection`（参考图输入区，v2.1 新增容器包裹 label+refList）rapi 下 `display:none` 整体禁用（`+` 按钮与已入列参考图一并隐藏；数据保留，切回 kmage/kdr 自动恢复显示），下方 `refDisabledHint` 提示段落 rapi 下显示（说明仅文生图与数据保留）；`qualityCell`（精细度）rapi 下隐藏（rapi 请求 body 无 quality 参数，从未生效）；`sizeRowKdr`（分辨率档）从 v2.0 的 `kdr||rapi` 误显修正为**仅 kdr**（rapi 实际用 `rapiSizeFor()` 比例→size 映射，该档位从未生效）——rapi 下面板只显示实际生效的模型/比例/提示词；`generate()` 校验同步：rapi 通道必须填写提示词（参考图已不可用，空 prompt+残留参考图不再误通过）
+- **设置面板冗余清理（用户指令 ③）**：移除 kdr「共享 Gift Key」获取/刷新行（`giftKeyAlias` pill + `btnRefreshGift` 按钮 + 点击绑定）——上游会员制后 `GET /api/gift-key` 恒返回占位符 GO-ON-GOODLUCK，UI 已无意义；替换为「通道状态」pill（`kdrStatePill`：待命（上游会员制））+ 说明文字（含付费 Key 指引）；**自定义付费 Key textarea 保留**（kdr 当前唯一可用路径，标签更新为「当前唯一可用路径」）；`renderGiftLine()` 退化为空函数（注释说明，维持 applyChannel/ensureGiftKey/导入/初始化等历史调用点不牵连改动），textarea 回填职责迁至 `renderSettings()`（导入设置包后即时回显）；移除通道切换与页面初始化时的 Gift Key 预取（`switchChannel('kdr')` 与 init 两处，免空转 RTT 与日志噪音；`generateKdr` 内质询解销后的 `ensureGiftKey(true)` 刷新路径保留）
+- **徽章与文案勘误**：`renderBadge()` kdr 分支——无自定义 Key 时「kdr · 共享 Key」→「kdr · 待命」（title 说明会员制与付费 Key 指引），有 Key 时 title 更新；**新增 rapi 分支**（「rapi · 免费试用」）——v2.0 及以前 rapi 误显 kmage 号池积分（误导）；通知开关「双通道生效」→「三通道生效」勘误；头部 HTML 注释「上游: 双通道」→「三通道」并补 v2.1 面板裁剪说明
+- **版本与自描述**：VERSION 6 处 2.1（后端 const/前端 var/`<title>`/header `.ver`/SW `ai-image-shell-…` 自动随 VERSION/时间线）；`/about` 新增 `notes_v2_1`（recheck_1119/panel_trim/cleanup/survey 四节），kdr/rapi mode 描述同步 11-19 实测结论；内嵌「关于」文档——通道说明（kdr 付费 Key 路径/rapi 参考图禁用）、面板记忆节（通道裁剪说明）、设置分区节（kdr 分区新形态）、时间线追加 v2.1 条目并清理 v1.6 遗留「（本版）」标记
+
+### Survey（新通道调研，用户指令 ④——结论：无一可接入）
+
+- **调研途径**：v2ex「生图」标签聚合页全量扫帖（2026-09~11）、sov2ex 全文检索（多关键词+时间过滤）、z-ai web_search、linux.do 与 NodeSeek（均登录墙不可搜）、候选站前端 bundle 逆向（API 端点/注册流程/验证码机制）
+- **候选全表（20+，均不满足「免费+可编程+可持续」接入标准）**：
+  - 无 API 纯网页：zimage.run（t/1182699，反馈卡死闪退）、gpt-image-2.me（t/1207873，注册仅 5 分）、happy-horse.tv（t/1209172）、pai.zaiduyu.top（t/1251127，5000 分≈33 张，回复确认无 API）、MossImage（t/1251081，每日 2 分带水印）、MiniMax H3 工具（t/1256012）、爱图工坊（t/1246030）、pikpikgo（t/1242510，商业站）、imagegoai（t/1254372，电商垂直，新号 3 张）
+  - 人工赠送（无法自动化）：Midalo API（t/1250311/t/1254216，$2-5 需 QQ 群认领）、麋鹿云 moosecloud.cc（t/1231045，兑换码当天领完+加群人工）、YunToken（t/1222163，回帖人工充 $5）、猫图AI catsapi.com→artart.icu（t/1216905，留言送分+邮箱验证码注册 `/api/auth/register/send-code` 阻断自动化）
+  - 验证码墙：miaosf.com→miaosf.rsod.top（t/1254988，双 11 注册送 50 张活跃至 11-18，但 better-auth + Turnstile + 邮箱 OTP + 邀请码三重门槛，bundle 逆向确认）；liuliuqiu.net/imagegen（t/1222012#53，FastAPI 任务制全端点需登录）
+  - 纯付费：优米 api.uxmio.com（t/1257341，¥0.01/张无免费证据）、0.009 元站（t/1256781）、多米/吉吉/大香蕉系中转（¥0.01-0.12/张）
+  - 同类资源（非通道，记档）：DSH 开源项目 dsh-our-imagen（t/1257442，Kaggle/Colab 免费 GPU 自跑 notebook，无服务端 API）
+- **结论**：2026-11 时点社区在推的免费生图服务全部落在上述五类；唯一符合本工具「共享凭据+每日续给+可程序化」模式的仍是 RouterAPI（已在 rapi 通道内，且当日复检健康）。调研全表记档于此，**后续复查可从本表续接，避免重复劳动**
+
+### Fixed / Verified
+
+- **v2.0 遗留问题顺带修复**：`refDisabledHint` 初始实现置于 `refSection` 容器内（容器隐藏时提示永不显示）——自检发现后移至容器外；kdr `sizeRowKdr` 对 rapi 误显示（v2.0 起从未生效的 UI，本版修正为仅 kdr）
+- **验证（部署 2026-11-19 02:19 UTC）**：node --check 整文件通过；结构自检 36/36（debug/selfcheck-v2.1.js：VERSION 6 处/新增与删除的 DOM id/绑定移除/预取移除/notes_v2_1/时间线/模板字符串完整性/无 CR-LF 转义序列）；线上 `/healthz`+`/about` 2.1（notes_v2_1 四节齐全）、`/sw.js` cache `ai-image-shell-kmage-kdr-rapi-2.1`、manifest 正常；无头浏览器实测——kmage 默认态（参考图/精细度显示、分辨率档隐藏）、rapi 裁剪态（参考图区隐藏+提示显示+精细度隐藏+徽章「rapi · 免费试用」）、kdr 态（分辨率档显示+徽章「kdr · 待命」）、三通道往返切换、设置面板（Gift Key 行已移除/状态 pill/自定义 Key textarea 保留/三通道文案）、关于文档 v2.1 内容渲染、控制台零错误；**生产 E2E：rapi 通道 UI 提交生图 33.0s completed**（gpt-image-2 · 1024x1024 · 2.3MB PNG，历史入册、下载可用，截图 debug/e2e-rapi-v2.1-20261119.png）；kdr/kmage 契约探针（占位符 401 会员文案 / 假 Key queued / 注册 201）经代理全过
+
+### Deployment
+
+- 部署 `ai-image`（CF API PUT，metadata `{"body_part":"worker.js"}`，success 02:19:09Z）；部署前现网脚本与仓库 v2.0 diff 确认一致（无漂移），回滚备份 `debug/deployed-v2.0-backup-20261119.js`
+- 备份：`0913-gpt2/gpt2-worker-kmage-v2.1.js`（约 265 KB）
+
+## kmage-kdr-rapi-2.0 (2026-10-24) — 新增 rapi 通道 + kdr 上游改版标注：双渠道失效排障后的第三通道接入
 
 - **排障结论（10-24 实测，双渠道失效均为上游策略变更而非本工具缺陷）**：
   - **kdr**：免费生图转入会员登录制——`POST /api/image-tasks/generations` 实测 401 `{"error":"请先登录会员后使用免费额度"}`；`/api/auth/*` 仅 login 端点存在（无 register），`GET /api/gift-key` 返回占位符 `GO-ON-GOODLUCK` 而非真实 Key；前端 bundle 证实会员态按 `member.remaining/dailyLimit` 控制免费额度。通道代码/端点/中继全量保留（用户指示不封闭），待上游重新开放或提供会员凭据即可恢复

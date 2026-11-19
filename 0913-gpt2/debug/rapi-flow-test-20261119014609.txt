@@ -1,0 +1,21 @@
+=== rapi flow test @ 2026-11-19T01:46:09Z ===
+--- 1. trial-session (via worker) ---
+{"credential":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NDAiLCJhdWQiOlsiaW1hZ2UtdHJpYWwtdmlzaXRvciJdLCJqdGkiOiJkOGE2ZDZkMi0wMGM3LTQwY2ItYjdjYy1mMjBhYmEwZWU4OGYifQ.qGyPTa07AoyAJr8FY6jaGDCjxH-Yn9hlgzhZe4g-GsU","enabled":true,"max_concurrent_images":5,"max_images":1}
+
+cred OK: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+--- 2. generations (via worker) ---
+{"created_at":1795052770,"id":"task_TZvpDu4YL7Ar1663ZeYCtdvRObjKt3nY","progress":"0%","status":"in_progress","task_id":"task_TZvpDu4YL7Ar1663ZeYCtdvRObjKt3nY"}
+HTTP:202
+
+task_id: task_TZvpDu4YL7Ar1663ZeYCtdvRObjKt3nY
+--- 3. poll tasks/batch up to ~100s ---
+[1] in_progress|
+[2] in_progress|
+[3] in_progress|
+[4] in_progress|
+[5] in_progress|
+[6] completed|
+--- 4. result body dump (last poll) ---
+{"data":[{"created_at":1795052770,"data":{"count":1,"kind":"image_generation","model":"gpt-image-2","prompt":"a cute orange cat sitting on a windowsill, watercolor style","resolution":"1K","results":[{"url":"https://223.113.41.37:12589/i/200d0edf-e439-40aa-b20f-063e42de1550.png"}],"size":"1024x1024"},"error":"","id":"task_TZvpDu4YL7Ar1663ZeYCtdvRObjKt3nY","progress":"100%","status":"completed","task_id":"task_TZvpDu4YL7Ar1663ZeYCtdvRObjKt3nY","updated_at":1795052797}],"missing":[]}
+
+=== done, log: /home/z/my-project/clock/0913-gpt2/debug/rapi-flow-test-20261119014609.txt ===
