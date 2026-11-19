@@ -1,6 +1,47 @@
-# GPT-Image-2 生图项目 — 完整工作交接文档（1119-1100 版）
+# GPT-Image-2 生图项目 — 完整工作交接文档（1119-1200 版）
 
-# 第一部分：1119 增量交接日志（2026-11-19 1100，三通道复检 → rapi 面板适配 → 设置面板冗余清理 → 新通道调研收官 → v2.1）
+# 第一部分：1119 增量交接日志（2026-11-19 1200，zimage 渠道接入（用户指定）→ 前端锁/后端锁定谳 → v2.2 四通道）
+
+## TL;DR（供短上下文 Agent 快速阅读）
+
+**项目现状**：仓库版本 `kmage-kdr-rapi-zimage-2.2`（单文件 Cloudflare Worker「AI生图」，kmage + kdr + rapi + zimage 四通道）。本次迭代由用户指定渠道驱动：zimage.run/zh「文生图界面可无需登录生成指定参数和张数（张数限制可能根据浏览器指纹），图生图需登录——你来把这个渠道做进来」，过程中追加指示「一定要看看首页非登录态锁住的功能是前端限制还是后端限制」。核心结论：① zimage.run 为 Next.js 站点、API 齐全（v2.1 调研「无 API 纯网页」判断**勘误撤销**，教训：候选站判定前必须做 bundle 逆向，不能只看页面表象）；② **匿名额度锁全部为后端强制**——张数锁 1（bs=4 → 400）、尺寸锁三档（512×512/768×512/512×768，其余 400）、img2img 锁登录（401），伪造前端参数绕不过；「浏览器指纹」感知实为登录态差异 + 前端 flag 门控（qwen/flux-3 两模型前端门控但**后端匿名放行，8 模型全开**）；无 Turnstile、无设备指纹 Cookie、promptModerationToken 非必需；③ 通道已全量集成（后端 `/api/zimage/*` 代理 + `/zimage/img` 兑底、前端通道下拉/模型 8 个/比例动态裁剪 3 档/参考图禁用），本地校验四关全过（node --check / selfcheck 60/60 / vm 冒烟 34/34 / **真实上游 E2E 全链通** ~21s 出图）；④ 顺手修复 v2.0 遗留 bug：loadChannel 白名单漏 rapi（选中后刷新被重置回 kmage）。**部署阻塞**：沙箱无 CF 凭据（旧 token 失效、v2.1 token 日志截断），`debug/deploy_v22.sh` 已备好，凭据到位一条命令部署。
+
+## 用户指令与落地对照（接手者必读）
+
+1. **「zimage.run/zh 文生图界面可无需登录生成指定参数和张数（张数限制可能根据浏览器指纹）（图生图需登录），你来把这个渠道做进来」→ 全量接入**：逆向（45 chunk 定位 `/api/z-image/generate`、`task/{uuid}`、`batch-status/{uuid}`、`generate-image-to-image`、`prompt-moderation/check`、`get-configs`）→ 无登录直调实测（提交 200 → 轮询 completed ~15-40s → files.zimage.run webp 公开直链）→ 集成为第四通道 zimage。上游无 CORS 头（无 ACAO）→ 浏览器不可直连，全走 Worker 代理（Origin/Referer 伪装 zimage.run/zh，与 rapi 同理）；结果图床 CORS * 开放 → 直连取图优先、`/zimage/img` 代理兑底（**仅放行 files.zimage.run 前缀**，防开放代理滥用——比 /rapi/img 收紧）。
+2. **「一定要看看首页非登录态锁住的功能是前端限制还是后端限制」→ 定谳（全部直调实测）**：张数（`[1,2,3,4]` 匿名灰置）→ **后端锁**（bs=4 → 400 "Anonymous users can only generate 1 image at a time"）；尺寸（大尺寸/自定义锁定 `size_locked_hint`）→ **后端锁**（1280×720、800×600 → 400 "Anonymous users can only use sizes: 512x512, 512x768, or 768x512"）；img2img → **后端锁**（401 "Please sign in to use image-to-image generation"）；模型 qwen-image-2-1/flux-3-image-klein（server flag 门控）→ **仅前端门控，后端匿名放行**（两模型直调均 200 且出图）；6 次提交弹登录框 → 纯前端（localStorage 计数）；history → 后端锁 401（本工具不依赖）；「指纹」→ **不存在**（turnstile_enabled:false、无设备 Cookie、仅 z_image_last_submit 时间戳 Cookie 且不携带照样受理、60s 窗口内连发均 200）——用户感知差异来自登录态与前端 flag。
+3. **部署（进行中，阻塞于凭据）**：`debug/deploy_v22.sh`（CF API multipart PUT + 双域 /healthz 验证 + 部署前现网版本记录）已备；凭据来源优先级 env CF_TOKEN/CF_ACC > `/home/z/my-project/scripts/.cruise_secrets.env`；沙箱现状两者皆无（v2.1 worklog token 截断 `cfat_LpiT…`，旧 cfat_ 已失效 9109）。**接手者拿到凭据后：bash debug/deploy_v22.sh → 双域验证 → 无头浏览器四通道交互 + 生产 E2E zimage 生图（截图记档）→ 本文档「生产环境现状」节补记**。
+
+## v2.2 变更清单（源码 diff 索引）
+
+- 后端：`ZIMAGE_UPSTREAM`/`ZIMAGE_FILES_PREFIX` 常量；`ZIMAGE_MODELS` 白名单；`zimageHeaders()`（Origin/Referer/UA）；`handleZimageProxy`（POST `/api/zimage/generate`：模型白名单非白名单回退 turbo、batchSize 强制 1、尺寸白名单 400 预检、prompt 截 600、seed 透传；GET `/api/zimage/task/{uuid}`：uuid 白名单 `[A-Za-z0-9_-]{1,64}`）；`handleZimageImage`（`/zimage/img?url=` 前缀限制 + cf cache）；handleRequest 路由两处；/healthz zimage_upstream + channels 四通道；/about name 四通道 + channels.zimage + notes_v2_2 三节
+- 前端：通道下拉 +zimage；`KMODELS_ZIMAGE`（8 项，turbo 默认）+ `ZIMAGE_DEFAULT_MODEL`；`zimageSizeFor()`；`RATIO_OPTIONS_FULL/ZIMAGE` + `applyRatioOptions()`（比例动态裁剪，选中值保留/回退 1:1）；applyChannel（noRef 变量统一 rapi/zimage、refDisabledHint 文案动态化、zimageHint 显示、btnGenerate 文案）；`zimageApi`/`zimagePollTask`/`zimageFetchB64`/`generateZimage`（3s 轮询/180s 上限/连续 8 次非 2xx 放弃；DAILY_LIMIT 中文兜底含 resetAt；历史 url 存公开直链）；generate 入口分派 + 提示词必填（zimage 同 rapi 仅文生图）；histEntry.size 尺寸；下载前缀 zimage_；renderBadge/switchChannel zimage 分支；通知「四通道」；formState.model 补 rapi/zimage 键
+- **bug 修复**：`loadChannel` 白名单 `kdr|kmage` → `kdr|kmage|rapi|zimage`（v2.0 起 rapi 刷新被重置回 kmage，v2.0/v2.1 两版未发现）；广播恢复分支同步补齐
+- 文档：worker 头注释（通道块/架构路由/v2.2 changelog 块）；关于路由表 +zimage 两行；时间线 v2.2 条目（v2.1 去本版 + 勘误回注）；README（标题/生产行/通道 bullets/v2.2 概览 bullet/文件清单/架构速览/前端数据/生图四通道/使用指引/survey 勘误/时间线 v2.2 节）；本 todo 文档重编号（原第一~九部分 → 第二~十部分）
+
+## 接手者最需要知道的事（增量）
+
+36. **zimage 通道契约速查**：模型 8 个全开放（turbo 默认；qwen/flux-3 前端门控但后端放行）；尺寸仅 512×512/768×512/512×768（比例 1:1/3:2/2:3，其余后端必拒故 UI 不提供）；每次 1 张；仅文生图；seed 可选字符串；prompt ≤600 字符；429 DAILY_LIMIT_EXCEEDED 带 remaining/requested/resetAt（**日额度数值未探明，不刷量**）；结果 webp 公开直链（files.zimage.run，无过期签名）→ 历史条目跨设备可回看。
+37. **zimage 与 rapi 的架构差异**：rapi 有 credential 身份链（Cookie rapi_trial + isolate 缓存 + 401/403 重取），zimage **完全无身份**（匿名即通道本身，代理零状态）；rapi 图床裸 IP（代理命中 CF 1003），zimage 图床域名（代理可用）——`/zimage/img` 是真正可用的兑底而非理论兜底。
+38. **probe 脚本与素材**：`/home/z/my-project/scripts/zimage_probe{1,2,3}.py`（沙箱 my-project/scripts，非仓库内）；上游 bundle 在 /tmp/zim/（沙箱回收即失效）；结论已全部落入 README v2.2 节与本文件，重跑非必需。
+39. **结构自检脚本升版**：`debug/selfcheck-v2.2.js`（60 项）+ `debug/smoke_test_v22.js`（vm 冒烟 34 项，mock 上游）+ `debug/e2e_real_v22.js`（真实上游 E2E）——下版迭代改完源码先跑这三个再部署。
+40. **v2.0 遗留 loadChannel bug 的教训**：新增通道时必须同步检查 ①`loadChannel` 白名单 ②广播恢复分支 ③`formState.model` 字面量 ④`fillModelOptions` 默认索引 ⑤`renderBadge`/`btnGenerate`/`switchChannel` 分支——v2.0 漏了 ①③（rapi 刷新重置），本次全部补齐并纳入 selfcheck 断言。
+
+## 生产环境现状（1119-1200 时点）
+
+- Worker `ai-image` = **仍是 `kmage-kdr-rapi-2.1`（v2.2 已就绪未部署——阻塞于 CF 凭据，见 TL;DR 第 ③ 条）**
+- v2.2 部署就绪度：本地四关全过（node --check / selfcheck-v2.2 60/60 / smoke 34/34 / 真实上游 E2E：uuid `b5U4U_I1j9nj4puY` → ~21s completed → /zimage/img 代理取回 webp 23446B）；`debug/deploy_v22.sh` 一条命令（含双域验证与回滚提示）
+- 回滚源：`gpt2-worker-kmage-v2.1.js`（仓库内）——v2.2 后端为纯增量（新常量/新函数/新路由），对既有三通道零改动（除 loadChannel 白名单扩展与文案），回滚无行为风险
+
+## 未完成事项与下一步建议
+
+1. **部署 v2.2（唯一关键路径）**：拿到 CF_TOKEN + CF_ACC 后 `bash debug/deploy_v22.sh`；随后无头浏览器验证四通道切换/zimage 比例裁剪/参考图禁用/生成 E2E（截图 debug/e2e-zimage-v2.2-*.png）。
+2. **观察项**：zimage 匿名日额度数值（耗尽时 429 DAILY_LIMIT 会带 resetAt，UI 已兜底）；上游是否启用 Turnstile（get-configs turnstile_enabled 转 true 则 403 VERIFICATION_REQUIRED 路径激活，需评估）；RATE_LIMIT 是否开始强制（当前 60s Cookie 未强制）。
+3. **明确不做**（沿袭重申）：不伪造质询信号；IP/指纹伪造；不绕过 Turnstile/邮箱 OTP；zimage 匿名额度**不刷量探测**（接入即可用，滥用会导致上游收紧或封禁 Worker 出口 IP）。
+
+---
+
+# 第二部分：1119 增量交接日志（2026-11-19 1100，三通道复检 → rapi 面板适配 → 设置面板冗余清理 → 新通道调研收官 → v2.1）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -42,7 +83,7 @@
 
 ---
 
-# 第二部分：1024 增量交接日志（2026-10-24 1430，双渠道失效排障 → site:v2ex.com 新通道检索 → rapi 第三通道接入 → v2.0 → 文档合并）
+# 第三部分：1024 增量交接日志（2026-10-24 1430，双渠道失效排障 → site:v2ex.com 新通道检索 → rapi 第三通道接入 → v2.0 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -87,7 +128,7 @@
 
 ---
 
-# 第三部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
+# 第四部分：1008 增量交接日志（2026-10-08 1230，真机截图/日志 debug → 中继修复 + 遥测 + 自动重载 → 定位校正 → v1.9 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -134,7 +175,7 @@
 
 ---
 
-# 第四部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
+# 第五部分：1008 增量交接日志（2026-10-08 0300，kmage API 文档与号内建 Key 路线 + kdr 质询人工验证中继 → v1.8 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -199,7 +240,7 @@
 
 ---
 
-# 第五部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
+# 第六部分：1008 增量交接日志（2026-10-08 0025，真机日志 268 条 → 双上游 10-07 再收紧归因 → 质询归类 + 充值闸门冷却 v1.7 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -249,7 +290,7 @@
 ---
 
 
-# 第六部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
+# 第七部分：0923-2 增量交接日志（2026-09-23，真机回传 → 根因定位 → 净号直注 v1.6 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -297,7 +338,7 @@
 
 ---
 
-# 第七部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
+# 第八部分：0923 增量交接日志（2026-09-23，双通道风控拦截 → 直连优先 v1.5 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -356,7 +397,7 @@
 
 ---
 
-# 第八部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
+# 第九部分：0913 增量交接日志（2026-09-13，kdr 修复复活 → kmage 上线 → v1.4 → 文档合并）
 
 ## TL;DR（供短上下文 Agent 快速阅读）
 
@@ -426,7 +467,7 @@
 
 ---
 
-# 第九部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
+# 第十部分：历史交接文档（0722~0819，原 TODO-full.md 全文）
 
 > 以下为 2026-08-25 生成的交接文档（TODO-0826-1200.md）原文，覆盖 2026-07-22 至 2026-08-19。本次合并仅去除了原文件中的行号转录格式（`Read "..."` 头与行号前缀），内容未作任何改动；文中提及的路径（如 `0722-gpt2/`）、版本与结论均为当时状态，最新状态以第一部分与 `README.md` 为准。
 
